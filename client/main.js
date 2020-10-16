@@ -32,19 +32,19 @@ Empirica.consent(Consent);
 // At this point they have been assigned a treatment. You can return
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps((game, treatment) => {
-  const steps = [Overview, TaskDetails, ConstraintsDetails, RoomArrangements];
-  if (game.treatment.playerCount > 1) {
-    steps.push(TeamDetails, SocialInteractionDetails);
-  }
-  steps.push(MoreAboutBonus, UIOverview);
+  // const steps = [Overview, TaskDetails, ConstraintsDetails, RoomArrangements];
+  // if (game.treatment.playerCount > 1) {
+  //   steps.push(TeamDetails, SocialInteractionDetails);
+  // }
+  // steps.push(MoreAboutBonus, UIOverview);
 
-  if (game.treatment.playerCount > 1) {
-    steps.push(GroupQuiz);
-  } else {
-    steps.push(IndividualQuiz);
-  }
+  // if (game.treatment.playerCount > 1) {
+  //   steps.push(GroupQuiz);
+  // } else {
+  //   steps.push(IndividualQuiz);
+  // }
 
-  return steps;
+  return [];
 });
 
 // The Round component containing the game UI logic.
