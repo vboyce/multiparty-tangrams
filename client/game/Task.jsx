@@ -90,7 +90,7 @@ export default class Task extends React.Component {
 
     return (
       <div className="task">
-        <div className="left">
+        <div className="left"> //chat box goes here
           <div className="info">
             <Timer stage={stage} />
             <div className="score">

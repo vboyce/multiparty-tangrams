@@ -25,9 +25,10 @@ export default class Round extends React.Component {
       <div className="round">
         <Task stage={stage} player={player} game={game} />
         {/*game.player.length is a better check for social interaction than 'game.treatment.playerCount > 1' because of the lobby --> ignor settings*/}
-        {game.players.length > 1 ? (
-          <SocialInteractions game={game} stage={stage} player={player} />
-        ) : null}
+        {/*{game.players.length > 1 ? (*/}
+        {/*  <SocialInteractions game={game} stage={stage} player={player} />*/}
+        {/*) : null}*/}
+        <SocialInteractions game={game} stage={stage} player={player} />
       </div>
     );
   }
