@@ -1,6 +1,6 @@
 import React from "react";
 
-import Room from "./Room.jsx";
+import Tangram from "./Tangram.jsx";
 import Timer from "./Timer.jsx";
 import { HTMLTable } from "@blueprintjs/core";
 import { StageTimeWrapper } from "meteor/empirica:core";
@@ -84,7 +84,6 @@ export default class Task extends React.Component {
 
   render() {
     const { game, stage, player } = this.props;
-
     const task = stage.get("task");
     const violatedConstraints = stage.get("violatedConstraints") || [];
 
@@ -163,20 +162,19 @@ export default class Task extends React.Component {
         {/*</div>*/}
 
         <div className="board">
-          <div className="all-rooms">
-            <Room
+          <div className="all-tangrams">
+            <Tangram
               room="deck"
               stage={stage}
               game={game}
               player={player}
               isDeck
             />
-
-            <div className="rooms">
-              {task.rooms.map((room) => (
-                <Room
-                  key={room}
-                  room={room}
+            <div className="tangrams">
+              {stage.tangrams.map((tangram) => (
+                <Tangram
+                  key={tangram}
+                  tangram={tangram}
                   stage={stage}
                   game={game}
                   player={player}

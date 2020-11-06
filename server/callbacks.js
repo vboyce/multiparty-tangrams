@@ -82,11 +82,11 @@ Empirica.onStageStart((game, round, stage) => {
   ]);
   stage.set("intermediateSolutions", []);
 
-  const task = stage.get("task");
-  task.students.forEach((student) => {
-    stage.set(`student-${student}-room`, "deck");
-    stage.set(`student-${student}-dragger`, null);
-  });
+  // const task = stage.get("task");
+  // task.students.forEach((student) => {
+  //   stage.set(`student-${student}-room`, "deck");
+  //   stage.set(`student-${student}-dragger`, null);
+  // });
 
   players.forEach((player) => {
     player.set("satisfied", false);
@@ -103,22 +103,22 @@ Empirica.onStageEnd((game, round, stage) => {
   console.debug("Round ", stage.name, "game", game._id, " ended");
 
   const currentScore = stage.get("score");
-  const optimalScore = stage.get("task").optimal;
+  //const optimalScore = stage.get("task").optimal;
 
-  if (currentScore === optimalScore) {
-    if (stage.name !== "practice") {
-      game.set("nOptimalSolutions", game.get("nOptimalSolutions") + 1);
-    }
-    stage.set("optimalSubmitted", true);
-    console.log("You found the optimal");
-  }
+  // if (currentScore === optimalScore) {
+  //   if (stage.name !== "practice") {
+  //     game.set("nOptimalSolutions", game.get("nOptimalSolutions") + 1);
+  //   }
+  //   stage.set("optimalSubmitted", true);
+  //   console.log("You found the optimal");
+  // }
 
-  //add the round score to the game total cumulative score (only if it is not practice)
-  if (stage.name !== "practice") {
-    const cumScore = game.get("cumulativeScore") || 0;
-    const scoreIncrement = currentScore > 0 ? Math.round(currentScore) : 0;
-    game.set("cumulativeScore", Math.round(scoreIncrement + cumScore));
-  }
+  // //add the round score to the game total cumulative score (only if it is not practice)
+  // if (stage.name !== "practice") {
+  //   const cumScore = game.get("cumulativeScore") || 0;
+  //   const scoreIncrement = currentScore > 0 ? Math.round(currentScore) : 0;
+  //   game.set("cumulativeScore", Math.round(scoreIncrement + cumScore));
+  // }
 });
 
 // onRoundEnd is triggered after each round.
