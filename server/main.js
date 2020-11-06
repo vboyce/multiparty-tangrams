@@ -36,14 +36,25 @@ Empirica.gameInit((game, treatment) => {
   }
 
   //we'll have 1 round, each task is one stage
-  const round = game.addRound();
-  _.times(taskSequence.length, i => {
+  _.times(game.treatment.numTrials, trialNum => {
+    const round = game.addRound();
+    round.set('target', 'tangram_A.png');
     const stage = round.addStage({
-      name: i === 0 ? "practice" : i,
-      displayName: taskSequence[i].difficulty,
-      durationInSeconds: game.treatment.stageDuration
+      name: trialNum + 'speaker',
+      displayName: "speaker's turn",
+      durationInSeconds: 30000000
     });
-    stage.set("task", taskSequence[i]);
+    stage.set('tangrams', ['tangram_A.png', 'tangram_B.png']);
+    // round.addStage({
+    //   name: trialNum + 'listener',
+    //   displayName: "listener's turn",
+    //   durationInSeconds: 30000000
+    // });
+    // round.addStage({
+    //   name: trialNum + 'feedback',
+    //   displayName: "feedback",
+    //   durationInSeconds: 30000000
+    // });
   });
 });
 
