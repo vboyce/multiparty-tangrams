@@ -90,77 +90,77 @@ export default class Task extends React.Component {
 
     return (
       <div className="task">
-        <div className="left"> //chat box goes here
-          <div className="info">
-            <Timer stage={stage} />
-            <div className="score">
-              <h5 className="bp3-heading">Score</h5>
+        {/*<div className="left">*/}
+        {/*  <div className="info">*/}
+        {/*    <Timer stage={stage} />*/}
+        {/*    <div className="score">*/}
+        {/*      <h5 className="bp3-heading">Score</h5>*/}
 
-              <h2 className="bp3-heading">{stage.get("score")}</h2>
-            </div>
-          </div>
+        {/*      <h2 className="bp3-heading">{stage.get("score")}</h2>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
 
-          <div className="constraints">
-            {stage.name === "practice" ? (
-              <p>
-                <strong style={{ color: "blue" }}>
-                  This is practice round and the Score will not count
-                </strong>
-              </p>
-            ) : (
-              ""
-            )}
-            <h5 className="bp3-heading">Constraints</h5>
-            <ul>
-              {task.constraints.map((constraint) => {
-                const failed = violatedConstraints.includes(constraint._id);
-                return (
-                  <li key={constraint._id} className={failed ? "failed" : ""}>
-                    {failed ? (
-                      <span className="bp3-icon-standard bp3-icon-cross" />
-                    ) : (
-                      <span className="bp3-icon-standard bp3-icon-dot" />
-                    )}
-                    {constraint.pair.join(" and ")} {constraint.text}.
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+        {/*  <div className="constraints">*/}
+        {/*    {stage.name === "practice" ? (*/}
+        {/*      <p>*/}
+        {/*        <strong style={{ color: "blue" }}>*/}
+        {/*          This is practice round and the Score will not count*/}
+        {/*        </strong>*/}
+        {/*      </p>*/}
+        {/*    ) : (*/}
+        {/*      ""*/}
+        {/*    )}*/}
+        {/*    <h5 className="bp3-heading">Constraints</h5>*/}
+        {/*    <ul>*/}
+        {/*      {task.constraints.map((constraint) => {*/}
+        {/*        const failed = violatedConstraints.includes(constraint._id);*/}
+        {/*        return (*/}
+        {/*          <li key={constraint._id} className={failed ? "failed" : ""}>*/}
+        {/*            {failed ? (*/}
+        {/*              <span className="bp3-icon-standard bp3-icon-cross" />*/}
+        {/*            ) : (*/}
+        {/*              <span className="bp3-icon-standard bp3-icon-dot" />*/}
+        {/*            )}*/}
+        {/*            {constraint.pair.join(" and ")} {constraint.text}.*/}
+        {/*          </li>*/}
+        {/*        );*/}
+        {/*      })}*/}
+        {/*    </ul>*/}
+        {/*  </div>*/}
 
-          <div className="payoff">
-            <h5 className="bp3-heading">Payoff</h5>
-            <HTMLTable className="bp3-table">
-              <thead>
-                <tr>
-                  <th>Rooms</th>
-                  {task.rooms.map((room) => (
-                    <th key={room}>{room}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {task.students.map((student) => (
-                  <tr key={student}>
-                    <th>Student {student}</th>
-                    {task.rooms.map((room) => (
-                      <td
-                        className={
-                          stage.get(`student-${student}-room`) === room
-                            ? "active"
-                            : null
-                        }
-                        key={room}
-                      >
-                        {task.payoff[student][room]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </HTMLTable>
-          </div>
-        </div>
+        {/*  <div className="payoff">*/}
+        {/*    <h5 className="bp3-heading">Payoff</h5>*/}
+        {/*    <HTMLTable className="bp3-table">*/}
+        {/*      <thead>*/}
+        {/*        <tr>*/}
+        {/*          <th>Rooms</th>*/}
+        {/*          {task.rooms.map((room) => (*/}
+        {/*            <th key={room}>{room}</th>*/}
+        {/*          ))}*/}
+        {/*        </tr>*/}
+        {/*      </thead>*/}
+        {/*      <tbody>*/}
+        {/*        {task.students.map((student) => (*/}
+        {/*          <tr key={student}>*/}
+        {/*            <th>Student {student}</th>*/}
+        {/*            {task.rooms.map((room) => (*/}
+        {/*              <td*/}
+        {/*                className={*/}
+        {/*                  stage.get(`student-${student}-room`) === room*/}
+        {/*                    ? "active"*/}
+        {/*                    : null*/}
+        {/*                }*/}
+        {/*                key={room}*/}
+        {/*              >*/}
+        {/*                {task.payoff[student][room]}*/}
+        {/*              </td>*/}
+        {/*            ))}*/}
+        {/*          </tr>*/}
+        {/*        ))}*/}
+        {/*      </tbody>*/}
+        {/*    </HTMLTable>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <div className="board">
           <div className="all-rooms">
