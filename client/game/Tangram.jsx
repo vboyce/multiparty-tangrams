@@ -1,7 +1,5 @@
 import React from "react";
 
-import Student from "./Student.jsx";
-
 export default class Tangram extends React.Component {
   state = { clicked: false };
 

@@ -206,50 +206,51 @@ Empirica.onSet(
       return;
     }
 
-    //someone placed a student to a room
-    if (key.substring(0, 8) === "student-" && key.slice(-4) === "room") {
-      const task = stage.get("task");
-      let assignments = { deck: [] };
-      task.rooms.forEach((room) => {
-        assignments[room] = [];
-      });
-
-      //find the rooms for each player
-      task.students.forEach((student) => {
-        const room = stage.get(`student-${student}-room`);
-        assignments[room].push(student);
-      });
-
-      //check for constraint violations
-      const violationIds = getViolations(stage, assignments);
-      stage.set("violatedConstraints", violationIds);
-
-      //get score if there are no violations, otherwise, the score is 0
-      const currentScore =
-        assignments["deck"].length === 0
-          ? getScore(task, assignments, violationIds.length)
-          : 0;
-      //console.debug("currentScore", currentScore);
-      stage.set("score", currentScore || 0);
-
-      if (currentScore === task.optimal) {
-        stage.set("optimalFound", true);
-      }
-
-      //keep track of solution, scores, and violated constraints
-      //TODO: eventually this should have the 'log' parameter so it is not sent to the UI
-      //TODO: how about I store everything here, and that's it! less data
-      stage.append("intermediateSolutions", {
-        solution: assignments,
-        at: new Date(),
-        violatedConstraintsIds: violationIds,
-        nConstraintsViolated: violationIds.length,
-        score: getScore(task, assignments, violationIds.length),
-        optimalFound: currentScore === task.optimal,
-        completeSolution: assignments["deck"].length === 0,
-        completeSolutionScore: currentScore,
-      });
-    }
+    // //TODO: actually change this for clicking tangrams, currently just commented out
+    // //someone placed a student to a room
+    // if (key.substring(0, 8) === "student-" && key.slice(-4) === "room") {
+    //   const task = stage.get("task");
+    //   let assignments = { deck: [] };
+    //   task.rooms.forEach((room) => {
+    //     assignments[room] = [];
+    //   });
+    //
+    //   //find the rooms for each player
+    //   task.students.forEach((student) => {
+    //     const room = stage.get(`student-${student}-room`);
+    //     assignments[room].push(student);
+    //   });
+    //
+    //   //check for constraint violations
+    //   const violationIds = getViolations(stage, assignments);
+    //   stage.set("violatedConstraints", violationIds);
+    //
+    //   //get score if there are no violations, otherwise, the score is 0
+    //   const currentScore =
+    //     assignments["deck"].length === 0
+    //       ? getScore(task, assignments, violationIds.length)
+    //       : 0;
+    //   //console.debug("currentScore", currentScore);
+    //   stage.set("score", currentScore || 0);
+    //
+    //   if (currentScore === task.optimal) {
+    //     stage.set("optimalFound", true);
+    //   }
+    //
+    //   //keep track of solution, scores, and violated constraints
+    //   //TODO: eventually this should have the 'log' parameter so it is not sent to the UI
+    //   //TODO: how about I store everything here, and that's it! less data
+    //   stage.append("intermediateSolutions", {
+    //     solution: assignments,
+    //     at: new Date(),
+    //     violatedConstraintsIds: violationIds,
+    //     nConstraintsViolated: violationIds.length,
+    //     score: getScore(task, assignments, violationIds.length),
+    //     optimalFound: currentScore === task.optimal,
+    //     completeSolution: assignments["deck"].length === 0,
+    //     completeSolutionScore: currentScore,
+    //   });
+    // }
   }
 );
 

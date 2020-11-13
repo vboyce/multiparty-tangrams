@@ -12,6 +12,12 @@ import { stepOneData, stepTwoData } from "./constants";
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
 
+// Game object contains
+// index (auto-increment assigned to each Game in order),
+// treatment (object representing Factors set on this game),
+// players (array of player objects participating in this game),
+// rounds (rounds composing this Game),
+// createdAt (Date type, time at which the game was created approximates time at which the Game was started)
 Empirica.gameInit((game, treatment) => {
   console.log(
     "Game with a treatment: ",
@@ -35,15 +41,28 @@ Empirica.gameInit((game, treatment) => {
     taskSequence = customShuffle(taskSequence); //this is with keeping the first practice round fixed
   }
 
-  //we'll have 1 round, each task is one stage
+  //we'll have trialNum rounds, each task is one stage
+  //TODO: need to figure out how to import variable numTrials into treatment
+  //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
+  // Round/Stage progress indicator - UI that shows which are the current Round and Stage
   _.times(game.treatment.numTrials, trialNum => {
+    // Round object contains
+    // index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
+    // stages (array of Stage objects, contains Stages composing this Round)
     const round = game.addRound();
     round.set('target', 'tangram_A.png');
+    // Stage object contains
+    // index (Object, the 0 based position of the current stage in the ordered list of all of the game's stages),
+    // name (String, programatic name of stage),
+    // displayName (String, Human name of the stage to be showed players),
+    // durationInSeconds (Integer, stage duration in seconds)
+    // startTimeAt (Date, time at which the stage started, only set if stage has already started)
     const stage = round.addStage({
       name: trialNum + 'speaker',
       displayName: "speaker's turn",
       durationInSeconds: 30000000
     });
+    // TODO: I think one issue might be here where we use tangrams directly instead of task
     stage.set('tangrams', ['tangram_A.png', 'tangram_B.png']);
     // round.addStage({
     //   name: trialNum + 'listener',
@@ -58,6 +77,7 @@ Empirica.gameInit((game, treatment) => {
   });
 });
 
+// TODO: we only need to fix the first practice task at the very start, don't need one every round
 // fix the first practice task and shuffle the rest
 //to learn more:
 //https://stackoverflow.com/questions/50536044/swapping-all-elements-of-an-array-except-for-first-and-last

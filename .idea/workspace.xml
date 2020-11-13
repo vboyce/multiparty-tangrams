@@ -21,8 +21,12 @@
   <component name="ChangeListManager">
     <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="Removed player requirement for displaying chat &amp; event log">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/game/Round.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Round.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/game/Tangram.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Tangram.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/game/Task.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Task.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/main.less" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/callbacks.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/callbacks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +80,9 @@
       <workItem from="1604081325333" duration="866000" />
       <workItem from="1604549262293" duration="765000" />
       <workItem from="1604551266833" duration="5977000" />
+      <workItem from="1604700718264" duration="2896000" />
+      <workItem from="1605111216745" duration="4067000" />
+      <workItem from="1605277038981" duration="3443000" />
     </task>
     <task id="LOCAL-00001" summary="Removed player requirement for displaying chat &amp; event log">
       <created>1604554031588</created>

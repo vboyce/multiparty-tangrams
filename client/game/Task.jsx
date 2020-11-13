@@ -84,7 +84,7 @@ export default class Task extends React.Component {
 
   render() {
     const { game, stage, player } = this.props;
-    const task = stage.get("task");
+    const task = stage.get('tangrams');
     const violatedConstraints = stage.get("violatedConstraints") || [];
 
     return (
@@ -164,14 +164,15 @@ export default class Task extends React.Component {
         <div className="board">
           <div className="all-tangrams">
             <Tangram
-              room="deck"
+              tangram="deck"
               stage={stage}
               game={game}
               player={player}
               isDeck
             />
+
             <div className="tangrams">
-              {stage.tangrams.map((tangram) => (
+              {task.tangrams.map((tangram) => (
                 <Tangram
                   key={tangram}
                   tangram={tangram}
