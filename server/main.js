@@ -45,7 +45,7 @@ Empirica.gameInit((game, treatment) => {
   //TODO: need to figure out how to import variable numTrials into treatment
   //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
   // Round/Stage progress indicator - UI that shows which are the current Round and Stage
-  _.times(game.treatment.numTrials, trialNum => {
+  _.times(24, trialNum => {
     // Round object contains
     // index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
     // stages (array of Stage objects, contains Stages composing this Round)
@@ -63,7 +63,6 @@ Empirica.gameInit((game, treatment) => {
       durationInSeconds: 30000000
     });
     // TODO: I think one issue might be here where we use tangrams directly instead of task
-    stage.set("tangrams", ['tangram_A.png', 'tangram_B.png']);
     // round.addStage({
     //   name: trialNum + 'listener',
     //   displayName: "listener's turn",

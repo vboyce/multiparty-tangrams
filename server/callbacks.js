@@ -69,6 +69,11 @@ Empirica.onStageStart((game, round, stage) => {
 
   //initiate the score for this round (because everyone will have the same score, we can save it at the round object
   stage.set("score", 0);
+  stage.set("tangramURLs", [
+    "/experiment/tangram_A.png",
+    "/experiment/tangram_B.png",
+    "/experiment/tangram_C.png"
+  ]);
   stage.set("chat", []); //todo: I need to check if they are in team first
   stage.set("log", [
     {

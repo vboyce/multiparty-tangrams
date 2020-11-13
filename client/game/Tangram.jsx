@@ -17,7 +17,7 @@ export default class Tangram extends React.Component {
         onClick={this.handleClick}
         className={`bp3-card`}
         >
-        <img src={tangram.url}></img>
+        <img src={tangram}></img>
       </div>
     );
   }
