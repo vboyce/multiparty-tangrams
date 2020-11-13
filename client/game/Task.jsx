@@ -84,7 +84,7 @@ export default class Task extends React.Component {
 
   render() {
     const { game, stage, player } = this.props;
-    const task = stage.get('tangrams');
+    const task = stage.get("tangrams");
     const violatedConstraints = stage.get("violatedConstraints") || [];
 
     return (

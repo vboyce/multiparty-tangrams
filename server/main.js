@@ -63,7 +63,7 @@ Empirica.gameInit((game, treatment) => {
       durationInSeconds: 30000000
     });
     // TODO: I think one issue might be here where we use tangrams directly instead of task
-    stage.set('tangrams', ['tangram_A.png', 'tangram_B.png']);
+    stage.set("tangrams", ['tangram_A.png', 'tangram_B.png']);
     // round.addStage({
     //   name: trialNum + 'listener',
     //   displayName: "listener's turn",

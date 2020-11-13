@@ -8,6 +8,9 @@ const studentNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 // room numbers
 const roomNumbers = _.range(101, 111);
 
+// tangrams
+const tangramIDs = "ABCDEFGHIJKL".split("");
+
 // constraint types
 const constraintTypes = {
   0: "must live in the same room",
@@ -22,27 +25,7 @@ export const exampleTaskData = {
   difficulty: "easy",
   students: studentNames.slice(0, 4), // how many students
   rooms: roomNumbers.slice(0, 3), // how many rooms
-  constraints: [
-    {
-      _id: 0, // i.e., A and B can't live in the same room or be neighbors.
-      pair: ["A", "B"],
-      type: 3,
-      text: constraintTypes[3]
-    },
-    {
-      _id: 1, // i.e., B and C must live in the same room.
-      pair: ["B", "C"],
-      type: 0,
-      text: constraintTypes[0]
-    }
-  ],
-  payoff: {
-    // the payoff of placing Student i in Room j (e.g., `payoff[i][j]`)
-    A: { 101: 20, 102: 80, 103: 65 },
-    B: { 101: 67, 102: 90, 103: 76 },
-    C: { 101: 85, 102: 82, 103: 79 },
-    D: { 101: 20, 102: 75, 103: 78 }
-  }
+  tangrams: tangramIDs.slice(0, 3) // how many tangrams
 };
 
 export default class TaskDetails extends React.Component {
@@ -111,12 +94,12 @@ export default class TaskDetails extends React.Component {
             </div>
 
             <div className="board">
-              <div className="all-rooms">
-                {this.renderRoom("deck", true)}
-                <div className="rooms">
-                  {exampleTaskData.rooms.map(room =>
-                    this.renderRoom(room, false)
-                  )}
+              <div className="all-tangrams">
+                {this.renderTangram("deck", true)}
+                <div className="tangrams">
+                  {exampleTaskData.tangrams.map(tangram =>
+                    this.renderTangram(tangram, false)
+                    )}
                 </div>
               </div>
             </div>
@@ -223,6 +206,34 @@ export default class TaskDetails extends React.Component {
         {isDeck ? null : <h6 className={'bp3-heading'}>Room {room}</h6>}
         {students.map(student => this.renderStudent(student))}
       </div>
+    );
+  }
+
+  renderTangram(tangram, isDeck) {
+    const { clicked } = this.state;
+    const students = [];
+    // exampleTaskData.students.forEach(student => {
+    //   if (this.state[`student${student}Room`] === room) {
+    //     students.push(student);
+    //   }
+    // });
+
+    // const classNameTangram = isDeck ? "deck bp3-elevation-1" : "room";
+    // const classNameClicked = clicked ? "bp3-elevation-3" : "";
+    return (
+        <div
+            key={room}
+            onClick={this.handleClick}
+            className={`bp3-card`}
+            // onDrop={this.handleDrop.bind(this, room)}
+            // onDragOver={this.handleDragOver}
+            // onDragLeave={this.handleDragLeave}
+            // className={`bp3-card ${classNameRoom} ${classNameHovered}`}
+        >
+          {/*{isDeck ? null : <h6 className={'bp3-heading'}>Room {room}</h6>}*/}
+          {/*{students.map(student => this.renderStudent(student))}*/}
+          <img src={tangram.url}></img>
+        </div>
     );
   }
 
