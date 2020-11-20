@@ -87,20 +87,25 @@ export default class Task extends React.Component {
     const tangramURLs = stage.get("tangramURLs");
     const violatedConstraints = stage.get("violatedConstraints") || [];
     console.log(tangramURLs)
+
+    let tangramsToRender;
+    if (tangramURLs) {
+      tangramsToRender = tangramURLs.map((tangram) => (
+            <Tangram
+                key={tangram}
+                tangram={tangram}
+                stage={stage}
+                game={game}
+                player={player}
+            />
+        ));
+    }
     return (
       <div className="task">
         <div className="board">
           <div className="all-tangrams">
             <div className="tangrams">
-              {tangramURLs.map((tangram) => (
-                <Tangram
-                  key={tangram}
-                  tangram={tangram}
-                  stage={stage}
-                  game={game}
-                  player={player}
-                />
-              ))}
+              {tangramsToRender}
             </div>
           </div>
 

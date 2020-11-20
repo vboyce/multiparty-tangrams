@@ -25,6 +25,12 @@ export const exampleTaskData = {
   difficulty: "easy",
   students: studentNames.slice(0, 4), // how many students
   rooms: roomNumbers.slice(0, 3), // how many rooms
+  tangramURLS: [
+    "/experiment/tangram_A.png",
+    "/experiment/tangram_B.png",
+    "/experiment/tangram_C.png",
+    "/experiment/tangram_D.png"
+  ],
   tangrams: tangramIDs.slice(0, 3) // how many tangrams
 };
 

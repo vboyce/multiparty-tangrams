@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -19,9 +22,14 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="Editing TaskDetails and constants to (attempt to) fix the type error in Task. Still receiving a TypeError but should be closer to what we need than before.">
+    <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="Initial edits to LESS/CSS content, creating sections for tangrams">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/game/Task.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Task.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/TaskDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/TaskDetails.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/main.less" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/callbacks.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/callbacks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +88,7 @@
       <workItem from="1605277038981" duration="3443000" />
       <workItem from="1605282432022" duration="8179000" />
       <workItem from="1605834747657" duration="5539000" />
+      <workItem from="1605899744678" duration="6962000" />
     </task>
     <task id="LOCAL-00001" summary="Removed player requirement for displaying chat &amp; event log">
       <created>1604554031588</created>
@@ -102,7 +111,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605286566320</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Initial edits to LESS/CSS content, creating sections for tangrams">
+      <created>1605899785232</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1605899785232</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -128,7 +144,8 @@
     <MESSAGE value="Removed player requirement for displaying chat &amp; event log" />
     <MESSAGE value="Added TODOs and informational comments about various objects and functions within Empirica (based on API).&#10;&#10;Fixed a few of the initial errors. There are still errors." />
     <MESSAGE value="Editing TaskDetails and constants to (attempt to) fix the type error in Task. Still receiving a TypeError but should be closer to what we need than before." />
-    <option name="LAST_COMMIT_MESSAGE" value="Editing TaskDetails and constants to (attempt to) fix the type error in Task. Still receiving a TypeError but should be closer to what we need than before." />
+    <MESSAGE value="Initial edits to LESS/CSS content, creating sections for tangrams" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial edits to LESS/CSS content, creating sections for tangrams" />
   </component>
   <component name="WindowStateProjectService">
     <state x="59" y="191" key="EditFileWatcherDialog" timestamp="1605841285653">
@@ -155,17 +172,17 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="0" y="57" key="SettingsEditor/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604551064422" />
-    <state x="361" y="132" key="Vcs.Push.Dialog.v2" timestamp="1605286596947">
+    <state x="361" y="132" key="Vcs.Push.Dialog.v2" timestamp="1605899792727">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="132" key="Vcs.Push.Dialog.v2/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1605286596947" />
+    <state x="361" y="132" key="Vcs.Push.Dialog.v2/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1605899792727" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604632506488">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604632506488" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605842218246">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1605902186551">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1605842218246" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1605902186551" />
   </component>
 </project>
