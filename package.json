@@ -12,6 +12,7 @@
     "minimist": ">=0.2.1",
     "moment": "^2.29.1",
     "react": "16.5.2",
+    "lodash": "4.17.15",
     "react-browser-detection": "^1.2.1",
     "react-dom": "16.5.2",
     "react-router-dom": "4.3.1",
