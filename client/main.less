@@ -108,6 +108,7 @@
     .all-tangrams {
       display: flex;
       flex-direction: row;
+      width:100%;
       align-items: center;
 
       .deck,
@@ -121,7 +122,7 @@
       .deck {
         flex-shrink: 1;
         height: 7rem;
-        min-width: 40rem;
+        min-width: 50rem;
         // max-width: 50rem;
         // border: 0.15rem dashed #eee;
         // border-radius: 10px;
@@ -132,20 +133,21 @@
       .tangrams {
         display: flex;
         flex-wrap: nowrap;
+        width:100%;
         justify-content: center;
         //max-width:100%;
 
         .tangram {
-          //max-width: 100%;
-          min-width: 0;
-          //width: 5rem;
-          //height: auto;
-          padding: 3.5rem 1rem 1rem;
-          flex-grow: 0;
-          flex-shrink: 5;
-          //height: 10rem;
-          //width: 10rem;
-          margin: 1rem;
+            //max-width: 100%;
+            min-width: 5rem;
+            //width: 5rem;
+            //height: auto;
+            padding: 3.5rem 1rem 1rem;
+            flex-grow: 0;
+            flex-shrink: 5;
+            //height: 10rem;
+            //width: 10rem;
+            margin: 1rem;
         }
       }
     }
