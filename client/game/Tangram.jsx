@@ -11,13 +11,18 @@ export default class Tangram extends React.Component {
   render() {
     const { tangram, isDeck, stage, ...rest } = this.props;
     const { clicked } = this.state;
+    const mystyle = {
+      "background" : "url(" + tangram + ")",
+      "background-size": "cover",
+      "width" : "25%",
+    };
     const target = stage.get("target");
     return (
       <div
         onClick={this.handleClick}
-        className={`bp3-card`}
+        className={`tangram`}
+        style={mystyle}
         >
-        <img src={tangram}></img>
       </div>
     );
   }

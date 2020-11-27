@@ -4,10 +4,6 @@ export const stepOneData = [
     {
         _id: "0",
         tangrams: ["A", "B", "C", "D"],
-        tangramURLS: [
-            "/experiment/tangram_A.png",
-            "/experiment/tangram_B.png",
-            "/experiment/tangram_C.png"],
         target: ["B"]
         // usedIn: "step2",
         // study: "pilot2"

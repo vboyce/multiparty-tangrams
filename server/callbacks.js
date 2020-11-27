@@ -70,12 +70,12 @@ Empirica.onStageStart((game, round, stage) => {
   //initiate the score for this round (because everyone will have the same score, we can save it at the round object
   stage.set("score", 0);
   // don't want to do this here, it will set it for every single stage
-  // stage.set("tangramURLs", [
-  //   "/experiment/tangram_A.png",
-  //   "/experiment/tangram_B.png",
-  //   "/experiment/tangram_C.png",
-  //   "/experiment/tangram_D.png"
-  // ]);
+  stage.set("tangramURLs", _.shuffle([
+    "/experiment/tangram_A.png",
+    "/experiment/tangram_B.png",
+    "/experiment/tangram_C.png",
+    "/experiment/tangram_D.png"
+  ]));
   const task = stage.get("task");
   stage.set("tangramURLS", task.tangramURLS);
 
