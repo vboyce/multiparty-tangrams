@@ -4,8 +4,10 @@ export default class Tangram extends React.Component {
   state = { clicked: false };
 
   handleClick = e => {
+    const { tangram, tangram_num, stage, player } = this.props;
     e.preventDefault();
     this.setState({ clicked: true });
+    player.set("submitted", tangram_num);
   };
   
   render() {

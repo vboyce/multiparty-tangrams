@@ -46,7 +46,7 @@ Empirica.gameInit((game, treatment) => {
   //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
   // Round/Stage progress indicator - UI that shows which are the current Round and Stage
   const round = game.addRound();
-  _.times(6, trialNum => {
+  _.times(12, trialNum => {
     // Round object contains
     // index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
     // stages (array of Stage objects, contains Stages composing this Round)
@@ -58,9 +58,10 @@ Empirica.gameInit((game, treatment) => {
     // displayName (String, Human name of the stage to be showed players),
     // durationInSeconds (Integer, stage duration in seconds)
     // startTimeAt (Date, time at which the stage started, only set if stage has already started)
+    let turn = (trialNum % 2) == 0 ? "Selection" : "Feedback"
     const stage = round.addStage({
-      name: trialNum + 'speaker',
-      displayName: "Round " + trialNum + ": speaker's turn",
+      name: trialNum + turn,
+      displayName: "Stage " + (trialNum+1) + ": " + turn,
       durationInSeconds: 30000000
     });
     stage.set("task", taskSequence[trialNum]);

@@ -209,6 +209,11 @@ Empirica.onSet(
       }
       return;
     }
+    if (key === "submitted") {
+      players.forEach((player) => {
+        player.stage.submit();
+      });
+    }
 
     // //TODO: actually change this for clicking tangrams, currently just commented out
     // //someone placed a student to a room
