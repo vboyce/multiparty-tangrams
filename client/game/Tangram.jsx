@@ -7,7 +7,10 @@ export default class Tangram extends React.Component {
     const { tangram, tangram_num, stage, player } = this.props;
     e.preventDefault();
     this.setState({ clicked: true });
-    player.set("submitted", tangram_num);
+    const chatlog = stage.get("chat");
+    if (chatlog.length > 0) {
+      player.set("submitted", tangram_num);
+    }
   };
   
   render() {

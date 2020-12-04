@@ -110,42 +110,42 @@ export default class Task extends React.Component {
             </div>
           </div>
 
-          <div className="response">
-            <TimedButton_1
-              stage={stage}
-              player={player}
-              activateAt={game.treatment.stageDuration - 5}
-              onClick={this.handleSatisfaction.bind(this, false)}
-            />
+          {/*<div className="response">*/}
+          {/*  <TimedButton_1*/}
+          {/*    stage={stage}*/}
+          {/*    player={player}*/}
+          {/*    activateAt={game.treatment.stageDuration - 5}*/}
+          {/*    onClick={this.handleSatisfaction.bind(this, false)}*/}
+          {/*  />*/}
 
-            <TimedButton_2
-              stage={stage}
-              player={player}
-              activateAt={game.treatment.stageDuration - 5}
-              onClick={this.handleSatisfaction.bind(this, true)}
-            />
+          {/*  <TimedButton_2*/}
+          {/*    stage={stage}*/}
+          {/*    player={player}*/}
+          {/*    activateAt={game.treatment.stageDuration - 5}*/}
+          {/*    onClick={this.handleSatisfaction.bind(this, true)}*/}
+          {/*  />*/}
 
-            {/* <button
-                type="button"
-                className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${
-                  player.get("satisfied") ? "bp3-minimal" : ""
-                }`}
-                onClick={this.handleSatisfaction.bind(this, false)}
-                disabled={!this.state.activeButton}
-              >
-                Unsatisfied
-              </button>
-            <button
-              type="button"
-              className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${
-                player.get("satisfied") ? "" : "bp3-minimal"
-              }`}
-              onClick={this.handleSatisfaction.bind(this, true)}
-              disabled={!this.state.activeButton}
-            >
-              Satisfied
-            </button> */}
-          </div>
+          {/*  /!* <button*/}
+          {/*      type="button"*/}
+          {/*      className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${*/}
+          {/*        player.get("satisfied") ? "bp3-minimal" : ""*/}
+          {/*      }`}*/}
+          {/*      onClick={this.handleSatisfaction.bind(this, false)}*/}
+          {/*      disabled={!this.state.activeButton}*/}
+          {/*    >*/}
+          {/*      Unsatisfied*/}
+          {/*    </button>*/}
+          {/*  <button*/}
+          {/*    type="button"*/}
+          {/*    className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${*/}
+          {/*      player.get("satisfied") ? "" : "bp3-minimal"*/}
+          {/*    }`}*/}
+          {/*    onClick={this.handleSatisfaction.bind(this, true)}*/}
+          {/*    disabled={!this.state.activeButton}*/}
+          {/*  >*/}
+          {/*    Satisfied*/}
+          {/*  </button> *!/*/}
+          {/*</div>*/}
         </div>
       </div>
     );
