@@ -9,12 +9,17 @@ export default class Tangram extends React.Component {
   };
   
   render() {
-    const { tangram, isDeck, stage, ...rest } = this.props;
+    const { tangram, tangram_num, stage, ...rest } = this.props;
     const { clicked } = this.state;
+    const row = 1 + Math.floor(tangram_num / 2)
+    const column = 1 + tangram_num % 2
     const mystyle = {
       "background" : "url(" + tangram + ")",
       "background-size": "cover",
-      "width" : "25%",
+      "width" : "25vh",
+      "height" : "25vh",
+      "gridRow": row,
+      "gridColumn": column
     };
     const target = stage.get("target");
     return (

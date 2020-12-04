@@ -90,15 +90,16 @@ export default class Task extends React.Component {
 
     let tangramsToRender;
     if (tangramURLs) {
-      tangramsToRender = tangramURLs.map((tangram) => (
-            <Tangram
-                key={tangram}
-                tangram={tangram}
-                stage={stage}
-                game={game}
-                player={player}
-            />
-        ));
+      tangramsToRender = tangramURLs.map((tangram, i) => (
+        <Tangram
+          key={tangram}
+          tangram={tangram}
+          tangram_num={i}
+          stage={stage}
+          game={game}
+          player={player}
+          />
+      ));
     }
     return (
       <div className="task">
