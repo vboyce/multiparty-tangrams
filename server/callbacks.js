@@ -76,8 +76,8 @@ Empirica.onStageStart((game, round, stage) => {
     "/experiment/tangram_C.png",
     "/experiment/tangram_D.png"
   ]));
-  const task = stage.get("task");
-  stage.set("tangramURLS", task.tangramURLS);
+  //const task = stage.get("task");
+  //stage.set("tangramURLS", task.tangramURLS);
 
   stage.set("chat", []); //todo: I need to check if they are in team first
   stage.set("log", [
