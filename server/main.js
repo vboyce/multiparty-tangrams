@@ -2,7 +2,7 @@ import Empirica from "meteor/empirica:core";
 
 import "./callbacks.js";
 import "./bots.js";
-import { stepOneData, stepTwoData } from "./constants";
+import { taskData } from "./constants";
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
@@ -33,20 +33,16 @@ Empirica.gameInit((game, treatment) => {
   game.set("team", game.players.length > 1);
 
   //we don't know the sequence yet
-  let taskSequence = game.treatment.stepOne ? stepOneData : stepTwoData;
-
-  if (game.treatment.shuffleTaskOrder) {
-    //TODO: I need to make sure that I keep the first task fixed (if it has training)
-    //taskSequence = _.shuffle(taskSequence); //this is full shuffle
-    taskSequence = customShuffle(taskSequence); //this is with keeping the first practice round fixed
-  }
-
+  let taskSequence = taskData;
+  
   //we'll have trialNum rounds, each task is one stage
   //TODO: need to figure out how to import variable numTrials into treatment
   //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
   // Round/Stage progress indicator - UI that shows which are the current Round and Stage
-  const round = game.addRound();
-  _.times(16, trialNum => {
+  _.times(1, trialNum => {
+    const round = game.addRound();
+    round.set("task", taskSequence[trialNum]);
+
     // Round object contains
     // index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
     // stages (array of Stage objects, contains Stages composing this Round)
@@ -58,14 +54,19 @@ Empirica.gameInit((game, treatment) => {
     // displayName (String, Human name of the stage to be showed players),
     // durationInSeconds (Integer, stage duration in seconds)
     // startTimeAt (Date, time at which the stage started, only set if stage has already started)
-    let turn = (trialNum % 2) == 0 ? "Selection" : "Feedback"
-    const stage = round.addStage({
-      name: trialNum + turn,
-      displayName: "Stage " + (trialNum+1) + ": " + turn,
+    let turn = (trialNum % 2) == 0 ? "Selection" : "Feedback";
+    round.addStage({
+      name: trialNum + "Selection",
+      displayName: "Stage " + (trialNum+1) + ": " + "Selection",
       durationInSeconds: 30000000
     });
 
-    stage.set("task", taskSequence[trialNum]);
+    round.addStage({
+      name: trialNum + "Feedback",
+      displayName: "Stage " + (trialNum+1) + ": " + "Feedback",
+      durationInSeconds: 30000000
+    });
+
     // TODO: I think one issue might be here where we use tangrams directly instead of task
     // round.addStage({
     //   name: trialNum + 'listener',
