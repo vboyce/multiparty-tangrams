@@ -51,6 +51,12 @@ Empirica.onGameStart((game) => {
   ]; // similar to the color of the avatar
 
   players.forEach((player, i) => {
+    player.set("tangramURLs", _.shuffle([
+      "/experiment/tangram_A.png",
+      "/experiment/tangram_B.png",
+      "/experiment/tangram_C.png",
+      "/experiment/tangram_D.png"
+    ]));
     player.set("name", names[i]);
     player.set("role", roles[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
@@ -173,10 +179,9 @@ Empirica.onSet(
     value, // New value
     prevValue // Previous value
   ) => {
-    const players = game.players;
-    //someone changed their satisfaction status
-    if (key === "submitted") {
-      players.forEach((player) => {
+    // Advance to feedback after listener clicks
+    if (key === "clicked") {
+      game.players.forEach((player) => {
         player.stage.submit();
       });
     }

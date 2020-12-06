@@ -3,46 +3,18 @@
 export const taskData = [
     {
         _id: "0",
-        tangrams: ["A", "B", "C", "D"],
-        tangramURLs: [
-            "/experiment/tangram_A.png",
-            "/experiment/tangram_B.png",
-            "/experiment/tangram_C.png",
-            "/experiment/tangram_D.png"
-        ],
         target: "/experiment/tangram_A.png"
     },
     {
         _id: "1",
-        tangrams: ["A", "B", "C", "D"],
-        tangramURLs: [
-            "/experiment/tangram_A.png",
-            "/experiment/tangram_B.png",
-            "/experiment/tangram_C.png",
-            "/experiment/tangram_D.png"
-        ],
         target: "/experiment/tangram_B.png"
     },
     {
         _id: "2",
-        tangrams: ["A", "B", "C", "D"],
-        tangramURLs: [
-            "/experiment/tangram_A.png",
-            "/experiment/tangram_B.png",
-            "/experiment/tangram_C.png",
-            "/experiment/tangram_D.png"
-        ],
         target: "/experiment/tangram_C.png"
     },
     {
         _id: "3",
-        tangrams: ["A", "B", "C", "D"],
-        tangramURLs: [
-            "/experiment/tangram_A.png",
-            "/experiment/tangram_B.png",
-            "/experiment/tangram_C.png",
-            "/experiment/tangram_D.png"
-        ],
         target: "/experiment/tangram_D.png"
     },
 ];

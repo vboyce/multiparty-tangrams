@@ -12,15 +12,14 @@ export default class Task extends React.Component {
     // We want each participant to see tangrams in a random but stable order
     // so we shuffle at the beginning and save in state
     this.state = {
-      activeButton: false,
-      shuffledTangramURLs: _.shuffle(this.props.round.get('task').tangramURLs)
+      activeButton: false
     };
   }
 
   render() {
     const { game, round, stage, player } = this.props;
     const task = round.get("task");
-    const tangramURLs = this.state.shuffledTangramURLs;
+    const tangramURLs = player.get('tangramURLs');
     let tangramsToRender;
     if (tangramURLs) {
       tangramsToRender = tangramURLs.map((tangram, i) => (
