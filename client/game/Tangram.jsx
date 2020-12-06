@@ -14,10 +14,11 @@ export default class Tangram extends React.Component {
   };
   
   render() {
-    const { tangram, tangram_num, stage, ...rest } = this.props;
+    const { tangram, tangram_num, round, player, ...rest } = this.props;
     const { clicked } = this.state;
     const row = 1 + Math.floor(tangram_num / 2)
     const column = 1 + tangram_num % 2
+    const target = round.get("task").target;
     const mystyle = {
       "background" : "url(" + tangram + ")",
       "background-size": "cover",
@@ -26,11 +27,12 @@ export default class Tangram extends React.Component {
       "gridRow": row,
       "gridColumn": column
     };
-    const target = stage.get("target");
+    if(target == tangram & player.get('role') == 'speaker') {
+      _.extend(mystyle, {"border" :  "10px solid #000"})
+    }
     return (
       <div
         onClick={this.handleClick}
-        className={`tangram`}
         style={mystyle}
         >
       </div>
