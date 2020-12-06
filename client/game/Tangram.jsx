@@ -28,7 +28,10 @@ export default class Tangram extends React.Component {
       "gridColumn": column
     };
     if(target == tangram & player.get('role') == 'speaker') {
-      _.extend(mystyle, {"border" :  "10px solid #000"})
+      _.extend(mystyle, {
+        "outline" :  "10px solid #000",
+        "z-index" : 9
+      })
     }
     return (
       <div
