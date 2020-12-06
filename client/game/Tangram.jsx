@@ -5,10 +5,11 @@ export default class Tangram extends React.Component {
 
   handleClick = e => {
     const { tangram, tangram_num, stage, player } = this.props;
-    e.preventDefault();
-    this.setState({ clicked: true });
-    const chatlog = stage.get("chat");
-    if (chatlog.length > 0) {
+    const speakerMsgs = _.filter(stage.get("chat"), msg => msg.role == 'speaker')
+
+    // only register click if the 
+    if (speakerMsgs.length > 0 & player.get('role') == 'listener') {
+      this.setState({ clicked: true });
       player.set("submitted", tangram_num);
     }
   };
@@ -30,7 +31,7 @@ export default class Tangram extends React.Component {
     if(target == tangram & player.get('role') == 'speaker') {
       _.extend(mystyle, {
         "outline" :  "10px solid #000",
-        "z-index" : 9
+        "z-index" : "9"
       })
     }
     return (

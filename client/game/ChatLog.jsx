@@ -17,7 +17,8 @@ export default class ChatLog extends React.Component {
       const { stage, player } = this.props;
       stage.append("chat", {
         text,
-        playerId: player._id
+        playerId: player._id,
+        role: player.get('role')
       });
       this.setState({ comment: "" });
     }
