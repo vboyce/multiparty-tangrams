@@ -18,6 +18,19 @@ import { taskData } from "./constants";
 // players (array of player objects participating in this game),
 // rounds (rounds composing this Game),
 // createdAt (Date type, time at which the game was created approximates time at which the Game was started)
+
+// Round object contains
+// index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
+// stages (array of Stage objects, contains Stages composing this Round)
+// const round = game.addRound();
+// round.set('target', 'tangram_A.png');
+// Stage object contains
+// index (Object, the 0 based position of the current stage in the ordered list of all of the game's stages),
+// name (String, programatic name of stage),
+// displayName (String, Human name of the stage to be showed players),
+// durationInSeconds (Integer, stage duration in seconds)
+// startTimeAt (Date, time at which the stage started, only set if stage has already started)
+
 Empirica.gameInit((game, treatment) => {
   console.log(
     "Game with a treatment: ",
@@ -35,49 +48,22 @@ Empirica.gameInit((game, treatment) => {
   //we don't know the sequence yet
   let taskSequence = taskData;
   
-  //we'll have trialNum rounds, each task is one stage
-  //TODO: need to figure out how to import variable numTrials into treatment
   //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
   // Round/Stage progress indicator - UI that shows which are the current Round and Stage
-  _.times(1, trialNum => {
+  _.times(4, trialNum => {
     const round = game.addRound();
     round.set("task", taskSequence[trialNum]);
-
-    // Round object contains
-    // index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
-    // stages (array of Stage objects, contains Stages composing this Round)
-    // const round = game.addRound();
-    // round.set('target', 'tangram_A.png');
-    // Stage object contains
-    // index (Object, the 0 based position of the current stage in the ordered list of all of the game's stages),
-    // name (String, programatic name of stage),
-    // displayName (String, Human name of the stage to be showed players),
-    // durationInSeconds (Integer, stage duration in seconds)
-    // startTimeAt (Date, time at which the stage started, only set if stage has already started)
-    let turn = (trialNum % 2) == 0 ? "Selection" : "Feedback";
     round.addStage({
-      name: trialNum + "Selection",
-      displayName: "Stage " + (trialNum+1) + ": " + "Selection",
+      name: "selection",
+      displayName: "Selection",
       durationInSeconds: 30000000
     });
 
     round.addStage({
-      name: trialNum + "Feedback",
-      displayName: "Stage " + (trialNum+1) + ": " + "Feedback",
-      durationInSeconds: 30000000
+      name: "feedback",
+      displayName: "Feedback",
+      durationInSeconds: 3
     });
-
-    // TODO: I think one issue might be here where we use tangrams directly instead of task
-    // round.addStage({
-    //   name: trialNum + 'listener',
-    //   displayName: "listener's turn",
-    //   durationInSeconds: 30000000
-    // });
-    // round.addStage({
-    //   name: trialNum + 'feedback',
-    //   displayName: "feedback",
-    //   durationInSeconds: 30000000
-    // });
   });
 });
 
