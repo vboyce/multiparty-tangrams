@@ -9,45 +9,50 @@ Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
 
+  const roles = [
+    "speaker",
+    "listener"
+  ];
   const names = [
     "Blue",
     "Green",
-    "Pink",
-    "Yellow",
-    "Purple",
-    "Red",
-    "Turqoise",
-    "Gold",
-    "Grey",
-    "Magenta",
+    // "Pink",
+    // "Yellow",
+    // "Purple",
+    // "Red",
+    // "Turqoise",
+    // "Gold",
+    // "Grey",
+    // "Magenta",
   ]; // for the players names to match avatar color
   const avatarNames = [
     "Colton",
     "Aaron",
-    "Alex",
-    "Tristan",
-    "Daniel",
-    "Jill",
-    "Jimmy",
-    "Adam",
-    "Flynn",
-    "Annalise",
+    //     "Alex",
+    // "Tristan",
+    // "Daniel",
+    // "Jill",
+    // "Jimmy",
+    // "Adam",
+    // "Flynn",
+    // "Annalise",
   ]; // to do more go to https://jdenticon.com/#icon-D3
   const nameColor = [
     "#3D50B7",
     "#70A945",
-    "#DE8AAB",
-    "#A59144",
-    "#DER5F4",
-    "#EB8TWV",
-    "#N0WFA4",
-    "#TP3BWU",
-    "#QW7MI9",
-    "#EB8TWj",
+    // "#DE8AAB",
+    // "#A59144",
+    // "#DER5F4",
+    // "#EB8TWV",
+    // "#N0WFA4",
+    // "#TP3BWU",
+    // "#QW7MI9",
+    // "#EB8TWj",
   ]; // similar to the color of the avatar
 
   players.forEach((player, i) => {
     player.set("name", names[i]);
+    player.set("role", roles[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
     player.set("nameColor", nameColor[i]);
     player.set("cumulativeScore", 0);
@@ -69,16 +74,6 @@ Empirica.onStageStart((game, round, stage) => {
 
   //initiate the score for this round (because everyone will have the same score, we can save it at the round object
   stage.set("score", 0);
-  // don't want to do this here, it will set it for every single stage
-  stage.set("tangramURLs", _.shuffle([
-    "/experiment/tangram_A.png",
-    "/experiment/tangram_B.png",
-    "/experiment/tangram_C.png",
-    "/experiment/tangram_D.png"
-  ]));
-  //const task = stage.get("task");
-  //stage.set("tangramURLS", task.tangramURLS);
-
   stage.set("chat", []); //todo: I need to check if they are in team first
   stage.set("log", [
     {
@@ -93,7 +88,7 @@ Empirica.onStageStart((game, round, stage) => {
   stage.set("intermediateSolutions", []);
 
   players.forEach((player) => {
-    player.set("satisfied", false);
+    player.set("messageSent", false);
   });
 
   //there is a case where the optimal is found, but not submitted (i.e., they ruin things)
@@ -103,31 +98,16 @@ Empirica.onStageStart((game, round, stage) => {
 
 // onStageEnd is triggered after each stage.
 // It receives the same options as onRoundEnd, and the stage that just ended.
-Empirica.onStageEnd((game, round, stage) => {
-  console.debug("Round ", stage.name, "game", game._id, " ended");
-
-  const currentScore = stage.get("score");
-  //const optimalScore = stage.get("task").optimal;
-
-  // if (currentScore === optimalScore) {
-  //   if (stage.name !== "practice") {
-  //     game.set("nOptimalSolutions", game.get("nOptimalSolutions") + 1);
-  //   }
-  //   stage.set("optimalSubmitted", true);
-  //   console.log("You found the optimal");
-  // }
-
-  // //add the round score to the game total cumulative score (only if it is not practice)
-  // if (stage.name !== "practice") {
-  //   const cumScore = game.get("cumulativeScore") || 0;
-  //   const scoreIncrement = currentScore > 0 ? Math.round(currentScore) : 0;
-  //   game.set("cumulativeScore", Math.round(scoreIncrement + cumScore));
-  // }
-});
+Empirica.onStageEnd((game, round, stage) => {});
 
 // onRoundEnd is triggered after each round.
 // It receives the same options as onGameEnd, and the round that just ended.
-Empirica.onRoundEnd((game, round) => {});
+Empirica.onRoundEnd((game, round) => {
+  const currentScore = round.get("score");
+  const cumScore = game.get("cumulativeScore") || 0;
+  const scoreIncrement = currentScore > 0 ? Math.round(currentScore) : 0;
+  game.set("cumulativeScore", Math.round(scoreIncrement + cumScore));
+});
 
 // onRoundEnd is triggered when the game ends.
 // It receives the same options as onGameStart.
@@ -195,20 +175,6 @@ Empirica.onSet(
   ) => {
     const players = game.players;
     //someone changed their satisfaction status
-    console.log("key", key);
-    if (key === "satisfied") {
-      //check if everyone is satisfied and if so, submit their answer
-      let allSatisfied = true;
-      players.forEach((player) => {
-        allSatisfied = player.get("satisfied") && allSatisfied;
-      });
-      if (allSatisfied) {
-        players.forEach((player) => {
-          player.stage.submit();
-        });
-      }
-      return;
-    }
     if (key === "submitted") {
       players.forEach((player) => {
         player.stage.submit();
@@ -278,65 +244,6 @@ function find_room(assignments, student) {
   return Object.keys(assignments).find((room) =>
     assignments[room].includes(student)
   );
-}
-
-function getViolations(stage, assignments) {
-  // console.debug("assignments ", assignments);
-  const task = stage.get("task");
-  const violatedConstraintsIds = [];
-
-  task.constraints.forEach((constraint) => {
-    const firstStudentRoom = find_room(assignments, constraint.pair[0]);
-    const secondStudentRoom = find_room(assignments, constraint.pair[1]);
-
-    if (firstStudentRoom !== "deck" && secondStudentRoom !== "deck") {
-      switch (constraint.type) {
-        case 0:
-          //they are not in the same room, when they should've
-          if (firstStudentRoom !== secondStudentRoom) {
-            // console.debug(
-            //   constraint.pair.join(" and "),
-            //   "they are not in the same room, when they should've"
-            // );
-            violatedConstraintsIds.push(constraint._id);
-          }
-          break;
-        case 1:
-          //they are in the same room, when they shouldn't
-          if (firstStudentRoom === secondStudentRoom) {
-            // console.debug(
-            //   constraint.pair.join(" and "),
-            //   "they are in the same room, when they shouldn't"
-            // );
-            violatedConstraintsIds.push(constraint._id);
-          }
-
-          break;
-        case 2:
-          //if they are not neighbors, when they should've been
-          if (Math.abs(firstStudentRoom - secondStudentRoom) !== 1) {
-            // console.debug(
-            //   constraint.pair.join(" and "),
-            //   "they are not neighbors, when they should've been"
-            // );
-            violatedConstraintsIds.push(constraint._id);
-          }
-
-          break;
-        case 3:
-          if (Math.abs(firstStudentRoom - secondStudentRoom) < 2) {
-            // console.debug(
-            //   constraint.pair.join(" and "),
-            //   "can't live in the same room or be neighbors, so why are they?"
-            // );
-            violatedConstraintsIds.push(constraint._id);
-          }
-          break;
-      }
-    }
-  });
-
-  return violatedConstraintsIds;
 }
 
 // // onSet is called when the experiment code call the `.append()` method
