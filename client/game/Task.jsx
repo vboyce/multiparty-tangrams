@@ -5,42 +5,6 @@ import Timer from "./Timer.jsx";
 import { HTMLTable } from "@blueprintjs/core";
 import { StageTimeWrapper } from "meteor/empirica:core";
 
-const TimedButton_1 = StageTimeWrapper((props) => {
-  const { player, onClick, activateAt, remainingSeconds, stage } = props;
-
-  const disabled = remainingSeconds > activateAt;
-  return (
-    <button
-      type="button"
-      className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${
-        player.get("satisfied") ? "bp3-minimal" : ""
-      }`}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      Unsatisfied
-    </button>
-  );
-});
-
-const TimedButton_2 = StageTimeWrapper((props) => {
-  const { player, onClick, activateAt, remainingSeconds, stage } = props;
-
-  const disabled = remainingSeconds > activateAt;
-  return (
-    <button
-      type="button"
-      className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${
-        player.get("satisfied") ? "" : "bp3-minimal"
-      }`}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      Satisfied
-    </button>
-  );
-});
-
 export default class Task extends React.Component {
   constructor(props) {
     super(props);
@@ -48,11 +12,12 @@ export default class Task extends React.Component {
   }
 
   componentDidMount() {
-    const { player } = this.props;
-    setTimeout(() => this.setState({ activeButton: true }), 5000); //we make the satisfied button active after 5 seconds
-    if (player.stage.submitted) {
-      this.setState({ activeButton: false });
-    }
+    //const { player } = this.props;
+    // we make the satisfied button active after 5 seconds
+    // setTimeout(() => this.setState({ activeButton: true }), 5000); 
+    // if (player.stage.submitted) {
+    //   this.setState({ activeButton: false });
+    // }
   }
 
   handleSatisfaction = (satisfied, event) => {
@@ -83,11 +48,11 @@ export default class Task extends React.Component {
   };
 
   render() {
-    const { game, stage, player } = this.props;
-    const tangramURLs = stage.get("tangramURLs");
-    const violatedConstraints = stage.get("violatedConstraints") || [];
-    console.log(tangramURLs)
-
+    const { game, round, stage, player } = this.props;
+    const task = round.get("task");
+    console.log(task)
+    const tangramURLs = round.get("task").tangramURLs;    
+    console.log('tangram urls', tangramURLs)
     let tangramsToRender;
     if (tangramURLs) {
       tangramsToRender = tangramURLs.map((tangram, i) => (
@@ -95,6 +60,7 @@ export default class Task extends React.Component {
           key={tangram}
           tangram={tangram}
           tangram_num={i}
+          round={round}
           stage={stage}
           game={game}
           player={player}

@@ -19,16 +19,11 @@ export default class Round extends React.Component {
   }
 
   render() {
-    const { stage, player, game } = this.props;
-
+    const {round, stage, player, game } = this.props;
     return (
       <div className="round">
         <SocialInteractions game={game} stage={stage} player={player} />
-        <Task stage={stage} player={player} game={game} />
-        {/*game.player.length is a better check for social interaction than 'game.treatment.playerCount > 1' because of the lobby --> ignor settings*/}
-        {/*{game.players.length > 1 ? (*/}
-        {/*  <SocialInteractions game={game} stage={stage} player={player} />*/}
-        {/*) : null}*/}
+        <Task game={game} round={round} stage={stage} player={player} />
       </div>
     );
   }
