@@ -8,51 +8,19 @@ import { StageTimeWrapper } from "meteor/empirica:core";
 export default class Task extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeButton: false };
+
+    // We want each participant to see tangrams in a random but stable order
+    // so we shuffle at the beginning and save in state
+    this.state = {
+      activeButton: false,
+      shuffledTangramURLs: _.shuffle(this.props.round.get('task').tangramURLs)
+    };
   }
-
-  componentDidMount() {
-    //const { player } = this.props;
-    // we make the satisfied button active after 5 seconds
-    // setTimeout(() => this.setState({ activeButton: true }), 5000); 
-    // if (player.stage.submitted) {
-    //   this.setState({ activeButton: false });
-    // }
-  }
-
-  handleSatisfaction = (satisfied, event) => {
-    const { game, player, stage } = this.props;
-    event.preventDefault();
-
-    //if everyone submitted then, there is nothing to handle
-    if (player.stage.submitted) {
-      return;
-    }
-
-    //if it is only one player, and satisfied, we want to lock everything
-    if (game.players.length === 1 && satisfied) {
-      this.setState({ activeButton: false });
-    } else {
-      //if they are group (or individual that clicked unsatisfied), we want to momentarily disable the button so they don't spam, but they can change their mind so we unlock it after 1.5 seconds
-      this.setState({ activeButton: false });
-      setTimeout(() => this.setState({ activeButton: true }), 800); //preventing spam by a group
-    }
-
-    player.set("satisfied", satisfied);
-    stage.append("log", {
-      verb: "playerSatisfaction",
-      subjectId: player._id,
-      state: satisfied ? "satisfied" : "unsatisfied",
-      at: new Date(),
-    });
-  };
 
   render() {
     const { game, round, stage, player } = this.props;
     const task = round.get("task");
-    console.log(task)
-    const tangramURLs = round.get("task").tangramURLs;    
-    console.log('tangram urls', tangramURLs)
+    const tangramURLs = this.state.shuffledTangramURLs;
     let tangramsToRender;
     if (tangramURLs) {
       tangramsToRender = tangramURLs.map((tangram, i) => (
@@ -75,43 +43,6 @@ export default class Task extends React.Component {
               {tangramsToRender}
             </div>
           </div>
-
-          {/*<div className="response">*/}
-          {/*  <TimedButton_1*/}
-          {/*    stage={stage}*/}
-          {/*    player={player}*/}
-          {/*    activateAt={game.treatment.stageDuration - 5}*/}
-          {/*    onClick={this.handleSatisfaction.bind(this, false)}*/}
-          {/*  />*/}
-
-          {/*  <TimedButton_2*/}
-          {/*    stage={stage}*/}
-          {/*    player={player}*/}
-          {/*    activateAt={game.treatment.stageDuration - 5}*/}
-          {/*    onClick={this.handleSatisfaction.bind(this, true)}*/}
-          {/*  />*/}
-
-          {/*  /!* <button*/}
-          {/*      type="button"*/}
-          {/*      className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${*/}
-          {/*        player.get("satisfied") ? "bp3-minimal" : ""*/}
-          {/*      }`}*/}
-          {/*      onClick={this.handleSatisfaction.bind(this, false)}*/}
-          {/*      disabled={!this.state.activeButton}*/}
-          {/*    >*/}
-          {/*      Unsatisfied*/}
-          {/*    </button>*/}
-          {/*  <button*/}
-          {/*    type="button"*/}
-          {/*    className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${*/}
-          {/*      player.get("satisfied") ? "" : "bp3-minimal"*/}
-          {/*    }`}*/}
-          {/*    onClick={this.handleSatisfaction.bind(this, true)}*/}
-          {/*    disabled={!this.state.activeButton}*/}
-          {/*  >*/}
-          {/*    Satisfied*/}
-          {/*  </button> *!/*/}
-          {/*</div>*/}
         </div>
       </div>
     );
