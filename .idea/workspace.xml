@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="" />
+    <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="fixed bug">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/game/Tangram.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Tangram.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/game/Task.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/game/Task.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/room-assignment-csop" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1iWevA434BJYvUjwGYKAW4ZLSLg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="HbShouldOpenHtmlAsHb" value="enabled" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="js.meteor.library.cached" value="$PROJECT_DIR$/.meteor" />
     <property name="js.meteor.library.was.enabled" value="true" />
     <property name="js.meteor.project" value="true" />
@@ -31,8 +59,12 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="/usr/local/lib/node_modules/prettier" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -44,10 +76,146 @@
       <option name="presentableId" value="Default" />
       <updated>1602028002371</updated>
       <workItem from="1602028005462" duration="489000" />
+      <workItem from="1604081170734" duration="30000" />
+      <workItem from="1604081325333" duration="866000" />
+      <workItem from="1604549262293" duration="765000" />
+      <workItem from="1604551266833" duration="5977000" />
+      <workItem from="1604700718264" duration="2896000" />
+      <workItem from="1605111216745" duration="4067000" />
+      <workItem from="1605277038981" duration="3443000" />
+      <workItem from="1605282432022" duration="8179000" />
+      <workItem from="1605834747657" duration="5539000" />
+      <workItem from="1605899744678" duration="7035000" />
+      <workItem from="1605909519328" duration="4018000" />
+      <workItem from="1606514464121" duration="935000" />
+      <workItem from="1607059053504" duration="394000" />
+      <workItem from="1607104774520" duration="3694000" />
     </task>
+    <task id="LOCAL-00001" summary="Removed player requirement for displaying chat &amp; event log">
+      <created>1604554031588</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1604554031588</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added TODOs and informational comments about various objects and functions within Empirica (based on API).&#10;&#10;Fixed a few of the initial errors. There are still errors.">
+      <created>1605282615721</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1605282615721</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Editing TaskDetails and constants to (attempt to) fix the type error in Task. Still receiving a TypeError but should be closer to what we need than before.">
+      <created>1605286566320</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1605286566320</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Initial edits to LESS/CSS content, creating sections for tangrams">
+      <created>1605899785232</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1605899785232</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Importing data from constants.js into the rest of the project. Still some issues with the code (tangramURLs undefined) but mostly there. Temporarily set stages to 6.">
+      <created>1605907916648</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1605907916648</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Changed stage transition conditions (enabled stage change through clicking on tangrams)&#10;&#10;Change stage progression to selection &amp; feedback cycle">
+      <created>1607058415486</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1607058415486</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fixed bug">
+      <created>1607059427670</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1607059427670</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+      <path value="$PROJECT_DIR$/room-assignment-csop" />
+    </ignored-roots>
+    <MESSAGE value="Removed player requirement for displaying chat &amp; event log" />
+    <MESSAGE value="Added TODOs and informational comments about various objects and functions within Empirica (based on API).&#10;&#10;Fixed a few of the initial errors. There are still errors." />
+    <MESSAGE value="Editing TaskDetails and constants to (attempt to) fix the type error in Task. Still receiving a TypeError but should be closer to what we need than before." />
+    <MESSAGE value="Initial edits to LESS/CSS content, creating sections for tangrams" />
+    <MESSAGE value="Importing data from constants.js into the rest of the project. Still some issues with the code (tangramURLs undefined) but mostly there. Temporarily set stages to 6." />
+    <MESSAGE value="Changed stage transition conditions (enabled stage change through clicking on tangrams)&#10;&#10;Change stage progression to selection &amp; feedback cycle" />
+    <MESSAGE value="fixed bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="59" y="191" key="EditFileWatcherDialog" timestamp="1605841285653">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="59" y="191" key="EditFileWatcherDialog/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1605841285653" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1607058647231">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1607058647231" />
+    <state width="1515" height="195" key="GridCell.Tab.0.bottom" timestamp="1604098150700">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="195" key="GridCell.Tab.0.bottom/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604098150700" />
+    <state width="1515" height="195" key="GridCell.Tab.0.center" timestamp="1604098150700">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="195" key="GridCell.Tab.0.center/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604098150700" />
+    <state width="1515" height="195" key="GridCell.Tab.0.left" timestamp="1604098150700">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="195" key="GridCell.Tab.0.left/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604098150700" />
+    <state width="1515" height="195" key="GridCell.Tab.0.right" timestamp="1604098150700">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="195" key="GridCell.Tab.0.right/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604098150700" />
+    <state x="0" y="57" key="SettingsEditor" timestamp="1604551064422">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="0" y="57" key="SettingsEditor/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604551064422" />
+    <state x="361" y="132" key="Vcs.Push.Dialog.v2" timestamp="1607059433224">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="132" key="Vcs.Push.Dialog.v2/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1607059433224" />
+    <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604632506488">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1604632506488" />
+    <state x="478" y="11" width="579" height="801" key="find.popup" timestamp="1607109257172">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="478" y="11" width="579" height="801" key="find.popup/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1607109257172" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1607044173078">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/460.1080.1000.504@0.0.1536.824" timestamp="1607044173078" />
   </component>
 </project>

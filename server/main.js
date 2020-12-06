@@ -2,7 +2,7 @@ import Empirica from "meteor/empirica:core";
 
 import "./callbacks.js";
 import "./bots.js";
-import { stepOneData, stepTwoData } from "./constants";
+import { taskData } from "./constants";
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
@@ -11,6 +11,25 @@ import { stepOneData, stepTwoData } from "./constants";
 // and the players. You can also get/set initial values on your game, players,
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
+
+// Game object contains
+// index (auto-increment assigned to each Game in order),
+// treatment (object representing Factors set on this game),
+// players (array of player objects participating in this game),
+// rounds (rounds composing this Game),
+// createdAt (Date type, time at which the game was created approximates time at which the Game was started)
+
+// Round object contains
+// index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
+// stages (array of Stage objects, contains Stages composing this Round)
+// const round = game.addRound();
+// round.set('target', 'tangram_A.png');
+// Stage object contains
+// index (Object, the 0 based position of the current stage in the ordered list of all of the game's stages),
+// name (String, programatic name of stage),
+// displayName (String, Human name of the stage to be showed players),
+// durationInSeconds (Integer, stage duration in seconds)
+// startTimeAt (Date, time at which the stage started, only set if stage has already started)
 
 Empirica.gameInit((game, treatment) => {
   console.log(
@@ -27,26 +46,28 @@ Empirica.gameInit((game, treatment) => {
   game.set("team", game.players.length > 1);
 
   //we don't know the sequence yet
-  let taskSequence = game.treatment.stepOne ? stepOneData : stepTwoData;
-
-  if (game.treatment.shuffleTaskOrder) {
-    //TODO: I need to make sure that I keep the first task fixed (if it has training)
-    //taskSequence = _.shuffle(taskSequence); //this is full shuffle
-    taskSequence = customShuffle(taskSequence); //this is with keeping the first practice round fixed
-  }
-
-  //we'll have 1 round, each task is one stage
-  const round = game.addRound();
-  _.times(taskSequence.length, i => {
-    const stage = round.addStage({
-      name: i === 0 ? "practice" : i,
-      displayName: taskSequence[i].difficulty,
-      durationInSeconds: game.treatment.stageDuration
+  let taskSequence = taskData;
+  
+  //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
+  // Round/Stage progress indicator - UI that shows which are the current Round and Stage
+  _.times(4, trialNum => {
+    const round = game.addRound();
+    round.set("task", taskSequence[trialNum]);
+    round.addStage({
+      name: "selection",
+      displayName: "Selection",
+      durationInSeconds: 30000000
     });
-    stage.set("task", taskSequence[i]);
+
+    round.addStage({
+      name: "feedback",
+      displayName: "Feedback",
+      durationInSeconds: 3
+    });
   });
 });
 
+// TODO: we only need to fix the first practice task at the very start, don't need one every round
 // fix the first practice task and shuffle the rest
 //to learn more:
 //https://stackoverflow.com/questions/50536044/swapping-all-elements-of-an-array-except-for-first-and-last

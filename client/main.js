@@ -71,6 +71,8 @@ Empirica.exitSteps((game, player) => {
   }
 });
 
+// Empirica.breadcrumb would probably go here
+
 // Start the app render tree.
 // NB: This must be called after any other Empirica calls (Empirica.round(),
 // Empirica.introSteps(), ...).
