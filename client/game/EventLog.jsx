@@ -24,6 +24,7 @@ export default class EventLog extends React.Component {
             <Event
               key={i}
               event={event}
+              player={player}
               self={event.subject ? player._id === event.subject._id : null}
             />
           ))}
@@ -42,44 +43,23 @@ class Event extends React.Component {
       object,
       target,
       state,
-      at
+      at,
     } = this.props.event;
-    const { self } = this.props;
+    const { self, player } = this.props;
     let content;
     switch (verb) {
-      case "roundStarted":
-        content = <div className="content">Round {roundId} started</div>;
-        break;
-      case "movedStudent":
+      case "selectionStarted":
+      content = (<>
+                   <div className="content">You're playing with {player.get('partner')}! </div>
+                   <div className="content">On this trial, you're the {player.get('role')}. </div>
+                   <div className="content">{player.get('role') == 'speaker' ? 'Please describe the object in the black box so your partner can correctly pick it out.' : 'Click the object your partner is describing! Feel free to respond or ask questions if necessary.'} </div>
+                 </>
+      )
+      break;
+
+      case "feedbackStarted":
         content = (
-          <div className="content">
-            <Author player={subject} self={self} /> moved{" "}
-            <div className="object">{object}</div> to{" "}
-            <div className="target">Room {target}</div>.
-          </div>
-        );
-        break;
-      case "draggingStudent":
-        content = (
-          <div className="content">
-            <Author player={subject} self={self} /> started moving{" "}
-            <div className="object">{object}</div>.
-          </div>
-        );
-        break;
-      case "releasedStudent":
-        content = (
-          <div className="content">
-            <Author player={subject} self={self} /> released{" "}
-            <div className="object">{object}</div> without moving it.
-          </div>
-        );
-        break;
-      case "playerSatisfaction":
-        content = (
-          <div className="content">
-            <Author player={subject} self={self} /> {self ? "are" : "is"}{" "}
-            <div className="object">{state}</div> with the answer
+          <div className="content">This is the feedback!
           </div>
         );
         break;
