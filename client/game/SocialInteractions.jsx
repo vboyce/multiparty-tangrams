@@ -34,13 +34,13 @@ export default class SocialInteractions extends React.Component {
     const { game, stage, player } = this.props;
 
     const otherPlayers = _.reject(game.players, p => p._id === player._id);
-    console.log("otherPlayers", otherPlayers);
-    console.log("chat", stage.get("chat"));
-    console.log("log", stage.get("log"));
-    const messages = stage.get("chat").map(({ text, playerId }) => ({
-      text,
-      subject: game.players.find(p => p._id === playerId)
-    }));
+    const partnerId = player.get('partner')
+    const messages = stage.get("chat")
+          .filter(({playerId}) => playerId === partnerId || playerId === player._id)
+          .map(({ text, playerId }) => ({
+            text,
+            subject: game.players.find(p => p._id === playerId)
+          }));
     const events = stage.get("log").map(({ subjectId, ...rest }) => ({
       subject: subjectId && game.players.find(p => p._id === subjectId),
       ...rest
@@ -60,9 +60,8 @@ export default class SocialInteractions extends React.Component {
             <h2 className='bp3-heading'>{game.get("cumulativeScore") || 0}</h2>
           </div>
         </div>
-
-        <EventLog events={events} stage={stage} player={player} />
         <ChatLog messages={messages} stage={stage} player={player} />
+        <EventLog events={events} stage={stage} player={player} />
       </div>
     );
   }
