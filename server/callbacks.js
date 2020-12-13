@@ -1,4 +1,49 @@
 import Empirica from "meteor/empirica:core";
+import {names, avatarNames, nameColor} from './constants.js';
+import _ from "lodash";
+
+function addToSchedule(schedule, first, second, numTrials) {
+  var newValue1 = _.fromPairs([[
+    _.toString(first),
+    schedule[first].concat(_.times(numTrials, _.constant(second)))
+  ]]);
+  _.extend(schedule, newValue1);
+}
+
+function addToRoles(roles, player, role, numTrials) {
+  var seq = role == 'speaker' ? ['speaker', 'listener'] : ['listener', 'speaker'];
+  var newValue1 = _.fromPairs([[
+    player.toString(),
+    roles[player].concat(..._.times(numTrials/2, _.constant(seq)))
+  ]]);
+  _.extend(roles, newValue1);
+}
+
+function createSchedule(players, numTrialsPerPartner) {
+  // Create a schedule for all players to play all others using 'circle' method
+  // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
+  // assert(self.num_players % 2 == 0)
+  const l = _.clone(players);
+  const schedule = _.zipObject(l, _.times(l.length, _.constant([])));
+  const roles = _.zipObject(l, _.times(l.length, _.constant([])));
+  const roomAssignments = [];
+  _.forEach(_.range(l.length - 1), function(round) {
+    const mid = parseInt(l.length / 2);
+    const l1 = l.slice(0, mid);
+    const l2 = _.reverse(l.slice(mid, l.length));
+    const zipped = _.zip(l1, l2);
+    roomAssignments.push(..._.times(numTrialsPerPartner, _.constant(zipped)));
+    _.forEach(_.range(mid), function(player) {
+      addToSchedule(schedule, l1[player], l2[player], numTrialsPerPartner);
+      addToSchedule(schedule, l2[player], l1[player], numTrialsPerPartner);
+      addToRoles(roles, l1[player], 'speaker', numTrialsPerPartner);
+      addToRoles(roles, l2[player], 'listener', numTrialsPerPartner);      
+    });
+    // rotate around fixed point
+    l.splice(1, 0, l.pop());
+  });
+  return {roomAssignments, schedule, roles};
+}
 
 // //// Avatar stuff //////
 
@@ -9,47 +54,7 @@ Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
 
-  const roles = [
-    "speaker",
-    "listener"
-  ];
-  const names = [
-    "Blue",
-    "Green",
-    // "Pink",
-    // "Yellow",
-    // "Purple",
-    // "Red",
-    // "Turqoise",
-    // "Gold",
-    // "Grey",
-    // "Magenta",
-  ]; // for the players names to match avatar color
-  const avatarNames = [
-    "Colton",
-    "Aaron",
-    //     "Alex",
-    // "Tristan",
-    // "Daniel",
-    // "Jill",
-    // "Jimmy",
-    // "Adam",
-    // "Flynn",
-    // "Annalise",
-  ]; // to do more go to https://jdenticon.com/#icon-D3
-  const nameColor = [
-    "#3D50B7",
-    "#70A945",
-    // "#DE8AAB",
-    // "#A59144",
-    // "#DER5F4",
-    // "#EB8TWV",
-    // "#N0WFA4",
-    // "#TP3BWU",
-    // "#QW7MI9",
-    // "#EB8TWj",
-  ]; // similar to the color of the avatar
-
+  const scheduleObj = createSchedule(_.map(players, '_id'), 4);
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle([
       "/experiment/tangram_A.png",
@@ -57,8 +62,10 @@ Empirica.onGameStart((game) => {
       "/experiment/tangram_C.png",
       "/experiment/tangram_D.png"
     ]));
+    console.log(scheduleObj);
+    player.set("partnerList", scheduleObj.schedule[player._id]);
+    player.set("roleList", scheduleObj.roles[player._id]);    
     player.set("name", names[i]);
-    player.set("role", roles[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
     player.set("nameColor", nameColor[i]);
     player.set("cumulativeScore", 0);
@@ -68,38 +75,30 @@ Empirica.onGameStart((game) => {
 
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
-Empirica.onRoundStart((game, round) => {});
+Empirica.onRoundStart((game, round) => {
+  const players = game.players;
+  
+  players.forEach(player => {
+    player.set('partner', player.get('partnerList')[round.index]),
+    player.set('role', player.get('roleList')[round.index])
+    player.set('clicked', false);
+  });
+});
 
 // onRoundStart is triggered before each stage starts.
 // It receives the same options as onRoundStart, and the stage that is starting.
 Empirica.onStageStart((game, round, stage) => {
   const players = game.players;
   console.debug("Round ", stage.name, "game", game._id, " started");
-  const team = game.get("team");
-  console.log("is it team?", team);
-
-  //initiate the score for this round (because everyone will have the same score, we can save it at the round object
   stage.set("score", 0);
-  stage.set("chat", []); //todo: I need to check if they are in team first
+  stage.set("chat", []); 
   stage.set("log", [
     {
-      verb: "roundStarted",
-      roundId:
-        stage.name === "practice"
-          ? stage.name + " (will not count towards your score)"
-          : stage.name,
+      verb: stage.name + "Started",
+      roundId: stage.name,
       at: new Date(),
     },
   ]);
-  stage.set("intermediateSolutions", []);
-
-  players.forEach((player) => {
-    player.set("messageSent", false);
-  });
-
-  //there is a case where the optimal is found, but not submitted (i.e., they ruin things)
-  stage.set("optimalFound", false); //the optimal answer wasn't found
-  stage.set("optimalSubmitted", false); //the optimal answer wasn't submitted
 });
 
 // onStageEnd is triggered after each stage.
@@ -180,56 +179,10 @@ Empirica.onSet(
     prevValue // Previous value
   ) => {
     // Advance to feedback after listener clicks
-    if (key === "clicked") {
-      game.players.forEach((player) => {
-        player.stage.submit();
-      });
-    }
-
-    // //TODO: actually change this for clicking tangrams, currently just commented out
-    // //someone placed a student to a room
-    // if (key.substring(0, 8) === "student-" && key.slice(-4) === "room") {
-    //   const task = stage.get("task");
-    //   let assignments = { deck: [] };
-    //   task.rooms.forEach((room) => {
-    //     assignments[room] = [];
-    //   });
-    //
-    //   //find the rooms for each player
-    //   task.students.forEach((student) => {
-    //     const room = stage.get(`student-${student}-room`);
-    //     assignments[room].push(student);
-    //   });
-    //
-    //   //check for constraint violations
-    //   const violationIds = getViolations(stage, assignments);
-    //   stage.set("violatedConstraints", violationIds);
-    //
-    //   //get score if there are no violations, otherwise, the score is 0
-    //   const currentScore =
-    //     assignments["deck"].length === 0
-    //       ? getScore(task, assignments, violationIds.length)
-    //       : 0;
-    //   //console.debug("currentScore", currentScore);
-    //   stage.set("score", currentScore || 0);
-    //
-    //   if (currentScore === task.optimal) {
-    //     stage.set("optimalFound", true);
-    //   }
-    //
-    //   //keep track of solution, scores, and violated constraints
-    //   //TODO: eventually this should have the 'log' parameter so it is not sent to the UI
-    //   //TODO: how about I store everything here, and that's it! less data
-    //   stage.append("intermediateSolutions", {
-    //     solution: assignments,
-    //     at: new Date(),
-    //     violatedConstraintsIds: violationIds,
-    //     nConstraintsViolated: violationIds.length,
-    //     score: getScore(task, assignments, violationIds.length),
-    //     optimalFound: currentScore === task.optimal,
-    //     completeSolution: assignments["deck"].length === 0,
-    //     completeSolutionScore: currentScore,
-    //   });
+    // if (key === "clicked") {
+    //   console.log(player);
+    //   console.log(target);
+    //   player.stage.submit();
     // }
   }
 );
