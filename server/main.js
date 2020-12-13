@@ -8,6 +8,7 @@ import { taskData } from "./constants";
 // Just before every game starts, once all the players needed are ready, this
 // function is called with the treatment and the list of players.
 // You must then add rounds and stages to the game, depending on the treatment
+
 // and the players. You can also get/set initial values on your game, players,
 // rounds and stages (with get/set methods), that will be able to use later in
 // the game.
@@ -39,59 +40,27 @@ Empirica.gameInit((game, treatment) => {
     _.pluck(game.players, "id")
   );
 
-  //initiate the cumulative score for this game (because everyone will have the same score, we can save it at the game object
-  game.set("cumulativeScore", 0); // the total score at the end of the game
-  game.set("nOptimalSolutions", 0); // will count how many times they've got the optimal answer
   game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
   game.set("team", game.players.length > 1);
 
-  //we don't know the sequence yet
-  let taskSequence = taskData;
-  
-  //TODO: there is also an Empirica.breadcrumb(Component) component on the client side that replaces the default
-  // Round/Stage progress indicator - UI that shows which are the current Round and Stage
-  _.times(4, trialNum => {
-    const round = game.addRound();
-    round.set("task", taskSequence[trialNum]);
-    round.addStage({
-      name: "selection",
-      displayName: "Selection",
-      durationInSeconds: 30000000
-    });
+    let taskSequence = taskData;
+  _.times(game.players.length - 1, partnerNum => {
+    
+    _.times(4, trialNum => {
+      const round = game.addRound();
+      round.set("task", taskSequence[trialNum]);
+      round.addStage({
+        name: "selection",
+        displayName: "Selection",
+        durationInSeconds: 30000000
+      });
 
-    round.addStage({
-      name: "feedback",
-      displayName: "Feedback",
-      durationInSeconds: 3
+      round.addStage({
+        name: "feedback",
+        displayName: "Feedback",
+        durationInSeconds: 3
+      });
     });
   });
 });
 
-// TODO: we only need to fix the first practice task at the very start, don't need one every round
-// fix the first practice task and shuffle the rest
-//to learn more:
-//https://stackoverflow.com/questions/50536044/swapping-all-elements-of-an-array-except-for-first-and-last
-function customShuffle(taskSequence) {
-  // Find and remove first and last:
-  const practiceTask = taskSequence[0];
-
-  const firstIndex = taskSequence.indexOf(practiceTask);
-
-  if (firstIndex !== -1) {
-    taskSequence.splice(firstIndex, 1);
-  }
-
-  // Normal shuffle with the remaining elements using ES6:
-  for (let i = taskSequence.length - 1; i > 0; --i) {
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [taskSequence[i], taskSequence[j]] = [taskSequence[j], taskSequence[i]];
-  }
-
-  // Add them back in their new position:
-  if (firstIndex !== -1) {
-    taskSequence.unshift(practiceTask);
-  }
-
-  return taskSequence;
-}
