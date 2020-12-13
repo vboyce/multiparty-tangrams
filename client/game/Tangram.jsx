@@ -2,14 +2,20 @@ import React from "react";
 
 export default class Tangram extends React.Component {
   handleClick = e => {
-    const { tangram, tangram_num, stage, player, round } = this.props;
-    const speakerMsgs = _.filter(stage.get("chat"), msg => msg.role == 'speaker')
-
+    const { game, tangram, tangram_num, stage, player, round } = this.props;
+    const speakerMsgs = _.filter(stage.get("chat"), msg => {
+      return msg.role == 'speaker' & msg.playerId == player.get('partner')
+    })
+    const partner = _.find(game.players, p => p._id === player.get('partner'));
+    
     // only register click for listener and only after the speaker has sent a message
     if (stage.name == 'selection' &
         speakerMsgs.length > 0 &
         player.get('role') == 'listener') {
-      round.set("clicked", tangram);
+      partner.set("clicked", tangram)
+      player.set("clicked", tangram)
+      partner.stage.submit();
+      player.stage.submit();
     }
   };
   
@@ -30,7 +36,7 @@ export default class Tangram extends React.Component {
     // Show it to both players at feedback stage.
     const target = round.get("task").target;
     if((target == tangram & player.get('role') == 'speaker') ||
-       (target == tangram & stage.name == 'feedback')) {
+       (target == tangram & player.get('clicked') != '')) {
       _.extend(mystyle, {
         "outline" :  "10px solid #000",
         "zIndex" : "9"
@@ -38,7 +44,8 @@ export default class Tangram extends React.Component {
     }
 
     // Highlight clicked object in green if correct; red if incorrect
-    if(stage.name == 'feedback' & tangram == round.get('clicked')) {
+    console.log(player.get('clicked'))
+    if(tangram == player.get('clicked')) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
         "outline" :  `10px solid ${color}`,
