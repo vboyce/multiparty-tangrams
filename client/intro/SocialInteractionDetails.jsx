@@ -83,72 +83,59 @@ export default class SocialInteractionDetails extends React.Component {
           <p>
             Also, you may communicate with your teammates through the in-game
             chat. This chat room is public so whatever you write will appear to
-            the other {treatment.playerCount - 1} teammates. You can use this in
-            anyway you want.
+            your partner. {" "}
+            <strong>The speaker must send a message before the listener is allowed to make a selection</strong>
+            . Other than that, you can use the chat function in any way you want.
           </p>
 
           <p>
             Remember, you and your teammates have{" "}
             {Math.ceil(treatment.stageDuration / 60.0)} minutes in each task to
-            find a room assignment plan. You will automatically{" "}
+            select a tangram. You will automatically{" "}
             <strong>progress to the next task when the time is up</strong>.
-          </p>
-          <p>
-            However, you can always indicate whether you are satisfied with the
-            answer before the timer is up (indicated by the check mark on the
-            avatar). Click on the "Satisfied" button in the following example
-            and see what happens!
+            If your pair selects a tangram before the other pair is finished, please wait and
+            do not refresh as you wait for the other pair to complete their selections. Partners will
+            automatically swap, so please take note of who you are currently playing with.
           </p>
 
-          <div className="social-interactions" style={{ margin: "auto" }}>
-            <div className="status">
-              <div className="players bp3-card">
-                {this.renderPlayer(player, true)}
-                {otherPlayers.map(p => this.renderPlayer(p))}
-              </div>
-              <div className="total-score bp3-card">
-                <h6 className={"bp3-heading"}>Total Score</h6>
+          {/*<div className="social-interactions" style={{ margin: "auto" }}>*/}
+          {/*  <div className="status">*/}
+          {/*    <div className="players bp3-card">*/}
+          {/*      {this.renderPlayer(player, true)}*/}
+          {/*      {otherPlayers.map(p => this.renderPlayer(p))}*/}
+          {/*    </div>*/}
+          {/*    <div className="total-score bp3-card">*/}
+          {/*      <h6 className={"bp3-heading"}>Total Score</h6>*/}
 
-                <h2 className={"bp3-heading"}>{3400}</h2>
-              </div>
-            </div>
-          </div>
+          {/*      <h2 className={"bp3-heading"}>{3400}</h2>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
-          <div className="task">
-            <div className="board">
-              <div className="response">
-                <button
-                  type="button"
-                  className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${
-                    this.state.satisfied ? "bp3-minimal" : ""
-                  }`}
-                  onClick={this.handleSatisfaction.bind(this, false)}
-                >
-                  Unsatisfied
-                </button>
-                <button
-                  type="button"
-                  className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${
-                    this.state.satisfied ? "" : "bp3-minimal"
-                  }`}
-                  onClick={this.handleSatisfaction.bind(this, true)}
-                >
-                  Satisfied
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <p>
-            <strong>
-              If all team members are satisfied with the answer before the timer
-              is up, the answer will be submitted and your team will proceed to
-              the next task. If the "Satisfied" button is unclickable (i.e.,
-              inactive) for you for more than 10 seconds, try to refresh the
-              page.
-            </strong>
-            .
-          </p>
+          {/*<div className="task">*/}
+          {/*  <div className="board">*/}
+          {/*    <div className="response">*/}
+          {/*      <button*/}
+          {/*        type="button"*/}
+          {/*        className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${*/}
+          {/*          this.state.satisfied ? "bp3-minimal" : ""*/}
+          {/*        }`}*/}
+          {/*        onClick={this.handleSatisfaction.bind(this, false)}*/}
+          {/*      >*/}
+          {/*        Unsatisfied*/}
+          {/*      </button>*/}
+          {/*      <button*/}
+          {/*        type="button"*/}
+          {/*        className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${*/}
+          {/*          this.state.satisfied ? "" : "bp3-minimal"*/}
+          {/*        }`}*/}
+          {/*        onClick={this.handleSatisfaction.bind(this, true)}*/}
+          {/*      >*/}
+          {/*        Satisfied*/}
+          {/*      </button>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <button
             type="button"

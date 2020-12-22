@@ -54,12 +54,14 @@ export default class TeamDetails extends React.Component {
             In this game, you will{" "}
             <strong>
               play together with {treatment.playerCount - 1} other participants
-              (your teammates)
+              (your community members)
             </strong>
-            . They are other MTurk workers who are undertaking the same study
-            simultaneously. Throughout all the tasks, the team will submit only
-            one answer, and therefore,{" "}
-            <strong>all members of the team will receive the same score</strong>
+            . They are other participants who are undertaking the same study
+            simultaneously. Throughout all the tasks, you will be paired off with one
+            of your community members at a time to complete the tangram matching task described
+            on the previous page. The listener's answer will reflect both the speaker's quality of
+            description and the listener's comprehension, and therefore,{" "}
+            <strong>both members of each pair will receive the same score for a given round</strong>
             . To help you identify yourself and differentiate each other in the
             team, we will assign a color to you when the game starts (as shown
             in the following example).
@@ -82,16 +84,7 @@ export default class TeamDetails extends React.Component {
           <br />
           <p>
             Note that the game allows for simultaneous and real-time actions.
-            That means that you will be able to drag students to assign them to
-            rooms while your teammates are doing the same. However, when any
-            member in the team starts dragging a student, that student will be
-            locked (i.e., no one else can move it) until it is assigned to a
-            room.{" "}
-            <strong>
-              The student that is being moved will have the color of the
-              participant
-            </strong>
-            .
+            That means that you will be able to communicate in real time with your current partner.
           </p>
 
           <button

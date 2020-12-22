@@ -56,60 +56,60 @@ export default class TaskDetails extends React.Component {
             that student and drop it into the room. Try this example:
           </p>
 
-          <div className="task">
-            <div className="left">
-              <div className="payoff">
-                <h5>Payoff</h5>
-                <HTMLTable>
-                  <thead>
-                    <tr>
-                      <th>Rooms</th>
-                      {exampleTaskData.rooms.map(room => (
-                        <th key={room}>{room}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {exampleTaskData.students.map(student => (
-                      <tr key={student}>
-                        <th>Student {student}</th>
-                        {exampleTaskData.rooms.map(room => (
-                          <td
-                            key={room}
-                            className={
-                              this.state[`student${student}Room`] === room
-                                ? "active"
-                                : null
-                            }
-                          >
-                            {exampleTaskData.payoff[student][room]}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </HTMLTable>
-              </div>
+          {/*<div className="task">*/}
+          {/*  <div className="left">*/}
+          {/*    <div className="payoff">*/}
+          {/*      <h5>Payoff</h5>*/}
+          {/*      <HTMLTable>*/}
+          {/*        <thead>*/}
+          {/*          <tr>*/}
+          {/*            <th>Rooms</th>*/}
+          {/*            {exampleTaskData.rooms.map(room => (*/}
+          {/*              <th key={room}>{room}</th>*/}
+          {/*            ))}*/}
+          {/*          </tr>*/}
+          {/*        </thead>*/}
+          {/*        <tbody>*/}
+          {/*          {exampleTaskData.students.map(student => (*/}
+          {/*            <tr key={student}>*/}
+          {/*              <th>Student {student}</th>*/}
+          {/*              {exampleTaskData.rooms.map(room => (*/}
+          {/*                <td*/}
+          {/*                  key={room}*/}
+          {/*                  className={*/}
+          {/*                    this.state[`student${student}Room`] === room*/}
+          {/*                      ? "active"*/}
+          {/*                      : null*/}
+          {/*                  }*/}
+          {/*                >*/}
+          {/*                  {exampleTaskData.payoff[student][room]}*/}
+          {/*                </td>*/}
+          {/*              ))}*/}
+          {/*            </tr>*/}
+          {/*          ))}*/}
+          {/*        </tbody>*/}
+          {/*      </HTMLTable>*/}
+          {/*    </div>*/}
 
-              <div className="info">
-                <div className="score">
-                  <h5>Score</h5>
-                  <h2>{this.state.score}</h2>
-                </div>
-              </div>
-            </div>
+          {/*    <div className="info">*/}
+          {/*      <div className="score">*/}
+          {/*        <h5>Score</h5>*/}
+          {/*        <h2>{this.state.score}</h2>*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
 
-            <div className="board">
-              <div className="all-tangrams">
-                {this.renderTangram("deck", true)}
-                <div className="tangrams">
-                  {exampleTaskData.tangrams.map(tangram =>
-                    this.renderTangram(tangram, false)
-                    )}
-                </div>
-              </div>
-            </div>
-          </div>
+          {/*  <div className="board">*/}
+          {/*    <div className="all-tangrams">*/}
+          {/*      {this.renderTangram("deck", true)}*/}
+          {/*      <div className="tangrams">*/}
+          {/*        {exampleTaskData.tangrams.map(tangram =>*/}
+          {/*          this.renderTangram(tangram, false)*/}
+          {/*          )}*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <div style={{ textAlign: "center" }}>
             <p>

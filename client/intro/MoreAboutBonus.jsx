@@ -12,14 +12,8 @@ export default class MoreAboutBonus extends React.Component {
           <h1 className={"bp3-heading"}> Scores and Bonuses</h1>
 
           <p>
-            In each task, we use "score" to evaluate the quality of the room
-            assignment plan that {social ? "your team" : "you"} came up with.{" "}
-            <strong style={{ color: "red" }}>
-              {" "}
-              Your score starts counting only when you have a complete
-              assignment
-            </strong>{" "}
-            (that is, each student has been assigned to a room).
+            In each task, we use "score" to evaluate the quality of the selections that you and your
+            partner have made. Your total score will be calculated as the sum of the scores on each round.
           </p>
 
           <p>The score of your assignment is calculated as:</p>
@@ -27,79 +21,18 @@ export default class MoreAboutBonus extends React.Component {
           <div style={{ textAlign: "center" }}>
             <p>
               <strong style={{ color: "blue" }}>
-                S = The sum of students' ratings of their assigned rooms - 100 *
-                the number of violated constraints
+                S = The number of correctly chosen tangrams * 100
               </strong>
             </p>
           </div>
 
           <p>
-            That means,{" "}
-            <strong>
-              for each constraint you violate, you get 100 points deducted.
-            </strong>
-          </p>
-
-          {social ? (
-            <p>
-              As a team, <strong>you will submit ONE answer per task</strong>{" "}
-              and therefore{" "}
-              <strong>
-                all team members will have the same score on each task
-              </strong>.
-            </p>
-          ) : null}
-
-          <p>
-            There are two parts of the bonus that you will have opportunity to
-            earn in each task:
-          </p>
-
-          <p>
-            1. <strong>"performance-based bonus":</strong> When your score is
-            positive, no matter whether your answer is the BEST possible
-            assignment or not. The exchange rate is{" "}
+            Your performance bonus will be based on your score at the end of the experiment.
+            The exchange rate is{" "}
             <strong style={{ color: "red" }}>
               {Math.round(1 / treatment.conversionRate)} game points = $1 bonus
             </strong>.
           </p>
-
-          <p>
-            2. <strong>"optimal assignment bonus" </strong>: When your answer is
-            the BEST possible assignment, you get{" "}
-            <strong style={{ color: "red" }}>
-              an additional bonus of ${treatment.optimalSolutionBonus} in that
-              task
-            </strong>.
-          </p>
-
-          <p>
-            Therefore,
-            <strong>
-              big part of the bonus is for finding the BEST possible
-              assignment{" "}
-            </strong>{" "}
-            (i.e., "optimal assignment bonus", which can be up to $5 total).
-            Also,
-            <strong>
-              you can earn more game points (i.e., more performance-based
-              bonuses) from the difficult tasks{" "}
-            </strong>{" "}
-            compared to the easier ones (more students/rooms means more possible
-            bonus).
-          </p>
-
-          {social ? (
-            <div style={{ textAlign: "center" }}>
-              <p>
-                <strong>
-                  Together with your teammates, you should try to find a
-                  complete room assignment with a score that is as high as
-                  possible to earn more bonus in each task!
-                </strong>
-              </p>
-            </div>
-          ) : null}
 
           <p>
             <strong>

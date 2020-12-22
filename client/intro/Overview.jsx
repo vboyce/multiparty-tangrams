@@ -17,19 +17,18 @@ export default class Overview extends React.Component {
           </p>
 
           <div className="image">
-            <img src="/experiment/instruction-room-arrangements.svg" />
+            <center><img src="/experiment/tangrams.PNG" /></center>
           </div>
 
           <p>
             Each time you are paired with a new partner, one of you will be
             randomly assigned the {" "}
             <strong>Speaker</strong> role and the other will be assigned the {" "}
-            <strong>Listener</strong> role. The Speaker will see a black box
-            secretly marking one of these four pictures as the {" "} <strong>target</strong>.
+               secretly marking one of these four pictures as the {" "} <strong>target</strong>.
           </p>
 
           <div className="image">
-            <img src="/experiment/instruction-room-arrangements.svg" />
+            <center><img src="/experiment/target.PNG" /></center>
           </div>
 
           <p>
@@ -44,14 +43,14 @@ export default class Overview extends React.Component {
           </p>
 
           <div className="image">
-            <img src="/experiment/instruction-room-arrangements.svg" />
+            <center><img src="/experiment/typing.PNG" /></center>
           </div>
 
           <p>
             After the Speaker sends a message, the Listener will read it and
             click the picture they believe is the target.  They are also
             allowed to respond by sending messages back through the chatbox
-            until they are ready to make a selection. After the Matcher clicks
+            until they are ready to make a selection. After the Listener clicks
             one of the pictures, both of you will be given feedback before
             advancing to the next round: the Speaker will see which picture
             the Listener clicked, and the Listener will see the true identity of
@@ -74,14 +73,14 @@ export default class Overview extends React.Component {
             A few final notes before you begin. First, because multiple players
             must be connected simultaneously for the study to begin, you might
             briefly see a waiting room screen with a progress bar at the
-            beginning while other turkers join the game. Second, when you are
+            beginning while other participants join the game. Second, when you are
             ready to swap partners, your new partner may still be completing a
             game with someone else and you may see another brief waiting
             screen like this one:
           </p>
 
           <div className="image">
-            <img src="/experiment/instruction-room-arrangements.svg" />
+            <center><img src="/experiment/imageneeded.PNG" /></center>
           </div>
 
           <p>
@@ -109,55 +108,6 @@ export default class Overview extends React.Component {
             and we will try to help! Have fun!
           </p>
 
-          {/*{social ? (*/}
-          {/*  <div>*/}
-          {/*    <p>*/}
-          {/*      <strong>*/}
-          {/*        You will play this game simultaneously with{" "}*/}
-          {/*        {treatment.playerCount - 1} other participants in real-time*/}
-          {/*      </strong>*/}
-          {/*      . As we will explain in more detail later, in each task, you and*/}
-          {/*      your teammates will submit a single room assignment plan.*/}
-          {/*      /!*We will evaluate the quality of your*!/*/}
-          {/*      /!*plan through score and thus all team members will receive the*!/*/}
-          {/*      /!*same score in each task.*!/*/}
-          {/*    </p>*/}
-          {/*    <p>*/}
-          {/*      At the end of the game, you will have the opportunity to earn a*/}
-          {/*      bonus payment and the amount is dependent on your accumulated*/}
-          {/*      score in all {treatment.nRounds} tasks.{" "}*/}
-          {/*      <strong> Note that "free riding" is not permitted</strong>.{" "}*/}
-          {/*      <em style={{ color: "red" }}>*/}
-          {/*        If we detect that you are inactive during a task, you will not*/}
-          {/*        receive a bonus for that task.*/}
-          {/*      </em>*/}
-          {/*    </p>*/}
-          {/*  </div>*/}
-          {/*) : (*/}
-          {/*  <p>*/}
-          {/*    In each task, you will submit a single room assignment plan. We*/}
-          {/*    will evaluate the quality of your plan by scoring it in each task.*/}
-          {/*    At the end of the game, you will have the opportunity to earn a*/}
-          {/*    bonus payment and the amount is dependent on your accumulated*/}
-          {/*    score in all {treatment.nRounds} tasks.{" "}*/}
-          {/*    <em style={{ color: "red" }}>*/}
-          {/*      If we detect that you are inactive during a task, you will not*/}
-          {/*      receive a bonus for that task.*/}
-          {/*    </em>*/}
-          {/*  </p>*/}
-          {/*)}*/}
-
-          {/*<p>*/}
-          {/*  The game <strong>must be played on a desktop or laptop</strong>.*/}
-          {/*  There is NO mobile support*/}
-          {/*</p>*/}
-
-          {/*<p>*/}
-          {/*  <strong>*/}
-          {/*    For the best experience, please maximize the window containing*/}
-          {/*    this task or make it as large as possible.*/}
-          {/*  </strong>*/}
-          {/*</p>*/}
           <button
             type="button"
             className="bp3-button bp3-intent-nope bp3-icon-double-chevron-left"

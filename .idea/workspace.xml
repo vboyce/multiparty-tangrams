@@ -24,13 +24,15 @@
   <component name="ChangeListManager">
     <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="only allowing players to click tangrams after a message has been sent">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/packages" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/release" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/release" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/versions" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/versions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/Consent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/Consent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/GroupQuiz.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/GroupQuiz.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/MoreAboutBonus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/MoreAboutBonus.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/intro/Overview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/Overview.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/SocialInteractionDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/SocialInteractionDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/TaskDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/TaskDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/TeamDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/TeamDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/intro/UIOverview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/UIOverview.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/main.less" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +98,7 @@
       <workItem from="1607104774520" duration="3959000" />
       <workItem from="1607119125282" duration="3209000" />
       <workItem from="1608326118752" duration="1947000" />
+      <workItem from="1608588675006" duration="6697000" />
     </task>
     <task id="LOCAL-00001" summary="Removed player requirement for displaying chat &amp; event log">
       <created>1604554031588</created>

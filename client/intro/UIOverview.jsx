@@ -21,14 +21,8 @@ export default class UIOverview extends React.Component {
           </p>
 
           <div className="image">
-            <img src={imagePath} style={{ border: "2px solid" }} />
+            <center><img src="/experiment/imageneeded.PNG" /></center>
           </div>
-
-          <p>
-            If the "Satisfied" button for in is unclickable (i.e., inactive) for
-            more than 10 seconds, try to refresh the page. Otherwise, you will
-            have wait for the time run out. This will not effect your bonus.
-          </p>
 
           <p>
             Now you know where everything goes and ready to take the quiz! Good

@@ -55,19 +55,19 @@ export default class GroupQuiz extends React.Component {
     if (
       this.state.nParticipants !== this.state.num_players.toString() ||
       this.state.scoreOption !== "all" ||
-      this.state.idle !== "100" ||
-      this.state.largeError !== "0" ||
-      this.state.mc_1_101 ||
-      !this.state.mc_1_102 || //only this one is correct
-      this.state.mc_1_103 ||
-      this.state.mc_1_104 ||
-      this.state.mc_1_105 ||
-      this.state.mc_2_101 ||
-      !this.state.mc_2_102 || //this one is correct
-      this.state.mc_2_103 ||
-      !this.state.mc_2_104 || //this one is correct
-      this.state.mc_2_105 ||
-      this.state.emptyOption !== "yes"
+      // this.state.idle !== "100" ||
+      this.state.largeError !== "0"
+      // this.state.mc_1_101 ||
+      // !this.state.mc_1_102 || //only this one is correct
+      // this.state.mc_1_103 ||
+      // this.state.mc_1_104 ||
+      // this.state.mc_1_105 ||
+      // this.state.mc_2_101 ||
+      // !this.state.mc_2_102 || //this one is correct
+      // this.state.mc_2_103 ||
+      // !this.state.mc_2_104 || //this one is correct
+      // this.state.mc_2_105 ||
+      // this.state.emptyOption !== "yes"
     ) {
       AlertToaster.show({
         message:
@@ -117,37 +117,36 @@ export default class GroupQuiz extends React.Component {
                   required
                 >
                   <Radio
-                    label="I will score points only based on the assignments that I make"
+                    label="I will score points based on how good my answers are no matter what my partner does."
                     value="single"
                   />
                   <Radio
-                    label="We will submit only one answer as a team and therefore we will all get the same score."
+                    label="My partner and I submit one answer as a team and therefore we will all get the same score."
                     value="all"
                   />
                 </RadioGroup>
               </div>
             </div>
 
-            <div className="bp3-form-group">
-              <div className="bp3-form-content">
-                <RadioGroup
-                  name="emptyOption"
-                  label="is it ok to have some rooms empty? (the answer is 'Yes')"
-                  onChange={this.handleRadioChange}
-                  selectedValue={this.state.emptyOption}
-                  required
-                >
-                  <Radio label="Yes!" value="yes" />
-                  <Radio label="No!" value="no" />
-                </RadioGroup>
-              </div>
-            </div>
+            {/*<div className="bp3-form-group">*/}
+            {/*  <div className="bp3-form-content">*/}
+            {/*    <RadioGroup*/}
+            {/*      name="emptyOption"*/}
+            {/*      label="is it ok to have some rooms empty? (the answer is 'Yes')"*/}
+            {/*      onChange={this.handleRadioChange}*/}
+            {/*      selectedValue={this.state.emptyOption}*/}
+            {/*      required*/}
+            {/*    >*/}
+            {/*      <Radio label="Yes!" value="yes" />*/}
+            {/*      <Radio label="No!" value="no" />*/}
+            {/*    </RadioGroup>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="number-of-participants">
-                If your team ended up NOT assigning all students to room (i.e.,
-                at least one student remained in the deck) then your score in
-                that task will be:
+                If your team ended up NOT choosing a tangram before the time is up
+                then your score in that task will be:
               </label>
               <div className="bp3-form-content">
                 <input
@@ -166,115 +165,93 @@ export default class GroupQuiz extends React.Component {
               </div>
             </div>
 
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="number-of-participants">
-                For each unsatisfied (i.e., violated) constraint, how many
-                points will be deducted from you?
-              </label>
-              <div className="bp3-form-content">
-                <input
-                  id="nParticipants"
-                  className="bp3-input"
-                  type="number"
-                  min="0"
-                  max="1000"
-                  step="1"
-                  dir="auto"
-                  name="idle"
-                  value={this.state.idle}
-                  onChange={this.handleChange}
-                  required
-                />
-              </div>
-            </div>
+            {/*<div className="bp3-form-group">*/}
+            {/*  <label className="bp3-label" htmlFor="neighbor-of-room-101">*/}
+            {/*    Which of the following rooms is a neighbor of Room 101? Please*/}
+            {/*    select all that apply.*/}
+            {/*  </label>*/}
+            {/*  <div className="bp3-form-content ">*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_1_101"}*/}
+            {/*        label="Room 101"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_1_102"}*/}
+            {/*        label="Room 102"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_1_103"}*/}
+            {/*        label="Room 103"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_1_104"}*/}
+            {/*        label="Room 104"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_1_105"}*/}
+            {/*        label="Room 105"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="neighbor-of-room-101">
-                Which of the following rooms is a neighbor of Room 101? Please
-                select all that apply.
-              </label>
-              <div className="bp3-form-content ">
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_1_101"}
-                    label="Room 101"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_1_102"}
-                    label="Room 102"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox">
-                  <Checkbox
-                    name={"mc_1_103"}
-                    label="Room 103"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_1_104"}
-                    label="Room 104"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_1_105"}
-                    label="Room 105"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="neighbor-of-room-101">
-                Which of the following rooms is a neighbor of Room 103? Please
-                select all that apply.{" "}
-              </label>
-              <div className="bp3-form-content ">
-                <div className="bp3-control bp3-checkbox">
-                  <Checkbox
-                    name={"mc_2_101"}
-                    label="Room 101"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_2_102"}
-                    label="Room 102"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox bp3-inline">
-                  <Checkbox
-                    name={"mc_2_103"}
-                    label="Room 103"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox">
-                  <Checkbox
-                    name={"mc_2_104"}
-                    label="Room 104"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-                <div className="bp3-control bp3-checkbox">
-                  <Checkbox
-                    name={"mc_2_105"}
-                    label="Room 105"
-                    onChange={this.handleEnabledChange}
-                  />
-                </div>
-              </div>
-            </div>
+            {/*<div className="bp3-form-group">*/}
+            {/*  <label className="bp3-label" htmlFor="neighbor-of-room-101">*/}
+            {/*    Which of the following rooms is a neighbor of Room 103? Please*/}
+            {/*    select all that apply.{" "}*/}
+            {/*  </label>*/}
+            {/*  <div className="bp3-form-content ">*/}
+            {/*    <div className="bp3-control bp3-checkbox">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_2_101"}*/}
+            {/*        label="Room 101"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_2_102"}*/}
+            {/*        label="Room 102"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_2_103"}*/}
+            {/*        label="Room 103"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_2_104"}*/}
+            {/*        label="Room 104"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*    <div className="bp3-control bp3-checkbox">*/}
+            {/*      <Checkbox*/}
+            {/*        name={"mc_2_105"}*/}
+            {/*        label="Room 105"*/}
+            {/*        onChange={this.handleEnabledChange}*/}
+            {/*      />*/}
+            {/*    </div>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             <button
               type="button"
