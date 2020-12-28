@@ -9,8 +9,11 @@ export default class Tangram extends React.Component {
     const partner = _.find(game.players, p => p._id === player.get('partner'));
     
     // only register click for listener and only after the speaker has sent a message
+    console.log(player)
+    console.log(stage)
     if (stage.name == 'selection' &
         speakerMsgs.length > 0 &
+        player.get('clicked') === false &
         player.get('role') == 'listener') {
       partner.set("clicked", tangram)
       player.set("clicked", tangram)

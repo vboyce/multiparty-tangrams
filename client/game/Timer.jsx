@@ -10,7 +10,7 @@ class timer extends React.Component {
     const seconds = ("0" + (remainingSeconds - minutes * 60)).slice(-2);
   
   
-    const classes = ["timer"];
+    const classes = ["timer", "bp3-card"];
     if (remainingSeconds <= 5) {
       classes.push("lessThan5");
     } else if (remainingSeconds <= 10) {

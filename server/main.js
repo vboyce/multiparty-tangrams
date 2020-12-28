@@ -52,7 +52,7 @@ Empirica.gameInit((game, treatment) => {
       round.addStage({
         name: "selection",
         displayName: "Selection",
-        durationInSeconds: 30000000
+        durationInSeconds: 3000
       });
 
       round.addStage({

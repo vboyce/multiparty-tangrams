@@ -24,6 +24,7 @@ export default class Overview extends React.Component {
             Each time you are paired with a new partner, one of you will be
             randomly assigned the {" "}
             <strong>Speaker</strong> role and the other will be assigned the {" "}
+            <strong>Listener</strong> role. If you are the speaker, you will see a black box
                secretly marking one of these four pictures as the {" "} <strong>target</strong>.
           </p>
 
