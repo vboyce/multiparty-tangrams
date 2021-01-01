@@ -57,7 +57,7 @@ export default class SocialInteractions extends React.Component {
           <div className="total-score bp3-card">
             <h6 className='bp3-heading'>Total Score</h6>
 
-            <h2 className='bp3-heading'>{game.get("cumulativeScore") || 0}</h2>
+            <h2 className='bp3-heading'>${(player.get("cumulativeScore") || 0).toFixed(2)}</h2>
           </div>
         </div>
         <ChatLog messages={messages} stage={stage} player={player} />

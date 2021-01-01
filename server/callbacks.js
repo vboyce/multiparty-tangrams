@@ -108,10 +108,14 @@ Empirica.onStageEnd((game, round, stage) => {});
 // onRoundEnd is triggered after each round.
 // It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round) => {
-  const currentScore = round.get("score");
-  const cumScore = game.get("cumulativeScore") || 0;
-  const scoreIncrement = currentScore > 0 ? Math.round(currentScore) : 0;
-  game.set("cumulativeScore", Math.round(scoreIncrement + cumScore));
+  const players = game.players;
+  const correctAnswer = round.get("task").target;
+  players.forEach(player => {
+    const selectedAnswer = player.get("clicked");
+    const currScore = player.get("cumulativeScore") || 0;
+    const scoreIncrement = selectedAnswer == correctAnswer ? 0.02 : 0;
+    player.set("cumulativeScore", scoreIncrement + currScore);
+  });
 });
 
 // onRoundEnd is triggered when the game ends.
@@ -178,31 +182,11 @@ Empirica.onSet(
     value, // New value
     prevValue // Previous value
   ) => {
-    // Advance to feedback after listener clicks
-    // if (key === "clicked") {
-    //   console.log(player);
-    //   console.log(target);
-    //   player.stage.submit();
-    // }
+    // Compute score after player clicks
+    if (key === "clicked") {
+    }
   }
 );
-
-//helpers
-function getScore(task, assignments, nViolations) {
-  let score = 0;
-  Object.keys(assignments).forEach((room) => {
-    assignments[room].forEach((student) => {
-      score += task.payoff[student][room];
-    });
-  });
-  return score - nViolations * 100;
-}
-
-function find_room(assignments, student) {
-  return Object.keys(assignments).find((room) =>
-    assignments[room].includes(student)
-  );
-}
 
 // // onSet is called when the experiment code call the `.append()` method
 // // on games, rounds, stages, players, playerRounds or playerStages.

@@ -9,8 +9,6 @@ export default class Tangram extends React.Component {
     const partner = _.find(game.players, p => p._id === player.get('partner'));
     
     // only register click for listener and only after the speaker has sent a message
-    console.log(player)
-    console.log(stage)
     if (stage.name == 'selection' &
         speakerMsgs.length > 0 &
         player.get('clicked') === false &
@@ -47,7 +45,6 @@ export default class Tangram extends React.Component {
     }
 
     // Highlight clicked object in green if correct; red if incorrect
-    console.log(player.get('clicked'))
     if(tangram == player.get('clicked')) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
