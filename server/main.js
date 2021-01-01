@@ -44,15 +44,14 @@ Empirica.gameInit((game, treatment) => {
   game.set("team", game.players.length > 1);
 
     let taskSequence = taskData;
-  _.times(game.players.length - 1, partnerNum => {
-    
+  _.times(game.players.length - 1, partnerNum => {    
     _.times(4, trialNum => {
       const round = game.addRound();
       round.set("task", taskSequence[trialNum]);
       round.addStage({
         name: "selection",
         displayName: "Selection",
-        durationInSeconds: 3000
+        durationInSeconds: 30
       });
 
       round.addStage({
