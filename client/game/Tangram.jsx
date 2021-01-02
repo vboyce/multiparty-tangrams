@@ -3,7 +3,7 @@ import React from "react";
 export default class Tangram extends React.Component {
   handleClick = e => {
     const { game, tangram, tangram_num, stage, player, round } = this.props;
-    const speakerMsgs = _.filter(stage.get("chat"), msg => {
+    const speakerMsgs = _.filter(round.get("chat"), msg => {
       return msg.role == 'speaker' & msg.playerId == player.get('partner')
     })
     const partner = _.find(game.players, p => p._id === player.get('partner'));

@@ -14,8 +14,8 @@ export default class ChatLog extends React.Component {
     e.preventDefault();
     const text = this.state.comment.trim();
     if (text !== "") {
-      const { stage, player } = this.props;
-      stage.append("chat", {
+      const { round, player } = this.props;
+      round.append("chat", {
         text,
         playerId: player._id,
         role: player.get('role')

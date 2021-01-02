@@ -77,7 +77,8 @@ Empirica.onGameStart((game) => {
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round) => {
   const players = game.players;
-  
+  round.set("chat", []); 
+
   players.forEach(player => {
     player.set('partner', player.get('partnerList')[round.index]),
     player.set('role', player.get('roleList')[round.index])
@@ -90,8 +91,6 @@ Empirica.onRoundStart((game, round) => {
 Empirica.onStageStart((game, round, stage) => {
   const players = game.players;
   console.debug("Round ", stage.name, "game", game._id, " started");
-  stage.set("score", 0);
-  stage.set("chat", []); 
   stage.set("log", [
     {
       verb: stage.name + "Started",

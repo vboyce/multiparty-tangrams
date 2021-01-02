@@ -22,7 +22,7 @@ export default class Round extends React.Component {
     const {round, stage, player, game } = this.props;
     return (
       <div className="round">
-        <SocialInteractions game={game} stage={stage} player={player} />
+        <SocialInteractions game={game} round={round} stage={stage} player={player} />
         <Task game={game} round={round} stage={stage} player={player} />
       </div>
     );
