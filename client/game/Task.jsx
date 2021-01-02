@@ -43,9 +43,6 @@ export default class Task extends React.Component {
             </div>
           </div>
         </div>
-        <div className="right">
-          <Timer stage={stage} />
-        </div>
       </div>
     );
   }

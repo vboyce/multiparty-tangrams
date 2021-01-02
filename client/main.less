@@ -109,7 +109,7 @@
   flex-grow: 0;
   flex-shrink: 0;
 
-  width: 38rem;
+  width: 35%;
   max-height: 100%;
   height: 100%;
 
@@ -169,6 +169,28 @@
         }
       }
     }
+
+    .timer {
+        margin-right: 1rem;
+
+        .seconds {
+            color: green;
+            font-size: 2.7rem;
+            font-weight: bold;
+        }
+
+        &.lessThan10 {
+            .seconds {
+                color: orange;
+            }
+        }
+        &.lessThan5 {
+            .seconds {
+                color: red;
+            }
+        }
+    }
+
     .total-score {
       padding-top: 1.5rem;
       text-align: center;
@@ -320,27 +342,6 @@
           min-height: 36px;
         }
       }
-    }
-  }
-}
-
-.timer {
-  margin-right: 3rem;
-
-  .seconds {
-    color: green;
-    font-size: 2.7rem;
-    font-weight: bold;
-  }
-
-  &.lessThan10 {
-    .seconds {
-      color: orange;
-    }
-  }
-  &.lessThan5 {
-    .seconds {
-      color: red;
     }
   }
 }

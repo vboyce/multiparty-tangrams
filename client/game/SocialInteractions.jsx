@@ -1,6 +1,7 @@
 import React from "react";
 import EventLog from "./EventLog";
 import ChatLog from "./ChatLog";
+import Timer from "./Timer";
 
 export default class SocialInteractions extends React.Component {
   renderPlayer(player, self = false) {
@@ -54,6 +55,8 @@ export default class SocialInteractions extends React.Component {
             {this.renderPlayer(partner)}
           </div>
 
+          <Timer stage={stage} />
+          
           <div className="total-score bp3-card">
             <h6 className='bp3-heading'>Total Score</h6>
 
