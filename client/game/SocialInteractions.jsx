@@ -24,18 +24,18 @@ export default class SocialInteractions extends React.Component {
         {/* <span className="name" style={{ color: player.get("nameColor") }}> */}
         <span className="name" style={{ color: player.get("nameColor") }}>
           {player.get("name")}
-          {self ? " (You)" : ""}
+          {self ? " (You)" : "(Partner)"}
         </span>
       </div>
     );
   }
 
   render() {
-    const { game, stage, player } = this.props;
+    const { game, round, stage, player } = this.props;
 
-    const otherPlayers = _.reject(game.players, p => p._id === player._id);
     const partnerId = player.get('partner')
-    const messages = stage.get("chat")
+    const partner = _.filter(game.players, p => p._id === partnerId)[0];
+    const messages = round.get("chat")
           .filter(({playerId}) => playerId === partnerId || playerId === player._id)
           .map(({ text, playerId }) => ({
             text,
@@ -51,7 +51,7 @@ export default class SocialInteractions extends React.Component {
         <div className="status">
           <div className="players bp3-card">
             {this.renderPlayer(player, true)}
-            {otherPlayers.map(p => this.renderPlayer(p))}
+            {this.renderPlayer(partner)}
           </div>
 
           <div className="total-score bp3-card">
@@ -60,7 +60,7 @@ export default class SocialInteractions extends React.Component {
             <h2 className='bp3-heading'>${(player.get("cumulativeScore") || 0).toFixed(2)}</h2>
           </div>
         </div>
-        <ChatLog messages={messages} stage={stage} player={player} />
+        <ChatLog messages={messages} round={round} stage={stage} player={player} />
         <EventLog events={events} stage={stage} player={player} />
       </div>
     );
