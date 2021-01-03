@@ -25,7 +25,7 @@ export default class SocialInteractions extends React.Component {
         {/* <span className="name" style={{ color: player.get("nameColor") }}> */}
         <span className="name" style={{ color: player.get("nameColor") }}>
           {player.get("name")}
-          {self ? " (You)" : "(Partner)"}
+          {self ? " (You)" : " (Partner)"}
         </span>
       </div>
     );
@@ -58,7 +58,7 @@ export default class SocialInteractions extends React.Component {
           <Timer stage={stage} />
           
           <div className="total-score bp3-card">
-            <h6 className='bp3-heading'>Total Score</h6>
+            <h5 className='bp3-heading'>Score</h5>
 
             <h2 className='bp3-heading'>${(player.get("cumulativeScore") || 0).toFixed(2)}</h2>
           </div>
