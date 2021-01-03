@@ -34,14 +34,19 @@ export default class Task extends React.Component {
           />
       ));
     }
+    const feedback = (player.get('clicked') == '' ? '' :
+                      player.get('clicked') == round.get('task').target ? "Correct! You earned 2 points!" :
+                      "Ooops, that wasn't the target! You earned no bonus this round.")
     return (
       <div className="task">
         <div className="board">
+          <h1 className="roleIndicator"> You are the {player.get('role')}.</h1>
           <div className="all-tangrams">
             <div className="tangrams">
               {tangramsToRender}
             </div>
           </div>
+          <h1 className="feedbackIndicator">  {feedback}</h1>
         </div>
       </div>
     );
