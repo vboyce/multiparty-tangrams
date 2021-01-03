@@ -43,11 +43,22 @@ Empirica.gameInit((game, treatment) => {
   game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
   game.set("team", game.players.length > 1);
 
-    let taskSequence = taskData;
-  _.times(game.players.length - 1, partnerNum => {    
+  _.times(game.players.length - 1, partnerNum => {
+
+    // Loop through trials with partner
     _.times(4, trialNum => {
       const round = game.addRound();
-      round.set("task", taskSequence[trialNum]);
+      round.set("task", taskData[trialNum]);
+
+      // add 'partner swap' slide as first trial
+      if(partnerNum > 0 & trialNum == 0) {
+        round.addStage({
+          name: "transition",
+          displayName: "Partner Swap!",
+          durationInSeconds: 5
+        });
+      }
+      
       round.addStage({
         name: "selection",
         displayName: "Selection",
