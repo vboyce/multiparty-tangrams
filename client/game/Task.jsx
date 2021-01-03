@@ -34,9 +34,12 @@ export default class Task extends React.Component {
           />
       ));
     }
-    const feedback = (player.get('clicked') == '' ? '' :
-                      player.get('clicked') == round.get('task').target ? "Correct! You earned 2 points!" :
-                      "Ooops, that wasn't the target! You earned no bonus this round.")
+    let feedback = (
+      player.get('clicked') == '' ? '' :
+      player.get('clicked') == round.get('task').target ? "Correct! You earned 2 points!" :
+      "Ooops, that wasn't the target! You earned no bonus this round."
+    )
+    let feedback2 = player.get('clicked') == '' ? '' : "Ready to advance once other pairs finish."
     return (
       <div className="task">
         <div className="board">
@@ -46,7 +49,11 @@ export default class Task extends React.Component {
               {tangramsToRender}
             </div>
           </div>
-          <h1 className="feedbackIndicator">  {feedback}</h1>
+          <h3 className="feedbackIndicator">
+            {feedback}
+            <br/>
+            {feedback2}
+          </h3>
         </div>
       </div>
     );
