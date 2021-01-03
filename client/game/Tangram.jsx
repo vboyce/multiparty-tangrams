@@ -15,8 +15,8 @@ export default class Tangram extends React.Component {
         player.get('role') == 'listener') {
       partner.set("clicked", tangram)
       player.set("clicked", tangram)
-      partner.stage.submit();
-      player.stage.submit();
+      Meteor.setTimeout(() => player.stage.submit(), 3000);
+      Meteor.setTimeout(() => partner.stage.submit(), 3000);
     }
   };
   

@@ -51,13 +51,7 @@ Empirica.gameInit((game, treatment) => {
       round.addStage({
         name: "selection",
         displayName: "Selection",
-        durationInSeconds: 30
-      });
-
-      round.addStage({
-        name: "feedback",
-        displayName: "Feedback",
-        durationInSeconds: 3
+        durationInSeconds: 60000
       });
     });
   });
