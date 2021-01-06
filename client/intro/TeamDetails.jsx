@@ -87,6 +87,29 @@ export default class TeamDetails extends React.Component {
             That means that you will be able to communicate in real time with your current partner.
           </p>
 
+          <h1 className={"bp3-heading"}>Your team will be placed within a larger community.</h1>
+          <p>
+            There are two different communities playing this game, a red community and a blue community.
+            You will only play this game with other participants who are in the same community as you.
+            For example, someone in the red community will only play with other members of the red community.
+          </p>
+
+          <div style={{ textAlign: "center" }}>
+            <p>
+              <strong style={{ color: "blue" }}>
+                You are a member of the blue community.
+              </strong>
+            </p>
+          </div>
+
+          <p>
+            Each community has a different set of tangrams, as shown below.
+          </p>
+
+          <div className="image">
+            <center><img src="/experiment/communities.PNG" /></center>
+          </div>
+
           <button
             type="button"
             className="bp3-button bp3-intent-nope bp3-icon-double-chevron-left"

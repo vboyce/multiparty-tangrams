@@ -56,12 +56,12 @@ export default class GroupQuiz extends React.Component {
       this.state.nParticipants !== this.state.num_players.toString() ||
       this.state.scoreOption !== "all" ||
       // this.state.idle !== "100" ||
-      this.state.largeError !== "0"
-      // this.state.mc_1_101 ||
-      // !this.state.mc_1_102 || //only this one is correct
-      // this.state.mc_1_103 ||
-      // this.state.mc_1_104 ||
-      // this.state.mc_1_105 ||
+      this.state.largeError !== "0" ||
+      !this.state.mc_red ||
+      this.state.mc_yellow || //only this one is correct
+      this.state.mc_green ||
+      !this.state.mc_blue ||
+      this.state.community !== "blue"
       // this.state.mc_2_101 ||
       // !this.state.mc_2_102 || //this one is correct
       // this.state.mc_2_103 ||
@@ -87,7 +87,7 @@ export default class GroupQuiz extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="number-of-participants">
-                How many participants will play at the same time, including
+                How many participants will play at the same time on your team, including
                 yourself?
               </label>
               <div className="bp3-form-content">
@@ -165,54 +165,76 @@ export default class GroupQuiz extends React.Component {
               </div>
             </div>
 
-            {/*<div className="bp3-form-group">*/}
-            {/*  <label className="bp3-label" htmlFor="neighbor-of-room-101">*/}
-            {/*    Which of the following rooms is a neighbor of Room 101? Please*/}
-            {/*    select all that apply.*/}
-            {/*  </label>*/}
-            {/*  <div className="bp3-form-content ">*/}
-            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
-            {/*      <Checkbox*/}
-            {/*        name={"mc_1_101"}*/}
-            {/*        label="Room 101"*/}
-            {/*        onChange={this.handleEnabledChange}*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
-            {/*      <Checkbox*/}
-            {/*        name={"mc_1_102"}*/}
-            {/*        label="Room 102"*/}
-            {/*        onChange={this.handleEnabledChange}*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*    <div className="bp3-control bp3-checkbox">*/}
-            {/*      <Checkbox*/}
-            {/*        name={"mc_1_103"}*/}
-            {/*        label="Room 103"*/}
-            {/*        onChange={this.handleEnabledChange}*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
-            {/*      <Checkbox*/}
-            {/*        name={"mc_1_104"}*/}
-            {/*        label="Room 104"*/}
-            {/*        onChange={this.handleEnabledChange}*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*    <div className="bp3-control bp3-checkbox bp3-inline">*/}
-            {/*      <Checkbox*/}
-            {/*        name={"mc_1_105"}*/}
-            {/*        label="Room 105"*/}
-            {/*        onChange={this.handleEnabledChange}*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+            <div className="bp3-form-group">
+              <label className="bp3-label" htmlFor="neighbor-of-room-101">
+                There are multiple communities that your team may be placed into. Each of these communities
+                has a different set of tangram images. What colors are these communities?
+                Select all that apply.
+              </label>
+              <div className="bp3-form-content ">
+                <div className="bp3-control bp3-checkbox bp3-inline">
+                  <Checkbox
+                    name={"mc_red"}
+                    label="Red"
+                    onChange={this.handleEnabledChange}
+                  />
+                </div>
+                <div className="bp3-control bp3-checkbox bp3-inline">
+                  <Checkbox
+                    name={"mc_yellow"}
+                    label="Yellow"
+                    onChange={this.handleEnabledChange}
+                  />
+                </div>
+                <div className="bp3-control bp3-checkbox">
+                  <Checkbox
+                    name={"mc_green"}
+                    label="Green"
+                    onChange={this.handleEnabledChange}
+                  />
+                </div>
+                <div className="bp3-control bp3-checkbox bp3-inline">
+                  <Checkbox
+                    name={"mc_blue"}
+                    label="Blue"
+                    onChange={this.handleEnabledChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bp3-form-group">
+              <div className="bp3-form-content">
+                <RadioGroup
+                    label="Which community has your team been placed into?"
+                    onChange={this.handleRadioChange}
+                    selectedValue={this.state.community}
+                    name="community"
+                    required
+                >
+                  <Radio
+                      label="We are in the red community."
+                      value="red"
+                  />
+                  <Radio
+                      label="We are in the yellow community."
+                      value="yellow"
+                  />
+                  <Radio
+                      label="We are in the green community."
+                      value="green"
+                  />
+                  <Radio
+                      label="We are in the blue community."
+                      value="blue"
+                  />
+                </RadioGroup>
+              </div>
+            </div>
 
             {/*<div className="bp3-form-group">*/}
             {/*  <label className="bp3-label" htmlFor="neighbor-of-room-101">*/}
-            {/*    Which of the following rooms is a neighbor of Room 103? Please*/}
-            {/*    select all that apply.{" "}*/}
+            {/*    Which community have you been placed into?*/}
             {/*  </label>*/}
             {/*  <div className="bp3-form-content ">*/}
             {/*    <div className="bp3-control bp3-checkbox">*/}

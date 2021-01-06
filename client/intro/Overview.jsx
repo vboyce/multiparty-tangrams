@@ -81,7 +81,7 @@ export default class Overview extends React.Component {
           </p>
 
           <div className="image">
-            <center><img src="/experiment/imageneeded.PNG" /></center>
+            <center><img src="/experiment/waiting.PNG" /></center>
           </div>
 
           <p>

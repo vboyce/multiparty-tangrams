@@ -6,7 +6,7 @@ export default class UIOverview extends React.Component {
     const { hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
     const imagePath =
       treatment.playerCount > 1
-        ? "experiment/groupUIExample.svg"
+        ? "experiment/interface.PNG"
         : "experiment/indUIExample.svg";
 
     console.log("imagePath", imagePath);
@@ -20,8 +20,12 @@ export default class UIOverview extends React.Component {
             with the game User Interface shown here:
           </p>
 
+          {/*<div className="image">*/}
+          {/*  <center><img src="/experiment/interface.PNG" /></center>*/}
+          {/*</div>*/}
+
           <div className="image">
-            <center><img src="/experiment/imageneeded.PNG" /></center>
+            <img src={imagePath} style={{ border: "2px solid" }} />
           </div>
 
           <p>

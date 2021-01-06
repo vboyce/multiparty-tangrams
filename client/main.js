@@ -44,7 +44,7 @@ Empirica.introSteps((game, treatment) => {
     steps.push(IndividualQuiz);
   }
 
-  return [];
+  return steps;
 });
 
 // The Round component containing the game UI logic.
