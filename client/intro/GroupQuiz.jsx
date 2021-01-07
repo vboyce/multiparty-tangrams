@@ -12,18 +12,12 @@ export default class GroupQuiz extends React.Component {
     scoreOption: "",
     idle: "",
     largeError: "",
-    mc_1_101: false,
-    mc_1_102: false,
-    mc_1_103: false,
-    mc_1_104: false,
-    mc_1_105: false,
-    mc_2_101: false,
-    mc_2_102: false,
-    mc_2_103: false,
-    mc_2_104: false,
-    mc_2_105: false,
-    emptyOption: "",
+    mc_red: false,
+    mc_yellow: false,
+    mc_green: false,
+    mc_blue: false,
     num_players: 0,
+    community: "",
   };
 
   componentDidMount() {
