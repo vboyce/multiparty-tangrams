@@ -55,6 +55,7 @@ Empirica.onGameStart((game) => {
   console.debug("game ", game._id, " started");
 
   const scheduleObj = createSchedule(_.map(players, '_id'), 4);
+  game.set('rooms', scheduleObj.roomAssignments);
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle([
       "/experiment/tangram_A.png",
@@ -105,15 +106,29 @@ Empirica.onStageStart((game, round, stage) => {
 Empirica.onStageEnd((game, round, stage) => {});
 
 // onRoundEnd is triggered after each round.
-// It receives the same options as onGameEnd, and the round that just ended.
 Empirica.onRoundEnd((game, round) => {
   const players = game.players;
+  const rooms = game.get('rooms');
+  
+  // Update player scores
   const correctAnswer = round.get("task").target;
   players.forEach(player => {
     const selectedAnswer = player.get("clicked");
     const currScore = player.get("cumulativeScore") || 0;
     const scoreIncrement = selectedAnswer == correctAnswer ? 0.02 : 0;
     player.set("cumulativeScore", scoreIncrement + currScore);
+  });
+
+  // Save outcomes as property of round for later export/analysis
+  rooms[round.index].forEach((room, i) => {
+    const player1 = game.players.find(p => p._id == room[0]);
+    const roomPacket = {
+      room_num: i,
+      room_members: room,
+      room_clicked: player1.get('clicked'),
+      room_correct: player1.get('clicked') == correctAnswer
+    };
+    round.set('room' + i, roomPacket);
   });
 });
 
