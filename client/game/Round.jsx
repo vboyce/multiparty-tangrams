@@ -6,6 +6,21 @@ import Transition from "./Transition.jsx";
 
 const roundSound = new Audio("experiment/round-sound.mp3");
 const gameSound = new Audio("experiment/bell.mp3");
+const setTimeout = function(player) {
+  if(!player.get('exitTimeoutId')) {
+    player.set('exitTimeoutId', Meteor.setTimeout(() => {
+      player.set('exited', true);
+      player.exit('It looks like one of your partners disconnected before you could finish the experiment!')
+    }, 10000))
+  }
+}
+const cancelTimeout = function(player) {
+  const id = player.get('exitTimeoutId')
+  if(id) {
+    Meteor.clearTimeout(id)
+    player.set('exitTimeoutId', null)
+  }
+}
 
 export default class Round extends React.Component {
   componentDidMount() {
@@ -21,6 +36,13 @@ export default class Round extends React.Component {
 
   render() {
     const {round, stage, player, game } = this.props;
+    const allPlayersOnline = game.players.every(player => player.online);
+    const anyPlayersExited = game.players.some(player => player.get('exited'));
+    if(!allPlayersOnline || anyPlayersExited) {
+      setTimeout(player);
+    } else {
+      cancelTimeout(player);
+    }
     if(stage.name == 'transition') {
       return (
         <div className="round">
