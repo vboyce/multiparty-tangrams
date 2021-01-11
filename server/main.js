@@ -99,7 +99,7 @@ Empirica.gameInit((game, treatment) => {
 
   // Sample whether on the blue team or red team
   // TODO: use treatment variable
-  game.set("teamColor", _.sample(['red', 'blue']));
+  game.set("teamColor", treatment.teamColor);
   game.set("team", game.players.length > 1);
 
   // Loop through trials with partner

@@ -17,12 +17,14 @@ export default class GroupQuiz extends React.Component {
     mc_green: false,
     mc_blue: false,
     num_players: 0,
+    teamColor: "",
     community: "",
   };
 
   componentDidMount() {
     const { game } = this.props;
     this.state.num_players = game.treatment.playerCount;
+    this.state.teamColor = game.treatment.teamColor;
   }
 
   handleChange = (event) => {
@@ -55,7 +57,7 @@ export default class GroupQuiz extends React.Component {
       this.state.mc_yellow || //only this one is correct
       this.state.mc_green ||
       !this.state.mc_blue ||
-      this.state.community !== "blue"
+      this.state.community !== this.state.teamColor
       // this.state.mc_2_101 ||
       // !this.state.mc_2_102 || //this one is correct
       // this.state.mc_2_103 ||
@@ -73,7 +75,7 @@ export default class GroupQuiz extends React.Component {
   };
 
   render() {
-    const { hasPrev, onPrev } = this.props;
+    const { hasPrev, onPrev, game, treatment } = this.props;
     return (
       <Centered>
         <div className="quiz">

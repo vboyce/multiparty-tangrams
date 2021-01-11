@@ -1,6 +1,7 @@
 import Empirica from "meteor/empirica:core";
 import {names, avatarNames, nameColors} from './constants.js';
 import _ from "lodash";
+import {nameColors} from "./constants";
 
 // //// Avatar stuff //////
 
@@ -11,8 +12,10 @@ Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
 
+  const teamColor = game.treatment.teamColor;
   const schedule = game.get('schedule');
   const roleList = game.get('roleList');
+
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle([
       "/experiment/tangram_A.png",
@@ -20,12 +23,11 @@ Empirica.onGameStart((game) => {
       "/experiment/tangram_C.png",
       "/experiment/tangram_D.png"
     ]));
-    // TODO index into avatar/name list with teamColor
     player.set("partnerList", schedule[player._id]);
     player.set("roleList", roleList[player._id]);    
     player.set("name", names[i]);
-    player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
-    player.set("nameColor", nameColor[i]);
+    player.set("avatar", `/avatars/jdenticon/${avatarNames[teamColor][i]}`);
+    player.set("nameColor", nameColors[teamColor][i]);
     player.set("bonus", 0);
   });
 });
