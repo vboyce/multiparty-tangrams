@@ -25,6 +25,7 @@ import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
 import ExitSurvey from "./exit/ExitSurvey";
+import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
 Empirica.consent(Consent);
@@ -73,6 +74,7 @@ Empirica.exitSteps((game, player) => {
 });
 
 // Empirica.breadcrumb would probably go here
+Empirica.breadcrumb(customBreadcrumb);
 
 // Start the app render tree.
 // NB: This must be called after any other Empirica calls (Empirica.round(),

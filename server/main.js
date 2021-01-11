@@ -86,7 +86,7 @@ Empirica.gameInit((game, treatment) => {
 
   const reps = treatment.repetitionsWithPartner;
   const numTargets = targets.length;
-
+  const numPartners = game.players.length - 1;
   // I use this to play the sound on the UI when the game starts
   game.set("justStarted", true);
 
@@ -103,7 +103,7 @@ Empirica.gameInit((game, treatment) => {
   game.set("team", game.players.length > 1);
 
   // Loop through trials with partner
-  _.times(game.players.length - 1, partnerNum => {
+  _.times(numPartners, partnerNum => {
 
     // Loop through repetition blocks
     _.times(reps, repNum => {
@@ -114,7 +114,12 @@ Empirica.gameInit((game, treatment) => {
         const round = game.addRound();
         const roomTargets = _.map(roomBlock, room => room[targetNum]);
         round.set('task', _.zipObject(roomIds, roomTargets));
-
+        round.set('numTrials', reps * numTargets);
+        round.set('trialNum', repNum * reps + targetNum);
+        round.set('numPartners', numPartners);
+        round.set('partnerNum', partnerNum);
+        round.set('repNum', repNum);
+        
         // add 'partner swap' slide as first trial w/ new partner
         if(partnerNum > 0 & repNum == 0 & targetNum == 0) {
           round.addStage({
