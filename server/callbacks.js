@@ -1,5 +1,5 @@
 import Empirica from "meteor/empirica:core";
-import {names, avatarNames, nameColor} from './constants.js';
+import {names, avatarNames, nameColors} from './constants.js';
 import _ from "lodash";
 
 // //// Avatar stuff //////
