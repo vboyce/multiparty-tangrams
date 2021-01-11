@@ -24,18 +24,18 @@ export default class Sorry extends React.Component {
         break;
       default:
         msg = "Unfortunately the Game was cancelled...";
-        break;
+      break;
     }
 
+    if(player.exitReason) 
+      msg = player.exitReason
     return (
       <Centered>
         <div className="score">
           <h1>Sorry!</h1>
-
-          <p>Sorry, you were not able to play today! {msg}</p>
-
+          <p>{msg}</p>
+          {/*<p>Sorry, you were not able to play today! {msg}</p>*/}
           {/*{player.exitStatus !== "gameFull" ? (*/}
-
           {/*<p>*/}
           {/*Please return the HIT now so our platform does register your MTurk.*/}
           {/*Please come back for one of the next batches of Part 1. We will submit new*/}
@@ -43,20 +43,18 @@ export default class Sorry extends React.Component {
           {/*(batches of 100 games every hour starting at 2PM ET until 5PM).*/}
           {/*</p>*/}
 
-          {player.exitStatus === "gameLobbyTimedOut" ? (
-            <p>
-              Please submit <em>{player._id}</em> as the survey code in order to
-              receive the $1 base payment for your time today. We will also add
-              $0.1 showing-up bonus with the approval of this HIT.
-            </p>
-          ) : null}
-
           {player.exitStatus === "gameFull" ? (
             <p>
               Please submit <em>FZgameFullCSOP213093</em> as the survey code in
               order to receive the $0.1 showing up bonus.
             </p>
-          ) : null}
+          ) : (
+            <p>
+              Please submit <em>{player._id}</em> as the survey code in order to
+              receive the $1 base payment for your time today.
+              We will also add $0.1 showing-up bonus with the approval of this HIT.
+            </p>
+          )}
 
           {/*) : (*/}
           {/*<p>*/}
@@ -70,7 +68,7 @@ export default class Sorry extends React.Component {
           {/*</p>*/}
 
           <p>
-            <strong>Please come back for the next scheduled game.</strong>{" "}
+            {/*<strong>Please come back for the next scheduled game.</strong>{" "}*/}
             {/*We will send an email notification once the next  HIT is scheduled.*/}
           </p>
 
