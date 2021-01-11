@@ -33,7 +33,8 @@ export const names = [
   ]; // for the players names to match avatar color
 
 // Blue avatar names and color codes:
-export const avatarNames = [
+export const avatarNames = {
+  'blue' : [
     "Lincoln",
     "Leo",
     "Kayla",
@@ -44,9 +45,23 @@ export const avatarNames = [
     "Elijah",
     "Evan",
     "Katherine",
-   ]; // to do more go to https://jdenticon.com/#icon-D3
+  ],
+  'red' : [
+    "Claire",
+    "Jill",
+    "Asher",
+    "Wyatt",
+    "Jake",
+    "Cole",
+    "Declan",
+    "Jack",
+    "Sarah",
+    "Kaylee",
+  ]
+} // to do more go to https://jdenticon.com/#icon-D3
 
-export const nameColor = [
+export const nameColors = {
+  'blue' : [
     "#7A9CDC",
     "#5697C3",
     "#6DBCD2",
@@ -56,8 +71,21 @@ export const nameColor = [
     "#2A8393",
     "#4EABC5",
     "#4173B5",
-    "#4649AB",
-  ]; // similar to the color of the avatar
+    "#4649AB"
+  ],
+  'red' : [
+    "#A33C49",
+    "#B55D42",
+    "#BB786C",
+    "#BB6C7C",
+    "#CE7771",
+    "#A33F56",
+    "#C56D67",
+    "#C56777",
+    "#C56767",
+    "#A04744"
+  ]
+}
 
 // Red avatar names and color codes:
 // export const avatarNames = [

@@ -40,7 +40,12 @@ Empirica.gameInit((game, treatment) => {
     _.pluck(game.players, "id")
   );
 
-  game.set("justStarted", true); // I use this to play the sound on the UI when the game starts
+  // I use this to play the sound on the UI when the game starts
+  game.set("justStarted", true);
+
+  // Sample whether on the blue team or red team
+  // TODO: use treatment variable
+  game.set("teamColor", _.sample(['red', 'blue']));
   game.set("team", game.players.length > 1);
 
   _.times(game.players.length - 1, partnerNum => {
@@ -55,14 +60,14 @@ Empirica.gameInit((game, treatment) => {
         round.addStage({
           name: "transition",
           displayName: "Partner Swap!",
-          durationInSeconds: 5
+          durationInSeconds: 10
         });
       }
       
       round.addStage({
         name: "selection",
         displayName: "Selection",
-        durationInSeconds: 60000
+        durationInSeconds: 60
       });
     });
   });

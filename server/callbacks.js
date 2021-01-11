@@ -53,7 +53,7 @@ function createSchedule(players, numTrialsPerPartner) {
 Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
-
+  
   const scheduleObj = createSchedule(_.map(players, '_id'), 4);
   game.set('rooms', scheduleObj.roomAssignments);
   players.forEach((player, i) => {
@@ -64,6 +64,7 @@ Empirica.onGameStart((game) => {
       "/experiment/tangram_D.png"
     ]));
     console.log(scheduleObj);
+    // TODO index into avatar/name list with teamColor
     player.set("partnerList", scheduleObj.schedule[player._id]);
     player.set("roleList", scheduleObj.roles[player._id]);    
     player.set("name", names[i]);
