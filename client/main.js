@@ -8,7 +8,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import Empirica from "meteor/empirica:core";
 
 import Consent from "./intro/Consent.jsx";
-import GroupExitSurvey from "./exit/GroupExitSurvey.jsx";
+import GroupPostTest from "./exit/GroupPostTest.jsx";
 import IndividualExitSurvey from "./exit/IndividualExitSurvey.jsx";
 import Overview from "./intro/Overview.jsx";
 import TaskDetails from "./intro/TaskDetails.jsx";
@@ -24,6 +24,7 @@ import IndividualQuiz from "./intro/IndividualQuiz.jsx";
 import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
+import ExitSurvey from "./exit/ExitSurvey";
 
 // Set the Consent Component you want to present players (optional).
 Empirica.consent(Consent);
@@ -65,9 +66,9 @@ Empirica.exitSteps((game, player) => {
     return [Sorry];
   }
   if (game.players.length > 1) {
-    return [GroupExitSurvey, Thanks];
+    return [GroupPostTest, ExitSurvey, Thanks];
   } else {
-    return [IndividualExitSurvey, Thanks];
+    return [IndividualExitSurvey, ExitSurvey, Thanks];
   }
 });
 

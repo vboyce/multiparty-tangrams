@@ -12,8 +12,8 @@ import {
   Radio,
 } from "@blueprintjs/core";
 
-export default class GroupExitSurvey extends React.Component {
-  static stepName = "ExitSurvey";
+export default class GroupPostTest extends React.Component {
+  static stepName = "PostTest";
   state = {
     blueA: "",
     blueB: "",
@@ -83,7 +83,7 @@ export default class GroupExitSurvey extends React.Component {
         <form onSubmit={this.handleSubmit}>
 
           <h3>
-            You have been paired with a <em>new partner from the blue community</em>.
+            You have been paired with a <em style={{ color: "blue" }}>new partner from the blue community</em>.
           </h3>
 
           <div className="image">
@@ -450,7 +450,7 @@ export default class GroupExitSurvey extends React.Component {
     const { player, game } = this.props;
     return (
       <Centered>
-        <div className="exit-survey">
+        <div className="post-test">
           {this.exitMessage(player, game)}
           <hr />
           {this.exitForm()}
