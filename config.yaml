@@ -36,6 +36,13 @@ factorTypes:
     description: are you red or blue?
     required: false
     type: String
+  - _id: kJddTH8X4Y6Df7SPA
+    name: selectionDuration
+    description: >-
+      how many seconds do participants have to complete a tangram selection
+      trial
+    required: true
+    type: String
 factors:
   - _id: LCPL67GcDLnC7kpX4
     name: duo
@@ -57,6 +64,10 @@ factors:
     name: blue
     value: blue
     factorTypeId: yZ9EAzrPfAEKk96kr
+  - _id: H6mfXThg4jQ2annbb
+    name: minute
+    value: '60'
+    factorTypeId: kJddTH8X4Y6Df7SPA
 lobbyConfigs:
   - name: lobby
     timeoutType: lobby
