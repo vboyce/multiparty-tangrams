@@ -69,7 +69,6 @@ Empirica.onGameStart((game) => {
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
     player.set("nameColor", nameColor[i]);
-    player.set("cumulativeScore", 0);
     player.set("bonus", 0);
   });
 });
@@ -114,9 +113,9 @@ Empirica.onRoundEnd((game, round) => {
   const correctAnswer = round.get("task").target;
   players.forEach(player => {
     const selectedAnswer = player.get("clicked");
-    const currScore = player.get("cumulativeScore") || 0;
+    const currScore = player.get("bonus") || 0;
     const scoreIncrement = selectedAnswer == correctAnswer ? 0.02 : 0;
-    player.set("cumulativeScore", scoreIncrement + currScore);
+    player.set("bonus", scoreIncrement + currScore);
   });
 
   // Save outcomes as property of round for later export/analysis
@@ -135,32 +134,7 @@ Empirica.onRoundEnd((game, round) => {
 // onRoundEnd is triggered when the game ends.
 // It receives the same options as onGameStart.
 Empirica.onGameEnd((game) => {
-  const players = game.players;
   console.debug("The game", game._id, "has ended");
-  //computing the bonus for everyone (in this game, everyone will get the same value)
-  const conversionRate = game.treatment.conversionRate
-    ? game.treatment.conversionRate
-    : 1;
-
-  const optimalSolutionBonus = game.treatment.optimalSolutionBonus
-    ? game.treatment.optimalSolutionBonus
-    : 0;
-
-  const bonus =
-    game.get("cumulativeScore") > 0
-      ? (
-          game.get("cumulativeScore") * conversionRate +
-          game.get("nOptimalSolutions") * optimalSolutionBonus
-        ).toFixed(2)
-      : 0;
-
-  players.forEach((player) => {
-    if (player.get("bonus") === 0) {
-      //if we never computed their bonus
-      player.set("bonus", bonus);
-      player.set("cumulativeScore", game.get("cumulativeScore"));
-    }
-  });
 });
 
 // ===========================================================================
