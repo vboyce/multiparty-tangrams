@@ -24,7 +24,9 @@ export default class TeamDetails extends React.Component {
   }
 
   render() {
-    const { hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
+    console.log(this.props)
+    const {game, hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
+    const teamColor = treatment.teamColor
     const player = {
       _id: 0,
       name: names[0],
@@ -96,8 +98,8 @@ export default class TeamDetails extends React.Component {
 
           <div style={{ textAlign: "center" }}>
             <p>
-              <strong style={{ color: "blue" }}>
-                You are a member of the blue community.
+              <strong style={{ color: teamColor }}>
+                You are a member of the {teamColor} community.
               </strong>
             </p>
           </div>
