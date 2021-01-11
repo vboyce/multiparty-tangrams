@@ -1,20 +1,16 @@
 import Empirica from "meteor/empirica:core";
 
-export const taskData = [
+export const targets = [
   {
-    _id: "0",
     target: "/experiment/tangram_A.png"
   },
   {
-    _id: "1",
     target: "/experiment/tangram_B.png"
   },
   {
-    _id: "2",
     target: "/experiment/tangram_C.png"
   },
   {
-    _id: "3",
     target: "/experiment/tangram_D.png"
   },
 ];
