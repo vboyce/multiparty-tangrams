@@ -20,16 +20,16 @@ export const taskData = [
 ];
 
 export const names = [
-    "Blue",
-    "Green",
-    "Pink",
-    "Yellow",
-    "Purple",
-    "Red",
-    "Turqoise",
-    "Gold",
-    "Grey",
-    "Magenta",
+    "Repi",
+    "Minu",
+    "Laju",
+    "Hera",
+    "Zuda",
+    "Bavi",
+    "Lika",
+    "Felu",
+    "Wepi",
+    "Dace",
   ]; // for the players names to match avatar color
 
 // Blue avatar names and color codes:
