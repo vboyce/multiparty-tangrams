@@ -18,8 +18,10 @@ export default class Task extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-    const task = round.get("task");
+    const room = player.get('roomId');
+    const task = round.get("task")[room];
     const tangramURLs = player.get('tangramURLs');
+    const correct = player.get('clicked') == task.target
     let tangramsToRender;
     if (tangramURLs) {
       tangramsToRender = tangramURLs.map((tangram, i) => (
@@ -36,7 +38,7 @@ export default class Task extends React.Component {
     }
     let feedback = (
       player.get('clicked') == '' ? '' :
-      player.get('clicked') == round.get('task').target ? "Correct! You earned 2 points!" :
+        correct ? "Correct! You earned 2 points!" :
       "Ooops, that wasn't the target! You earned no bonus this round."
     )
     let feedback2 = player.get('clicked') == '' ? '' : "Ready to advance once other pairs finish."
