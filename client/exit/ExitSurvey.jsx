@@ -55,7 +55,7 @@ export default class ExitSurvey extends React.Component {
                 <p>
                     You final{" "}
                     <strong>
-                        <em>bonus is ${player.get("cumulativeScore") || 0}</em>
+                        <em>bonus is ${player.get("bonus") || 0}</em>
                     </strong>{" "}
                 </p>
             </div>
