@@ -1,6 +1,7 @@
 import Empirica from "meteor/empirica:core";
 import {names, avatarNames, nameColor} from './constants.js';
 import _ from "lodash";
+import {nameColors} from "./constants";
 
 function addToSchedule(schedule, first, second, numTrials) {
   var newValue1 = _.fromPairs([[
@@ -53,6 +54,7 @@ function createSchedule(players, numTrialsPerPartner) {
 Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
+  const teamColor = game.treatment.teamColor;
   
   const scheduleObj = createSchedule(_.map(players, '_id'), 4);
   game.set('rooms', scheduleObj.roomAssignments);
@@ -68,8 +70,10 @@ Empirica.onGameStart((game) => {
     player.set("partnerList", scheduleObj.schedule[player._id]);
     player.set("roleList", scheduleObj.roles[player._id]);    
     player.set("name", names[i]);
-    player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
-    player.set("nameColor", nameColor[i]);
+    console.log(names[i]);
+    // console.log(avatarNames[i])
+    player.set("avatar", `/avatars/jdenticon/${avatarNames[teamColor][i]}`);
+    player.set("nameColor", nameColors[teamColor][i]);
     player.set("bonus", 0);
   });
 });

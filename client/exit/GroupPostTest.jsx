@@ -36,7 +36,7 @@ export default class GroupPostTest extends React.Component {
         this.state.blueA === "" ||
         this.state.blueB === "" ||
         this.state.blueC === "" ||
-        this.state.blueD === "" || //only this one is correct
+        this.state.blueD === "" ||
         this.state.redA === "" ||
         this.state.redB === "" ||
         this.state.redC === "" ||
@@ -95,7 +95,7 @@ export default class GroupPostTest extends React.Component {
               <FormGroup
                   className={"form-group"}
                   inline={false}
-                  label={"How would you describe the tangram above to another member of the blue community?"}
+                  label={"How would you describe the tangram above to a member of the blue community?"}
                   labelFor={"blueA"}
                   //className={"form-group"}
               >
@@ -121,7 +121,7 @@ export default class GroupPostTest extends React.Component {
               <FormGroup
                   className={"form-group"}
                   inline={false}
-                  label={"How would you describe the tangram above to another member of the blue community?"}
+                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
                   labelFor={"blueB"}
                   //className={"form-group"}
               >
@@ -147,7 +147,7 @@ export default class GroupPostTest extends React.Component {
               <FormGroup
                   className={"form-group"}
                   inline={false}
-                  label={"How would you describe the tangram above to another member of the blue community?"}
+                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
                   labelFor={"blueC"}
                   //className={"form-group"}
               >
@@ -173,7 +173,7 @@ export default class GroupPostTest extends React.Component {
               <FormGroup
                   className={"form-group"}
                   inline={false}
-                  label={"How would you describe the tangram above to another member of the blue community?"}
+                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
                   labelFor={"blueD"}
                   //className={"form-group"}
               >
