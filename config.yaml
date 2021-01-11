@@ -1,0 +1,65 @@
+treatments:
+  - name: duo_blue
+    factorIds:
+      - LCPL67GcDLnC7kpX4
+      - dwfYRz6EK4FE9iNcR
+      - QEbiEZHHkAaEDEo3q
+  - name: duo_red
+    factorIds:
+      - LCPL67GcDLnC7kpX4
+      - dwfYRz6EK4FE9iNcR
+      - LYqRqNsuy3tZGcu7x
+  - name: quad_blue
+    factorIds:
+      - 9mWDEEbPMz8J8oWxh
+      - dwfYRz6EK4FE9iNcR
+      - QEbiEZHHkAaEDEo3q
+  - name: quad_red
+    factorIds:
+      - 9mWDEEbPMz8J8oWxh
+      - dwfYRz6EK4FE9iNcR
+      - LYqRqNsuy3tZGcu7x
+factorTypes:
+  - _id: FyNRiLFNYJ5593cHs
+    name: playerCount
+    description: The Number of players participating in the given game.
+    required: true
+    type: Integer
+    min: 1
+  - _id: BBRoq5WHnzs4qpWew
+    name: repetitionsWithPartner
+    description: how many times do you repeat with a partner
+    required: false
+    type: String
+  - _id: yZ9EAzrPfAEKk96kr
+    name: teamColor
+    description: are you red or blue?
+    required: false
+    type: String
+factors:
+  - _id: LCPL67GcDLnC7kpX4
+    name: duo
+    value: 2
+    factorTypeId: FyNRiLFNYJ5593cHs
+  - _id: 9mWDEEbPMz8J8oWxh
+    name: quad
+    value: 4
+    factorTypeId: FyNRiLFNYJ5593cHs
+  - _id: dwfYRz6EK4FE9iNcR
+    name: four
+    value: '4'
+    factorTypeId: BBRoq5WHnzs4qpWew
+  - _id: LYqRqNsuy3tZGcu7x
+    name: red
+    value: red
+    factorTypeId: yZ9EAzrPfAEKk96kr
+  - _id: QEbiEZHHkAaEDEo3q
+    name: blue
+    value: blue
+    factorTypeId: yZ9EAzrPfAEKk96kr
+lobbyConfigs:
+  - name: lobby
+    timeoutType: lobby
+    timeoutInSeconds: 300
+    timeoutStrategy: fail
+    gameLobbyIds: []
