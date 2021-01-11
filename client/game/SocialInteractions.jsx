@@ -50,7 +50,7 @@ export default class SocialInteractions extends React.Component {
           </div>
         </div>
         <ChatLog messages={messages} round={round} stage={stage} player={player} />
-        <EventLog events={events} stage={stage} player={player} />
+        <EventLog events={events} game={game} stage={stage} player={player} />
       </div>
     );
   }

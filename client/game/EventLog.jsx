@@ -14,7 +14,7 @@ export default class EventLog extends React.Component {
   }
 
   render() {
-    const { events, player } = this.props;
+    const { game, events, player } = this.props;
 
     //if the one who made the event is the player himself then self will be true
     return (
@@ -23,6 +23,7 @@ export default class EventLog extends React.Component {
           {events.map((event, i) => (
             <Event
               key={i}
+              game={game}
               event={event}
               player={player}
               self={event.subject ? player._id === event.subject._id : null}
@@ -45,15 +46,29 @@ class Event extends React.Component {
       state,
       at,
     } = this.props.event;
-    const { self, player } = this.props;
+    console.log(this.props)
+    const { self, game, player } = this.props;
+    const partnerId = player.get('partner')
+    const partner = _.filter(game.players, p => p._id === partnerId)[0];
+
     let content;
     switch (verb) {
-      case "selectionStarted":
-      content = (<>
-                   <div className="content">You're playing with {player.get('partner')}! </div>
-                   <div className="content">On this trial, you're the {player.get('role')}. </div>
-                   <div className="content">{player.get('role') == 'speaker' ? 'Please describe the object in the black box so your partner can correctly pick it out.' : 'Click the object your partner is describing! Feel free to respond or ask questions if necessary.'} </div>
-                 </>
+    case "selectionStarted":
+      content = (
+        <>
+          <div className="content">
+            You're playing with <strong style={{color: partner.get('nameColor')}}>{partner.get('name')}</strong>! 
+          </div>
+          <br/>
+          <br/>
+          <div className="content">
+            {player.get('role') == 'speaker' ?
+             'Please describe the object in the black box so your partner can \
+              correctly pick it out.' :
+             'Click the object your partner is describing! Feel free to respond \
+              or ask questions if necessary.'}
+          </div>
+        </>
       )
       break;
 
