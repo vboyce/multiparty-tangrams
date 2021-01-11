@@ -2,7 +2,51 @@ import Empirica from "meteor/empirica:core";
 
 import "./callbacks.js";
 import "./bots.js";
-import { taskData } from "./constants";
+import { targets } from "./constants";
+import _ from "lodash";
+
+function addToSchedule(schedule, first, second, numTrials) {
+  var newValue1 = _.fromPairs([[
+    _.toString(first),
+    schedule[first].concat(_.times(numTrials, _.constant(second)))
+  ]]);
+  _.extend(schedule, newValue1);
+}
+
+function addToRoles(roles, player, role, numTrials) {
+  var seq = role == 'speaker' ? ['speaker', 'listener'] : ['listener', 'speaker'];
+  var newValue1 = _.fromPairs([[
+    player.toString(),
+    roles[player].concat(..._.times(numTrials/2, _.constant(seq)))
+  ]]);
+  _.extend(roles, newValue1);
+}
+
+function createSchedule(players, numTrialsPerPartner) {
+  // Create a schedule for all players to play all others using 'circle' method
+  // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
+  // assert(self.num_players % 2 == 0)
+  const l = _.clone(players);
+  const schedule = _.zipObject(l, _.times(l.length, _.constant([])));
+  const roles = _.zipObject(l, _.times(l.length, _.constant([])));
+  const roomAssignments = [];
+  _.forEach(_.range(l.length - 1), function(round) {
+    const mid = parseInt(l.length / 2);
+    const l1 = l.slice(0, mid);
+    const l2 = _.reverse(l.slice(mid, l.length));
+    const zipped = _.zip(l1, l2);
+    roomAssignments.push(..._.times(numTrialsPerPartner, _.constant(zipped)));
+    _.forEach(_.range(mid), function(player) {
+      addToSchedule(schedule, l1[player], l2[player], numTrialsPerPartner);
+      addToSchedule(schedule, l2[player], l1[player], numTrialsPerPartner);
+      addToRoles(roles, l1[player], 'speaker', numTrialsPerPartner);
+      addToRoles(roles, l2[player], 'listener', numTrialsPerPartner);      
+    });
+    // rotate around fixed point
+    l.splice(1, 0, l.pop());
+  });
+  return {roomAssignments, schedule, roles};
+}
 
 // gameInit is where the structure of a game is defined.
 // Just before every game starts, once all the players needed are ready, this
@@ -37,37 +81,54 @@ Empirica.gameInit((game, treatment) => {
     "Game with a treatment: ",
     treatment,
     " will start, with workers",
-    _.pluck(game.players, "id")
+    _.map(game.players, "id")
   );
+
+  const reps = treatment.repetitionsWithPartner;
+  const numTargets = targets.length;
 
   // I use this to play the sound on the UI when the game starts
   game.set("justStarted", true);
+
+  // Make partner schedule for the game
+  const scheduleObj = createSchedule(_.map(game.players, '_id'), reps * numTargets);
+  const roomIds = _.map(scheduleObj.roomAssignments[0], (room, i) => 'room' + i);
+  game.set('rooms', scheduleObj.roomAssignments);
+  game.set('schedule', scheduleObj.schedule);
+  game.set('roleList', scheduleObj.roles);
 
   // Sample whether on the blue team or red team
   // TODO: use treatment variable
   game.set("teamColor", _.sample(['red', 'blue']));
   game.set("team", game.players.length > 1);
 
+  // Loop through trials with partner
   _.times(game.players.length - 1, partnerNum => {
 
-    // Loop through trials with partner
-    _.times(4, trialNum => {
-      const round = game.addRound();
-      round.set("task", taskData[trialNum]);
+    // Loop through repetition blocks
+    _.times(reps, repNum => {
+      const roomBlock = _.map(game.get('rooms'), room => _.shuffle(targets));
 
-      // add 'partner swap' slide as first trial
-      if(partnerNum > 0 & trialNum == 0) {
+      // Loop through targets in block
+      _.times(numTargets, targetNum => {      
+        const round = game.addRound();
+        const roomTargets = _.map(roomBlock, room => room[targetNum]);
+        round.set('task', _.zipObject(roomIds, roomTargets));
+
+        // add 'partner swap' slide as first trial w/ new partner
+        if(partnerNum > 0 & repNum == 0 & targetNum == 0) {
+          round.addStage({
+            name: "transition",
+            displayName: "Partner Swap!",
+            durationInSeconds: 10
+          });
+        }
+        
         round.addStage({
-          name: "transition",
-          displayName: "Partner Swap!",
-          durationInSeconds: 10
+          name: "selection",
+          displayName: "Selection",
+          durationInSeconds: 60
         });
-      }
-      
-      round.addStage({
-        name: "selection",
-        displayName: "Selection",
-        durationInSeconds: 60
       });
     });
   });

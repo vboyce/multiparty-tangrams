@@ -2,49 +2,6 @@ import Empirica from "meteor/empirica:core";
 import {names, avatarNames, nameColor} from './constants.js';
 import _ from "lodash";
 
-function addToSchedule(schedule, first, second, numTrials) {
-  var newValue1 = _.fromPairs([[
-    _.toString(first),
-    schedule[first].concat(_.times(numTrials, _.constant(second)))
-  ]]);
-  _.extend(schedule, newValue1);
-}
-
-function addToRoles(roles, player, role, numTrials) {
-  var seq = role == 'speaker' ? ['speaker', 'listener'] : ['listener', 'speaker'];
-  var newValue1 = _.fromPairs([[
-    player.toString(),
-    roles[player].concat(..._.times(numTrials/2, _.constant(seq)))
-  ]]);
-  _.extend(roles, newValue1);
-}
-
-function createSchedule(players, numTrialsPerPartner) {
-  // Create a schedule for all players to play all others using 'circle' method
-  // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
-  // assert(self.num_players % 2 == 0)
-  const l = _.clone(players);
-  const schedule = _.zipObject(l, _.times(l.length, _.constant([])));
-  const roles = _.zipObject(l, _.times(l.length, _.constant([])));
-  const roomAssignments = [];
-  _.forEach(_.range(l.length - 1), function(round) {
-    const mid = parseInt(l.length / 2);
-    const l1 = l.slice(0, mid);
-    const l2 = _.reverse(l.slice(mid, l.length));
-    const zipped = _.zip(l1, l2);
-    roomAssignments.push(..._.times(numTrialsPerPartner, _.constant(zipped)));
-    _.forEach(_.range(mid), function(player) {
-      addToSchedule(schedule, l1[player], l2[player], numTrialsPerPartner);
-      addToSchedule(schedule, l2[player], l1[player], numTrialsPerPartner);
-      addToRoles(roles, l1[player], 'speaker', numTrialsPerPartner);
-      addToRoles(roles, l2[player], 'listener', numTrialsPerPartner);      
-    });
-    // rotate around fixed point
-    l.splice(1, 0, l.pop());
-  });
-  return {roomAssignments, schedule, roles};
-}
-
 // //// Avatar stuff //////
 
 // onGameStart is triggered opnce per game before the game starts, and before
@@ -53,9 +10,9 @@ function createSchedule(players, numTrialsPerPartner) {
 Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
-  
-  const scheduleObj = createSchedule(_.map(players, '_id'), 4);
-  game.set('rooms', scheduleObj.roomAssignments);
+
+  const schedule = game.get('schedule');
+  const roleList = game.get('roleList');
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle([
       "/experiment/tangram_A.png",
@@ -63,10 +20,9 @@ Empirica.onGameStart((game) => {
       "/experiment/tangram_C.png",
       "/experiment/tangram_D.png"
     ]));
-    console.log(scheduleObj);
     // TODO index into avatar/name list with teamColor
-    player.set("partnerList", scheduleObj.schedule[player._id]);
-    player.set("roleList", scheduleObj.roles[player._id]);    
+    player.set("partnerList", schedule[player._id]);
+    player.set("roleList", roleList[player._id]);    
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
     player.set("nameColor", nameColor[i]);
@@ -78,9 +34,14 @@ Empirica.onGameStart((game) => {
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round) => {
   const players = game.players;
+  const rooms = game.get('rooms')[round.index];
   round.set("chat", []); 
 
   players.forEach(player => {
+    console.log(rooms)
+    const roomId = _.findIndex(rooms, room => _.includes(room, player._id));
+    console.log(roomId);
+    player.set('roomId', 'room' + roomId);
     player.set('partner', player.get('partnerList')[round.index]),
     player.set('role', player.get('roleList')[round.index])
     player.set('clicked', false);
@@ -109,26 +70,29 @@ Empirica.onStageEnd((game, round, stage) => {});
 Empirica.onRoundEnd((game, round) => {
   const players = game.players;
   const rooms = game.get('rooms');
-  
+  const task = round.get('task');
+
   // Update player scores
-  const correctAnswer = round.get("task").target;
   players.forEach(player => {
+    const roomId = player.get('roomId');
     const selectedAnswer = player.get("clicked");
     const currScore = player.get("bonus") || 0;
+    const correctAnswer = task[roomId].target;
     const scoreIncrement = selectedAnswer == correctAnswer ? 0.02 : 0;
     player.set("bonus", scoreIncrement + currScore);
   });
 
   // Save outcomes as property of round for later export/analysis
-  rooms[round.index].forEach((room, i) => {
+  rooms[round.index].forEach((room, roomId) => {
     const player1 = game.players.find(p => p._id == room[0]);
+    const correctAnswer = task['room' + roomId].target;
     const roomPacket = {
-      room_num: i,
+      room_num: roomId,
       room_members: room,
       room_clicked: player1.get('clicked'),
       room_correct: player1.get('clicked') == correctAnswer
     };
-    round.set('room' + i, roomPacket);
+    round.set('room' + roomId + 'data', roomPacket);
   });
 });
 
