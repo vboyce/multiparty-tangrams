@@ -3,9 +3,39 @@ import React from "react";
 import { Centered } from "meteor/empirica:core";
 // //// Avatar stuff //////
 // const names = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split(""); //for the players names (we will call them A, B, C etc)
-const names = ["Blue", "Green", "Pink", "Yellow"]; // for the players names to match avatar color
-const avatarNames = ["Colton", "Aaron", "Alex", "Tristan"]; // to do more go to https://jdenticon.com/#icon-D3
-const nameColor = ["#3D50B7", "#70A945", "#DE8AAB", "A59144"]; // similar to the color of the avatar
+const names = ["Kati", "Lepi", "Daru", "Soha"]; // for the players names to match avatar color
+// const avatarNames = ["Colton", "Aaron", "Alex", "Tristan"]; // to do more go to https://jdenticon.com/#icon-D3
+// const nameColor = ["#3D50B7", "#70A945", "#DE8AAB", "A59144"]; // similar to the color of the avatar
+
+const avatarNames = {
+  'blue' : [
+    "Lincoln",
+    "Leo",
+    "Kayla",
+    "Molly",
+  ],
+  'red' : [
+    "Claire",
+    "Jill",
+    "Asher",
+    "Wyatt",
+  ]
+}
+
+const nameColor = {
+  'blue' : [
+    "#7A9CDC",
+    "#5697C3",
+    "#6DBCD2",
+    "#2D7496",
+  ],
+  'red' : [
+    "#A33C49",
+    "#B55D42",
+    "#BB786C",
+    "#BB6C7C",
+  ]
+}
 
 export default class TeamDetails extends React.Component {
   renderPlayer(player, self = false) {
@@ -30,22 +60,16 @@ export default class TeamDetails extends React.Component {
     const player = {
       _id: 0,
       name: names[0],
-      nameColor: nameColor[0],
-      avatar: `/avatars/jdenticon/${avatarNames[0]}`
+      nameColor: nameColor[teamColor][0],
+      avatar: `/avatars/jdenticon/${avatarNames[teamColor][0]}`
     };
 
     const otherPlayers = [
       {
         _id: 1,
         name: names[1],
-        nameColor: nameColor[1],
-        avatar: `/avatars/jdenticon/${avatarNames[1]}`
-      },
-      {
-        _id: 2,
-        name: names[2],
-        nameColor: nameColor[2],
-        avatar: `/avatars/jdenticon/${avatarNames[2]}`
+        nameColor: nameColor[teamColor][1],
+        avatar: `/avatars/jdenticon/${avatarNames[teamColor][1]}`
       }
     ];
     return (
@@ -60,7 +84,7 @@ export default class TeamDetails extends React.Component {
             </strong>
             . They are other participants who are undertaking the same study
             simultaneously. Throughout all the tasks, you will be paired off with one
-            of your community members at a time to complete the tangram matching task described
+            of your community members at a time to complete the picture matching game described
             on the previous page. The listener's answer will reflect both the speaker's quality of
             description and the listener's comprehension, and therefore,{" "}
             <strong>both members of each pair will receive the same score for a given round</strong>
@@ -78,7 +102,7 @@ export default class TeamDetails extends React.Component {
               <div className="total-score bp3-card">
                 <h6 className={"bp3-heading"}>Total Score</h6>
 
-                <h2 className={"bp3-heading"}>{3400}</h2>
+                <h2 className={"bp3-heading"}>{"$1.02"}</h2>
               </div>
             </div>
           </div>
@@ -105,12 +129,8 @@ export default class TeamDetails extends React.Component {
           </div>
 
           <p>
-            Each community has a different set of tangrams, as shown below.
+            Each community has a different set of pictures, so remember which community you are in!
           </p>
-
-          <div className="image">
-            <center><img src="/experiment/communities.PNG" /></center>
-          </div>
 
           <button
             type="button"

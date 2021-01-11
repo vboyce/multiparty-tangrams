@@ -21,17 +21,13 @@ export default class MoreAboutBonus extends React.Component {
           <div style={{ textAlign: "center" }}>
             <p>
               <strong style={{ color: "blue" }}>
-                S = The number of correctly chosen tangrams * 100
+                S = The number of correctly chosen tangrams * 0.02
               </strong>
             </p>
           </div>
 
           <p>
             Your performance bonus will be based on your score at the end of the experiment.
-            The exchange rate is{" "}
-            <strong style={{ color: "red" }}>
-              {Math.round(1 / treatment.conversionRate)} game points = $1 bonus
-            </strong>.
           </p>
 
           <p>

@@ -93,7 +93,7 @@ export default class SocialInteractionDetails extends React.Component {
             {Math.ceil(treatment.stageDuration / 60.0)} minutes in each task to
             select a tangram. You will automatically{" "}
             <strong>progress to the next task when the time is up</strong>.
-            If your pair selects a tangram before the other pair is finished, please wait and
+            If your pair selects a picture before the other pair is finished, please wait and
             do not refresh as you wait for the other pair to complete their selections. Partners will
             automatically swap, so please take note of who you are currently playing with.
           </p>

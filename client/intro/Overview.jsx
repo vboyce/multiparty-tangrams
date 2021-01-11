@@ -13,7 +13,7 @@ export default class Overview extends React.Component {
           <h1 className={"bp3-heading"}> Game Overview </h1>
           <p>
             In this game, you will play a series of communication games with other participants.
-            All of you will see the same set of four pictures, which will look something like this:
+            All of the people you play with will see the same set of four pictures, which will look something like this:
           </p>
 
           <div className="image">
@@ -55,7 +55,7 @@ export default class Overview extends React.Component {
             one of the pictures, both of you will be given feedback before
             advancing to the next round: the Speaker will see which picture
             the Listener clicked, and the Listener will see the true identity of
-            the target. You will earn a {" "} <strong>4 cent bonus</strong> for each correct
+            the target. You will earn a {" "} <strong>2 cent bonus</strong> for each correct
             match, so pay attention!
           </p>
 
@@ -63,10 +63,11 @@ export default class Overview extends React.Component {
             There are a total of <b>16 rounds</b> with each partner, so each
             picture will appear as the target multiple times with that
             partner. You will switch roles over 4 rounds, so both of you will
-            get the chance to be Director and Matcher.  After the final round
+            get the chance to be Speaker and Listener.  After the final round
             of your game with one partner, you will <b>switch partners</b> to
             someone you haven't talked to before!  Once you have played a game
-            with <b>three different turkers</b>, you will fill out a quick 15
+            with <b>three different partners</b>, you will fill out a short test about how you would
+            describe different pictures to different people. Finally, you will fill out a quick 15
             second survey and be on your way.
           </p>
 
@@ -86,10 +87,10 @@ export default class Overview extends React.Component {
 
           <p>
             Just hold tight a moment while they catch up to you! We realize
-            this waiting can make the completion time of the HIT more
+            this waiting can make the completion time of the study more
             variable, but we are tracking the amount of time you spend in the
             waiting room; if you are waiting for more than 20 minutes and a
-            game still has not started, or if you find your HIT close to
+            game still has not started, or if you find your study close to
             expiration, please email us at rdhawkins@princeton.edu for
             compensation.
           </p>
@@ -98,12 +99,12 @@ export default class Overview extends React.Component {
             Lastly, please DO NOT refresh the page or close the window; you
             will not be able to return to the study. Because the study
             requires the whole group to be present, if one of the other
-            turkers in your group disconnects, you will be referred to a page
+            participants in your group disconnects, you will be referred to a page
             where you will answer some questions and be able to submit your
-            HIT. However, because such disconnections are disruptive and
+            responses. However, because such disconnections are disruptive and
             unfair to other participants, who will be prevented from receiving the
             total possible bonus for finishing the experiment, we ask you to
-            please return the HIT if you believe you may not be able to complete
+            please close this page if you believe you may not be able to complete
             the experiment. If you decide to disconnect during the experiment
             anyway, we would very much appreciate an email with your feedback,
             and we will try to help! Have fun!
