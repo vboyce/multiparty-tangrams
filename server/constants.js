@@ -87,30 +87,3 @@ export const nameColors = {
   ]
 }
 
-// Red avatar names and color codes:
-// export const avatarNames = [
-//     "Claire",
-//     "Jill",
-//     "Asher",
-//     "Wyatt",
-//     "Jake",
-//     "Cole",
-//     "Declan",
-//     "Jack",
-//     "Sarah",
-//     "Kaylee",
-// ]; // to do more go to https://jdenticon.com/#icon-D3
-
-// export const nameColor = [
-//     "#A33C49",
-//     "#B55D42",
-//     "#BB786C",
-//     "#BB6C7C",
-//     "#CE7771",
-//     "#A33F56",
-//     "#C56D67",
-//     "#C56777",
-//     "#C56767",
-//     "#A04744",
-// ]; // similar to the color of the avatar
-
