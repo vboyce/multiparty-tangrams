@@ -5,6 +5,8 @@ import {Centered} from "meteor/empirica:core";
 export default class Thanks extends React.Component {
   static stepName = "Thanks";
 
+  componentWillMount() {}
+
   exitMessage = (player, game) => {
     return (
         <div>
@@ -13,7 +15,7 @@ export default class Thanks extends React.Component {
           <br />
           <h3>
             Please submit the following code to receive your bonus:{" "}
-            <em>{game.treatment.submitCode}</em>.
+            <em>3B021164</em>.
           </h3>
           <p>
             Your final{" "}
@@ -32,6 +34,9 @@ export default class Thanks extends React.Component {
 
   render() {
     const { player, game } = this.props;
+    if(!game) {
+      return <h1> Error generating code! Please contact requester. </h1>
+    }
     return (
       <Centered>
         <div className="game finished">

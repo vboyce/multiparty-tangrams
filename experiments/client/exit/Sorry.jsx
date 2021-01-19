@@ -5,7 +5,7 @@ import {Centered} from "meteor/empirica:core";
 export default class Sorry extends React.Component {
   static stepName = "Sorry";
 
-  render() {
+  render() {    
     const { player, game, hasNext, onSubmit } = this.props;
     let msg;
     switch (player.exitStatus) {
@@ -44,7 +44,7 @@ export default class Sorry extends React.Component {
           {/*</p>*/}
 
           <p>
-            Please submit <em>{game.treatment.submitCode}</em> as the survey code in
+            Please submit <em>3B021164</em> as the survey code in
             order to receive the base pay for your time today.
           </p>
           
