@@ -8,12 +8,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import Empirica from "meteor/empirica:core";
 
 import Consent from "./intro/Consent.jsx";
-import GroupPostTest from "./exit/GroupPostTest.jsx";
-import IndividualExitSurvey from "./exit/IndividualExitSurvey.jsx";
 import Overview from "./intro/Overview.jsx";
-import TaskDetails from "./intro/TaskDetails.jsx";
-import ConstraintsDetails from "./intro/ConstraintsDetails.jsx";
-import RoomArrangements from "./intro/RoomArrangements";
 import TeamDetails from "./intro/TeamDetails.jsx";
 import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
 import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
@@ -25,6 +20,9 @@ import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
 import ExitSurvey from "./exit/ExitSurvey";
+import { BlueA, BlueB, BlueC, BlueD, BlueE, BlueF, BlueG, BlueH,
+         RedA, RedB, RedC, RedD, RedE, RedF, RedG, RedH } from "./exit/GroupPostTest.jsx";
+import PostTestInstructions from "./exit/PostTestInstructions.jsx";
 import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
@@ -46,7 +44,7 @@ Empirica.introSteps((game, treatment) => {
     steps.push(IndividualQuiz);
   }
 
-  return [];
+  return steps;
 });
 
 // The Round component containing the game UI logic.
@@ -65,11 +63,13 @@ Empirica.round(Round);
 Empirica.exitSteps((game, player) => {
   if (player.exitStatus !== "finished") {
     return [Sorry];
-  }
-  if (game.players.length > 1) {
-    return [GroupPostTest, ExitSurvey, Thanks];
   } else {
-    return [IndividualExitSurvey, ExitSurvey, Thanks];
+    const blues_setA = _.shuffle([BlueA, BlueB, BlueC, BlueD]);
+    const reds_setA = _.shuffle([RedA, RedB, RedC, RedD]);
+    const blues_setB = _.shuffle([BlueE, BlueF, BlueG, BlueH]);
+    const reds_setB = _.shuffle([RedE, RedF, RedG, RedH]);
+    const post_test = game.get('targetSet') == 'setA' ? [blues_setA, reds_setA] : [blues_setB, reds_setB];
+    return [PostTestInstructions].concat(_.flatten(_.shuffle(post_test))).concat(ExitSurvey, Thanks);
   }
 });
 

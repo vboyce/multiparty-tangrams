@@ -12,450 +12,306 @@ import {
   Radio,
 } from "@blueprintjs/core";
 
-export default class GroupPostTest extends React.Component {
-  static stepName = "PostTest";
-  state = {
-    blueA: "",
-    blueB: "",
-    blueC: "",
-    blueD: "",
-    redA: "",
-    redB: "",
-    redC: "",
-    redD: "",
-  };
-
+class GroupPostTest extends React.Component {
   handleChange = (event) => {
     const el = event.currentTarget;
-    this.setState({ [el.name]: el.value });
+    this.setState({ 'text' : el.value });
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if (
-        this.state.blueA === "" ||
-        this.state.blueB === "" ||
-        this.state.blueC === "" ||
-        this.state.blueD === "" ||
-        this.state.redA === "" ||
-        this.state.redB === "" ||
-        this.state.redC === "" ||
-        this.state.redD === ""
-    ) {
+    if (this.state.text === "") {
       AlertToaster.show({
-        message:
-            "Sorry, you have not completed one or more of the questions above. Please answer all of the questions before submitting!",
+        message: "Sorry, you have not completed the question above. Please answer the question before submitting!"
+      });
+    } else if(this.state.loadingNextRound) {
+      AlertToaster.show({
+        message: "Sorry, you have already submitted. Please wait for the next question to load."
       });
     } else {
-      this.props.onSubmit(this.state);
+      this.state.loadingNextRound = true;
+      document.getElementById('submit-button').disabled = true;
+      Meteor.setTimeout(() => this.props.onSubmit(this.state), 1000);
     }
   };
 
-  exitMessage = (player, game) => {
+  showTangram = () => {
     return (
       <div>
-        {" "}
-        <h1> Hypothetical Games </h1>
-        <br />
-        <p>
-          For the final part of this experiment, please answer the following questions about how you
-          would describe tangrams to different players.
-        </p>
+        <div className="image">
+          <center><img width='200px' src={this.state.tangram} /></center>
+        </div>
+        
+        <div className="pt-form-group">
+          <div className="pt-form-content">
+            <label style={{color: this.state.group}} htmlFor={this.state.id}>
+              {"How would you describe the tangram above to a member of the " + this.state.group + " community?"}
+            </label>
+            <TextArea
+              id={this.state.id}
+              large={true}
+              intent={Intent.PRIMARY}
+              onChange={this.handleChange}
+              fill={true}
+              name={this.state.id}
+            />
+          </div>
+        </div>
       </div>
-    );
-  };
-
-  exitForm = () => {
-    const {
-      blueA,
-      blueB,
-      blueC,
-      blueD,
-      redA,
-      redB,
-      redC,
-      redD,
-    } = this.state;
-
-    return (
-      <div>
-        {" "}
-        <form onSubmit={this.handleSubmit}>
-
-          <h3>
-            You have been paired with a <em style={{ color: "blue" }}>new partner from the blue community</em>.
-          </h3>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_A.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to a member of the blue community?"}
-                  labelFor={"blueA"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="blueA"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={blueA}
-                    fill={true}
-                    name="blueA"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_B.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
-                  labelFor={"blueB"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="blueA"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={blueB}
-                    fill={true}
-                    name="blueB"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_C.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
-                  labelFor={"blueC"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="blueA"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={blueC}
-                    fill={true}
-                    name="blueC"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_D.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the blue community?"}
-                  labelFor={"blueD"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="blueD"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={blueD}
-                    fill={true}
-                    name="blueD"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <hr />
-
-          <h3>
-            You have been paired with a <em style={{ color: "red" }}>new partner from the red community</em>.
-          </h3>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_A.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the red community?"}
-                  labelFor={"redA"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="redA"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={redA}
-                    fill={true}
-                    name="redA"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_B.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the red community?"}
-                  labelFor={"redB"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="redB"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={redB}
-                    fill={true}
-                    name="redB"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_C.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the red community?"}
-                  labelFor={"redC"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="redC"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={redC}
-                    fill={true}
-                    name="redC"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-          <div className="image">
-            <center><img src="/experiment/tangram_D.png" /></center>
-          </div>
-
-          <div className="pt-form-group">
-            <div className="pt-form-content">
-              <FormGroup
-                  className={"form-group"}
-                  inline={false}
-                  label={"How would you describe the tangram above to an unknown member of the red community?"}
-                  labelFor={"redD"}
-                  //className={"form-group"}
-              >
-                <TextArea
-                    id="redD"
-                    large={true}
-                    intent={Intent.PRIMARY}
-                    onChange={this.handleChange}
-                    value={redD}
-                    fill={true}
-                    name="redD"
-                />
-              </FormGroup>
-            </div>
-          </div>
-
-
-
-          {/*<div className="pt-form-group">*/}
-          {/*  <div className="pt-form-content">*/}
-          {/*    <RadioGroup*/}
-          {/*      name="chatComfort"*/}
-          {/*      label="How comfortable were you in sharing your perspective with the team through the chat?"*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      selectedValue={chatComfort}*/}
-          {/*    >*/}
-          {/*      <Radio*/}
-          {/*        label="Very comfortable"*/}
-          {/*        value="extremelyValuable"*/}
-          {/*        className={"pt-inline"}*/}
-          {/*      />*/}
-          {/*      <Radio*/}
-          {/*        label="Comfortable"*/}
-          {/*        value="comfortable"*/}
-          {/*        className={"pt-inline"}*/}
-          {/*      />*/}
-          {/*      <Radio*/}
-          {/*        label="Neutral"*/}
-          {/*        value="neutral"*/}
-          {/*        className={"pt-inline"}*/}
-          {/*      />*/}
-
-          {/*      <Radio*/}
-          {/*        label="Uncomfortable"*/}
-          {/*        value="uncomfortable"*/}
-          {/*        className={"pt-inline"}*/}
-          {/*      />*/}
-
-          {/*      <Radio*/}
-          {/*        label="Very uncomfortable"*/}
-          {/*        value="veryUncomfortable"*/}
-          {/*        className={"pt-inline"}*/}
-          {/*      />*/}
-          {/*    </RadioGroup>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-
-          {/*<div className="form-line thirds">*/}
-          {/*  <FormGroup*/}
-          {/*    className={"form-group"}*/}
-          {/*    inline={false}*/}
-          {/*    label={"How would you describe your strategy in the game?"}*/}
-          {/*    labelFor={"strategy"}*/}
-          {/*    //className={"form-group"}*/}
-          {/*  >*/}
-          {/*    <TextArea*/}
-          {/*      id="strategy"*/}
-          {/*      large={true}*/}
-          {/*      intent={Intent.PRIMARY}*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      value={strategy}*/}
-          {/*      fill={true}*/}
-          {/*      name="strategy"*/}
-          {/*    />*/}
-          {/*  </FormGroup>*/}
-
-          {/*  <FormGroup*/}
-          {/*    className={"form-group"}*/}
-          {/*    inline={false}*/}
-          {/*    label={"Do you feel the pay was fair?"}*/}
-          {/*    labelFor={"fair"}*/}
-          {/*    //className={"form-group"}*/}
-          {/*  >*/}
-          {/*    <TextArea*/}
-          {/*      id="fair"*/}
-          {/*      name="fair"*/}
-          {/*      large={true}*/}
-          {/*      intent={Intent.PRIMARY}*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      value={fair}*/}
-          {/*      fill={true}*/}
-          {/*    />*/}
-          {/*  </FormGroup>*/}
-
-          {/*  <FormGroup*/}
-          {/*    className={"form-group"}*/}
-          {/*    inline={false}*/}
-          {/*    label={"Feedback, including problems you encountered."}*/}
-          {/*    labelFor={"feedback"}*/}
-          {/*    //className={"form-group"}*/}
-          {/*  >*/}
-          {/*    <TextArea*/}
-          {/*      id="feedback"*/}
-          {/*      name="feedback"*/}
-          {/*      large={true}*/}
-          {/*      intent={Intent.PRIMARY}*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      value={feedback}*/}
-          {/*      fill={true}*/}
-          {/*    />*/}
-          {/*  </FormGroup>*/}
-          {/*</div>*/}
-
-          {/*<div className="form-line thirds">*/}
-          {/*  <FormGroup*/}
-          {/*    className={"form-group"}*/}
-          {/*    inline={false}*/}
-          {/*    label={"Was the in-game chat feature useful?"}*/}
-          {/*    labelFor={"chatUseful"}*/}
-          {/*    //className={"form-group"}*/}
-          {/*  >*/}
-          {/*    <TextArea*/}
-          {/*      id="chatUseful"*/}
-          {/*      name="chatUseful"*/}
-          {/*      large={true}*/}
-          {/*      intent={Intent.PRIMARY}*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      value={chatUseful}*/}
-          {/*      fill={true}*/}
-          {/*    />*/}
-          {/*  </FormGroup>*/}
-
-          {/*  <FormGroup*/}
-          {/*    className={"form-group"}*/}
-          {/*    inline={false}*/}
-          {/*    label={"Was the events log feature useful?"}*/}
-          {/*    labelFor={"events"}*/}
-          {/*    //className={"form-group"}*/}
-          {/*  >*/}
-          {/*    <TextArea*/}
-          {/*      id="events"*/}
-          {/*      name="events"*/}
-          {/*      large={true}*/}
-          {/*      intent={Intent.PRIMARY}*/}
-          {/*      onChange={this.handleChange}*/}
-          {/*      value={events}*/}
-          {/*      fill={true}*/}
-          {/*    />*/}
-          {/*  </FormGroup>*/}
-          {/*</div>*/}
-
-          <button type="submit" className="pt-button pt-intent-primary">
-            Submit
-            <span className="pt-icon-standard pt-icon-key-enter pt-align-right" />
-          </button>
-        </form>{" "}
-      </div>
-    );
-  };
-
+    )
+  }
+  
   componentWillMount() {}
 
   render() {
     const { player, game } = this.props;
-    return (
+    return this.state.loadingNextRound ? (
+      <Centered>
+        <div className="post-test"> <h3> Got it! Loading next question... </h3></div>
+      </Centered>
+    ) : (
       <Centered>
         <div className="post-test">
-          {this.exitMessage(player, game)}
-          <hr />
-          {this.exitForm()}
+          <form onSubmit={this.handleSubmit}>
+            <h3>
+              Describe this object for a new member of <b style={{ color: this.state.color }}> {this.state.group == game.treatment.teamColor ? "your own community, " : " the other community, "} the {this.state.group} community</b>.
+            </h3>
+            <p>
+              You'll receive a $0.10 bonus if they can choose it correctly based on your message.
+            </p>
+            {this.showTangram()}
+            <button type="submit" id='submit-button' className="pt-button pt-intent-primary">
+              Submit
+              <span className="pt-icon-standard pt-icon-key-enter pt-align-right" />
+            </button>
+          </form>  
         </div>
       </Centered>
     );
+  }
+}
+
+export class BlueA extends GroupPostTest {
+  static stepName = 'blueA'
+  constructor(props) {
+    console.log('blue a props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_A.png",
+      group: 'blue',
+      id: 'blueA',
+      text: ""
+    };
+  }
+}
+
+export class BlueB extends GroupPostTest {
+  static stepName = 'blueB'
+    constructor(props) {
+      console.log('blue b props', props)
+      super(props);
+      this.state = {
+        tangram: "/experiment/tangram_B.png",
+        group: 'blue',
+        id: 'blueB',
+        text: ""
+      };
+  }
+}
+
+export class BlueC extends GroupPostTest {
+  static stepName = 'blueC'
+  constructor(props) {
+    console.log('blue c props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_C.png",
+      group: 'blue',
+      id: 'blueC',
+      text: ""
+    };
+  }
+}
+
+export class BlueD extends GroupPostTest {
+  static stepName = 'blueD'
+  constructor(props) {
+    console.log('blue d props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_D.png",
+      group: 'blue',
+      id: 'blueD',
+      text: ""
+    };
+  }
+}
+
+
+export class BlueE extends GroupPostTest {
+  static stepName = 'blueE'
+  constructor(props) {
+    console.log('blue e props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_E.png",
+      group: 'blue',
+      id: 'blueE',
+      text: ""
+    };
+  }
+}
+
+export class BlueF extends GroupPostTest {
+  static stepName = 'blueF'
+    constructor(props) {
+      console.log('blue f props', props)
+      super(props);
+      this.state = {
+        tangram: "/experiment/tangram_F.png",
+        group: 'blue',
+        id: 'blueF',
+        text: ""
+      };
+  }
+}
+
+export class BlueG extends GroupPostTest {
+  static stepName = 'blueG'
+  constructor(props) {
+    console.log('blue g props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_G.png",
+      group: 'blue',
+      id: 'blueG',
+      text: ""
+    };
+  }
+}
+
+export class BlueH extends GroupPostTest {
+  static stepName = 'blueH'
+  constructor(props) {
+    console.log('blue h props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_H.png",
+      group: 'blue',
+      id: 'blueH',
+      text: ""
+    };
+  }
+}
+
+
+export class RedA extends GroupPostTest {
+  static stepName = 'RedA'
+  constructor(props) {
+    console.log('red a props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_A.png",
+      group: 'red',
+      id: 'redA',
+      text: ""
+    };
+  }
+}
+
+export class RedB extends GroupPostTest {
+  static stepName = 'RedB'
+  constructor(props) {
+    console.log('red b props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_B.png",
+      group: 'red',
+      id: 'redB',
+      text: ""
+    };
+  }
+}
+
+export  class RedC extends GroupPostTest {
+  static stepName = 'RedC'
+  constructor(props) {
+    console.log('red c props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_C.png",
+      group: 'red',
+      id: 'redC',
+      text: ""
+    };
+  }
+}
+
+export class RedD extends GroupPostTest {
+  static stepName = 'RedD'
+  constructor(props) {
+    console.log('red d props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_D.png",
+      group: 'red',
+      id: 'redD',
+      text: ""
+    };
+  }
+}
+export class RedE extends GroupPostTest {
+  static stepName = 'RedE'
+  constructor(props) {
+    console.log('red e props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_E.png",
+      group: 'red',
+      id: 'redE',
+      text: ""
+    };
+  }
+}
+
+export class RedF extends GroupPostTest {
+  static stepName = 'RedF'
+  constructor(props) {
+    console.log('red f props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_F.png",
+      group: 'red',
+      id: 'redF',
+      text: ""
+    };
+  }
+}
+
+export  class RedG extends GroupPostTest {
+  static stepName = 'RedG'
+  constructor(props) {
+    console.log('red g props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_G.png",
+      group: 'red',
+      id: 'redG',
+      text: ""
+    };
+  }
+}
+
+export class RedH extends GroupPostTest {
+  static stepName = 'RedH'
+  constructor(props) {
+    console.log('red h props', props)
+    super(props);
+    this.state = {
+      tangram: "/experiment/tangram_H.png",
+      group: 'red',
+      id: 'redH',
+      text: ""
+    };
   }
 }
