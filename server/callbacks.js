@@ -14,16 +14,12 @@ Empirica.onGameStart((game) => {
   const teamColor = game.treatment.teamColor;
   const schedule = game.get('schedule');
   const roleList = game.get('roleList');
+  const targets = game.get('context');
 
   players.forEach((player, i) => {
-    player.set("tangramURLs", _.shuffle([
-      "/experiment/tangram_A.png",
-      "/experiment/tangram_B.png",
-      "/experiment/tangram_C.png",
-      "/experiment/tangram_D.png"
-    ]));
+    player.set("tangramURLs", _.shuffle(targets));
     player.set("partnerList", schedule[player._id]);
-    player.set("roleList", roleList[player._id]);    
+    player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[teamColor][i]}`);
     player.set("nameColor", nameColors[teamColor][i]);
@@ -39,9 +35,7 @@ Empirica.onRoundStart((game, round) => {
   round.set("chat", []); 
 
   players.forEach(player => {
-    console.log(rooms)
     const roomId = _.findIndex(rooms, room => _.includes(room, player._id));
-    console.log(roomId);
     player.set('roomId', 'room' + roomId);
     player.set('partner', player.get('partnerList')[round.index]),
     player.set('role', player.get('roleList')[round.index])
@@ -71,22 +65,22 @@ Empirica.onStageEnd((game, round, stage) => {});
 Empirica.onRoundEnd((game, round) => {
   const players = game.players;
   const rooms = game.get('rooms');
-  const task = round.get('task');
+  const target = round.get('target');
 
   // Update player scores
   players.forEach(player => {
     const roomId = player.get('roomId');
     const selectedAnswer = player.get("clicked");
     const currScore = player.get("bonus") || 0;
-    const correctAnswer = task[roomId].target;
-    const scoreIncrement = selectedAnswer == correctAnswer ? 0.02 : 0;
+    const correctAnswer = target[roomId];
+    const scoreIncrement = selectedAnswer == correctAnswer ? 0.03 : 0;
     player.set("bonus", scoreIncrement + currScore);
   });
 
   // Save outcomes as property of round for later export/analysis
   rooms[round.index].forEach((room, roomId) => {
     const player1 = game.players.find(p => p._id == room[0]);
-    const correctAnswer = task['room' + roomId].target;
+    const correctAnswer = target['room' + roomId];
     const roomPacket = {
       room_num: roomId,
       room_members: room,

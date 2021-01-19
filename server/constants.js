@@ -1,19 +1,19 @@
 import Empirica from "meteor/empirica:core";
 
-export const targets = [
-  {
-    target: "/experiment/tangram_A.png"
-  },
-  {
-    target: "/experiment/tangram_B.png"
-  },
-  {
-    target: "/experiment/tangram_C.png"
-  },
-  {
-    target: "/experiment/tangram_D.png"
-  },
-];
+export const targetSets = {
+  'setA' : [
+    "/experiment/tangram_A.png",
+    "/experiment/tangram_B.png",
+    "/experiment/tangram_C.png",
+    "/experiment/tangram_D.png"
+  ],
+  'setB' : [
+    "/experiment/tangram_E.png",
+    "/experiment/tangram_F.png",
+    "/experiment/tangram_G.png",
+    "/experiment/tangram_H.png"
+  ]
+};
 
 export const names = [
     "Repi",

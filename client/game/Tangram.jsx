@@ -23,7 +23,7 @@ export default class Tangram extends React.Component {
   render() {
     const { tangram, tangram_num, round, stage, player, ...rest } = this.props;
     const room = player.get('roomId')
-    const task = round.get("task")[room]
+    const target = round.get("target")[room]
     const row = 1 + Math.floor(tangram_num / 2)
     const column = 1 + tangram_num % 2
     const mystyle = {
@@ -37,7 +37,6 @@ export default class Tangram extends React.Component {
 
     // Highlight target object for speaker at selection stage
     // Show it to both players at feedback stage.
-    const target = task.target;
     if((target == tangram & player.get('role') == 'speaker') ||
        (target == tangram & player.get('clicked') != '')) {
       _.extend(mystyle, {
