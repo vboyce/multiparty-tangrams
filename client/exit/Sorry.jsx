@@ -6,7 +6,7 @@ export default class Sorry extends React.Component {
   static stepName = "Sorry";
 
   render() {
-    const { player, hasNext, onSubmit } = this.props;
+    const { player, game, hasNext, onSubmit } = this.props;
     let msg;
     switch (player.exitStatus) {
       case "gameFull":
@@ -43,19 +43,11 @@ export default class Sorry extends React.Component {
           {/*(batches of 100 games every hour starting at 2PM ET until 5PM).*/}
           {/*</p>*/}
 
-          {player.exitStatus === "gameFull" ? (
-            <p>
-              Please submit <em>FZgameFullCSOP213093</em> as the survey code in
-              order to receive the $0.1 showing up bonus.
-            </p>
-          ) : (
-            <p>
-              Please submit <em>{player._id}</em> as the survey code in order to
-              receive the $1 base payment for your time today.
-              We will also add $0.1 showing-up bonus with the approval of this HIT.
-            </p>
-          )}
-
+          <p>
+            Please submit <em>{game.treatment.submitCode}</em> as the survey code in
+            order to receive the base pay for your time today.
+          </p>
+          
           {/*) : (*/}
           {/*<p>*/}
           {/*Please click on: <strong>Reset current session</strong> from the*/}
@@ -67,12 +59,6 @@ export default class Sorry extends React.Component {
           {/*participated.*/}
           {/*</p>*/}
 
-          <p>
-            {/*<strong>Please come back for the next scheduled game.</strong>{" "}*/}
-            {/*We will send an email notification once the next  HIT is scheduled.*/}
-          </p>
-
-          {/*This is not really needed .. all of these people failed to start the game .. if we allow them to submit, then their data will be deleted, we don't want that*/}
           <p>
             {hasNext ? (
               <button

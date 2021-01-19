@@ -13,13 +13,18 @@ export default class Thanks extends React.Component {
           <br />
           <h3>
             Please submit the following code to receive your bonus:{" "}
-            <em>{player._id}</em>.
+            <em>{game.treatment.submitCode}</em>.
           </h3>
           <p>
-            You final{" "}
+            Your final{" "}
             <strong>
-              <em>bonus is ${player.get("bonus") || 0}</em>
+              <em>performance bonus is ${player.get("bonus").toFixed(2) || 0}.</em>
             </strong>{" "}
+          </p>
+          <p>
+            Thank you again for participating! If you were curious, you were always interacting in real time with real human partners.
+            The aim of our study was to understand how new language spreads through a community, like slang and dialects do in the real world. Please email us at robertdh@princeton.edu if you have any questions or concerns.
+
           </p>
         </div>
     );
@@ -32,22 +37,7 @@ export default class Thanks extends React.Component {
         <div className="game finished">
           {this.exitMessage(player, game)}
           <hr />
-          <div className="pt-non-ideal-state">
-            <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-              <span className="pt-icon pt-icon-thumbs-up" />
-            </div>
-            <h4 className="pt-non-ideal-state-title">Finished!</h4>
-            <hr />
-            <h4 className="pt-non-ideal-state-title">
-              Submission code: {player._id}
-            </h4>
-            <h4 className="pt-non-ideal-state-title">
-              Bonus: ${player.get("bonus")}
-            </h4>
-            <hr />
-            <div className="pt-non-ideal-state-description">
-              Thank you for participating!
-            </div>
+          <div className="pt-non-ideal-state-description">
           </div>
         </div>
       </Centered>
