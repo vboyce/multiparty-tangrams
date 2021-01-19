@@ -1,3 +1,6 @@
 *~
+.RHistory
+*.html
 node_modules
 .DS_Store
+.Rproj.user
