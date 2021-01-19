@@ -1,4 +1,4 @@
-\import React from "react";
+import React from "react";
 
 import {Centered} from "meteor/empirica:core";
 
