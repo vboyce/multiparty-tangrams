@@ -23,7 +23,8 @@ export default class GroupQuiz extends React.Component {
 
   componentDidMount() {
     const { game } = this.props;
-    this.state.num_players = game.treatment.playerCount;
+    document.querySelector("main").scrollTo(0,0)
+    this.state.num_players = game.treatment.playerCount + 2;
     this.state.teamColor = game.treatment.teamColor;
   }
 
@@ -113,35 +114,20 @@ export default class GroupQuiz extends React.Component {
                   required
                 >
                   <Radio
-                    label="I will score points based on how good my answers are no matter what my partner does."
+                    label="I will score points based only on what I do, no matter what my partner does."
                     value="single"
                   />
                   <Radio
-                    label="My partner and I submit one answer as a team and therefore we will all get the same score."
+                    label="My partner and I work together as a team and therefore we will both get the same score."
                     value="all"
                   />
                 </RadioGroup>
               </div>
             </div>
-
-            {/*<div className="bp3-form-group">*/}
-            {/*  <div className="bp3-form-content">*/}
-            {/*    <RadioGroup*/}
-            {/*      name="emptyOption"*/}
-            {/*      label="is it ok to have some rooms empty? (the answer is 'Yes')"*/}
-            {/*      onChange={this.handleRadioChange}*/}
-            {/*      selectedValue={this.state.emptyOption}*/}
-            {/*      required*/}
-            {/*    >*/}
-            {/*      <Radio label="Yes!" value="yes" />*/}
-            {/*      <Radio label="No!" value="no" />*/}
-            {/*    </RadioGroup>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-
+            
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="number-of-participants">
-                If your team ended up NOT choosing a tangram before the time is up
+                If you do NOT choose a tangram before the time is up
                 then your score in that task will be:
               </label>
               <div className="bp3-form-content">

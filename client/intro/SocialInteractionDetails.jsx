@@ -73,69 +73,23 @@ export default class SocialInteractionDetails extends React.Component {
     return (
       <Centered>
         <div className="instructions">
-          <h1 className={"bp3-heading"}> Event Logs and In-Game Chat</h1>
+          <h1 className={"bp3-heading"}> In-Game Chat</h1>
           <p>
-            We will log every action taken by you or any of your teammates, and
-            this log will be shown to you to help you keep track of all the
-            actions that have taken place so far.
+            You may communicate with your teammates through the in-game
+            chat. Whatever you write will appear to your partner. {" "}
+            You can use the chat function however you like, but please note that
+            <strong>the speaker must send a message before the listener is allowed to make a selection</strong>.
           </p>
 
           <p>
-            Also, you may communicate with your teammates through the in-game
-            chat. This chat room is public so whatever you write will appear to
-            your partner. {" "}
-            <strong>The speaker must send a message before the listener is allowed to make a selection</strong>
-            . Other than that, you can use the chat function in any way you want.
+            You and your teammates have{" "}
+            {Math.ceil(treatment.selectionDuration / 60.0)} minutes on each round to
+            select a tangram. If you do not select a tangram in this window, you will automatically{" "}
+            <strong>progress to the next task when the time is up</strong> and will not recieve a bonus,
+            so please stay focused.
+            If your pair selects a picture before the other pairs are finished, please wait and
+            for the other pair to complete their selections. 
           </p>
-
-          <p>
-            Remember, you and your teammates have{" "}
-            {Math.ceil(treatment.stageDuration / 60.0)} minutes in each task to
-            select a tangram. You will automatically{" "}
-            <strong>progress to the next task when the time is up</strong>.
-            If your pair selects a picture before the other pair is finished, please wait and
-            do not refresh as you wait for the other pair to complete their selections. Partners will
-            automatically swap, so please take note of who you are currently playing with.
-          </p>
-
-          {/*<div className="social-interactions" style={{ margin: "auto" }}>*/}
-          {/*  <div className="status">*/}
-          {/*    <div className="players bp3-card">*/}
-          {/*      {this.renderPlayer(player, true)}*/}
-          {/*      {otherPlayers.map(p => this.renderPlayer(p))}*/}
-          {/*    </div>*/}
-          {/*    <div className="total-score bp3-card">*/}
-          {/*      <h6 className={"bp3-heading"}>Total Score</h6>*/}
-
-          {/*      <h2 className={"bp3-heading"}>{3400}</h2>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-
-          {/*<div className="task">*/}
-          {/*  <div className="board">*/}
-          {/*    <div className="response">*/}
-          {/*      <button*/}
-          {/*        type="button"*/}
-          {/*        className={`bp3-button bp3-icon-cross bp3-intent-danger bp3-large ${*/}
-          {/*          this.state.satisfied ? "bp3-minimal" : ""*/}
-          {/*        }`}*/}
-          {/*        onClick={this.handleSatisfaction.bind(this, false)}*/}
-          {/*      >*/}
-          {/*        Unsatisfied*/}
-          {/*      </button>*/}
-          {/*      <button*/}
-          {/*        type="button"*/}
-          {/*        className={`bp3-button bp3-icon-tick bp3-intent-success bp3-large ${*/}
-          {/*          this.state.satisfied ? "" : "bp3-minimal"*/}
-          {/*        }`}*/}
-          {/*        onClick={this.handleSatisfaction.bind(this, true)}*/}
-          {/*      >*/}
-          {/*        Satisfied*/}
-          {/*      </button>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
 
           <button
             type="button"

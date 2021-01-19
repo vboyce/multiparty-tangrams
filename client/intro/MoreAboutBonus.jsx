@@ -1,4 +1,4 @@
-import React from "react";
+\import React from "react";
 
 import {Centered} from "meteor/empirica:core";
 
@@ -20,8 +20,8 @@ export default class MoreAboutBonus extends React.Component {
 
           <div style={{ textAlign: "center" }}>
             <p>
-              <strong style={{ color: "blue" }}>
-                S = The number of correctly chosen tangrams * 0.02
+              <strong>
+                S = The number of correct responses * 0.03
               </strong>
             </p>
           </div>

@@ -12,24 +12,29 @@ export default class Overview extends React.Component {
         <div className="instructions">
           <h1 className={"bp3-heading"}> Game Overview </h1>
           <p>
-            In this game, you will play a series of communication games with other participants.
-            All of the people you play with will see the same set of four pictures, which will look something like this:
+            In this task, you will be assigned to a team with {treatment.playerCount + 1} other people ({treatment.playerCount + 2} including yourself!)
+            You will play a series of communication games with people on your team.
+            Everyone on your team will see the same set of four pictures, which will look something like this:
           </p>
 
           <div className="image">
-            <center><img src="/experiment/tangrams.PNG" /></center>
+            <center><img width="300px" src="/experiment/tangrams.PNG" /></center>
           </div>
 
           <p>
-            Each time you are paired with a new partner, one of you will be
-            randomly assigned the {" "}
+            Throughout the game, you will be paired up with different partners from your team. 
+            When you first meet a new partner, one of you will be randomly assigned the {" "}
             <strong>Speaker</strong> role and the other will be assigned the {" "}
-            <strong>Listener</strong> role. If you are the speaker, you will see a black box
-               secretly marking one of these four pictures as the {" "} <strong>target</strong>.
+            <strong>Listener</strong> role.
+          </p>
+
+          <p>
+            If you are the Speaker, you will see a black box
+            secretly marking one of these four pictures as the {" "} <strong>target</strong>.
           </p>
 
           <div className="image">
-            <center><img src="/experiment/target.PNG" /></center>
+            <center><img width="300px" src="/experiment/target.PNG" /></center>
           </div>
 
           <p>
@@ -44,7 +49,8 @@ export default class Overview extends React.Component {
           </p>
 
           <div className="image">
-            <center><img src="/experiment/typing.PNG" /></center>
+            <center><img width="250px" src="/experiment/typing.PNG" /></center>
+            <br/>
           </div>
 
           <p>
@@ -52,62 +58,17 @@ export default class Overview extends React.Component {
             click the picture they believe is the target.  They are also
             allowed to respond by sending messages back through the chatbox
             until they are ready to make a selection. After the Listener clicks
-            one of the pictures, both of you will be given feedback before
-            advancing to the next round: the Speaker will see which picture
+            one of the pictures, both of you will be given feedback: the Speaker will see which picture
             the Listener clicked, and the Listener will see the true identity of
-            the target. You will earn a {" "} <strong>2 cent bonus</strong> for each correct
+            the target.
+          </p>
+
+          <p>
+            The listener's answer will reflect both the speaker's quality of
+            description and the listener's comprehension, and therefore,{" "}
+            <strong>both members of each pair will receive the same score for a given round</strong>. 
+            You will earn a {" "} <strong>3 cent bonus</strong> for each correct
             match, so pay attention!
-          </p>
-
-          <p>
-            There are a total of <b>16 rounds</b> with each partner, so each
-            picture will appear as the target multiple times with that
-            partner. You will switch roles over 4 rounds, so both of you will
-            get the chance to be Speaker and Listener.  After the final round
-            of your game with one partner, you will <b>switch partners</b> to
-            someone you haven't talked to before!  Once you have played a game
-            with <b>three different partners</b>, you will fill out a short test about how you would
-            describe different pictures to different people. Finally, you will fill out a quick 15
-            second survey and be on your way.
-          </p>
-
-          <p>
-            A few final notes before you begin. First, because multiple players
-            must be connected simultaneously for the study to begin, you might
-            briefly see a waiting room screen with a progress bar at the
-            beginning while other participants join the game. Second, when you are
-            ready to swap partners, your new partner may still be completing a
-            game with someone else and you may see another brief waiting
-            screen like this one:
-          </p>
-
-          <div className="image">
-            <center><img src="/experiment/waiting.PNG" /></center>
-          </div>
-
-          <p>
-            Just hold tight a moment while they catch up to you! We realize
-            this waiting can make the completion time of the study more
-            variable, but we are tracking the amount of time you spend in the
-            waiting room; if you are waiting for more than 20 minutes and a
-            game still has not started, or if you find your study close to
-            expiration, please email us at rdhawkins@princeton.edu for
-            compensation.
-          </p>
-
-          <p>
-            Lastly, please DO NOT refresh the page or close the window; you
-            will not be able to return to the study. Because the study
-            requires the whole group to be present, if one of the other
-            participants in your group disconnects, you will be referred to a page
-            where you will answer some questions and be able to submit your
-            responses. However, because such disconnections are disruptive and
-            unfair to other participants, who will be prevented from receiving the
-            total possible bonus for finishing the experiment, we ask you to
-            please close this page if you believe you may not be able to complete
-            the experiment. If you decide to disconnect during the experiment
-            anyway, we would very much appreciate an email with your feedback,
-            and we will try to help! Have fun!
           </p>
 
           <button

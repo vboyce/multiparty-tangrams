@@ -1,11 +1,7 @@
 import React from "react";
 
 import { Centered } from "meteor/empirica:core";
-// //// Avatar stuff //////
-// const names = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split(""); //for the players names (we will call them A, B, C etc)
 const names = ["Kati", "Lepi", "Daru", "Soha"]; // for the players names to match avatar color
-// const avatarNames = ["Colton", "Aaron", "Alex", "Tristan"]; // to do more go to https://jdenticon.com/#icon-D3
-// const nameColor = ["#3D50B7", "#70A945", "#DE8AAB", "A59144"]; // similar to the color of the avatar
 
 const avatarNames = {
   'blue' : [
@@ -38,6 +34,10 @@ const nameColor = {
 }
 
 export default class TeamDetails extends React.Component {
+  componentDidMount() {
+    document.querySelector("main").scrollTo(0,0)
+  }
+
   renderPlayer(player, self = false) {
     return (
       <div className="player" key={player._id}>
@@ -75,23 +75,20 @@ export default class TeamDetails extends React.Component {
     return (
       <Centered>
         <div className="instructions">
-          <h1 className={"bp3-heading"}>You will be part of a team</h1>
+          <h1 className={"bp3-heading"}>You are on the {treatment.teamColor} team.</h1>
           <p>
-            In this game, you will{" "}
+            Importantly, you will not just play with one partner, you are on a team with
             <strong>
-              play together with {treatment.playerCount - 1} other participants
-              (your community members)
-            </strong>
-            . They are other participants who are undertaking the same study
-            simultaneously. Throughout all the tasks, you will be paired off with one
-            of your community members at a time to complete the picture matching game described
-            on the previous page. The listener's answer will reflect both the speaker's quality of
-            description and the listener's comprehension, and therefore,{" "}
-            <strong>both members of each pair will receive the same score for a given round</strong>
-            . To help you identify yourself and differentiate each other in the
-            team, we will assign a color to you when the game starts (as shown
+              {treatment.playerCount + 1} other people
+            </strong>.
+
+            Everyone on your team is a participant undertaking the same study at the same time as you.
+            You will be paired off with different community members throughout the game.
+            To help you identify yourself and differentiate each other in the
+            team, we will assign an icon and a name to you when the game starts (as shown
             in the following example).
           </p>
+          
           <br />
           <div className="social-interactions" style={{ margin: "auto" }}>
             <div className="status">
@@ -110,13 +107,23 @@ export default class TeamDetails extends React.Component {
           <br />
           <p>
             Note that the game allows for simultaneous and real-time actions.
-            That means that you will be able to communicate in real time with your current partner.
+            Each round will only end after everyone on your team has made a selection.
+            There are a total of <b>16 rounds</b> in a row with each partner, so each
+            picture will appear as the target multiple times with that
+            partner. You will switch roles every 4 rounds, so both of you will
+            get the chance to be Speaker and Listener.
           </p>
 
-          <h1 className={"bp3-heading"}>Your team will be placed within a larger community.</h1>
           <p>
-            There are two different communities playing this game, a red community and a blue community.
-            You will only play this game with other participants who are in the same community as you.
+            After the final round of your game with one partner, you will <b>switch partners</b> to
+            play with someone on your team that you haven't talked to before!  Once you have played a game
+            with <b>three different partners</b>, we'll ask you a few addition questions and you'll be on your way.
+          </p>
+
+          <h1 className={"bp3-heading"}>Red vs. blue.</h1>
+          <p>
+            there are actually two different communities simultaneously playing this game, a <strong>red</strong> community and a <strong>blue</strong> community.
+            You will only interact with other players in your own community.
             For example, someone in the red community will only play with other members of the red community.
           </p>
 
@@ -129,7 +136,7 @@ export default class TeamDetails extends React.Component {
           </div>
 
           <p>
-            Each community has a different set of pictures, so remember which community you are in!
+            Each community sees a different set of pictures, so remember which community you are in!
           </p>
 
           <button

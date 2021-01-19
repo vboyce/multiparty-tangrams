@@ -16,13 +16,9 @@ export default class UIOverview extends React.Component {
         <div className="instructions">
           <h1 className={"bp3-heading"}> Game Interface</h1>
           <p>
-            We are almost there! please take a second to familiarize yourself
-            with the game User Interface shown here:
+            We are almost there! Please take a second to familiarize yourself
+            with the game Interface shown here:
           </p>
-
-          {/*<div className="image">*/}
-          {/*  <center><img src="/experiment/interface.PNG" /></center>*/}
-          {/*</div>*/}
 
           <div className="image">
             <img src={imagePath} style={{ border: "2px solid" }} />
