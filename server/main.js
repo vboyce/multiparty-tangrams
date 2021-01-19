@@ -2,7 +2,7 @@ import Empirica from "meteor/empirica:core";
 
 import "./callbacks.js";
 import "./bots.js";
-import { targets } from "./constants";
+import { targetSets } from "./constants";
 import _ from "lodash";
 
 function addToSchedule(schedule, first, second, info) {
@@ -31,7 +31,7 @@ function addToRoles(roles, player, role, info) {
 function createSchedule(players, info) {
   // Create a schedule for all players to play all others using 'circle' method
   // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
-  // assert(self.num_players % 2 == 0)
+  // requires an even umber of players
   const l = _.clone(players);
   const schedule = _.zipObject(l, _.times(l.length, _.constant([])));
   const roles = _.zipObject(l, _.times(l.length, _.constant([])));
@@ -54,34 +54,13 @@ function createSchedule(players, info) {
   return {roomAssignments, schedule, roles};
 }
 
-// gameInit is where the structure of a game is defined.
-// Just before every game starts, once all the players needed are ready, this
-// function is called with the treatment and the list of players.
-// You must then add rounds and stages to the game, depending on the treatment
-
-// and the players. You can also get/set initial values on your game, players,
-// rounds and stages (with get/set methods), that will be able to use later in
-// the game.
-
-// Game object contains
-// index (auto-increment assigned to each Game in order),
-// treatment (object representing Factors set on this game),
-// players (array of player objects participating in this game),
-// rounds (rounds composing this Game),
-// createdAt (Date type, time at which the game was created approximates time at which the Game was started)
-
-// Round object contains
-// index (Object, the 0 based position of the current round in the ordered list of rounds in a game),
-// stages (array of Stage objects, contains Stages composing this Round)
-// const round = game.addRound();
-// round.set('target', 'tangram_A.png');
-// Stage object contains
-// index (Object, the 0 based position of the current stage in the ordered list of all of the game's stages),
-// name (String, programatic name of stage),
-// displayName (String, Human name of the stage to be showed players),
-// durationInSeconds (Integer, stage duration in seconds)
-// startTimeAt (Date, time at which the stage started, only set if stage has already started)
-
+// gameInit is where the structure of a game is defined.  Just before
+// every game starts, once all the players needed are ready, this
+// function is called with the treatment and the list of players.  You
+// must then add rounds and stages to the game, depending on the
+// treatment and the players. You can also get/set initial values on
+// your game, players, rounds and stages (with get/set methods), that
+// will be able to use later in the game.
 Empirica.gameInit((game, treatment) => {
   console.log(
     "Game with a treatment: ",
@@ -90,6 +69,14 @@ Empirica.gameInit((game, treatment) => {
     _.map(game.players, "id")
   );
 
+  // Sample whether on the blue team or red team
+  game.set("teamColor", treatment.teamColor);
+
+  // Sample whether to use tangram set A or set B
+  game.set("targetSet", treatment.targetSet); 
+  game.set("team", game.players.length > 1);
+  game.set('context', targetSets[treatment.targetSet]);
+  const targets = game.get('context');
   const reps = treatment.repetitionsWithPartner;
   const numTargets = targets.length;
   const numPartners = game.players.length - 1;
@@ -109,11 +96,6 @@ Empirica.gameInit((game, treatment) => {
   game.set('schedule', scheduleObj.schedule);
   game.set('roleList', scheduleObj.roles);
 
-  // Sample whether on the blue team or red team
-  // TODO: use treatment variable
-  game.set("teamColor", treatment.teamColor);
-  game.set("team", game.players.length > 1);
-
   // Loop through trials with partner
   _.times(numPartners, partnerNum => {
 
@@ -125,7 +107,7 @@ Empirica.gameInit((game, treatment) => {
       _.times(numTargets, targetNum => {      
         const round = game.addRound();
         const roomTargets = _.map(roomBlock, room => room[targetNum]);
-        round.set('task', _.zipObject(roomIds, roomTargets));
+        round.set('target', _.zipObject(roomIds, roomTargets));
         round.set('numTrials', reps * numTargets);
         round.set('trialNum', repNum * reps + targetNum);
         round.set('numPartners', numPartners);
@@ -139,7 +121,7 @@ Empirica.gameInit((game, treatment) => {
             displayName: "Partner Swap!",
             durationInSeconds: 10
           });
-        }
+        } 
         
         round.addStage({
           name: "selection",
