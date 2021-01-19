@@ -1,0 +1,74 @@
+---
+title: "Experiment 1 analysis"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(jsonlite)
+
+# this is a helper function to deal with the awful json columns
+ParseJSONColumn <- function(x) {
+   str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+     fromJSON(flatten = T)
+}
+
+```
+
+```{r}
+d <- read_csv('data/rounds.csv') %>%
+  mutate(data.chat = ifelse(is.na(data.chat), '{}', data.chat),
+         data.room0data = ifelse(is.na(data.room0data), '{}', data.room0data),
+         data.room1data = ifelse(is.na(data.room1data), '{}', data.room1data)) %>%
+  rename(row_id = `_id`) %>%
+  mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
+  unnest(data.chat) %>%
+  mutate(data.target = map(data.target, .f = ParseJSONColumn)) %>%
+  unnest(data.target) %>%
+  rename(room0_target = room0, room1_target = room1) %>%
+  filter(!is.na(text)) %>%
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE))
+```
+
+Look at complete games (where at least one message was sent on every round)
+
+```{r}
+d %>%
+  group_by(gameId, trialNum, partnerNum) %>%
+  tally() %>%
+  group_by(gameId) %>%
+  tally()
+
+```
+
+```{r}
+post_test <- read_csv('data/player-inputs.csv') %>%
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>%
+  mutate(utt_length = str_length(text)) %>%
+  filter(!is.na(text)) %>%
+  group_by(gameId, playerId, group) %>%
+  summarize(m = mean(utt_length)) 
+
+
+post_test %>%
+  spread(group, m) %>%
+  ggplot(aes(x = blue, y = red)) +
+    geom_point() +
+    geom_abline(aes(intercept = 0, slope = 1)) +
+    ggthemes::theme_few() +
+    ylim(30, 60) +
+    xlim(30, 60) +
+    labs(x = '# words for other group', y = '# words for own group') +
+    theme(aspect.ratio = 1)
+```
+
+```{r}
+bonuses <- read_csv('data/players.csv') %>%
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>%
+  select(id, bonus) %>%
+  filter(!is.na(bonus)) %>%
+  filter(bonus > 0)
+
+bonuses
+```
