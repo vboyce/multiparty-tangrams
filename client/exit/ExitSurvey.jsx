@@ -38,29 +38,11 @@ export default class ExitSurvey extends React.Component {
     };
 
     handleSubmit = (event) => {
-        event.preventDefault();
+      event.preventDefault();
+      console.log(this.state);
         this.props.onSubmit(this.state);
     };
 
-    exitMessage = (player, game) => {
-        return (
-            <div>
-                {" "}
-                <h1> Exit Survey </h1>
-                <br />
-                <h3>
-                    Please submit the following code to receive your bonus:{" "}
-                    <em>{player._id}</em>.
-                </h3>
-                <p>
-                    You final{" "}
-                    <strong>
-                        <em>bonus is ${player.get("bonus") || 0}</em>
-                    </strong>{" "}
-                </p>
-            </div>
-        );
-    };
 
     exitForm = () => {
         const {
@@ -83,12 +65,14 @@ export default class ExitSurvey extends React.Component {
 
         return (
             <div>
-                {" "}
-                <p>
-                    Please answer the following short survey. You do not have to provide
-                    any information you feel uncomfortable with.
-                </p>
-                <form onSubmit={this.handleSubmit}>
+              {" "}
+              <h1>
+                Finally, please answer the following short survey. 
+              </h1>
+              <h3>
+                You do not have to provide any information you feel uncomfortable with.
+              </h3>
+              <form onSubmit={this.handleSubmit}>
                     <div className="pt-form-group">
                         <div className="pt-form-content">
                             <RadioGroup
@@ -245,7 +229,7 @@ export default class ExitSurvey extends React.Component {
                         <div className="pt-form-content">
                             <RadioGroup
                                 name="newpartner"
-                                label="Did you read the instructions and think you did the tasks correctly?"
+                                label="Did you believe all of your partners were new?"
                                 onChange={this.handleChange}
                                 selectedValue={newpartner}
                             >
@@ -267,7 +251,7 @@ export default class ExitSurvey extends React.Component {
                         <div className="pt-form-content">
                             <RadioGroup
                                 name="satisfied"
-                                label="How satisfied are you with your team's performance in the game?"
+                                label="How satisfied are you with your community's performance in the game?"
                                 onChange={this.handleChange}
                                 selectedValue={satisfied}
                             >
@@ -305,7 +289,7 @@ export default class ExitSurvey extends React.Component {
                         <div className="pt-form-content">
                             <RadioGroup
                                 name="workedWell"
-                                label="Do you think your team worked well together?"
+                                label="Do you think your community worked well together?"
                                 onChange={this.handleChange}
                                 selectedValue={workedWell}
                             >
@@ -372,27 +356,27 @@ export default class ExitSurvey extends React.Component {
                                 fill={true}
                             />
                         </FormGroup>
-
-                        <FormGroup
-                            className={"form-group"}
-                            inline={false}
-                            label={"Did you notice any problems or have any other comments about the study?"}
-                            labelFor={"feedback"}
-                            //className={"form-group"}
-                        >
-                            <TextArea
-                                id="feedback"
-                                name="feedback"
-                                large={true}
-                                intent={Intent.PRIMARY}
-                                onChange={this.handleChange}
-                                value={feedback}
-                                fill={true}
-                            />
-                        </FormGroup>
                     </div>
 
-                    <div className="form-line thirds">
+                  <div className="form-line thirds">
+                    <FormGroup
+                      className={"form-group"}
+                      inline={false}
+                      label={"Did you notice any problems or have any other comments about the study?"}
+                      labelFor={"feedback"}
+                      //className={"form-group"}
+                    >
+                    <TextArea
+                      id="feedback"
+                      name="feedback"
+                      large={true}
+                      intent={Intent.PRIMARY}
+                      onChange={this.handleChange}
+                      value={feedback}
+                      fill={true}
+                    />
+                    </FormGroup>
+
                         <FormGroup
                             className={"form-group"}
                             inline={false}
@@ -407,24 +391,6 @@ export default class ExitSurvey extends React.Component {
                                 intent={Intent.PRIMARY}
                                 onChange={this.handleChange}
                                 value={chatUseful}
-                                fill={true}
-                            />
-                        </FormGroup>
-
-                        <FormGroup
-                            className={"form-group"}
-                            inline={false}
-                            label={"Was the events log feature useful?"}
-                            labelFor={"events"}
-                            //className={"form-group"}
-                        >
-                            <TextArea
-                                id="events"
-                                name="events"
-                                large={true}
-                                intent={Intent.PRIMARY}
-                                onChange={this.handleChange}
-                                value={events}
                                 fill={true}
                             />
                         </FormGroup>
@@ -446,8 +412,6 @@ export default class ExitSurvey extends React.Component {
         return (
             <Centered>
                 <div className="exit-survey">
-                    {this.exitMessage(player, game)}
-                    <hr />
                     {this.exitForm()}
                 </div>
             </Centered>
