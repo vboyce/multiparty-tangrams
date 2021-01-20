@@ -81,13 +81,8 @@ Empirica.onRoundEnd((game, round) => {
   rooms[round.index].forEach((room, roomId) => {
     const player1 = game.players.find(p => p._id == room[0]);
     const correctAnswer = target['room' + roomId];
-    const roomPacket = {
-      room_num: roomId,
-      room_members: room,
-      room_clicked: player1.get('clicked'),
-      room_correct: player1.get('clicked') == correctAnswer
-    };
-    round.set('room' + roomId + 'data', roomPacket);
+    round.set('room' + roomId + 'response', player1.get('clicked'));
+    round.set('room' + roomId + 'correct', correctAnswer == player1.get('clicked')); 
   });
 });
 
