@@ -23,11 +23,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ebd569ce-5511-4067-93c4-5c095faa96b9" name="Default Changelist" comment="Updating red/blue communities">
+      <change beforePath="$PROJECT_DIR$/.idea/room-assignment-csop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/room-assignment-csop.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_11_2021_1_29_PM_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_11_2021_1_29_PM__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/intro/MoreAboutBonus.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/MoreAboutBonus.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/intro/Overview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/Overview.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/intro/SocialInteractionDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/SocialInteractionDetails.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/intro/TeamDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/intro/TeamDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/comprehension/comprehension.html" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/comprehension/comprehension.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +55,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="js.meteor.library.cached" value="$PROJECT_DIR$/.meteor" />
+    <property name="js.meteor.library.cached" value="$PROJECT_DIR$/experiments/refgame/.meteor&#10;C:/Users/irina/Documents/code_switching/.meteor" />
     <property name="js.meteor.library.was.enabled" value="true" />
     <property name="js.meteor.project" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -103,6 +103,7 @@
       <workItem from="1610039969249" duration="4033000" />
       <workItem from="1610146030561" duration="790000" />
       <workItem from="1610376638872" duration="18896000" />
+      <workItem from="1611274364702" duration="5862000" />
     </task>
     <task id="LOCAL-00001" summary="Removed player requirement for displaying chat &amp; event log">
       <created>1604554031588</created>

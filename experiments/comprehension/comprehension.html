@@ -49,9 +49,11 @@
 
       var preview = {
         type: 'instructions',
-        pages: ['<p> Welcome! In this HIT, you will be asked to .... </p>' +
-              '<p> <b> If you are interested in learning more about this HIT, ' +
-              'please first accept the HIT in MTurk before continuing further</b>. </p>'],
+        pages: ['<p> Welcome! In this study, you will be shown a set of images and descriptions. ' +
+              'Based on each description, you will choose one of the images that matches ' +
+              'the description. </p>' +
+              '<p> <b> If you are interested in learning more about this study, ' +
+              'please first accept to taking the study before continuing further</b>. </p>'],
         show_clickable_nav: false,
         allow_keys: false
       };
@@ -68,9 +70,9 @@
         presented with a series of descriptions and do you best to understand what they mean. \
         All of the information we obtain during the research will be kept \
         confidential, and not associated with your name in any way. However, \
-        while the study is running it will be associated with your MTurk \
-        worker id. Once the study is complete we will replace your worker id \
-        with a random string.</p> \
+        while the study is running it will be associated with your id. \
+        Once the study is complete we will replace your id with a random \
+        combination of letters and numbers.</p> \
         <br> \
         <p style='width:50%;margin:auto' align='left'>If you have any questions about this research, do not hesitate to \
         contact Robert Hawkins at <b>hawkrobe@gmail.com</b>. If you have any questions \
@@ -80,8 +82,8 @@
         <br>\
         <p style='width:50%;margin:auto' align='left'>By consenting to participate, you acknowledge that you are 18 years \
         or older, have read this consent form, agree to its contents, and agree \
-        to take part in this research. If you do not wish to consent, close \
-        this page and return the HIT on Mechanical Turk.</p></font><p></p>",
+        to take part in this research. If you do not wish to consent, please close \
+        this page and exit the study.</p></font><p></p>",
       choices: ['I consent to participate.']
     }
 
@@ -103,7 +105,9 @@
       /* define instructions trial */
       timeline.push({
     	type: "html-keyboard-response",
-    	stimulus: "<p>To begin with, you will be shown a series of images ..." +
+    	stimulus: "<p>To begin with, you will be shown a series of images and descriptions. " +
+                "Please read the description carefully and then select the image that best matches " +
+                "the description." +
     	  "<p><strong>Press any key to begin.</strong></p>",
         data: {'condition' : 'instructions'}
       });
@@ -159,8 +163,8 @@
       timeline.push({
         type: 'html-button-response',
         stimulus: '<p>You have completed the experiment. Thank you for your participation.</p>' +
-        '<p><strong>Click the button to submit the HIT.</strong></p>',
-        choices: ['Submit HIT'],
+        '<p><strong>Click the button to submit your response.</strong></p>',
+        choices: ['Submit Response'],
       	on_finish: function() {
       	  jsPsych.turk.submitToTurk({'bonus': '2.00'});
       	}
