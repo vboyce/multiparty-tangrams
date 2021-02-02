@@ -26,7 +26,7 @@ import PostTestInstructions from "./exit/PostTestInstructions.jsx";
 import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
-Empirica.consent(Consent);
+//Empirica.consent(Consent);
 
 // Introduction pages to show before they play the game (optional).
 // At this point they have been assigned a treatment. You can return
@@ -44,7 +44,8 @@ Empirica.introSteps((game, treatment) => {
     steps.push(IndividualQuiz);
   }
 
-  return steps;
+  //return steps;
+  return [];
 });
 
 // The Round component containing the game UI logic.
@@ -69,7 +70,8 @@ Empirica.exitSteps((game, player) => {
     const blues_setB = _.shuffle([BlueE, BlueF, BlueG, BlueH]);
     const reds_setB = _.shuffle([RedE, RedF, RedG, RedH]);
     const post_test = game.get('targetSet') == 'setA' ? [blues_setA, reds_setA] : [blues_setB, reds_setB];
-    return [PostTestInstructions].concat(_.flatten(_.shuffle(post_test))).concat(ExitSurvey, Thanks);
+    //return [PostTestInstructions].concat(_.flatten(_.shuffle(post_test))).concat(ExitSurvey, Thanks);
+    return[Thanks];
   }
 });
 

@@ -18,8 +18,8 @@ export default class Task extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-    const room = player.get('roomId');
-    const target = round.get("target")[room];
+    //const room = player.get('roomId');
+    const target = round.get("target");
     const tangramURLs = player.get('tangramURLs');
     console.log(tangramURLs)
     const correct = player.get('clicked') == target
@@ -42,7 +42,7 @@ export default class Task extends React.Component {
         correct ? "Correct! You earned 3 points!" :
       "Ooops, that wasn't the target! You earned no bonus this round."
     )
-    let feedback2 = player.get('clicked') == '' ? '' : "Ready to advance once other pairs finish."
+    //let feedback2 = player.get('clicked') == '' ? '' : "Ready to advance once other pairs finish."
     return (
       <div className="task">
         <div className="board">
@@ -55,7 +55,6 @@ export default class Task extends React.Component {
           <h3 className="feedbackIndicator">
             {feedback}
             <br/>
-            {feedback2}
           </h3>
         </div>
       </div>

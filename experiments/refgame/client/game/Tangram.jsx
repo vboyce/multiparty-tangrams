@@ -2,28 +2,33 @@ import React from "react";
 
 export default class Tangram extends React.Component {
   handleClick = e => {
+    console.log("Here!")
     const { game, tangram, tangram_num, stage, player, round } = this.props;
+    console.log(player.get("partner1"));
     const speakerMsgs = _.filter(round.get("chat"), msg => {
-      return msg.role == 'speaker' & msg.playerId == player.get('partner')
-    })
-    const partner = _.find(game.players, p => p._id === player.get('partner'));
-    
+      return msg.role == 'speaker'    })
+    const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
+    const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     // only register click for listener and only after the speaker has sent a message
     if (stage.name == 'selection' &
         speakerMsgs.length > 0 &
         player.get('clicked') === false &
         player.get('role') == 'listener') {
-      partner.set("clicked", tangram)
+          console.log("Did the thing")
+      partner1.set("clicked", tangram)
+      partner2.set("clicked", tangram)
       player.set("clicked", tangram)
       Meteor.setTimeout(() => player.stage.submit(), 3000);
-      Meteor.setTimeout(() => partner.stage.submit(), 3000);
+      Meteor.setTimeout(() => partner1.stage.submit(), 3000);
+      Meteor.setTimeout(() => partner2.stage.submit(), 3000);
+          c
     }
   };
   
   render() {
     const { tangram, tangram_num, round, stage, player, ...rest } = this.props;
-    const room = player.get('roomId')
-    const target = round.get("target")[room]
+    //const room = player.get('roomId')
+    const target = round.get("target")
     const row = 1 + Math.floor(tangram_num / 2)
     const column = 1 + tangram_num % 2
     const mystyle = {

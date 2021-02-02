@@ -20,10 +20,11 @@ export default class SocialInteractions extends React.Component {
   render() {
     const { game, round, stage, player } = this.props;
 
-    const partnerId = player.get('partner')
-    const partner = _.filter(game.players, p => p._id === partnerId)[0];
+    //const partnerId = player.get('partner')
+    //const partner = _.filter(game.players, p => p._id === partnerId)[0];
+    const otherPlayers = _.reject(game.players, p => p._id === player._id);
     const messages = round.get("chat")
-          .filter(({playerId}) => playerId === partnerId || playerId === player._id)
+          //.filter(({playerId}) => playerId === partnerId || playerId === player._id)
           .map(({ text, playerId }) => ({
             text,
             subject: game.players.find(p => p._id === playerId)
@@ -38,8 +39,8 @@ export default class SocialInteractions extends React.Component {
         <div className="status">
           <div className="players bp3-card">
             {this.renderPlayer(player, true)}
-            {this.renderPlayer(partner)}
-          </div>
+            {otherPlayers.map(p => this.renderPlayer(p))}        
+              </div>
 
           <Timer stage={stage} />
           

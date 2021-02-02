@@ -48,8 +48,10 @@ class Event extends React.Component {
     } = this.props.event;
     console.log(this.props)
     const { self, game, player } = this.props;
-    const partnerId = player.get('partner')
-    const partner = _.filter(game.players, p => p._id === partnerId)[0];
+    //const partnerId = player.get('partner')
+    //const partner = _.filter(game.players, p => p._id === partnerId)[0];
+    const otherPlayers = _.reject(game.players, p => p._id === player._id);
+    console.log(otherPlayers)
 
     let content;
     switch (verb) {
@@ -57,13 +59,13 @@ class Event extends React.Component {
       content = (
         <>
           <div className="content">
-            You're playing with <strong style={{color: partner.get('nameColor')}}>{partner.get('name')}</strong>! 
+            You're playing with <strong style={{color: otherPlayers[0].get('nameColor')}}>{otherPlayers[0].get('name')}</strong> and <strong style={{color: otherPlayers[0].get('nameColor')}}>{otherPlayers[0].get('name')}</strong>! 
           </div>
           <br/>
           <br/>
           <div className="content">
             {player.get('role') == 'speaker' ?
-             'Please describe the object in the black box so your partner can \
+             'Please describe the object in the black box so your partners can \
               correctly pick it out.' :
              'Click the object your partner is describing! Feel free to respond \
               or ask questions if necessary.'}

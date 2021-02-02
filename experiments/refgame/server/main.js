@@ -5,13 +5,6 @@ import "./bots.js";
 import { targetSets } from "./constants";
 import _ from "lodash";
 
-function addToSchedule(schedule, first, second, info) {
-  var newValue1 = _.fromPairs([[
-    _.toString(first),
-    schedule[first].concat(_.times(info.numTrialsPerPartner, _.constant(second)))
-  ]]);
-  _.extend(schedule, newValue1);
-}
 
 function addToRoles(roles, player, role, info) {
   // swap roles every repetition
@@ -32,26 +25,14 @@ function createSchedule(players, info) {
   // Create a schedule for all players to play all others using 'circle' method
   // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
   // requires an even umber of players
-  const l = _.clone(players);
-  const schedule = _.zipObject(l, _.times(l.length, _.constant([])));
-  const roles = _.zipObject(l, _.times(l.length, _.constant([])));
-  const roomAssignments = [];
-  _.forEach(_.range(l.length - 1), function(round) {
-    const mid = parseInt(l.length / 2);
-    const l1 = l.slice(0, mid);
-    const l2 = _.reverse(l.slice(mid, l.length));
-    const zipped = _.zip(l1, l2);
-    roomAssignments.push(..._.times(info.numTrialsPerPartner, _.constant(zipped)));
-    _.forEach(_.range(mid), function(player) {
-      addToSchedule(schedule, l1[player], l2[player], info);
-      addToSchedule(schedule, l2[player], l1[player], info);
-      addToRoles(roles, l1[player], 'speaker', info);
-      addToRoles(roles, l2[player], 'listener', info);      
-    });
-    // rotate around fixed point
-    l.splice(1, 0, l.pop());
-  });
-  return {roomAssignments, schedule, roles};
+  const l = _.shuffle(players);
+  const speaker = _.times(info.numTotalTrials, _.constant("speaker"))
+  const listener = _.times(info.numTotalTrials, _.constant("listener"))
+  console.log(speaker)
+  const role_list= [speaker, listener, listener]; //just hard code for now
+  const roles=_.zipObject(l,role_list);
+  console.log(roles)
+  return {roles};
 }
 
 // gameInit is where the structure of a game is defined.  Just before
@@ -82,8 +63,8 @@ Empirica.gameInit((game, treatment) => {
   const numPartners = game.players.length - 1;
   const info = {
     numTrialsPerBlock : numTargets,
-    numRepsPerPartner : reps,
-    numTrialsPerPartner: reps * numTargets
+    numBlocks : reps,
+    numTotalTrials: reps * numTargets
   };
   
   // I use this to play the sound on the UI when the game starts
@@ -91,23 +72,25 @@ Empirica.gameInit((game, treatment) => {
 
   // Make partner schedule for the game
   const scheduleObj = createSchedule(_.map(game.players, '_id'), info);
-  const roomIds = _.map(scheduleObj.roomAssignments[0], (room, i) => 'room' + i);
-  game.set('rooms', scheduleObj.roomAssignments);
-  game.set('schedule', scheduleObj.schedule);
+  //const roomIds = _.map(scheduleObj.roomAssignments[0], (room, i) => 'room' + i);
+  //game.set('rooms', scheduleObj.roomAssignments);
   game.set('roleList', scheduleObj.roles);
+
 
   // Loop through trials with partner
   _.times(numPartners, partnerNum => {
 
     // Loop through repetition blocks
     _.times(reps, repNum => {
-      const roomBlock = _.map(game.get('rooms'), room => _.shuffle(targets));
+      //const roomBlock = _.map(game.get('rooms'), room => _.shuffle(targets));
 
       // Loop through targets in block
       _.times(numTargets, targetNum => {      
         const round = game.addRound();
-        const roomTargets = _.map(roomBlock, room => room[targetNum]);
-        round.set('target', _.zipObject(roomIds, roomTargets));
+        //const roomTargets = _.map(roomBlock, room => room[targetNum]);
+        //round.set('target', _.zipObject(roomIds, roomTargets));
+        round.set('target', _.shuffle(targets));
+
         round.set('numTrials', reps * numTargets);
         round.set('trialNum', repNum * reps + targetNum);
         round.set('numPartners', numPartners);
@@ -115,13 +98,6 @@ Empirica.gameInit((game, treatment) => {
         round.set('repNum', repNum);
         
         // add 'partner swap' slide as first trial w/ new partner
-        if(partnerNum > 0 & repNum == 0 & targetNum == 0) {
-          round.addStage({
-            name: "transition",
-            displayName: "Partner Swap!",
-            durationInSeconds: 10
-          });
-        } 
         
         round.addStage({
           name: "selection",
