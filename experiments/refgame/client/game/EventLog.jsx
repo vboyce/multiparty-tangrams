@@ -46,12 +46,12 @@ class Event extends React.Component {
       state,
       at,
     } = this.props.event;
-    console.log(this.props)
+    //console.log(this.props)
     const { self, game, player } = this.props;
-    //const partnerId = player.get('partner')
-    //const partner = _.filter(game.players, p => p._id === partnerId)[0];
-    const otherPlayers = _.reject(game.players, p => p._id === player._id);
-    console.log(otherPlayers)
+    const partner1Id=player.get('partner1')
+    const partner2Id=player.get('partner2')
+    const partner1=_.filter(game.players, p => p._id === partner1Id)[0];
+    const partner2=_.filter(game.players, p => p._id === partner2Id)[0];
 
     let content;
     switch (verb) {
@@ -59,7 +59,7 @@ class Event extends React.Component {
       content = (
         <>
           <div className="content">
-            You're playing with <strong style={{color: otherPlayers[0].get('nameColor')}}>{otherPlayers[0].get('name')}</strong> and <strong style={{color: otherPlayers[0].get('nameColor')}}>{otherPlayers[0].get('name')}</strong>! 
+            You're playing with <strong style={{color: partner1.get('nameColor')}}>{partner1.get('name')}</strong>  and <strong style={{color: partner2.get('nameColor')}}>{partner2.get('name')}</strong>! 
           </div>
           <br/>
           <br/>

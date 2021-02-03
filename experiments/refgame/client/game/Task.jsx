@@ -21,7 +21,6 @@ export default class Task extends React.Component {
     //const room = player.get('roomId');
     const target = round.get("target");
     const tangramURLs = player.get('tangramURLs');
-    console.log(tangramURLs)
     const correct = player.get('clicked') == target
     let tangramsToRender;
     if (tangramURLs) {

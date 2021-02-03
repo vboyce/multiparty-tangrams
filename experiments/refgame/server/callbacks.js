@@ -19,8 +19,7 @@ Empirica.onGameStart((game) => {
     player.set("tangramURLs", _.shuffle(targets));
     const otherPlayers = _.reject(game.players, p => p._id === player._id);
     player.set("partner1", otherPlayers[0]._id)
-    player.set("partner2", otherPlayers[0]._id)
-    //player.set("partnerList", schedule[player._id]);
+    player.set("partner2", otherPlayers[1]._id)
     player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[teamColor][i]}`);
@@ -33,12 +32,9 @@ Empirica.onGameStart((game) => {
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round) => {
   const players = game.players;
-  //const rooms = game.get('rooms')[round.index];
   round.set("chat", []); 
 
   players.forEach(player => {
-    //const roomId = _.findIndex(rooms, room => _.includes(room, player._id));
-    //player.set('roomId', 'room' + roomId);
     player.set('role', player.get('roleList')[round.index])
     player.set('clicked', false);
   });
@@ -65,15 +61,12 @@ Empirica.onStageEnd((game, round, stage) => {});
 // onRoundEnd is triggered after each round.
 Empirica.onRoundEnd((game, round) => {
   const players = game.players;
-  //const rooms = game.get('rooms');
   const target = round.get('target');
 
   // Update player scores
   players.forEach(player => {
-    //const roomId = player.get('roomId');
     const selectedAnswer = player.get("clicked");
     const currScore = player.get("bonus") || 0;
-    //const correctAnswer = target[roomId];
     const correctAnswer = target;
     const scoreIncrement = selectedAnswer == correctAnswer ? 0.03 : 0;
     player.set("bonus", scoreIncrement + currScore);
