@@ -12,17 +12,23 @@ export default class Tangram extends React.Component {
         speakerMsgs.length > 0 &
         player.get('clicked') === false &
         player.get('role') == 'listener') {
-      partner1.set("clicked", tangram)
-      partner2.set("clicked", tangram)
       player.set("clicked", tangram)
+    if ((partner1.get('clicked') !="" || partner1.get('role') == 'speaker') &
+    (partner2.get('clicked') !="" || partner2.get('role') == 'speaker')){
+      player.set('done', true);
+      partner1.set('done', true);
+      partner2.set('done', true);
       Meteor.setTimeout(() => player.stage.submit(), 3000);
       Meteor.setTimeout(() => partner1.stage.submit(), 3000);
       Meteor.setTimeout(() => partner2.stage.submit(), 3000);
     }
+    }
   };
   
   render() {
-    const { tangram, tangram_num, round, stage, player, ...rest } = this.props;
+    const { game, tangram, tangram_num, round, stage, player, ...rest } = this.props;
+    const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
+    const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     const target = round.get("target")
     const row = 1 + Math.floor(tangram_num / 2)
     const column = 1 + tangram_num % 2
@@ -38,7 +44,7 @@ export default class Tangram extends React.Component {
     // Highlight target object for speaker at selection stage
     // Show it to both players at feedback stage.
     if((target == tangram & player.get('role') == 'speaker') ||
-       (target == tangram & player.get('clicked') != '')) {
+       (target == tangram & player.get('done') === true)) {
       _.extend(mystyle, {
         "outline" :  "10px solid #000",
         "zIndex" : "9"
@@ -46,7 +52,9 @@ export default class Tangram extends React.Component {
     }
 
     // Highlight clicked object in green if correct; red if incorrect
-    if(tangram == player.get('clicked')) {
+    if(player.get('done') === true & (tangram == player.get('clicked') ||
+     (player.get('role')== "speaker" & 
+          (tangram == partner1.get('clicked') || tangram == partner2.get('clicked'))))) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
         "outline" :  `10px solid ${color}`,

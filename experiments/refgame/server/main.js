@@ -35,8 +35,6 @@ Empirica.gameInit((game, treatment) => {
     _.map(game.players, "id")
   );
 
-  // Sample whether on the blue team or red team
-  game.set("teamColor", treatment.teamColor);
 
   // Sample whether to use tangram set A or set B
   game.set("targetSet", treatment.targetSet); 

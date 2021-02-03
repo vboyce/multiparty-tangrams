@@ -7,22 +7,22 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 
 import Empirica from "meteor/empirica:core";
 
-import Consent from "./intro/Consent.jsx";
-import Overview from "./intro/Overview.jsx";
-import TeamDetails from "./intro/TeamDetails.jsx";
-import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
-import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
-import UIOverview from "./intro/UIOverview.jsx";
-import GroupQuiz from "./intro/GroupQuiz.jsx";
-import IndividualQuiz from "./intro/IndividualQuiz.jsx";
+//import Consent from "./intro/Consent.jsx";
+//import Overview from "./intro/Overview.jsx";
+//import TeamDetails from "./intro/TeamDetails.jsx";
+//import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
+//import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
+//import UIOverview from "./intro/UIOverview.jsx";
+//import GroupQuiz from "./intro/GroupQuiz.jsx";
+// import IndividualQuiz from "./intro/IndividualQuiz.jsx";
 
 import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
-import ExitSurvey from "./exit/ExitSurvey";
-import { BlueA, BlueB, BlueC, BlueD, BlueE, BlueF, BlueG, BlueH,
-         RedA, RedB, RedC, RedD, RedE, RedF, RedG, RedH } from "./exit/GroupPostTest.jsx";
-import PostTestInstructions from "./exit/PostTestInstructions.jsx";
+//import ExitSurvey from "./exit/ExitSurvey";
+// import { BlueA, BlueB, BlueC, BlueD, BlueE, BlueF, BlueG, BlueH,
+//          RedA, RedB, RedC, RedD, RedE, RedF, RedG, RedH } from "./exit/GroupPostTest.jsx";
+// import PostTestInstructions from "./exit/PostTestInstructions.jsx";
 import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
@@ -32,17 +32,17 @@ import customBreadcrumb from "./game/Breadcrumb.jsx";
 // At this point they have been assigned a treatment. You can return
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps((game, treatment) => {
-  const steps = [Overview];
-  if (game.treatment.playerCount > 1) {
-    steps.push(TeamDetails, SocialInteractionDetails);
-  }
-  steps.push(MoreAboutBonus, UIOverview);
+  //const steps = [Overview];
+  // if (game.treatment.playerCount > 1) {
+  //   steps.push(TeamDetails, SocialInteractionDetails);
+  // }
+  // steps.push(MoreAboutBonus, UIOverview);
 
-  if (game.treatment.playerCount > 1) {
-    steps.push(GroupQuiz);
-  } else {
-    steps.push(IndividualQuiz);
-  }
+  // if (game.treatment.playerCount > 1) {
+  //   steps.push(GroupQuiz);
+  // } else {
+  //   steps.push(IndividualQuiz);
+  // }
 
   //return steps;
   return [];

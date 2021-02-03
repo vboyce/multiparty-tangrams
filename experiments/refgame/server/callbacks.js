@@ -11,7 +11,6 @@ Empirica.onGameStart((game) => {
   const players = game.players;
   console.debug("game ", game._id, " started");
 
-  const teamColor = game.treatment.teamColor;
   const roleList = game.get('roleList');
   const targets = game.get('context');
 
@@ -22,8 +21,8 @@ Empirica.onGameStart((game) => {
     player.set("partner2", otherPlayers[1]._id)
     player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
-    player.set("avatar", `/avatars/jdenticon/${avatarNames[teamColor][i]}`);
-    player.set("nameColor", nameColors[teamColor][i]);
+    player.set("avatar", `/avatars/jdenticon/${avatarNames['red'][i]}`);
+    player.set("nameColor", nameColors['red'][i]);
     player.set("bonus", 0);
   });
 });
@@ -37,6 +36,7 @@ Empirica.onRoundStart((game, round) => {
   players.forEach(player => {
     player.set('role', player.get('roleList')[round.index])
     player.set('clicked', false);
+    player.set('done', false);
   });
 });
 
