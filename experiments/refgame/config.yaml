@@ -7,6 +7,7 @@ treatments:
       - H6mfXThg4jQ2annbb
       - 5G2PioQghwMMQaiDA
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T01:57:56.152Z
   - name: blueB_network
     factorIds:
       - 9mWDEEbPMz8J8oWxh
@@ -15,6 +16,7 @@ treatments:
       - H6mfXThg4jQ2annbb
       - T3s4h67DrihbRNpQS
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T01:57:56.641Z
   - name: redA_network
     factorIds:
       - 9mWDEEbPMz8J8oWxh
@@ -23,6 +25,7 @@ treatments:
       - H6mfXThg4jQ2annbb
       - 5G2PioQghwMMQaiDA
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T01:57:57.097Z
   - name: redB_network
     factorIds:
       - 9mWDEEbPMz8J8oWxh
@@ -31,8 +34,34 @@ treatments:
       - H6mfXThg4jQ2annbb
       - T3s4h67DrihbRNpQS
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T01:57:57.741Z
+  - name: test
+    factorIds:
+      - LCPL67GcDLnC7kpX4
+      - dwfYRz6EK4FE9iNcR
+      - QEbiEZHHkAaEDEo3q
+      - 6MrFJYnfziMgRMbZq
+      - 5G2PioQghwMMQaiDA
+      - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T19:43:17.517Z
+  - name: triad
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - dwfYRz6EK4FE9iNcR
+      - QEbiEZHHkAaEDEo3q
+      - 6MrFJYnfziMgRMbZq
+      - T3s4h67DrihbRNpQS
+      - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-03T19:43:16.769Z
+  - name: Three-player
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - dwfYRz6EK4FE9iNcR
+      - 6MrFJYnfziMgRMbZq
+      - T3s4h67DrihbRNpQS
+      - PhWBYRyqGv7hpZbKm
 factorTypes:
-  - _id: FyNRiLFNYJ5593cHs
+  - _id: vYnBSPaCKt6m9nJu9
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -48,6 +77,7 @@ factorTypes:
     description: are you red or blue?
     required: true
     type: String
+    archivedAt: 2021-02-03T19:37:00.943Z
   - _id: kJddTH8X4Y6Df7SPA
     name: selectionDuration
     description: >-
@@ -69,11 +99,13 @@ factors:
   - _id: LCPL67GcDLnC7kpX4
     name: duo
     value: 2
-    factorTypeId: FyNRiLFNYJ5593cHs
+    factorTypeId: vYnBSPaCKt6m9nJu9
+    archivedAt: 2021-02-03T19:37:44.531Z
   - _id: 9mWDEEbPMz8J8oWxh
     name: quad
     value: 4
-    factorTypeId: FyNRiLFNYJ5593cHs
+    factorTypeId: vYnBSPaCKt6m9nJu9
+    archivedAt: 2021-02-03T19:37:37.339Z
   - _id: dwfYRz6EK4FE9iNcR
     name: four
     value: '4'
@@ -93,7 +125,8 @@ factors:
   - _id: sLBbCyDZv74ZsrtYE
     name: solo
     value: 1
-    factorTypeId: FyNRiLFNYJ5593cHs
+    factorTypeId: vYnBSPaCKt6m9nJu9
+    archivedAt: 2021-02-03T19:37:27.802Z
   - _id: GSmgoGszjTjH6mWNu
     name: targetSet
     value: setA
@@ -111,9 +144,16 @@ factors:
     name: prolificPilot
     value: 3B021164
     factorTypeId: oTmtc6KmQb77CaDTC
+  - _id: 6MrFJYnfziMgRMbZq
+    name: lots
+    value: '200'
+    factorTypeId: kJddTH8X4Y6Df7SPA
+  - _id: xWQjpcmpuWmZXGA7P
+    name: Triad
+    value: 3
+    factorTypeId: vYnBSPaCKt6m9nJu9
 lobbyConfigs:
-  - name: lobby
-    timeoutType: lobby
+  - timeoutType: lobby
     timeoutInSeconds: 300
     timeoutStrategy: fail
     gameLobbyIds: []
