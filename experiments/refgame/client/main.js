@@ -65,11 +65,11 @@ Empirica.exitSteps((game, player) => {
   if (player.exitStatus !== "finished") {
     return [Sorry];
   } else {
-    const blues_setA = _.shuffle([BlueA, BlueB, BlueC, BlueD]);
-    const reds_setA = _.shuffle([RedA, RedB, RedC, RedD]);
-    const blues_setB = _.shuffle([BlueE, BlueF, BlueG, BlueH]);
-    const reds_setB = _.shuffle([RedE, RedF, RedG, RedH]);
-    const post_test = game.get('targetSet') == 'setA' ? [blues_setA, reds_setA] : [blues_setB, reds_setB];
+    // const blues_setA = _.shuffle([BlueA, BlueB, BlueC, BlueD]);
+    // const reds_setA = _.shuffle([RedA, RedB, RedC, RedD]);
+    // const blues_setB = _.shuffle([BlueE, BlueF, BlueG, BlueH]);
+    // const reds_setB = _.shuffle([RedE, RedF, RedG, RedH]);
+    // const post_test = game.get('targetSet') == 'setA' ? [blues_setA, reds_setA] : [blues_setB, reds_setB];
     //return [PostTestInstructions].concat(_.flatten(_.shuffle(post_test))).concat(ExitSurvey, Thanks);
     return[Thanks];
   }

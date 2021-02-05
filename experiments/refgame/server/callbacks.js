@@ -32,7 +32,7 @@ Empirica.onGameStart((game) => {
 Empirica.onRoundStart((game, round) => {
   const players = game.players;
   round.set("chat", []); 
-
+  round.set("roundbonus",0);
   players.forEach(player => {
     player.set('role', player.get('roleList')[round.index])
     player.set('clicked', false);
@@ -61,15 +61,18 @@ Empirica.onStageEnd((game, round, stage) => {});
 // onRoundEnd is triggered after each round.
 Empirica.onRoundEnd((game, round) => {
   const players = game.players;
-  const target = round.get('target');
 
   // Update player scores
   players.forEach(player => {
-    const selectedAnswer = player.get("clicked");
     const currScore = player.get("bonus") || 0;
-    const correctAnswer = target;
-    const scoreIncrement = selectedAnswer == correctAnswer ? 0.03 : 0;
+    if (player.get("role")=="speaker"){
+    player.set("bonus", round.get("roundbonus") + currScore);}
+    else{
+    const selectedAnswer = player.get("clicked");
+    const target = round.get('target');
+    const scoreIncrement = selectedAnswer == target ? 0.04 : 0;
     player.set("bonus", scoreIncrement + currScore);
+    }
   });
 
   // Save outcomes as property of round for later export/analysis

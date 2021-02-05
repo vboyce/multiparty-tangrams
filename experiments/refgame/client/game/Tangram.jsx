@@ -1,6 +1,9 @@
+import { relativeTimeRounding } from "moment";
 import React from "react";
 
+
 export default class Tangram extends React.Component {
+    
   handleClick = e => {
     const { game, tangram, tangram_num, stage, player, round } = this.props;
     const speakerMsgs = _.filter(round.get("chat"), msg => {
@@ -18,13 +21,23 @@ export default class Tangram extends React.Component {
       player.set('done', true);
       partner1.set('done', true);
       partner2.set('done', true);
+      const target = round.get("target")
+      if (partner1.get("clicked")==target){
+        round.set("roundbonus", round.get("roundbonus")+.02)
+      }
+      if (partner2.get("clicked")==target){
+        round.set("roundbonus", round.get("roundbonus")+.02)
+      }
+      if (player.get("clicked")==target){
+        round.set("roundbonus", round.get("roundbonus")+.02)
+      }
       Meteor.setTimeout(() => player.stage.submit(), 3000);
       Meteor.setTimeout(() => partner1.stage.submit(), 3000);
       Meteor.setTimeout(() => partner2.stage.submit(), 3000);
     }
     }
   };
-  
+
   render() {
     const { game, tangram, tangram_num, round, stage, player, ...rest } = this.props;
     const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
@@ -43,8 +56,7 @@ export default class Tangram extends React.Component {
 
     // Highlight target object for speaker at selection stage
     // Show it to both players at feedback stage.
-    if((target == tangram & player.get('role') == 'speaker') ||
-       (target == tangram & player.get('done') === true)) {
+    if(target == tangram & player.get('role') == 'speaker') {
       _.extend(mystyle, {
         "outline" :  "10px solid #000",
         "zIndex" : "9"
@@ -61,12 +73,21 @@ export default class Tangram extends React.Component {
         "zIndex" : "9"
       })
     }
+    let feedback = (
+      player.get('role') == 'listener' ? '' :
+      player.get('done') == false ? "" :
+          partner1.get("clicked")==tangram ? (partner2.get("clicked")==tangram ?
+          partner1.get("name")+" "+partner2.get("name") : partner1.get("name") ):
+          partner2.get("clicked")==tangram ? partner2.get("name"): ""
+         
+    )
     
     return (
       <div
         onClick={this.handleClick}
         style={mystyle}
         >
+          <div className="tangramtext"> {feedback}</div>
       </div>
     );
   }
