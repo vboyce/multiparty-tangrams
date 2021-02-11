@@ -39,11 +39,10 @@ export default class Task extends React.Component {
     let feedback = (
       player.get('clicked') == '' ? '' :
       player.get('done') == false ? "Waiting for others to answer." :
-          correct ? "Correct! You earned 3 points!" :
+          correct ? "Correct! You earned 4 points!" :
       "Ooops, that wasn't the target! You earned no bonus this round."
     )
     let role = (player.get('role')=="speaker"? "the speaker": "a listener")
-    //let feedback2 = player.get('clicked') == '' ? '' : "Ready to advance once other pairs finish."
     return (
       <div className="task">
         <div className="board">

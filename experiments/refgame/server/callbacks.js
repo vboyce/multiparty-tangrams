@@ -21,8 +21,8 @@ Empirica.onGameStart((game) => {
     player.set("partner2", otherPlayers[1]._id)
     player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
-    player.set("avatar", `/avatars/jdenticon/${avatarNames['red'][i]}`);
-    player.set("nameColor", nameColors['red'][i]);
+    player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
+    player.set("nameColor", nameColors[i]);
     player.set("bonus", 0);
   });
 });
@@ -75,13 +75,12 @@ Empirica.onRoundEnd((game, round) => {
     }
   });
 
-  // Save outcomes as property of round for later export/analysis
-  //rooms[round.index].forEach((room, roomId) => {
-    //const player1 = game.players.find(p => p._id == room[0]);
-    //const correctAnswer = target['room' + roomId];
-    //round.set('room' + roomId + 'response', player1.get('clicked'));
-    //round.set('room' + roomId + 'correct', correctAnswer == player1.get('clicked')); 
-  //});
+  //Save outcomes as property of round for later export/analysis
+  players.forEach(player => {
+    const correctAnswer = round.get('target');
+    round.set('player' + player._id + 'response', player.get('clicked'));
+    round.set('room' + player._id+ 'correct', correctAnswer == player.get('clicked')); 
+  });
 });
 
 // onRoundEnd is triggered when the game ends.

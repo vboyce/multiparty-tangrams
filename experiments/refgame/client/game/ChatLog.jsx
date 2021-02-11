@@ -19,8 +19,7 @@ export default class ChatLog extends React.Component {
       round.append("chat", {
         text,
         playerId: player._id,
-        roomId: room,
-        target: round.get('target')[room],
+        target: round.get('target'),
         role: player.get('role')
       });
       this.setState({ comment: "" });

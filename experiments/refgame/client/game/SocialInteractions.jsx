@@ -20,11 +20,8 @@ export default class SocialInteractions extends React.Component {
   render() {
     const { game, round, stage, player } = this.props;
 
-    //const partnerId = player.get('partner')
-    //const partner = _.filter(game.players, p => p._id === partnerId)[0];
     const otherPlayers = _.reject(game.players, p => p._id === player._id);
     const messages = round.get("chat")
-          //.filter(({playerId}) => playerId === partnerId || playerId === player._id)
           .map(({ text, playerId }) => ({
             text,
             subject: game.players.find(p => p._id === playerId)

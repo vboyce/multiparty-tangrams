@@ -43,8 +43,8 @@ export default class Tangram extends React.Component {
     const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
     const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     const target = round.get("target")
-    const row = 1 + Math.floor(tangram_num / 2)
-    const column = 1 + tangram_num % 2
+    const row = 1 + Math.floor(tangram_num / 4)
+    const column = 1 + tangram_num % 4
     const mystyle = {
       "background" : "url(" + tangram + ")",
       "backgroundSize": "cover",
@@ -87,7 +87,7 @@ export default class Tangram extends React.Component {
         onClick={this.handleClick}
         style={mystyle}
         >
-          <div className="tangramtext"> {feedback}</div>
+          <div className="feedback"> {feedback}</div>
       </div>
     );
   }
