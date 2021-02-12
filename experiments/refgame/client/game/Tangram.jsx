@@ -73,14 +73,14 @@ export default class Tangram extends React.Component {
         "zIndex" : "9"
       })
     }
-    let feedback = (
-      player.get('role') == 'listener' ? '' :
-      player.get('done') == false ? "" :
-          partner1.get("clicked")==tangram ? (partner2.get("clicked")==tangram ?
-          partner1.get("name")+" "+partner2.get("name") : partner1.get("name") ):
-          partner2.get("clicked")==tangram ? partner2.get("name"): ""
-         
-    )
+    let feedback = []
+    if (player.get('role') == 'speaker' &  player.get('done') == true){
+      if (partner1.get("clicked")==tangram){
+        feedback.push(<img src={partner1.get("avatar")} />)}
+      if (partner2.get("clicked")==tangram){
+        feedback.push(<img src={partner2.get("avatar")} />)
+      }
+      }
     
     return (
       <div
