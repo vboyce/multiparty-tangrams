@@ -77,8 +77,8 @@ export default class SocialInteractionDetails extends React.Component {
           <p>
             You may communicate with your teammates through the in-game
             chat. Whatever you write will appear to your partner. {" "}
-            You can use the chat function however you like, but please note that
-            <strong>the speaker must send a message before the listener is allowed to make a selection</strong>.
+            You can use the chat function however you like, but please note that 
+            <strong>the speaker must send a message before listeners can make their selections</strong>.
           </p>
 
           <p>
@@ -87,8 +87,6 @@ export default class SocialInteractionDetails extends React.Component {
             select a tangram. If you do not select a tangram in this window, you will automatically{" "}
             <strong>progress to the next task when the time is up</strong> and will not recieve a bonus,
             so please stay focused.
-            If your pair selects a picture before the other pairs are finished, please wait and
-            for the other pair to complete their selections. 
           </p>
 
           <button

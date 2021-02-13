@@ -60,22 +60,21 @@ export default class TeamDetails extends React.Component {
     const player = {
       _id: 0,
       name: names[0],
-      nameColor: nameColor[teamColor][0],
-      avatar: `/avatars/jdenticon/${avatarNames[teamColor][0]}`
+      nameColor: nameColor['blue'][0],
+      avatar: `/avatars/jdenticon/${avatarNames['blue'][0]}`
     };
 
     const otherPlayers = [
       {
         _id: 1,
         name: names[1],
-        nameColor: nameColor[teamColor][1],
-        avatar: `/avatars/jdenticon/${avatarNames[teamColor][1]}`
+        nameColor: nameColor['blue'][1],
+        avatar: `/avatars/jdenticon/${avatarNames['blue'][1]}`
       }
     ];
     return (
       <Centered>
         <div className="instructions">
-          <h1 className={"bp3-heading"}>You are on the {treatment.teamColor} team.</h1>
           <p>
             Importantly, you will not just play with one partner, you are on a team with
             <strong>
@@ -120,24 +119,7 @@ export default class TeamDetails extends React.Component {
             with <b>three different partners</b>, we'll ask you a few addition questions and you'll be on your way.
           </p>
 
-          <h1 className={"bp3-heading"}>Red vs. blue.</h1>
-          <p>
-            there are actually two different communities simultaneously playing this game, a <strong>red</strong> community and a <strong>blue</strong> community.
-            You will only interact with other players in your own community.
-            For example, someone in the red community will only play with other members of the red community.
-          </p>
-
-          <div style={{ textAlign: "center" }}>
-            <p>
-              <strong style={{ color: teamColor }}>
-                You are a member of the {teamColor} community.
-              </strong>
-            </p>
-          </div>
-
-          <p>
-            Each community sees a different set of pictures, so remember which community you are in!
-          </p>
+        
 
           <button
             type="button"

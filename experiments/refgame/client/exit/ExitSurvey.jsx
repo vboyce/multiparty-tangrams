@@ -47,6 +47,9 @@ export default class ExitSurvey extends React.Component {
     exitForm = () => {
         const {
             community,
+            age,
+            gender,
+            education,
             engaged,
             correctness,
             english,
@@ -73,29 +76,95 @@ export default class ExitSurvey extends React.Component {
                 You do not have to provide any information you feel uncomfortable with.
               </h3>
               <form onSubmit={this.handleSubmit}>
-                    <div className="pt-form-group">
-                        <div className="pt-form-content">
-                            <RadioGroup
-                                name="community"
-                                label="What color community were you a part of?"
-                                onChange={this.handleChange}
-                                selectedValue={community}
-                            >
-                                <Radio
-                                    label="Red"
-                                    value="red"
-                                    className={"pt-inline"}
-                                />
-                                <Radio
-                                    label="Blue"
-                                    value="blue"
-                                    className={"pt-inline"}
-                                />
-                            </RadioGroup>
-                        </div>
-                    </div>
-
                     <span> </span>
+                    <div className="form-line">
+              <div>
+                <label htmlFor="age">Age</label>
+                <div>
+                  <input
+                    id="age"
+                    type="number"
+                    min="0"
+                    max="150"
+                    step="1"
+                    dir="auto"
+                    name="age"
+                    value={age}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="gender">Gender</label>
+                <div>
+                  <input
+                    id="gender"
+                    type="text"
+                    dir="auto"
+                    name="gender"
+                    value={gender}
+                    onChange={this.handleChange}
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+                <label htmlFor="english">Native Language</label>
+                <div>
+                  <input
+                    id="gender"
+                    type="text"
+                    dir="auto"
+                    name="gender"
+                    value={gender}
+                    onChange={this.handleChange}
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+            <div>
+              <label>Highest Education Qualification</label>
+              <div>
+              <Radio
+                  selected={education}
+                  name="education"
+                  value="less-high-school"
+                  label="Less than High School"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={education}
+                  name="education"
+                  value="high-school"
+                  label="High School"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={education}
+                  name="education"
+                  value="some-college"
+                  label="Some College"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={education}
+                  name="education"
+                  value="bachelor"
+                  label="US Bachelor's Degree"
+                  onChange={this.handleChange}
+                />
+                <Radio
+                  selected={education}
+                  name="education"
+                  value="master"
+                  label="Master's or higher"
+                  onChange={this.handleChange}
+                />
+            </div>
+            </div>
+
 
                     <div className="pt-form-group">
                         <div className="pt-form-content">
@@ -228,68 +297,8 @@ export default class ExitSurvey extends React.Component {
                     <div className="pt-form-group">
                         <div className="pt-form-content">
                             <RadioGroup
-                                name="newpartner"
-                                label="Did you believe all of your partners were new?"
-                                onChange={this.handleChange}
-                                selectedValue={newpartner}
-                            >
-                                <Radio
-                                    label="Yes, all partners were new."
-                                    value="yes"
-                                    className={"pt-inline"}
-                                />
-                                <Radio
-                                    label="No, I thought I had already interacted with my partners."
-                                    value="no"
-                                    className={"pt-inline"}
-                                />
-                            </RadioGroup>
-                        </div>
-                    </div>
-
-                    <div className="pt-form-group">
-                        <div className="pt-form-content">
-                            <RadioGroup
-                                name="satisfied"
-                                label="How satisfied are you with your community's performance in the game?"
-                                onChange={this.handleChange}
-                                selectedValue={satisfied}
-                            >
-                                <Radio
-                                    label="Very satisfied"
-                                    value="verySatisfied"
-                                    className={"pt-inline"}
-                                />
-                                <Radio
-                                    label="Satisfied"
-                                    value="somewhatSatisfied"
-                                    className={"pt-inline"}
-                                />
-                                <Radio
-                                    label="Neutral"
-                                    value="neutral"
-                                    className={"pt-inline"}
-                                />
-
-                                <Radio
-                                    label="Dissatisfied"
-                                    value="somewhatDissatisfied"
-                                    className={"pt-inline"}
-                                />
-                                <Radio
-                                    label="Very dissatisfied"
-                                    value="veryDissatisfied"
-                                    className={"pt-inline"}
-                                />
-                            </RadioGroup>
-                        </div>
-                    </div>
-
-                    <div className="pt-form-group">
-                        <div className="pt-form-content">
-                            <RadioGroup
                                 name="workedWell"
-                                label="Do you think your community worked well together?"
+                                label="Do you think you and your partners worked well together?"
                                 onChange={this.handleChange}
                                 selectedValue={workedWell}
                             >
@@ -321,23 +330,6 @@ export default class ExitSurvey extends React.Component {
                     </div>
 
                     <div className="form-line thirds">
-                        <FormGroup
-                            className={"form-group"}
-                            inline={false}
-                            label={"How would you describe your strategy in the game?"}
-                            labelFor={"strategy"}
-                            //className={"form-group"}
-                        >
-                            <TextArea
-                                id="strategy"
-                                large={true}
-                                intent={Intent.PRIMARY}
-                                onChange={this.handleChange}
-                                value={strategy}
-                                fill={true}
-                                name="strategy"
-                            />
-                        </FormGroup>
 
                         <FormGroup
                             className={"form-group"}
