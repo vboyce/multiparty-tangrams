@@ -14,7 +14,6 @@ import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
 import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
 import UIOverview from "./intro/UIOverview.jsx";
 import GroupQuiz from "./intro/GroupQuiz.jsx";
-import IndividualQuiz from "./intro/IndividualQuiz.jsx";
 
 import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
@@ -23,7 +22,7 @@ import ExitSurvey from "./exit/ExitSurvey";
 import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
-//Empirica.consent(Consent);
+Empirica.consent(Consent);
 
 // Introduction pages to show before they play the game (optional).
 // At this point they have been assigned a treatment. You can return
@@ -31,7 +30,7 @@ import customBreadcrumb from "./game/Breadcrumb.jsx";
 Empirica.introSteps((game, treatment) => {
   const steps = [Overview];
   if (game.treatment.playerCount > 1) {
-    steps.push(SocialInteractionDetails);
+    steps.push(TeamDetails, SocialInteractionDetails);
   }
   steps.push(MoreAboutBonus, UIOverview);
 
