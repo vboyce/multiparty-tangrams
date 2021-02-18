@@ -31,18 +31,16 @@ import customBreadcrumb from "./game/Breadcrumb.jsx";
 Empirica.introSteps((game, treatment) => {
   const steps = [Overview];
   if (game.treatment.playerCount > 1) {
-    steps.push(TeamDetails, SocialInteractionDetails);
+    steps.push(SocialInteractionDetails);
   }
   steps.push(MoreAboutBonus, UIOverview);
 
   if (game.treatment.playerCount > 1) {
     steps.push(GroupQuiz);
-  } else {
-    steps.push(IndividualQuiz);
-  }
+  } 
 
-  //return steps;
-  return [];
+  return steps;
+  //return [];
 });
 
 // The Round component containing the game UI logic.

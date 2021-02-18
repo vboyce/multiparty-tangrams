@@ -12,9 +12,9 @@ export default class Overview extends React.Component {
         <div className="instructions">
           <h1 className={"bp3-heading"}> Game Overview </h1>
           <p>
-            In this task, you will be assigned to a team with {treatment.playerCount + 1} other people ({treatment.playerCount + 2} including yourself!)
+            In this task, you will be assigned to a team with {treatment.playerCount -1} other people ({treatment.playerCount} including yourself!)
             You will play a series of communication games with people on your team.
-            Everyone on your team will see the same set of four pictures, which will look something like this:
+            Everyone on your team will see the same set of pictures, which will look something like this:
           </p>
 
           <div className="image">
@@ -22,15 +22,14 @@ export default class Overview extends React.Component {
           </div>
 
           <p>
-            Throughout the game, you will be paired up with different partners from your team. 
-            When you first meet a new partner, one of you will be randomly assigned the {" "}
-            <strong>Speaker</strong> role and the other will be assigned the {" "}
+            One of the people on the team will be randomly assigned the {" "}
+            <strong>Speaker</strong> role and the others will be assigned the {" "}
             <strong>Listener</strong> role.
           </p>
 
           <p>
             If you are the Speaker, you will see a black box
-            secretly marking one of these four pictures as the {" "} <strong>target</strong>.
+            secretly marking one of the pictures as the {" "} <strong>target</strong>.
           </p>
 
           <div className="image">
@@ -39,7 +38,7 @@ export default class Overview extends React.Component {
 
           <p>
             The Speaker's job is to send a description of the target through the chatbox
-            so that the Listener is able to pick it out of the set. You can write whatever
+            so that the Listeners are able to pick it out of the set. You can write whatever
             description you think will best allow your partner to identify the target
             (this isn't a game of "Taboo" and there is no reason to give cryptic clues!)
             Please note that the order of the pictures on your screen is scrambled on each
@@ -54,21 +53,20 @@ export default class Overview extends React.Component {
           </div>
 
           <p>
-            After the Speaker sends a message, the Listener will read it and
-            click the picture they believe is the target.  They are also
+            After the Speaker sends a message, the Listeners will read it and
+            each click the picture they believe is the target.  They are also
             allowed to respond by sending messages back through the chatbox
-            until they are ready to make a selection. After the Listener clicks
-            one of the pictures, both of you will be given feedback: the Speaker will see which picture
-            the Listener clicked, and the Listener will see the true identity of
-            the target.
+            until they are ready to make a selection. After each of the Listeners has clicked
+            one of the pictures, everyone will be given feedback: the Speaker will see which picture
+            each Listener clicked, and the Listeners will each see whether their selection was correct or not.
           </p>
 
           <p>
-            The listener's answer will reflect both the speaker's quality of
-            description and the listener's comprehension, and therefore,{" "}
-            <strong>both members of each pair will receive the same score for a given round</strong>. 
-            You will earn a {" "} <strong>3 cent bonus</strong> for each correct
-            match, so pay attention!
+            Note that the game allows for simultaneous and real-time actions.
+            Each round will only end after all the listeners have made a selection.
+            There will be 12 pictures shown at a time, and you will go through the 12 pictures 6 times,
+             so each
+            picture will appear as the target multiple times. Who the Speaker is may switch during the game, so keep an eye out!
           </p>
 
           <button

@@ -76,9 +76,9 @@ export default class SocialInteractionDetails extends React.Component {
           <h1 className={"bp3-heading"}> In-Game Chat</h1>
           <p>
             You may communicate with your teammates through the in-game
-            chat. Whatever you write will appear to your partner. {" "}
+            chat. Whatever you write will appear to your teammates. {" "}
             You can use the chat function however you like, but please note that 
-            <strong>the speaker must send a message before listeners can make their selections</strong>.
+            <strong>the Speaker must send a message before Listeners can make their selections</strong>.
           </p>
 
           <p>
