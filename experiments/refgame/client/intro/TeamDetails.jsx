@@ -104,14 +104,7 @@ export default class TeamDetails extends React.Component {
           </div>
 
           <br />
-          <p>
-            Note that the game allows for simultaneous and real-time actions.
-            Each round will only end after everyone on your team has made a selection.
-            There are a total of <b>16 rounds</b> in a row with each partner, so each
-            picture will appear as the target multiple times with that
-            partner. You will switch roles every 4 rounds, so both of you will
-            get the chance to be Speaker and Listener.
-          </p>
+         
 
           <p>
             After the final round of your game with one partner, you will <b>switch partners</b> to
