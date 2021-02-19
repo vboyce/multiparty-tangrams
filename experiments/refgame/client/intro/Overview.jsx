@@ -12,7 +12,7 @@ export default class Overview extends React.Component {
         <div className="instructions">
           <h1 className={"bp3-heading"}> Game Overview </h1>
           <p>
-            In this task, you will be assigned to a team with {treatment.playerCount -1} other people ({treatment.playerCount} including yourself!)
+            In this task, you will be assigned to a team with {treatment.playerCount -1} other people ({treatment.playerCount} including yourself!).
             You will play a series of communication games with people on your team.
             Everyone on your team will see the same set of pictures, which will look something like this:
           </p>
@@ -39,10 +39,9 @@ export default class Overview extends React.Component {
           <p>
             The Speaker's job is to send a description of the target through the chatbox
             so that the Listeners are able to pick it out of the set. You can write whatever
-            description you think will best allow your partner to identify the target
-            (this isn't a game of "Taboo" and there is no reason to give cryptic clues!)
-            Please note that the order of the pictures on your screen is scrambled on each
-            round, so descriptions like "the one on the left" or "the third one" will not
+            description you think will best allow your partners to identify the target.
+            Please note that <b>the order of the pictures on your screen is scrambled on each
+            round</b>, so descriptions like "the one on the left" or "the third one" will not
             work. Also, please limit your description to the current target picture: do not
             discuss previous trials or chat about any other topics!
           </p>
@@ -53,21 +52,10 @@ export default class Overview extends React.Component {
           </div>
 
           <p>
-            After the Speaker sends a message, the Listeners will read it and
-            each click the picture they believe is the target.  They are also
+            After the Speaker sends a message, the Listeners will read it and 
+            <b> each click the picture they believe is the target</b>.  They are also
             allowed to respond by sending messages back through the chatbox
-            until they are ready to make a selection. After each of the Listeners has clicked
-            one of the pictures, everyone will be given feedback: the Speaker will see which picture
-            each Listener clicked, and the Listeners will each see whether their selection was correct or not.
-          </p>
-
-          <p>
-            Note that the game allows for simultaneous and real-time actions.
-            Each round will only end after all the listeners have made a selection.
-            There will be 12 pictures shown at a time, and you will go through the 12 pictures 6 times,
-             so each
-            picture will appear as the target multiple times. Who the Speaker is may switch during the game, so keep an eye out!
-          </p>
+            until they are ready to make a selection. </p>
 
           <button
             type="button"

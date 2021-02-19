@@ -332,6 +332,55 @@
     line-height: 1.5;
     margin-bottom: 1em;
   }
+  .players {
+    padding: 0;
+    display: flex;
+    margin: 0 auto;
+    width: 35%;
+    // overflow allows for the user to scroll through
+    overflow: scroll;
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+
+      .image {
+        position: relative;
+        .satisfied {
+          // font-size: 0.1rem;
+          position: absolute;
+          top: -0.6rem;
+          right: -0.8rem;
+          .bp3-icon-standard {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      &:first-child {
+        .name {
+          padding-right: 2rem;
+          white-space: nowrap;
+        }
+        .image {
+          padding-right: 2rem;
+          border-right: 1px solid lightgrey;
+
+          .satisfied {
+            right: 1.2rem;
+          }
+        }
+      }
+
+      img {
+        width: 5rem;
+        height: 5rem;
+      }
+    }
+  }
+  
 }
 
 .exit-survey {

@@ -9,7 +9,6 @@ import Empirica from "meteor/empirica:core";
 
 import Consent from "./intro/Consent.jsx";
 import Overview from "./intro/Overview.jsx";
-import TeamDetails from "./intro/TeamDetails.jsx";
 import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
 import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
 import UIOverview from "./intro/UIOverview.jsx";
@@ -30,7 +29,7 @@ Empirica.consent(Consent);
 Empirica.introSteps((game, treatment) => {
   const steps = [Overview];
   if (game.treatment.playerCount > 1) {
-    steps.push(TeamDetails, SocialInteractionDetails);
+    steps.push(SocialInteractionDetails);
   }
   steps.push(MoreAboutBonus, UIOverview);
 
@@ -38,8 +37,8 @@ Empirica.introSteps((game, treatment) => {
     steps.push(GroupQuiz);
   } 
 
-  return steps;
-  //return [];
+  //return steps;
+  return [GroupQuiz];
 });
 
 // The Round component containing the game UI logic.

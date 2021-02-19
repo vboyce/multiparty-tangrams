@@ -8,10 +8,17 @@ export default class Consent extends React.Component {
     return (
       <Centered>
         <div className="consent bp3-ui-text">
-          <h5 className="bp3-heading">INTRODUCTION</h5>
-          <p class="block-text" id="legal">By answering the following questions, you are participating in a study being performed by cognitive scientists in the 
+        <div className="image">
+            <center><img width="300px" src="/experiment/stanford.png" /></center>
+          </div>
+          <p>
+          If you agree to take part in the research, you will play a series of communication games
+            with other participants: one of you will describe a picture so the others can choose it out of
+            a lineup of other pictures. This study will take approximately 30 minutes. </p>
+            
+            <p class="block-text" id="legal">By answering the following questions, you are participating in a study being performed by cognitive scientists in the 
           Stanford Department of Psychology. If you have questions about this research, please contact us at 
-           <a href="mailto://languagecoglab@gmail.com.">languagecoglab@gmail.com</a>.
+           <a href="mailto://languagecoglab@gmail.com."> languagecoglab@gmail.com</a>.
     You must be at least 18 years old to participate. Your participation in this research is voluntary. 
     You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences.
     Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you. 

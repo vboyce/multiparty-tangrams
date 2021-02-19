@@ -10,22 +10,16 @@ export default class GroupQuiz extends React.Component {
   state = {
     nParticipants: "",
     scoreOption: "",
-    idle: "",
-    largeError: "",
-    mc_red: false,
-    mc_yellow: false,
-    mc_green: false,
-    mc_blue: false,
-    num_players: 0,
-    teamColor: "",
-    community: "",
+    tangramCount: "",
+    timeOut: "",
+    chat: "",
+    pictures: ""
   };
 
   componentDidMount() {
     const { game } = this.props;
     document.querySelector("main").scrollTo(0,0)
-    this.state.num_players = game.treatment.playerCount + 2;
-    this.state.teamColor = game.treatment.teamColor;
+    this.state.num_players = game.treatment.playerCount;
   }
 
   handleChange = (event) => {
@@ -51,21 +45,11 @@ export default class GroupQuiz extends React.Component {
     //it should be this.state.nParticipants !== "3" but we don't have "treatment" in QUIZ
     if (
       this.state.nParticipants !== this.state.num_players.toString() ||
-      this.state.scoreOption !== "all" ||
-      // this.state.idle !== "100" ||
-      this.state.largeError !== "0" ||
-      !this.state.mc_red ||
-      this.state.mc_yellow || //only this one is correct
-      this.state.mc_green ||
-      !this.state.mc_blue ||
-      this.state.community !== this.state.teamColor
-      // this.state.mc_2_101 ||
-      // !this.state.mc_2_102 || //this one is correct
-      // this.state.mc_2_103 ||
-      // !this.state.mc_2_104 || //this one is correct
-      // this.state.mc_2_105 ||
-      // this.state.emptyOption !== "yes"
-    ) {
+      this.state.scoreOption !== "matter" ||
+      this.state.tangramCount !== "12"  ||
+      this.state.timeOut !== "0" ||
+      this.state.chat !== "anyone" ||
+      this.state.pictures !== "different") {
       AlertToaster.show({
         message:
           "Sorry, you have one or more mistakes. Please ensure that you answer the questions correctly, or go back to the instructions",
@@ -93,11 +77,32 @@ export default class GroupQuiz extends React.Component {
                   className="bp3-input"
                   type="number"
                   min="0"
-                  max="150"
+                  max="10"
                   step="1"
                   dir="auto"
                   name="nParticipants"
                   value={this.state.nParticipants}
+                  onChange={this.handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="bp3-form-group">
+              <label className="bp3-label" htmlFor="tangram-count">
+                How many pictures will be shown at a time?
+              </label>
+              <div className="bp3-form-content">
+                <input
+                  id="tangramCount"
+                  className="bp3-input"
+                  type="number"
+                  min="0"
+                  max="20"
+                  step="1"
+                  dir="auto"
+                  name="tangramCount"
+                  value={this.state.tangramCount}
                   onChange={this.handleChange}
                   required
                 />
@@ -114,33 +119,75 @@ export default class GroupQuiz extends React.Component {
                   required
                 >
                   <Radio
-                    label="I will score points based only on what I do, no matter what my partner does."
-                    value="single"
+                    label="The Speaker gets more points if more Listeners make the right choice."
+                    value="matter"
                   />
                   <Radio
-                    label="My partner and I work together as a team and therefore we will both get the same score."
-                    value="all"
+                    label="The Speaker gets the same number of points if 1 or 2 Listeners makes the right choice."
+                    value="constant"
+                  />
+                </RadioGroup>
+              </div>
+            </div>
+
+            <div className="bp3-form-group">
+              <div className="bp3-form-content">
+                <RadioGroup
+                  label="Select the true statement about the chat:"
+                  onChange={this.handleRadioChange}
+                  selectedValue={this.state.chat}
+                  name="chat"
+                  required
+                >
+                  <Radio
+                    label="Anyone can send messages through the chat."
+                    value="anyone"
+                  />
+                  <Radio
+                    label="Only the Speaker can send messages through the chat."
+                    value="speaker"
+                  />
+                </RadioGroup>
+              </div>
+            </div>
+
+            <div className="bp3-form-group">
+              <div className="bp3-form-content">
+                <RadioGroup
+                  label="Select the true statement about the pictures:"
+                  onChange={this.handleRadioChange}
+                  selectedValue={this.state.pictures}
+                  name="pictures"
+                  required
+                >
+                  <Radio
+                    label="Everyone will see the same pictures in the same places in the grid."
+                    value="same"
+                  />
+                  <Radio
+                    label="Pictures will be mixed up and in different places for different people."
+                    value="different"
                   />
                 </RadioGroup>
               </div>
             </div>
             
             <div className="bp3-form-group">
-              <label className="bp3-label" htmlFor="number-of-participants">
-                If you do NOT choose a tangram before the time is up
-                then your score in that task will be:
+              <label className="bp3-label" htmlFor="time-out">
+                If a Listener does NOT choose a tangram before the time is up
+                then their score in that task will be:
               </label>
               <div className="bp3-form-content">
                 <input
-                  id="nParticipants"
+                  id="timeOut"
                   className="bp3-input"
                   type="number"
                   min="-10"
                   max="10"
                   step="1"
                   dir="auto"
-                  name="largeError"
-                  value={this.state.largeError}
+                  name="timeOut"
+                  value={this.state.timeOut}
                   onChange={this.handleChange}
                   required
                 />

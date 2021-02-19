@@ -18,6 +18,8 @@ export default class MoreAboutBonus extends React.Component {
 
         <p>Each time a <strong>Listener</strong> makes a correct selection, they recieve <strong> 4 points</strong>.</p>
         <p>The <strong>Speaker</strong> gets <strong>2 points</strong> for each correct selection a Listener makes. </p>
+
+        <p> Incorrect selection and no selection (timing out) earn no points. </p>
         
         <p>For instance, if there are two Listeners and both make a correct selection, they each get 4 points, and the Speaker gets 2+2=4 points.
         If one Listener chooses correctly and one doesn't, the correct Listener gets 4 points, the other Listener gets 0 points, and the Speaker gets 2 points. </p>
