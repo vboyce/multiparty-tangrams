@@ -48,8 +48,6 @@ export default class Tangram extends React.Component {
     const mystyle = {
       "background" : "url(" + tangram + ")",
       "backgroundSize": "cover",
-      "width" : "15vw",
-      "height" : "15vw",
       "gridRow": row,
       "gridColumn": column
     };
@@ -84,6 +82,7 @@ export default class Tangram extends React.Component {
     
     return (
       <div
+        className="tangram"
         onClick={this.handleClick}
         style={mystyle}
         >
