@@ -41,7 +41,7 @@ Empirica.gameInit((game, treatment) => {
   game.set("team", game.players.length > 1);
   game.set('context', targetSets['setA']);
   const targets = game.get('context');
-  const reps = treatment.repetitionsWithPartner;
+  const reps = treatment.rounds;
   const numTargets = targets.length;
   const info = {
     numTrialsPerBlock : numTargets,

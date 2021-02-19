@@ -39,8 +39,8 @@ export default class Task extends React.Component {
     let feedback = (
       player.get('clicked') == '' ? '' :
       player.get('done') == false ? "Waiting for others to answer." :
-          correct ? "Correct! You earned 4 points!" :
-      "Ooops, that wasn't the target! You earned no bonus this round."
+          correct ? "" :
+      ""
     )
     let role = (player.get('role')=="speaker"? "the speaker": "a listener")
     return (

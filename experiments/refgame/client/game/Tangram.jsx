@@ -48,8 +48,8 @@ export default class Tangram extends React.Component {
     const mystyle = {
       "background" : "url(" + tangram + ")",
       "backgroundSize": "cover",
-      "width" : "25vh",
-      "height" : "25vh",
+      "width" : "15vw",
+      "height" : "15vw",
       "gridRow": row,
       "gridColumn": column
     };
