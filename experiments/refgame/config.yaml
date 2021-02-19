@@ -60,8 +60,15 @@ treatments:
       - 6MrFJYnfziMgRMbZq
       - T3s4h67DrihbRNpQS
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-02-19T19:15:54.657Z
+  - name: Test
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - WPMyAs4AHQkRbejSw
+      - 6MrFJYnfziMgRMbZq
+      - PhWBYRyqGv7hpZbKm
 factorTypes:
-  - _id: vYnBSPaCKt6m9nJu9
+  - _id: Hp25w7ExEWKNEn5KQ
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -72,6 +79,7 @@ factorTypes:
     description: how many times do you repeat with a partner
     required: true
     type: String
+    archivedAt: 2021-02-19T19:14:30.354Z
   - _id: yZ9EAzrPfAEKk96kr
     name: teamColor
     description: are you red or blue?
@@ -90,21 +98,28 @@ factorTypes:
     description: which set of tangrams do you see?
     required: true
     type: String
+    archivedAt: 2021-02-19T19:14:32.663Z
   - _id: oTmtc6KmQb77CaDTC
     name: submitCode
     description: code for submission to prolific/mturk
     required: true
     type: String
+  - _id: uWvpQqxyNi8Dz6CSn
+    name: rounds
+    description: number of rounds
+    required: false
+    type: Integer
+    min: 1
 factors:
   - _id: LCPL67GcDLnC7kpX4
     name: duo
     value: 2
-    factorTypeId: vYnBSPaCKt6m9nJu9
+    factorTypeId: Hp25w7ExEWKNEn5KQ
     archivedAt: 2021-02-03T19:37:44.531Z
   - _id: 9mWDEEbPMz8J8oWxh
     name: quad
     value: 4
-    factorTypeId: vYnBSPaCKt6m9nJu9
+    factorTypeId: Hp25w7ExEWKNEn5KQ
     archivedAt: 2021-02-03T19:37:37.339Z
   - _id: dwfYRz6EK4FE9iNcR
     name: four
@@ -125,7 +140,7 @@ factors:
   - _id: sLBbCyDZv74ZsrtYE
     name: solo
     value: 1
-    factorTypeId: vYnBSPaCKt6m9nJu9
+    factorTypeId: Hp25w7ExEWKNEn5KQ
     archivedAt: 2021-02-03T19:37:27.802Z
   - _id: GSmgoGszjTjH6mWNu
     name: targetSet
@@ -151,7 +166,15 @@ factors:
   - _id: xWQjpcmpuWmZXGA7P
     name: Triad
     value: 3
-    factorTypeId: vYnBSPaCKt6m9nJu9
+    factorTypeId: Hp25w7ExEWKNEn5KQ
+  - _id: WPMyAs4AHQkRbejSw
+    name: One
+    value: 1
+    factorTypeId: uWvpQqxyNi8Dz6CSn
+  - _id: bMLyzSZu2NMqPxMp3
+    name: Six
+    value: 6
+    factorTypeId: uWvpQqxyNi8Dz6CSn
 lobbyConfigs:
   - timeoutType: lobby
     timeoutInSeconds: 300
