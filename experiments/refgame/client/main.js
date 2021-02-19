@@ -18,9 +18,10 @@ import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
 import ExitSurvey from "./exit/ExitSurvey";
-import ExitSurvey2 from "./exit/ExitSurvey2";
 
 import customBreadcrumb from "./game/Breadcrumb.jsx";
+
+//Empirica.header(() => null);
 
 // Set the Consent Component you want to present players (optional).
 Empirica.consent(Consent);
