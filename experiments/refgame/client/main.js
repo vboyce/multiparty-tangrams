@@ -18,6 +18,8 @@ import Round from "./game/Round.jsx";
 import Thanks from "./exit/Thanks.jsx";
 import Sorry from "./exit/Sorry";
 import ExitSurvey from "./exit/ExitSurvey";
+import ExitSurvey2 from "./exit/ExitSurvey2";
+
 import customBreadcrumb from "./game/Breadcrumb.jsx";
 
 // Set the Consent Component you want to present players (optional).
@@ -37,14 +39,13 @@ Empirica.introSteps((game, treatment) => {
     steps.push(GroupQuiz);
   } 
 
-  //return steps;
-  return [GroupQuiz];
+  return steps;
 });
 
 // The Round component containing the game UI logic.
 // This is where you will be doing the most development.
 // See client/game/Round.jsx to learn more.
-Empirica.round(Round);
+//Empirica.round(Round);
 
 // End of Game pages. These may vary depending on player or game information.
 // For example we can show the score of the user, or we can show them a

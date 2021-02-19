@@ -25,7 +25,8 @@ export default class Thanks extends React.Component {
           </p>
           <p>
             Thank you again for participating! If you were curious, you were always interacting in real time with real human partners.
-            The aim of our study was to understand how new language spreads through a community, like slang and dialects do in the real world. Please email us at robertdh@princeton.edu if you have any questions or concerns.
+            The aim of our study was to understand how people cooeratively develop shorthand labels for new objects, sort of like how slang or dialects evolves in the real world. 
+            Please email us at <a href="mailto://languagecoglab@gmail.com."> languagecoglab@gmail.com</a> if you have any questions or concerns.
 
           </p>
         </div>

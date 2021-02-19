@@ -7,7 +7,7 @@ export default class Consent extends React.Component {
   static renderConsent() {
     return (
       <Centered>
-        <div className="consent bp3-ui-text">
+        <div className="instructions">
         <div className="image">
             <center><img width="300px" src="/experiment/stanford.png" /></center>
           </div>
