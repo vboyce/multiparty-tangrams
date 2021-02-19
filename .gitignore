@@ -4,4 +4,4 @@
 node_modules
 .DS_Store
 .Rproj.user
-*/local.json
+experiment/refgame/local.json
