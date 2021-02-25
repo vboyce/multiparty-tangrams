@@ -1,7 +1,6 @@
 import Empirica from "meteor/empirica:core";
 
 import "./callbacks.js";
-import "./bots.js";
 import { targetSets } from "./constants";
 import _ from "lodash";
 

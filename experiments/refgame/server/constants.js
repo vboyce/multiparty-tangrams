@@ -30,7 +30,6 @@ export const names = [
     "Dace",
   ]; // for the players names to match avatar color
 
-// Blue avatar names and color codes:
 export const avatarNames = [
     "Samuel",
     "Alaina",
@@ -55,5 +54,5 @@ export const nameColors = [
     "#59C7B1",
     "#A8385F",
     "#996832"
-  ]
+  ] //these match the avatarNames colors -- need to code by hand with html color picker type thing
 
