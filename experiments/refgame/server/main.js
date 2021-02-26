@@ -61,12 +61,12 @@ Empirica.gameInit((game, treatment) => {
       _.times(numTargets, targetNum => {      
         const round = game.addRound();
         round.set('target', mixed_targets[targetNum]);
-        round.set('numTrials', reps * numTargets);
-        round.set('reps', reps);
-        round.set('numTargets', numTargets);
+        //round.set('numTrials', reps * numTargets);
+        //round.set('reps', reps);
+        //round.set('numTargets', numTargets);
         round.set('targetNum', targetNum);
-        round.set('trialNum', repNum * reps + targetNum);
         round.set('repNum', repNum);
+        round.set('trialNum', repNum * numTargets + targetNum);
                 
         round.addStage({
           name: "selection",

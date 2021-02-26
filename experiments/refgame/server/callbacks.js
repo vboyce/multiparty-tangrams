@@ -78,8 +78,8 @@ Empirica.onRoundEnd((game, round) => {
   //Save outcomes as property of round for later export/analysis
   players.forEach(player => {
     const correctAnswer = round.get('target');
-    round.set('player' + player._id + 'response', player.get('clicked'));
-    round.set('room' + player._id+ 'correct', correctAnswer == player.get('clicked')); 
+    round.set('player_' + player._id + '_response', player.get('clicked'));
+    round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
   });
 });
 
