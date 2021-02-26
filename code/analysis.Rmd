@@ -8,7 +8,7 @@ output:
 # Data clean-up
 
 ```{r set-up, include=F}
-knitr::opts_chunk$set(echo = FALSE, warning=F)
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
 options(knitr.table.format = "html")
 library(tidyverse)
 library(jsonlite)
@@ -27,6 +27,7 @@ date_start=lubridate::ymd('2021-02-22')
 
 
 **Notes**: 
+
 - numTrials etc were removed in code edits, so after another round of data will need to adjust code
 - also check that trialnum is not messed up anymore
 - and if time to selection is added, deal with that!!
@@ -34,6 +35,7 @@ date_start=lubridate::ymd('2021-02-22')
 
 **TODOs**:
 - need to filter out who's the speaker -- no one wants their responses! (or we could be hacky about it)
+
 ```{r}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
   rename(gameId = `_id`)
@@ -69,12 +71,18 @@ d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
   filter(playerId!=speaker)
 
 ```
+
+Demographics are read in, but we don't care about them right now.
+
 ```{r demographics}
 d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
   filter(createdAt >= date_start) %>% 
   left_join(d.games, by = c('gameId'))
 
 ```
+
+Using some of Robert's code, could read roles off from game data, but I think it's easier to just keep track of who speaker is as a round-level variable, anyway?
+
 ```{r roles}
 
 roles.tmp <- d.games %>%
@@ -100,6 +108,7 @@ roles <- d.chat.raw %>%
   group_by(gameId, trialNum, repNum) %>%
   spread(role, playerId)
 ```
+
 ```{r chat}
 d.chat <- d.chat.raw %>%
   #filter(role == 'speaker') %>%
@@ -115,10 +124,20 @@ d.chat <- d.chat.raw %>%
   summarize(text = paste0(text, collapse = ', '),
             total_num_words = sum(utt_length_words),
             total_num_chars = sum(utt_length_chars))
+```
 
-ggplot(d.chat, aes(x=repNum, y=total_num_words, color=playerId))+facet_wrap(~tangram)+geom_point()+geom_line()
+# Pretty pictures
 
-ggplot(d.chat, aes(x=repNum, y=total_num_chars, color=playerId))+facet_wrap(~tangram)+geom_point()+geom_line()
+```{r}
+ggplot(d.chat, aes(x=repNum, y=total_num_words, color=playerId))+
+  facet_wrap(~tangram)+
+  geom_point()+
+  geom_line()
+
+ggplot(d.chat, aes(x=repNum, y=total_num_chars, color=playerId))+
+  facet_wrap(~tangram)+
+  geom_point()+
+  geom_line()
 
 ```
 
