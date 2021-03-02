@@ -33,10 +33,15 @@ Empirica.onRoundStart((game, round) => {
   const players = game.players;
   round.set("chat", []); 
   round.set("roundbonus",0);
+  round.set('speaker', "")
   players.forEach(player => {
     player.set('role', player.get('roleList')[round.index])
+    if (player.get('role')=="speaker"){
+      round.set('speaker', player._id)
+    }
     player.set('clicked', false);
     player.set('done', false);
+    player.set('clickTime', false);
   });
 });
 
@@ -80,6 +85,7 @@ Empirica.onRoundEnd((game, round) => {
     const correctAnswer = round.get('target');
     round.set('player_' + player._id + '_response', player.get('clicked'));
     round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
+    round.set('player_' + player._id+ '_time', player.get('clickTime'));
   });
 });
 

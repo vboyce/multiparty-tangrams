@@ -42,11 +42,12 @@ export default class Task extends React.Component {
           correct ? "" :
       ""
     )
-    let role = (player.get('role')=="speaker"? "the speaker": "a listener")
+    let role = (player.get('role')=="speaker"? "You are the speaker. Please describe the picture in the box to the other players.": 
+    "You are a listener. Please click on the image that the speaker describes.")
     return (
       <div className="task">
         <div className="board">
-          <h1 className="roleIndicator"> You are {role}.</h1>
+          <h1 className="roleIndicator"> {role}</h1>
           <div className="all-tangrams">
             <div className="tangrams">
               {tangramsToRender}

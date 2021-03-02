@@ -16,7 +16,7 @@ export default class MoreAboutBonus extends React.Component {
             partners make. Your total score will be calculated as the sum of your scores on each round.
           </p>
 
-        <p>Each time a <strong>Listener</strong> makes a correct selection, they recieve <strong> 4 points</strong>.</p>
+        <p>Each time a <strong>Listener</strong> makes a correct selection, they get <strong> 4 points</strong>.</p>
         <p>The <strong>Speaker</strong> gets <strong>2 points</strong> for each correct selection a Listener makes. </p>
 
         <p> Incorrect selection and no selection (timing out) earn no points. </p>

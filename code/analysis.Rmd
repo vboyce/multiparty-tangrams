@@ -47,7 +47,8 @@ d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
   unnest(data.chat) %>%
   select(-data.target, -ends_with('response'), -ends_with('correct'),-data.numTrials,-data.reps,-data.numTargets, -data.roundbonus) %>%
-  rename_with(~ gsub("data.", "", .x, fixed = TRUE))
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
+  write_csv("pilotA_chat.csv")
 
 d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
   filter(createdAt >= date_start) %>% 

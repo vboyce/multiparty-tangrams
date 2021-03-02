@@ -8,7 +8,7 @@ export default class Consent extends React.Component {
     return (
       <Centered>
         <div className="instructions">
-        <div className="image">
+        <div className="smallimage">
             <center><img width="300px" src="/experiment/stanford.png" /></center>
           </div>
           <p>

@@ -92,8 +92,8 @@ export default class SocialInteractionDetails extends React.Component {
          <p>
             You and your teammates have{" "}
             {Math.ceil(treatment.selectionDuration / 60.0)} minutes on each round to
-            select a tangram. If you do not select a tangram in this window, you will automatically{" "}
-            <strong>progress to the next task when the time is up</strong> and will not recieve a bonus,
+            select an image. If you do not select an image in this window, you will automatically{" "}
+            <strong>progress to the next task when the time is up</strong> and will not get a bonus,
             so please stay focused.
           </p>
           <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through the all the pictures {treatment.rounds} times,

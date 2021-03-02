@@ -10,14 +10,20 @@ export default class Overview extends React.Component {
     return (
       <Centered>
         <div className="instructions">
+       
           <h1 className={"bp3-heading"}> Game Overview </h1>
+
+          <p>
+            <b> Please read these instructions carefully! You will have to pass a quiz on how the game works before you can play!</b>
+          </p>
+          
           <p>
             In this task, you will be assigned to a team with {treatment.playerCount -1} other people ({treatment.playerCount} including yourself!).
             You will play a series of communication games with people on your team.
             Everyone on your team will see the same set of pictures, which will look something like this:
           </p>
 
-          <div className="image">
+          <div className="smallimage">
             <center><img width="300px" src="/experiment/tangrams.PNG" /></center>
           </div>
 
@@ -32,7 +38,7 @@ export default class Overview extends React.Component {
             secretly marking one of the pictures as the {" "} <strong>target</strong>.
           </p>
 
-          <div className="image">
+          <div className="smallimage">
             <center><img width="300px" src="/experiment/target.PNG" /></center>
           </div>
 
@@ -46,8 +52,8 @@ export default class Overview extends React.Component {
             discuss previous trials or chat about any other topics!
           </p>
 
-          <div className="image">
-            <center><img width="250px" src="/experiment/typing.PNG" /></center>
+          <div className="smallimage">
+            <center><img width="300px" src="/experiment/typing.PNG" /></center>
             <br/>
           </div>
 

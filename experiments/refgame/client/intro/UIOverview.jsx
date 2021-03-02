@@ -25,7 +25,7 @@ export default class UIOverview extends React.Component {
           </div>
 
           <p>
-            Now you know where everything goes and ready to take the quiz! Good
+            Now you know where everything goes and are ready to take the quiz! Good
             luck.
           </p>
 

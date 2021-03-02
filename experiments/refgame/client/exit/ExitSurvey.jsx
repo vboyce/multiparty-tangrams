@@ -33,6 +33,7 @@ export default class ExitSurvey extends React.Component {
         fair: "",
         chatUseful: "",
         feedback: "",
+        time: "",
     };
 
     handleChange = (event) => {
@@ -69,6 +70,7 @@ export default class ExitSurvey extends React.Component {
             fair,
             chatUseful,
             feedback,
+            time,
         } = this.state;
 
         return (
@@ -340,6 +342,29 @@ export default class ExitSurvey extends React.Component {
     />
 </FormGroup>
 </div>
+
+<div className="form-line thirds">
+
+<FormGroup
+    className={"form-group"}
+    inline={false}
+    label={"Did you feel like you had enough time on each round?"}
+    labelFor={"time"}
+    //className={"form-group"}
+>
+    <TextArea
+        id="time"
+        name="time"
+        large={true}
+        intent={Intent.PRIMARY}
+        onChange={this.handleChange}
+        value={time}
+        fill={true}
+    />
+</FormGroup>
+</div>
+
+
                   <div className="form-line thirds">
                     <FormGroup
                       className={"form-group"}
