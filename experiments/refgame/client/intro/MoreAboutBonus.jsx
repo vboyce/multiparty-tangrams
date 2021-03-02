@@ -16,13 +16,15 @@ export default class MoreAboutBonus extends React.Component {
             partners make. Your total score will be calculated as the sum of your scores on each round.
           </p>
 
-        <p>Each time a <strong>Listener</strong> makes a correct selection, they get <strong> 4 points</strong>.</p>
-        <p>The <strong>Speaker</strong> gets <strong>2 points</strong> for each correct selection a Listener makes. </p>
+        <p>Each time a <strong>Listener</strong> makes a correct selection, they get <strong> {treatment.listenerBonus} points</strong>.</p>
+        <p>The <strong>Speaker</strong> gets <strong> {treatment.speakerBonus} points</strong> for each correct selection a Listener makes. </p>
 
         <p> Incorrect selection and no selection (timing out) earn no points. </p>
         
-        <p>For instance, if there are two Listeners and both make a correct selection, they each get 4 points, and the Speaker gets 2+2=4 points.
-        If one Listener chooses correctly and one doesn't, the correct Listener gets 4 points, the other Listener gets 0 points, and the Speaker gets 2 points. </p>
+        <p>For instance, if there are two Listeners and both make a correct selection, they each get {treatment.listenerBonus} points, 
+        and the Speaker gets {treatment.speakerBonus}+{treatment.speakerBonus}={2*treatment.speakerBonus} points.
+        If one Listener chooses correctly and one doesn't, the correct Listener gets {treatment.listenerBonus} points, the other Listener gets 0 points, 
+        and the Speaker gets {treatment.speakerBonus} points. </p>
 
           <p>
             Your performance bonus will be based on your score at the end of the experiment.

@@ -4,10 +4,7 @@ import { Centered } from "meteor/empirica:core";
 export default class UIOverview extends React.Component {
   render() {
     const { hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
-    const imagePath =
-      treatment.playerCount > 1
-        ? "experiment/interface.PNG"
-        : "experiment/indUIExample.svg";
+    const imagePath ="experiment/interface.PNG"
 
     console.log("imagePath", imagePath);
 

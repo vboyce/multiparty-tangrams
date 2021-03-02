@@ -18,7 +18,8 @@ export default class Task extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-    //const room = player.get('roomId');
+    const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
+    const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     const target = round.get("target");
     const tangramURLs = player.get('tangramURLs');
     const correct = player.get('clicked') == target
@@ -36,14 +37,33 @@ export default class Task extends React.Component {
           />
       ));
     }
-    let feedback = (
-      player.get('clicked') == '' ? '' :
-      player.get('done') == false ? "Waiting for others to answer." :
-          correct ? "" :
-      ""
-    )
-    let role = (player.get('role')=="speaker"? "You are the speaker. Please describe the picture in the box to the other players.": 
-    "You are a listener. Please click on the image that the speaker describes.")
+      
+    let role = ""
+    if (stage.name=="selection"){
+     role = (player.get('role')=="speaker"? "You are the speaker. Please describe the picture in the box to the other players.": 
+    "You are a listener. Please click on the image that the speaker describes.")}
+    if (stage.name=="feedback"){
+      if (player.get('role')=='speaker'){
+        let countCorrect=0;
+        if (partner1.get("clicked")==target){
+          countCorrect=countCorrect+1
+        }
+        if (partner2.get("clicked")==target){
+          countCorrect=countCorrect+1
+        }
+        round.set("countCorrect",countCorrect)
+        role = countCorrect+"/"+(game.treatment.playerCount-1)+ " listeners selected correctly!"
+      }
+      else if (player.get("clicked")==target){
+        role = "Your selection is CORRECT!"
+      }
+      else if (player.get("clicked")==false){
+        role = "You did not make a selection."
+      }
+      else{
+        role = "Whoops, your selection was incorrect."
+      }
+    }
     return (
       <div className="task">
         <div className="board">
@@ -53,10 +73,6 @@ export default class Task extends React.Component {
               {tangramsToRender}
             </div>
           </div>
-          <h3 className="feedbackIndicator">
-            {feedback}
-            <br/>
-          </h3>
         </div>
       </div>
     );

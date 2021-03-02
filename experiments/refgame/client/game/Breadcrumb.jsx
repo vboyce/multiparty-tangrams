@@ -9,14 +9,14 @@ export default class customBreadcrumb extends React.Component {
         <ul className={Classes.BREADCRUMBS}>
           <li key={round.index}>
             <Crumb
-              text={"Block " + (1 + round.get('repNum')) +
+              text={"Round  " + (1 + round.get('repNum')) +
                     " / " + game.treatment.rounds}
               className={Classes.BREADCRUMB_CURRENT}
             />
           </li>
           <li>
             <Crumb
-              text={"Round " + (1 + round.get('targetNum')) +
+              text={"Target " + (1 + round.get('targetNum')) +
                     " / " + game.get('context').length}
               className={Classes.BREADCRUMB_CURRENT}
             />

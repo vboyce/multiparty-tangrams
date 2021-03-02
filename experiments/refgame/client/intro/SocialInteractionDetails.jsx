@@ -91,8 +91,8 @@ export default class SocialInteractionDetails extends React.Component {
           <br />
          <p>
             You and your teammates have{" "}
-            {Math.ceil(treatment.selectionDuration / 60.0)} minutes on each round to
-            select an image. If you do not select an image in this window, you will automatically{" "}
+            {Math.ceil(treatment.selectionDuration / 60.0)} minutes to
+            select an image on each repetition. If you do not select an image in this window, you will automatically{" "}
             <strong>progress to the next task when the time is up</strong> and will not get a bonus,
             so please stay focused.
           </p>
@@ -110,7 +110,7 @@ export default class SocialInteractionDetails extends React.Component {
           </p>
           <p>
             Note that the game allows for simultaneous and real-time actions.
-            Each round will only end after all the listeners have made a selection (or the round timer runs out).</p>
+            Each trial will only end after all the listeners have made a selection (or the timer runs out).</p>
 
             <p>At that time, everyone will be given feedback: the <b>Speaker</b> will see which picture
             each Listener selected, and the <b>Listeners</b> will each see whether their selection was correct or not.</p>
