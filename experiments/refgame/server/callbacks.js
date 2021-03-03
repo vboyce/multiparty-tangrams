@@ -85,7 +85,7 @@ Empirica.onRoundEnd((game, round) => {
     const correctAnswer = round.get('target');
     round.set('player_' + player._id + '_response', player.get('clicked'));
     round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
-    round.set('player_' + player._id+ '_time', player.get('clickTime'));
+    round.set('player_' + player._id + '_time', player.get('timeClick'));
   });
 });
 
