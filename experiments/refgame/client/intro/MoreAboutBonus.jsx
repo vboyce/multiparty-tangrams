@@ -13,7 +13,7 @@ export default class MoreAboutBonus extends React.Component {
 
           <p>
             In each task, we use "score" to evaluate the quality of the selections that you and your
-            partners make. Your total score will be calculated as the sum of your scores on each round.
+            partners make. Your total score will be calculated as the sum of all your scores on each round.
           </p>
 
         <p>Each time a <strong>Listener</strong> makes a correct selection, they get <strong> {treatment.listenerBonus} points</strong>.</p>

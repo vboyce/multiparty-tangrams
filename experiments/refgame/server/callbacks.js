@@ -34,13 +34,13 @@ Empirica.onRoundStart((game, round) => {
   round.set("chat", []); 
   round.set("countCorrect",0);
   round.set('speaker', "")
+  round.set('submitted', false);
   players.forEach(player => {
     player.set('role', player.get('roleList')[round.index])
     if (player.get('role')=="speaker"){
       round.set('speaker', player._id)
     }
     player.set('clicked', false);
-    player.set('clickTime', false);
     player.set('timeClick', false);
   });
 });

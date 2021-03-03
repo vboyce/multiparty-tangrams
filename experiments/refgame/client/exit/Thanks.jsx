@@ -15,7 +15,7 @@ export default class Thanks extends React.Component {
           <br />
           <h3>
             Please submit the following code to receive your bonus:{" "}
-            <em>3B021164</em>.
+            <em>{game.treatment.submitCode}</em>.
           </h3>
           <p>
             Your final{" "}

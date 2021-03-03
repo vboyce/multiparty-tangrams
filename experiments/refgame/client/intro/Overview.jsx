@@ -46,8 +46,7 @@ export default class Overview extends React.Component {
             The Speaker's job is to send a description of the target through the chatbox
             so that the Listeners are able to pick it out of the set. You can write whatever
             description you think will best allow your partners to identify the target.
-            Please note that <b>the order of the pictures on your screen is scrambled on each
-            round</b>, so descriptions like "the one on the left" or "the third one" will not
+            Please note that <b>the order of the pictures on your screen is scrambled</b>, so descriptions like "the one on the left" or "the third one" will not
             work. Also, please limit your description to the current target picture: do not
             discuss previous trials or chat about any other topics!
           </p>

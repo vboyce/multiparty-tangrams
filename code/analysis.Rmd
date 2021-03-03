@@ -21,8 +21,10 @@ ParseJSONColumn <- function(x) {
 }
 
 ##Data import constants
-data_location="data/pilotA/"
-date_start=lubridate::ymd('2021-02-22')
+#data_location="data/pilotA/"
+data_location="data/test"
+#date_start=lubridate::ymd('2021-02-22')
+date_start=lubridate::ymd('2021-03-01')
 ```
 
 
@@ -38,7 +40,8 @@ date_start=lubridate::ymd('2021-02-22')
 
 ```{r}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
-  rename(gameId = `_id`)
+  rename(gameId = `_id`) %>% 
+    filter(createdAt >= date_start)
 
 d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
   filter(createdAt >= date_start) %>%
@@ -62,11 +65,11 @@ d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
   separate(key, into = c('blah', 'playerId', 'info')) %>% 
   spread(info, value) %>% 
   select(-blah) %>% 
-  mutate(speaker=case_when( ## THis is only here so I can get the rest of the pipeline relatively smoothly because what data recorded how was not optimal
-    gameId=="mrpaHrMXHSntkA2Dy" ~"3cE5Tj2P4tigK262k",
-    gameId=="WHTbegqrqojvuQoQi" ~ "DfGiwQJ7jqYfuGHoj",
-    T ~ ""
-  )) %>% 
+  #mutate(speaker=case_when( ## THis is only here so I can get the rest of the pipeline relatively smoothly because what data recorded how was not optimal
+   # gameId=="mrpaHrMXHSntkA2Dy" ~"3cE5Tj2P4tigK262k",
+   # gameId=="WHTbegqrqojvuQoQi" ~ "DfGiwQJ7jqYfuGHoj",
+   # T ~ ""
+  #)) %>% 
   mutate(correct=as.logical(correct)) %>% 
   filter(!is.na(correct)) %>% 
   filter(playerId!=speaker)
@@ -82,33 +85,6 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
 
 ```
 
-Using some of Robert's code, could read roles off from game data, but I think it's easier to just keep track of who speaker is as a round-level variable, anyway?
-
-```{r roles}
-
-roles.tmp <- d.games %>%
-  select(gameId, data.roleList) %>% 
-  mutate(data.roleList = map(data.roleList, .f = ParseJSONColumn)) %>%
-  unnest(data.roleList) %>%
-  gather(playerId, role, -gameId) %>% 
-  rowwise() %>% 
-  filter(!is.null(role)) %>%
-  unnest(role) %>%
-  group_by(playerId) %>% 
-  mutate(n = row_number() - 1,
-         trialNum = n %% 12,
-         roundNum = floor(n / 12)) %>%
-  select(-n)
-roles <- d.chat.raw %>%
-  ungroup() %>%
-  mutate(row_id = row_number()) %>%
-  group_by(gameId, trialNum, repNum) %>%
-  filter(row_id == first(row_id)) %>%
-  summarize(playerId = unique(playerId)) %>%
-  left_join(roles.tmp) %>%
-  group_by(gameId, trialNum, repNum) %>%
-  spread(role, playerId)
-```
 
 ```{r chat}
 d.chat <- d.chat.raw %>%

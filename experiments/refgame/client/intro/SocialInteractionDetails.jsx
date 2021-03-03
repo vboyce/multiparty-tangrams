@@ -92,7 +92,7 @@ export default class SocialInteractionDetails extends React.Component {
          <p>
             You and your teammates have{" "}
             {Math.ceil(treatment.selectionDuration / 60.0)} minutes to
-            select an image on each repetition. If you do not select an image in this window, you will automatically{" "}
+            select an image on each repetition. If you do not select an image in this time frame, you will automatically{" "}
             <strong>progress to the next task when the time is up</strong> and will not get a bonus,
             so please stay focused.
           </p>

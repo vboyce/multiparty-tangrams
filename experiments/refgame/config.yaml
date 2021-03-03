@@ -60,15 +60,51 @@ treatments:
       - 6MrFJYnfziMgRMbZq
       - T3s4h67DrihbRNpQS
       - PhWBYRyqGv7hpZbKm
-    archivedAt: 2021-02-19T19:15:54.657Z
+    archivedAt: 2021-02-26T03:37:41.837Z
   - name: Test
     factorIds:
       - xWQjpcmpuWmZXGA7P
       - WPMyAs4AHQkRbejSw
       - 6MrFJYnfziMgRMbZq
       - PhWBYRyqGv7hpZbKm
+    archivedAt: 2021-03-02T21:59:49.637Z
+  - name: pilot
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - H6mfXThg4jQ2annbb
+      - PhWBYRyqGv7hpZbKm
+      - bMLyzSZu2NMqPxMp3
+    archivedAt: 2021-03-02T21:59:50.481Z
+  - name: Testing
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - 6MrFJYnfziMgRMbZq
+      - PhWBYRyqGv7hpZbKm
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - hsiunZ8b68hKxbnPM
+    archivedAt: 2021-03-03T00:55:19.116Z
+  - name: Testing2
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - pWeADdnYht6s2XmXy
+      - 8s4mWKpqFF83FP3X6
+      - WPMyAs4AHQkRbejSw
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - hsiunZ8b68hKxbnPM
+  - name: pilot_B
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - pWeADdnYht6s2XmXy
+      - 8s4mWKpqFF83FP3X6
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - hsiunZ8b68hKxbnPM
 factorTypes:
-  - _id: Hp25w7ExEWKNEn5KQ
+  - _id: vYnBSPaCKt6m9nJu9
     name: playerCount
     description: The Number of players participating in the given game.
     required: true
@@ -79,7 +115,7 @@ factorTypes:
     description: how many times do you repeat with a partner
     required: true
     type: String
-    archivedAt: 2021-02-19T19:14:30.354Z
+    archivedAt: 2021-02-26T03:37:41.365Z
   - _id: yZ9EAzrPfAEKk96kr
     name: teamColor
     description: are you red or blue?
@@ -98,7 +134,7 @@ factorTypes:
     description: which set of tangrams do you see?
     required: true
     type: String
-    archivedAt: 2021-02-19T19:14:32.663Z
+    archivedAt: 2021-02-26T03:37:41.381Z
   - _id: oTmtc6KmQb77CaDTC
     name: submitCode
     description: code for submission to prolific/mturk
@@ -110,16 +146,37 @@ factorTypes:
     required: false
     type: Integer
     min: 1
+  - _id: tJ642Av4buu8Q5w73
+    name: feedbackDuration
+    description: how many seconds the feedback is displayed for
+    required: false
+    type: Integer
+    min: 1
+    max: 100
+  - _id: ZkXeabrJhX4KfX8yj
+    name: listenerBonus
+    description: how much a listener is paid per correct answer (in cents)
+    required: false
+    type: Integer
+    min: 1
+    max: 10
+  - _id: b5miCkhM6uwYKF2Sn
+    name: speakerBonus
+    description: how much bonus the speaker gets *per listener* who gets it right
+    required: false
+    type: Integer
+    min: 0
+    max: 10
 factors:
   - _id: LCPL67GcDLnC7kpX4
     name: duo
     value: 2
-    factorTypeId: Hp25w7ExEWKNEn5KQ
+    factorTypeId: vYnBSPaCKt6m9nJu9
     archivedAt: 2021-02-03T19:37:44.531Z
   - _id: 9mWDEEbPMz8J8oWxh
     name: quad
     value: 4
-    factorTypeId: Hp25w7ExEWKNEn5KQ
+    factorTypeId: vYnBSPaCKt6m9nJu9
     archivedAt: 2021-02-03T19:37:37.339Z
   - _id: dwfYRz6EK4FE9iNcR
     name: four
@@ -140,7 +197,7 @@ factors:
   - _id: sLBbCyDZv74ZsrtYE
     name: solo
     value: 1
-    factorTypeId: Hp25w7ExEWKNEn5KQ
+    factorTypeId: vYnBSPaCKt6m9nJu9
     archivedAt: 2021-02-03T19:37:27.802Z
   - _id: GSmgoGszjTjH6mWNu
     name: targetSet
@@ -166,7 +223,7 @@ factors:
   - _id: xWQjpcmpuWmZXGA7P
     name: Triad
     value: 3
-    factorTypeId: Hp25w7ExEWKNEn5KQ
+    factorTypeId: vYnBSPaCKt6m9nJu9
   - _id: WPMyAs4AHQkRbejSw
     name: One
     value: 1
@@ -175,6 +232,26 @@ factors:
     name: Six
     value: 6
     factorTypeId: uWvpQqxyNi8Dz6CSn
+  - _id: XxGKfzAdshtarMJ8v
+    name: five
+    value: 5
+    factorTypeId: tJ642Av4buu8Q5w73
+  - _id: ivrbpviGCdXTDsEiZ
+    name: Four
+    value: 4
+    factorTypeId: ZkXeabrJhX4KfX8yj
+  - _id: hsiunZ8b68hKxbnPM
+    name: Two
+    value: 2
+    factorTypeId: b5miCkhM6uwYKF2Sn
+  - _id: 8s4mWKpqFF83FP3X6
+    name: test
+    value: LCX2Y5GM
+    factorTypeId: oTmtc6KmQb77CaDTC
+  - _id: pWeADdnYht6s2XmXy
+    name: threemin
+    value: '180'
+    factorTypeId: kJddTH8X4Y6Df7SPA
 lobbyConfigs:
   - timeoutType: lobby
     timeoutInSeconds: 300
