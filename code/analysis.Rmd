@@ -22,9 +22,9 @@ ParseJSONColumn <- function(x) {
 
 ##Data import constants
 #data_location="data/pilotA/"
-data_location="data/test"
+data_location="data/pilotB"
 #date_start=lubridate::ymd('2021-02-22')
-date_start=lubridate::ymd('2021-03-01')
+date_start=lubridate::ymd('2021-03-08')
 ```
 
 
@@ -49,7 +49,7 @@ d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
   rename(row_id = `_id`) %>%
   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
   unnest(data.chat) %>%
-  select(-data.target, -ends_with('response'), -ends_with('correct'),-data.numTrials,-data.reps,-data.numTargets, -data.roundbonus) %>%
+  select(-data.target, -ends_with('response'), -ends_with('correct')) %>%
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
   write_csv("pilotA_chat.csv")
 
@@ -60,17 +60,14 @@ d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
     rename_with ( ~ gsub("player", "player_", .x, fixed=T)) %>% 
     rename_with ( ~ gsub("correct", "_correct", .x, fixed=T)) %>% 
     rename_with ( ~ gsub("response", "_response", .x, fixed=T)) %>% 
-  select(-numTrials, -reps, -numTargets, -chat,-roundbonus) %>% 
+  rename_with( ~ gsub("time", "_time", .x, fixed=T)) %>% 
+  select(-chat) %>% 
   gather(key, value, starts_with('player')) %>% 
   separate(key, into = c('blah', 'playerId', 'info')) %>% 
   spread(info, value) %>% 
   select(-blah) %>% 
-  #mutate(speaker=case_when( ## THis is only here so I can get the rest of the pipeline relatively smoothly because what data recorded how was not optimal
-   # gameId=="mrpaHrMXHSntkA2Dy" ~"3cE5Tj2P4tigK262k",
-   # gameId=="WHTbegqrqojvuQoQi" ~ "DfGiwQJ7jqYfuGHoj",
-   # T ~ ""
-  #)) %>% 
-  mutate(correct=as.logical(correct)) %>% 
+  mutate(correct=as.logical(correct),
+         time=as.numeric(time)/1000) %>% 
   filter(!is.na(correct)) %>% 
   filter(playerId!=speaker)
 
@@ -125,5 +122,16 @@ d.round_results %>% group_by(playerId,repNum) %>%
            geom_line()+
   geom_point()+
   scale_y_continuous(breaks=c(0,3,6,9,12), limits = c(0,12))
+
+```
+
+```{r time}
+d.round_results %>% #group_by(playerId, repNum) %>% 
+  filter(correct==T) %>% 
+  #summarize(pct_corr=sum(correct)) %>% 
+  ggplot(aes(x=repNum, y=time, color=playerId))+
+           #geom_line()+
+  geom_point()+
+  scale_y_continuous(limits = c(0,180))
 
 ```
