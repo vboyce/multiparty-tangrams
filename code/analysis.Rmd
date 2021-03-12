@@ -4,8 +4,18 @@ output:
   html_document:
     df_print: paged
 ---
+**TODOs**:
 
-# Data clean-up
+Discussion points:
+
+- exclusion criteria? 
+- consider paying more
+- language requirement: fluent or native? 
+
+Future analyses:
+
+- regressions to go with the graphs
+- linguistic analyses
 
 ```{r set-up, include=F}
 knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
@@ -13,6 +23,7 @@ options(knitr.table.format = "html")
 library(tidyverse)
 library(jsonlite)
 library(here)
+library(rlang)
 theme_set(theme_bw())
 
 ParseJSONColumn <- function(x) {
@@ -25,18 +36,10 @@ ParseJSONColumn <- function(x) {
 data_location="data/pilotB"
 #date_start=lubridate::ymd('2021-02-22')
 date_start=lubridate::ymd('2021-03-08')
+
+image_location="write-ups/images"
 ```
 
-
-**Notes**: 
-
-- numTrials etc were removed in code edits, so after another round of data will need to adjust code
-- also check that trialnum is not messed up anymore
-- and if time to selection is added, deal with that!!
-- take out naming hacks
-
-**TODOs**:
-- need to filter out who's the speaker -- no one wants their responses! (or we could be hacky about it)
 
 ```{r}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
@@ -49,11 +52,11 @@ d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
   rename(row_id = `_id`) %>%
   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
   unnest(data.chat) %>%
-  select(-data.target, -ends_with('response'), -ends_with('correct')) %>%
+  select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
   write_csv("pilotA_chat.csv")
 
-d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
+d.round_results.raw <- read_csv(here(data_location,'rounds.csv')) %>%
   filter(createdAt >= date_start) %>% 
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
   rename_with ( ~ gsub("room", "player", .x, fixed=T)) %>% 
@@ -66,21 +69,54 @@ d.round_results <- read_csv(here(data_location,'rounds.csv')) %>%
   separate(key, into = c('blah', 'playerId', 'info')) %>% 
   spread(info, value) %>% 
   select(-blah) %>% 
+  mutate(tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
+         tangram = gsub('.png', '', tangram, fixed=TRUE)) %>% 
   mutate(correct=as.logical(correct),
          time=as.numeric(time)/1000) %>% 
   filter(!is.na(correct)) %>% 
   filter(playerId!=speaker)
 
+game_ids_exclude <- d.round_results.raw %>% group_by(gameId) %>% tally() %>% filter(n!=144)
+
+d.round_results <-  d.round_results.raw %>% anti_join(game_ids_exclude)
 ```
 
-Demographics are read in, but we don't care about them right now.
+# Pilot stuff
 
 ```{r demographics}
 d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
   filter(createdAt >= date_start) %>% 
-  left_join(d.games, by = c('gameId'))
+  left_join(d.games, by = c('gameId')) %>% 
+  anti_join(game_ids_exclude) %>% 
+    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
 
 ```
+
+```{r feedback}
+
+d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
+
+```
+
+In terms of language, I used the prolific pre-filter for fluent in English (but not English as native), not sure what we want
+
+How long did games take? Nothing took more than like 160 seconds (out of 180 possible). This is how long each game took (add 6 minutes of feedback time, and however long for intro and exit)
+
+
+
+```{r}
+d.round_results %>% group_by(trialNum, gameId) %>% 
+           mutate(time= time %|% 180) %>% 
+  summarize(max_time=max(time)) %>% 
+  group_by(gameId) %>% 
+  summarize(total_time=sum(max_time)/60)
+
+```
+We should consider paying more. 
+
+Of 20 people recruited, 6 games started, 4 finished. 
+
+# Pretty pictures
 
 
 ```{r chat}
@@ -94,44 +130,128 @@ d.chat <- d.chat.raw %>%
          tangram = gsub('.png', '', tangram, fixed=TRUE),
          utt_length_chars = str_length(text), 
          utt_length_words = str_count(text, "\\W+") + 1) %>%
-  group_by(gameId, trialNum, repNum, tangram, playerId, role) %>%
+  group_by(gameId, trialNum, repNum, tangram, playerId, role, countCorrect) %>%
   summarize(text = paste0(text, collapse = ', '),
-            total_num_words = sum(utt_length_words),
-            total_num_chars = sum(utt_length_chars))
+            total_num_words = sum(utt_length_words) %>% as.numeric(),
+            total_num_chars = sum(utt_length_chars) %>% as.numeric()) %>%
+  anti_join(game_ids_exclude) %>% 
+  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "countCorrect")) %>% 
+  mutate(text = text %|% "",
+         total_num_words= total_num_words %|% 0,
+         total_num_chars= total_num_chars %|% 0,
+         role = role %|% "listener")
+
 ```
 
-# Pretty pictures
+Everything here has bootstrapped 95% CIs. Speakers say less over the course of rounds. Also some tangrams are harder than others. 
 
 ```{r}
-ggplot(d.chat, aes(x=repNum, y=total_num_words, color=playerId))+
+ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
   facet_wrap(~tangram)+
-  geom_point()+
-  geom_line()
+  scale_color_brewer(palette="Dark2")+
+     stat_summary(fun.data = "mean_cl_boot")+
+  labs(title="Number of words", y="Number of words", x="Round number")
 
-ggplot(d.chat, aes(x=repNum, y=total_num_chars, color=playerId))+
+ggsave(here(image_location, 'words.pdf'), width=6, height=3)
+ggplot(d.chat, aes(x=repNum, y=total_num_chars, color=role))+
   facet_wrap(~tangram)+
-  geom_point()+
-  geom_line()
+    scale_color_brewer(palette="Dark2")+
+      stat_summary(fun.data = "mean_cl_boot")+
+    labs(title="Number of characters", y="Number of characters", x="Round number")
+
+ggsave(here(image_location, 'chars.pdf'))
+
 
 ```
 
 ```{r accuracy}
-d.round_results %>% group_by(playerId,repNum) %>% 
+d.round_results %>% group_by(playerId,repNum, gameId) %>% 
   summarize(pct_corr=sum(correct)) %>% 
-  ggplot(aes(x=repNum, y=pct_corr, color=playerId))+
-           geom_line()+
-  geom_point()+
-  scale_y_continuous(breaks=c(0,3,6,9,12), limits = c(0,12))
+  ggplot(aes(x=repNum, y=pct_corr))+
+  stat_summary(fun.data = "mean_cl_boot")+
+  #scale_color_brewer(palette="Dark2")+
+  scale_y_continuous(breaks=c(0,3,6,9,12), limits = c(0,12))+
+  labs(x="Round Number", y="Number correctly selected", title= "Overall accuracy increases over repetitions")
+
+ggsave(here(image_location, 'accuracy.pdf'), width=6, height=3)
 
 ```
 
+
 ```{r time}
-d.round_results %>% #group_by(playerId, repNum) %>% 
+d.round_results %>% group_by(playerId, repNum, gameId) %>% 
   filter(correct==T) %>% 
-  #summarize(pct_corr=sum(correct)) %>% 
-  ggplot(aes(x=repNum, y=time, color=playerId))+
-           #geom_line()+
-  geom_point()+
-  scale_y_continuous(limits = c(0,180))
+  #summarize(time=mean(time)) %>% 
+  ggplot(aes(x=repNum, y=time))+
+  geom_jitter(width=.2, height=0, alpha=1, color="lightgrey")+
+      stat_summary(fun.data = "mean_cl_boot")+
+  scale_y_continuous(limits = c(0,180))+
+    scale_color_brewer(palette="Dark2")+
+  labs(x="Round Number", y="Time to selection in seconds",
+       title="People choose faster in later rounds")
+
+ggsave(here(image_location, 'time.pdf'), width=6, height=3)
+
+```
+
+Don't have enough data (especially on mistakes) to see differential utterance length decreases by condition. 
+
+```{r}
+
+d.previous.round <- d.chat %>% 
+  ungroup() %>% 
+  select(gameId,tangram,repNum,playerId, role, countCorrectround=countCorrect, total_num_words_prev=total_num_words, total_num_chars_prev=total_num_chars) %>% 
+  unique() %>% 
+  mutate(repNum=repNum+1)
+
+ d.previous.trial <- d.chat %>% 
+  ungroup() %>% 
+  select(gameId,trialNum,playerId, role, countCorrecttrial=countCorrect, total_num_words_prev_trial=total_num_words, total_num_chars_prev_trial=total_num_chars) %>% 
+  unique() %>% 
+mutate(trialNum=trialNum+1)
+
+d.chat.lagged <- d.chat %>%
+  select(gameId, trialNum, repNum, playerId, role, tangram, total_num_words, total_num_chars) %>% 
+  left_join(d.previous.round) %>% 
+  mutate(reduction_word=log(total_num_words)-log(total_num_words_prev),
+         reduction_char=log(total_num_chars)-log(total_num_chars_prev)) %>% 
+  left_join(d.previous.trial) %>% 
+  mutate(reduction_word_trial=log(total_num_words)-log(total_num_words_prev_trial),
+         reduction_char_trial=log(total_num_chars)-log(total_num_chars_prev_trial)) %>%
+  filter(repNum>0) %>% 
+  filter(role=="speaker") %>% 
+  mutate(prev_correct_round=as.factor(countCorrectround),
+         prev_correct_trial=as.factor(countCorrecttrial),
+         prev_all_correct_round=ifelse(countCorrectround==2,T,F))
+
+ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_correct_round))+
+    scale_color_brewer(palette="Dark2")+
+      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+    labs(title="Change in utterance length", y="Log change in words", x="Round number")
+
+ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_correct_round))+
+    scale_color_brewer(palette="Dark2")+
+      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+    labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
+
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length", y="Log change in words", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_all_correct_round))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
+
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word_trial, color=prev_correct_trial))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length next trial", y="Log change in words", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char_trial, color=prev_correct_trial))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length next trial", y="Log change in  chars", x="Round number")
 
 ```
