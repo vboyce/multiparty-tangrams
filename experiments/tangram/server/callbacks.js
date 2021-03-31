@@ -16,9 +16,6 @@ Empirica.onGameStart((game) => {
 
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle(targets));
-    //const otherPlayers = _.reject(game.players, p => p._id === player._id);
-    //player.set("partner1", otherPlayers[0]._id)
-    //player.set("partner2", otherPlayers[1]._id)
     player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
@@ -61,32 +58,35 @@ Empirica.onStageStart((game, round, stage) => {
 
 // onStageEnd is triggered after each stage.
 // It receives the same options as onRoundEnd, and the stage that just ended.
-Empirica.onStageEnd((game, round, stage) => {});
+Empirica.onStageEnd((game, round, stage) => {
+  if (stage.name=="selection"){
+    const players = game.players;
+    // Update player scores
+    players.forEach(player => {
+      const currScore = player.get("bonus") || 0;
+      if (player.get("role")=="speaker"){
+      player.set("bonus", round.get("countCorrect")*game.treatment.listenerBonus/(game.players.length-1)*.01 + currScore);
+      }
+      else{
+      const selectedAnswer = player.get("clicked");
+      const target = round.get('target');
+      const scoreIncrement = selectedAnswer == target ? game.treatment.listenerBonus*.01 : 0;
+      player.set("bonus", scoreIncrement + currScore);
+      }
+    });
+    //Save outcomes as property of round for later export/analysis
+    players.forEach(player => {
+      const correctAnswer = round.get('target');
+      round.set('player_' + player._id + '_response', player.get('clicked'));
+      round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
+      round.set('player_' + player._id + '_time', player.get('timeClick'));
+    });
+}
+});
 
 // onRoundEnd is triggered after each round.
 Empirica.onRoundEnd((game, round) => {
-  const players = game.players;
-
-  // Update player scores
-  players.forEach(player => {
-    const currScore = player.get("bonus") || 0;
-    if (player.get("role")=="speaker"){
-    player.set("bonus", round.get("countCorrect")*game.treatment.speakerBonus*.01 + currScore);}
-    else{
-    const selectedAnswer = player.get("clicked");
-    const target = round.get('target');
-    const scoreIncrement = selectedAnswer == target ? game.treatment.listenerBonus*.01 : 0;
-    player.set("bonus", scoreIncrement + currScore);
-    }
-  });
-
-  //Save outcomes as property of round for later export/analysis
-  players.forEach(player => {
-    const correctAnswer = round.get('target');
-    round.set('player_' + player._id + '_response', player.get('clicked'));
-    round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
-    round.set('player_' + player._id + '_time', player.get('timeClick'));
-  });
+  
 });
 
 // onRoundEnd is triggered when the game ends.

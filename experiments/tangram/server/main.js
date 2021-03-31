@@ -13,7 +13,7 @@ function createRoles(players, info) {
   const l = _.shuffle(players);
   const speaker = _.times(info.numTotalTrials, _.constant("speaker"))
   const listener = _.times(info.numTotalTrials, _.constant("listener"))
-  const role_list= _.times(info.numPlayers, _.constant(listener)); //just hard code for now
+  const role_list= _.times(info.numPlayers, _.constant(listener)); 
   role_list[0]=speaker;
   const roles=_.zipObject(l,role_list);
   console.log(roles)
@@ -38,7 +38,6 @@ Empirica.gameInit((game, treatment) => {
 
   // Sample whether to use tangram set A or set B
   game.set("targetSet", 'setA'); 
-  //game.set("team", game.players.length > 1);
   game.set('context', targetSets['setA']);
   const targets = game.get('context');
   const reps = treatment.rounds;
@@ -63,12 +62,10 @@ Empirica.gameInit((game, treatment) => {
       _.times(numTargets, targetNum => {      
         const round = game.addRound();
         round.set('target', mixed_targets[targetNum]);
-        //round.set('numTrials', reps * numTargets);
-        //round.set('reps', reps);
-        //round.set('numTargets', numTargets);
         round.set('targetNum', targetNum);
         round.set('repNum', repNum);
         round.set('trialNum', repNum * numTargets + targetNum);
+        round.set('numPlayers', game.players.length)
                 
         round.addStage({
           name: "selection",

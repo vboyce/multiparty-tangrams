@@ -16,23 +16,22 @@ export default class Tangram extends React.Component {
         player.get('clicked') === false &
         player.get('role') == 'listener') {
       player.set("clicked", tangram)
-      player.stage.submit()
       if(player.get("clicked")==round.get("target")){
         const count=round.get("countCorrect")
         round.set("countCorrect", count+1)
       }
+      player.set("timeClick", Date.now()-stage.startTimeAt)
       if (!round.get('submitted')){
         speaker.stage.submit()
         round.set('submitted', true)
       }
-      player.set("timeClick", Date.now()-stage.startTimeAt)
+      player.stage.submit()
+
     }
   };
 
   render() {
     const { game, tangram, tangram_num, round, stage, player, ...rest } = this.props;
-    //const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
-    //const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     const players = game.players
     const target = round.get("target")
     const row = 1 + Math.floor(tangram_num / 4)
@@ -59,15 +58,18 @@ export default class Tangram extends React.Component {
         "zIndex" : "9"
       })
     }
+
+
     // Highlight clicked object in green if correct; red if incorrect
     if(stage.name=="feedback" & (tangram == player.get('clicked') ||
-     (player.get('role')== "speaker" & _.some(players, ['clicked', tangram])))) {
+     (player.get('role')== "speaker" & _.some(players, p => p.get("clicked") == tangram)))) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
         "outline" :  `10px solid ${color}`,
         "zIndex" : "9"
       })
     }
+    
     let feedback = []
     if (player.get('role') == 'speaker' &  stage.name=="feedback"){
       players.forEach(player => {

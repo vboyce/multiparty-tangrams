@@ -18,8 +18,6 @@ export default class Task extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-    //const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
-    //const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
     const target = round.get("target");
     const tangramURLs = player.get('tangramURLs');
     const correct = player.get('clicked') == target
