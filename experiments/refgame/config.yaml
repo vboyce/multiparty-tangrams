@@ -64,30 +64,10 @@ factorTypes:
     min: 0
     max: 10
 factors:
-  - _id: dwfYRz6EK4FE9iNcR
-    name: four
-    value: '4'
-    factorTypeId: BBRoq5WHnzs4qpWew
-  - _id: LYqRqNsuy3tZGcu7x
-    name: red
-    value: red
-    factorTypeId: yZ9EAzrPfAEKk96kr
-  - _id: QEbiEZHHkAaEDEo3q
-    name: blue
-    value: blue
-    factorTypeId: yZ9EAzrPfAEKk96kr
   - _id: H6mfXThg4jQ2annbb
     name: minute
     value: '60'
     factorTypeId: kJddTH8X4Y6Df7SPA
-  - _id: 5G2PioQghwMMQaiDA
-    name: setA
-    value: setA
-    factorTypeId: 2DXSSGGZYk9nTsqfw
-  - _id: T3s4h67DrihbRNpQS
-    name: setB
-    value: setB
-    factorTypeId: 2DXSSGGZYk9nTsqfw
   - _id: PhWBYRyqGv7hpZbKm
     name: prolificPilot
     value: 3B021164
@@ -99,6 +79,14 @@ factors:
   - _id: xWQjpcmpuWmZXGA7P
     name: Triad
     value: 3
+    factorTypeId: vYnBSPaCKt6m9nJu9
+  - _id: xWQjpcmpuWmZXGA7Q
+    name: Pair
+    value: 2
+    factorTypeId: vYnBSPaCKt6m9nJu9
+  - _id: xWQjpcmpuWmZXGA7R
+    name: Quad
+    value: 4
     factorTypeId: vYnBSPaCKt6m9nJu9
   - _id: WPMyAs4AHQkRbejSw
     name: One

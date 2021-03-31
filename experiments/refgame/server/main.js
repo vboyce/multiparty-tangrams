@@ -13,7 +13,8 @@ function createRoles(players, info) {
   const l = _.shuffle(players);
   const speaker = _.times(info.numTotalTrials, _.constant("speaker"))
   const listener = _.times(info.numTotalTrials, _.constant("listener"))
-  const role_list= [speaker, listener, listener]; //just hard code for now
+  const role_list= _.times(info.numPlayers, _.constant(listener)); //just hard code for now
+  role_list[0]=speaker;
   const roles=_.zipObject(l,role_list);
   console.log(roles)
   return roles;
@@ -37,7 +38,7 @@ Empirica.gameInit((game, treatment) => {
 
   // Sample whether to use tangram set A or set B
   game.set("targetSet", 'setA'); 
-  game.set("team", game.players.length > 1);
+  //game.set("team", game.players.length > 1);
   game.set('context', targetSets['setA']);
   const targets = game.get('context');
   const reps = treatment.rounds;
@@ -45,7 +46,8 @@ Empirica.gameInit((game, treatment) => {
   const info = {
     numTrialsPerBlock : numTargets,
     numBlocks : reps,
-    numTotalTrials: reps * numTargets
+    numTotalTrials: reps * numTargets,
+    numPlayers: game.players.length
   };
   
   // I use this to play the sound on the UI when the game starts

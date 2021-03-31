@@ -1,5 +1,6 @@
 import { relativeTimeRounding } from "moment";
 import React from "react";
+import _ from "lodash";
 
 
 export default class Tangram extends React.Component {
@@ -30,8 +31,9 @@ export default class Tangram extends React.Component {
 
   render() {
     const { game, tangram, tangram_num, round, stage, player, ...rest } = this.props;
-    const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
-    const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
+    //const partner1 = _.find(game.players, p => p._id === player.get('partner1'));
+    //const partner2 = _.find(game.players, p => p._id === player.get('partner2'));
+    const players = game.players
     const target = round.get("target")
     const row = 1 + Math.floor(tangram_num / 4)
     const column = 1 + tangram_num % 4
@@ -59,8 +61,7 @@ export default class Tangram extends React.Component {
     }
     // Highlight clicked object in green if correct; red if incorrect
     if(stage.name=="feedback" & (tangram == player.get('clicked') ||
-     (player.get('role')== "speaker" & 
-          (tangram == partner1.get('clicked') || tangram == partner2.get('clicked'))))) {
+     (player.get('role')== "speaker" & _.some(players, ['clicked', tangram])))) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
         "outline" :  `10px solid ${color}`,
@@ -69,12 +70,12 @@ export default class Tangram extends React.Component {
     }
     let feedback = []
     if (player.get('role') == 'speaker' &  stage.name=="feedback"){
-      if (partner1.get("clicked")==tangram){
-        feedback.push(<img src={partner1.get("avatar")} key="partner1" />)}
-      if (partner2.get("clicked")==tangram){
-        feedback.push(<img src={partner2.get("avatar")} key="partner2"/>)
-      }
-      }
+      players.forEach(player => {
+        if (player.get('clicked')==tangram){
+          feedback.push(<img src={player.get("avatar")} key="player" />)
+        }
+      })
+    }
     
     return (
       <div

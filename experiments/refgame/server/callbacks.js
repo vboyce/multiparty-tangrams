@@ -16,9 +16,9 @@ Empirica.onGameStart((game) => {
 
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle(targets));
-    const otherPlayers = _.reject(game.players, p => p._id === player._id);
-    player.set("partner1", otherPlayers[0]._id)
-    player.set("partner2", otherPlayers[1]._id)
+    //const otherPlayers = _.reject(game.players, p => p._id === player._id);
+    //player.set("partner1", otherPlayers[0]._id)
+    //player.set("partner2", otherPlayers[1]._id)
     player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
