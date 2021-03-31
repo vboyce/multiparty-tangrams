@@ -18,7 +18,7 @@ export default class MoreAboutBonus extends React.Component {
 
         <p>Each time a <strong>Listener</strong> makes a correct selection, they get <strong> {treatment.listenerBonus} points</strong>. </p>
         <p> Incorrect selection and no selection (timing out) earn no points. </p>
-        <p>The <strong>Speaker</strong> gets a bonus equal to the average of the Listners. </p>
+        <p>The <strong>Speaker</strong> gets a bonus equal to the average of the Listeners. </p>
 
         
         <p>For instance, if there are two Listeners and both make a correct selection, they each get {treatment.listenerBonus} points, 
