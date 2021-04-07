@@ -18,7 +18,8 @@ export default class Overview extends React.Component {
           </p>
           
           <p>
-            In this task, you will be assigned to a team with {treatment.playerCount -1} other people ({treatment.playerCount} including yourself!).
+            In this task, you will be assigned to a team with {treatment.playerCount -1} other {treatment.playerCount>2 ? "people ": "person "} 
+            (<strong>{treatment.playerCount} people including yourself!</strong>).
             You will play a series of communication games with people on your team.
             Everyone on your team will see the same set of pictures, which will look something like this:
           </p>
@@ -47,8 +48,8 @@ export default class Overview extends React.Component {
             so that the Listeners are able to pick it out of the set. You can write whatever
             description you think will best allow your partners to identify the target.
             Please note that <b>the order of the pictures on your screen is scrambled</b>, so descriptions like "the one on the left" or "the third one" will not
-            work. Also, please limit your description to the current target picture: do not
-            discuss previous trials or chat about any other topics!
+            work. Also, please limit your description to the current target picture: <strong> do not
+            discuss previous trials or chat about any other topics!</strong>
           </p>
 
           <div className="smallimage">

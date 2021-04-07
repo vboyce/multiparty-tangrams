@@ -62,6 +62,10 @@ factorTypes:
     type: Integer
     min: 1
     max: 10
+  - _id: PhWBYRyqGv7hpZbKm
+    name: prolificPilot
+    value: 3B021164
+    factorTypeId: oTmtc6KmQb77CaDTC
   - _id: xWQjpcmpuWmZXGA7P
     name: Triad
     value: 3
