@@ -31,7 +31,7 @@ export default class Overview extends React.Component {
           <p>
             One of the people on the team will be randomly assigned the {" "}
             <strong>Speaker</strong> role and the others will be assigned the {" "}
-            <strong>Listener</strong> role.
+            <strong>Listener</strong> role. {treatment.rotateSpeaker ? "The Speaker role will rotate to a new person each round.": "The same person will be the Speaker the entire game."}
           </p>
 
           <p>

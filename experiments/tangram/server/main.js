@@ -5,20 +5,31 @@ import { targetSets } from "./constants";
 import _ from "lodash";
 
 
-
 function createRoles(players, info) {
-  // Create a schedule for all players to play all others using 'circle' method
-  // (en.wikipedia.org/wiki/Round-robin_tournament#Scheduling_algorithm)
-  // requires an even umber of players
   const l = _.shuffle(players);
-  const speaker = _.times(info.numTotalTrials, _.constant("speaker"))
-  const listener = _.times(info.numTotalTrials, _.constant("listener"))
-  const role_list= _.times(info.numPlayers, _.constant(listener)); 
-  role_list[0]=speaker;
+  let order=[]
+  if (info.rotate===false){
+    order=_.times(info.numBlocks, _.constant(0))
+  }else if (info.rotate===true) {
+    order=_.range(info.numBlocks).map(p => p % info.numPlayers)  }
+  const speaker=_.times(info.numTrialsPerBlock, _.constant("speaker"))
+  const listener=_.times(info.numTrialsPerBlock, _.constant("listener"))
+
+  let role_list=[]
+  _.times(info.numPlayers, player_num => {
+    let current=[]
+    _.times(info.numBlocks, block =>{
+      order[block]==player_num ?
+        current.push(...speaker):
+        current.push(...listener)
+    })
+    role_list.push(current)
+  })
   const roles=_.zipObject(l,role_list);
-  console.log(roles)
+  console.log(roles);
   return roles;
 }
+
 
 // gameInit is where the structure of a game is defined.  Just before
 // every game starts, once all the players needed are ready, this
@@ -46,7 +57,8 @@ Empirica.gameInit((game, treatment) => {
     numTrialsPerBlock : numTargets,
     numBlocks : reps,
     numTotalTrials: reps * numTargets,
-    numPlayers: game.players.length
+    numPlayers: game.players.length,
+    rotate: treatment.rotateSpeaker,// change this!!!
   };
   
   // I use this to play the sound on the UI when the game starts

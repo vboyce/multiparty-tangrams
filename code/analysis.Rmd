@@ -1,8 +1,8 @@
 ---
 title: "FYP Analysis"
 output:
-  html_document:
-    df_print: paged
+  html_document: default
+  pdf_document: default
 ---
 **TODOs**:
 
@@ -76,7 +76,9 @@ d.chat.raw <- read_csv(here(data_location_2, 'rounds.csv')) %>%
   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
   mutate(numPlayers=3) %>% # because we didn't think ahead enough!
-  union(d.chat.raw)
+  union(d.chat.raw) %>% 
+  write_csv("all_pilot_chat.csv")
+
 
 d.round_results.raw <- read_csv(here(data_location,'rounds.csv')) %>%
   filter(createdAt >= date_start) %>% 
@@ -240,18 +242,18 @@ d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>%
 
 
 ```{r time}
-d.round_results %>% group_by(playerId, repNum, gameId) %>% 
+d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
   filter(correct==T) %>% 
   #summarize(time=mean(time)) %>% 
-  ggplot(aes(x=repNum, y=time))+
-  geom_jitter(width=.2, height=0, alpha=1, color="lightgrey")+
+  ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
+  geom_jitter(width=.2, height=0, alpha=.1)+
       stat_summary(fun.data = "mean_cl_boot")+
   scale_y_continuous(limits = c(0,180))+
     scale_color_brewer(palette="Dark2")+
   labs(x="Round Number", y="Time to selection in seconds",
        title="People choose faster in later rounds")
 
-#ggsave(here(image_location, 'time.pdf'), width=6, height=3)
+ggsave(here(image_location, 'time.pdf'), width=6, height=3)
 
 ```
 
