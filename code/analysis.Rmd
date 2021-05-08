@@ -6,16 +6,10 @@ output:
 ---
 **TODOs**:
 
-Discussion points:
+- Pay participants, calculate bonuses (including for problems -- see prolific messages), pay again
+- chat processing --> output chat, tag, reimport (not for first sample!)
+- Actual Bayesian stuff
 
-- exclusion criteria? 
-- consider paying more
-- language requirement: fluent or native? 
-
-Future analyses:
-
-- regressions to go with the graphs
-- linguistic analyses
 
 ```{r set-up, include=F}
 knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
@@ -32,32 +26,49 @@ ParseJSONColumn <- function(x) {
 }
 
 ##Data import constants
-#data_location="data/pilotA/"
-data_location="data/pilotC"
-data_location_2="data/pilotB"
+data_location="data/study1"
 
-#date_start=lubridate::ymd('2021-02-22')
-date_start_2=lubridate::ymd('2021-03-08')
-date_start=lubridate::ymd('2021-04-07')
+
+date_start=lubridate::ymd('2021-05-04')
 
 image_location="write-ups/images"
 ```
 
+<!--# Payment
+
+<!-- ```{r} -->
+
+<!-- d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`) -->
+
+<!-- d.games <- read_csv(here(data_location, 'games.csv')) %>% -->
+<!--   select(gameId=`_id`, treatmentId, playerIds) %>% -->
+<!--   left_join(d.treatments) %>% -->
+<!--   mutate(playerIds=str_split(playerIds,",")) %>% -->
+<!--   unnest(playerIds) %>% -->
+<!--   select(playerId=playerIds, name) -->
+
+<!-- d.players <- read_csv(here(data_location, 'players.csv')) %>% -->
+<!--   rename(playerId=`_id`) %>% -->
+<!--   left_join(d.games) %>% -->
+<!--   select(data.bonus, playerId,id,data.bonus,name) %>% -->
+<!--     filter(!is.na(name)) %>% -->
+<!--   mutate(pc_bonus=case_when( -->
+<!--     name=="fourRotate" ~ 3, -->
+<!--     name=="threeRotate" ~ 1.5, -->
+<!--     T ~ 0 -->
+<!--   )) %>% -->
+<!--   mutate(bonus=round(data.bonus+pc_bonus,2), -->
+<!--          cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv")) -->
+<!-- ``` -->
+
+# Pre-process
 
 ```{r}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
 
-#this part is only to combine with the other pilot!
-d.games <- read_csv(here(data_location_2, 'games.csv')) %>% 
-  rename(gameId = `_id`) %>% 
-    select(-data.team) %>% #this line in only to make pilot stuff work 
-    filter(createdAt >= date_start_2) %>% 
-  union(d.games)
-  
-
-d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
+d.chat.raw <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000) %>%
   filter(createdAt >= date_start) %>%
   mutate(data.chat = ifelse(is.na(data.chat), '{}', data.chat)) %>%
   rename(row_id = `_id`) %>%
@@ -66,21 +77,7 @@ d.chat.raw <- read_csv(here(data_location, 'rounds.csv')) %>%
   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) 
 
-#this part is to combine with other pilot!
-d.chat.raw <- read_csv(here(data_location_2, 'rounds.csv')) %>%
-  filter(createdAt >= date_start_2) %>%
-  mutate(data.chat = ifelse(is.na(data.chat), '{}', data.chat)) %>%
-  rename(row_id = `_id`) %>%
-  mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
-  unnest(data.chat) %>%
-  select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
-  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
-  mutate(numPlayers=3) %>% # because we didn't think ahead enough!
-  union(d.chat.raw) %>% 
-  write_csv("all_pilot_chat.csv")
-
-
-d.round_results.raw <- read_csv(here(data_location,'rounds.csv')) %>%
+d.round_results.raw <- read_csv(here(data_location,'rounds.csv'),guess_max=10000) %>% 
   filter(createdAt >= date_start) %>% 
   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
   rename_with ( ~ gsub("room", "player", .x, fixed=T)) %>% 
@@ -100,75 +97,48 @@ d.round_results.raw <- read_csv(here(data_location,'rounds.csv')) %>%
   filter(!is.na(correct)) %>% 
   filter(playerId!=speaker)
 
-## again this is just to glom pilots together
-d.round_results.raw <- read_csv(here(data_location_2,'rounds.csv')) %>%
-  filter(createdAt >= date_start_2) %>% 
-  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
-  rename_with ( ~ gsub("room", "player", .x, fixed=T)) %>% 
-    rename_with ( ~ gsub("player", "player_", .x, fixed=T)) %>% 
-    rename_with ( ~ gsub("correct", "_correct", .x, fixed=T)) %>% 
-    rename_with ( ~ gsub("response", "_response", .x, fixed=T)) %>% 
-  rename_with( ~ gsub("time", "_time", .x, fixed=T)) %>% 
-  select(-chat) %>% 
-  gather(key, value, starts_with('player')) %>% 
-  separate(key, into = c('blah', 'playerId', 'info')) %>% 
-  spread(info, value) %>% 
-  select(-blah) %>% 
-  mutate(tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
-         tangram = gsub('.png', '', tangram, fixed=TRUE)) %>% 
-  mutate(correct=as.logical(correct),
-         time=as.numeric(time)/1000) %>% 
-    mutate(numPlayers=3) %>% # because we didn't think ahead enough!
-  filter(!is.na(correct)) %>% 
-  filter(playerId!=speaker) %>% 
-  union(d.round_results.raw)
+#only include rounds that finished
+rounds_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers,repNum) %>% tally() %>% filter(n!=12*(numPlayers-1)) %>% select(gameId,repNum)
 
-
-game_ids_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers) %>% tally() %>% filter(n!=72*(numPlayers-1)) %>% select(gameId)
-
-# a couple games clearly all disconnected/stopped playing given timing and response correctness??
-game_ids_exclude <- tibble(gameId=c("ZAwsYDWZmqC8KjfKq", "YtmLNLThzm42sTxTh")) %>% union(game_ids_exclude)
-
-d.round_results <-  d.round_results.raw %>% anti_join(game_ids_exclude)
+d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude)
 
 ```
-
-# Pilot stuff
-
-A couple of the 4 person games obviously had problems where people stopped playing (judging by the time taken and the percent correct being 0 in later rounds). Manually excluding these, but should figure out a systematic approach for future. 
-
-```{r demographics}
-d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
-  filter(createdAt >= date_start) %>% 
-  left_join(d.games, by = c('gameId')) %>% 
-  anti_join(game_ids_exclude) %>% 
-    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
-
-d.exit.survey <- read_csv(here(data_location_2, 'player-inputs.csv')) %>%
-  filter(createdAt >= date_start_2) %>% 
-  left_join(d.games, by = c('gameId')) %>% 
-  anti_join(game_ids_exclude) %>% 
-    rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
-  union(d.exit.survey)
-```
-
-```{r feedback}
-
-d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
-
-```
-
 
 
 ```{r}
-d.round_results %>% group_by(trialNum, gameId, numPlayers) %>% 
+summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
            mutate(time= time %|% 180) %>% 
   summarize(max_time=max(time)) %>% 
   group_by(gameId, numPlayers) %>% 
-  summarize(total_time=sum(max_time)/60) %>% 
+  summarize(total_time=sum(max_time)/60,
+            num_rounds=max(repNum)) %>% 
   arrange(numPlayers)
 
+knitr::kable(summary)
+
+summary %>% filter(num_rounds==5) %>% group_by(numPlayers) %>% tally()
+
+summary %>% filter(num_rounds!=5) %>% group_by(numPlayers) %>% tally()
 ```
+
+
+<!--
+<!-- # Demographics -->
+<!-- ```{r demographics} -->
+<!-- d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>% -->
+<!--   filter(createdAt >= date_start) %>%  -->
+<!--   left_join(d.games, by = c('gameId')) %>%  -->
+<!--     rename_with(~ gsub("data.", "", .x, fixed = TRUE)) -->
+
+<!-- ``` -->
+
+<!-- ```{r feedback} -->
+
+<!-- d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable() -->
+
+<!-- ``` -->
+
+
 
 # Pretty pictures
 
@@ -188,7 +158,7 @@ d.chat <- d.chat.raw %>%
   summarize(text = paste0(text, collapse = ', '),
             total_num_words = sum(utt_length_words) %>% as.numeric(),
             total_num_chars = sum(utt_length_chars) %>% as.numeric()) %>%
-  anti_join(game_ids_exclude) %>% 
+  anti_join(rounds_exclude) %>% 
   full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "countCorrect", "numPlayers")) %>% 
   mutate(text = text %|% "",
          total_num_words= total_num_words %|% 0,
@@ -197,15 +167,15 @@ d.chat <- d.chat.raw %>%
 
 ```
 
-Everything here has bootstrapped 95% CIs. Speakers say less over the course of rounds. Also some tangrams are harder than others. 
+Everything here has bootstrapped 95% CIs.
 
 ```{r}
-ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
-  facet_wrap(~tangram, nrow=2)+
-  scale_color_brewer(palette="Dark2")+
-     stat_summary(fun.data = "mean_cl_boot")+
-  labs(title="Number of words", y="Number of words", x="Round number")+
-  theme(legend.position="bottom")
+# ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
+#   facet_wrap(~tangram, nrow=2)+
+#   scale_color_brewer(palette="Dark2")+
+#      stat_summary(fun.data = "mean_cl_boot")+
+#   labs(title="Number of words", y="Number of words", x="Round number")+
+#   theme(legend.position="bottom")
 
 ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   facet_wrap(~role, nrow=1)+
@@ -214,14 +184,6 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   labs(title="Number of words", y="Number of words", x="Round number")+
   theme(legend.position="bottom")
 
-#ggsave(here(image_location, 'words.pdf'), width=8, height=4)
-# ggplot(d.chat, aes(x=repNum, y=total_num_chars, color=role))+
-#   facet_wrap(~tangram)+
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot")+
-#     labs(title="Number of characters", y="Number of characters", x="Round number")
-# 
-# ggsave(here(image_location, 'chars.pdf'))
 
 
 ```
@@ -246,48 +208,38 @@ d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>%
   filter(correct==T) %>% 
   #summarize(time=mean(time)) %>% 
   ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
-  geom_jitter(width=.2, height=0, alpha=.1)+
+  #geom_jitter(width=.2, height=0, alpha=.1)+
       stat_summary(fun.data = "mean_cl_boot")+
   scale_y_continuous(limits = c(0,180))+
     scale_color_brewer(palette="Dark2")+
   labs(x="Round Number", y="Time to selection in seconds",
        title="People choose faster in later rounds")
 
-ggsave(here(image_location, 'time.pdf'), width=6, height=3)
+#ggsave(here(image_location, 'time.pdf'), width=6, height=3)
 
 ```
 
-Don't have enough data (especially on mistakes) to see differential utterance length decreases by condition. 
-
-We do mostly see the pattern if we binarize mistakes vs no-mistakes. And if we compare between rounds with between trials, they look different. So, reassuring, but also it's small data and therefore a mess. 
 
 ```{r}
+d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
+d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
+  left_join(d.prev.speaker) %>% unique() %>% mutate(repNum=repNum+1)
 
-d.previous.round <- d.chat %>% 
-  ungroup() %>% 
-  select(gameId,tangram,repNum,playerId, numPlayers, role, countCorrectround=countCorrect, total_num_words_prev=total_num_words, total_num_chars_prev=total_num_chars) %>% 
-  unique() %>% 
-  mutate(repNum=repNum+1)
-
- d.previous.trial <- d.chat %>% 
-  ungroup() %>% 
-  select(gameId,trialNum,playerId, role, numPlayers, countCorrecttrial=countCorrect, total_num_words_prev_trial=total_num_words, total_num_chars_prev_trial=total_num_chars) %>% 
-  unique() %>% 
-mutate(trialNum=trialNum+1)
 
 d.chat.lagged <- d.chat %>%
-  select(gameId, trialNum, repNum, playerId, role, tangram, total_num_words, total_num_chars, numPlayers) %>% 
-  left_join(d.previous.round) %>% 
-  mutate(reduction_word=log(total_num_words)-log(total_num_words_prev),
-         reduction_char=log(total_num_chars)-log(total_num_chars_prev)) %>% 
-  left_join(d.previous.trial) %>% 
-  mutate(reduction_word_trial=log(total_num_words)-log(total_num_words_prev_trial),
-         reduction_char_trial=log(total_num_chars)-log(total_num_chars_prev_trial)) %>%
-  filter(repNum>0) %>% 
-  filter(role=="speaker") %>% 
-  mutate(prev_correct_round=as.factor(countCorrectround),
-         prev_correct_trial=as.factor(countCorrecttrial),
-         prev_all_correct_round=ifelse(countCorrectround==(numPlayers-1),T,F))
+  ungroup() %>% 
+  select(gameId, playerId, trialNum, repNum, playerId, role, tangram, total_num_words, numPlayers) %>%
+  left_join(d.prev.round) %>%
+  mutate(reduction_word=log(total_num_words)-log(total_num_words_prev)) %>%
+  filter(repNum>0) %>%
+  filter(role=="speaker") %>%
+  mutate(prev_correct_round=correct)
+
+ggplot(d.chat.lagged, aes(x=repNum, y=total_num_words, color=prev_correct_round))+
+  facet_wrap(~numPlayers, nrow=1) +
+    scale_color_brewer(palette="Dark2")+
+      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+    labs(title="Utterance length", y="Number of words", x="Round number")
 
 ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_correct_round))+
   facet_wrap(~numPlayers, nrow=1) +
@@ -295,32 +247,32 @@ ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_correct_round))
       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
     labs(title="Change in utterance length", y="Log change in words", x="Round number")
 
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_correct_round))+
-  facet_wrap(~numPlayers, nrow=1) +
-    scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-    labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
-
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_all_correct_round))+
-    scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-    labs(title="Change in utterance length", y="Log change in words", x="Round number")
-
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_all_correct_round))+
-    scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-    labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
-
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word_trial, color=prev_correct_trial))+
-    facet_wrap(~numPlayers, nrow=1) +
-    scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-    labs(title="Change in utterance length next trial", y="Log change in words", x="Round number")
-
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char_trial, color=prev_correct_trial))+
-    facet_wrap(~numPlayers, nrow=1) +
-    scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-    labs(title="Change in utterance length next trial", y="Log change in  chars", x="Round number")
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_correct_round))+
+#   facet_wrap(~numPlayers, nrow=1) +
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_all_correct_round))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length", y="Log change in words", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_all_correct_round))+
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word_trial, color=prev_correct_trial))+
+#     facet_wrap(~numPlayers, nrow=1) +
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length next trial", y="Log change in words", x="Round number")
+# 
+# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char_trial, color=prev_correct_trial))+
+#     facet_wrap(~numPlayers, nrow=1) +
+#     scale_color_brewer(palette="Dark2")+
+#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#     labs(title="Change in utterance length next trial", y="Log change in  chars", x="Round number")
 
 ```

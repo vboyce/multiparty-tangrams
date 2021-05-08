@@ -1,5 +1,5 @@
 treatments:
-  - name: Pair
+  - name: pairRotate
     factorIds:
       - xWQjpcmpuWmZXGA7Q
       - pWeADdnYht6s2XmXy
@@ -7,15 +7,8 @@ treatments:
       - bMLyzSZu2NMqPxMp3
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
-  - name: Triad
-    factorIds:
-      - xWQjpcmpuWmZXGA7P
-      - pWeADdnYht6s2XmXy
-      - PhWBYRyqGv7hpZbKm
-      - bMLyzSZu2NMqPxMp3
-      - XxGKfzAdshtarMJ8v
-      - ivrbpviGCdXTDsEiZ
-  - name: Four
+      - zvEroQHdTehMmuyqf
+  - name: quadRotate
     factorIds:
       - xWQjpcmpuWmZXGA7R
       - pWeADdnYht6s2XmXy
@@ -23,6 +16,16 @@ treatments:
       - bMLyzSZu2NMqPxMp3
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+  - name: trioRotate
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - pWeADdnYht6s2XmXy
+      - PhWBYRyqGv7hpZbKm
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
 factorTypes:
   - _id: eccB2RajWGC4kcWQH
     name: playerCount
@@ -62,10 +65,13 @@ factorTypes:
     type: Integer
     min: 1
     max: 10
-  - _id: PhWBYRyqGv7hpZbKm
-    name: prolificPilot
-    value: 3B021164
-    factorTypeId: oTmtc6KmQb77CaDTC
+  - _id: PbMKWFHGq7qHwK6NL
+    name: rotateSpeaker
+    description: is there one speaker for the whole game or does it rotate
+    required: false
+    type: Boolean
+    min: 2
+factors:
   - _id: xWQjpcmpuWmZXGA7P
     name: Triad
     value: 3
@@ -98,10 +104,6 @@ factorTypes:
     name: Two
     value: 2
     factorTypeId: b5miCkhM6uwYKF2Sn
-  - _id: 8s4mWKpqFF83FP3X6
-    name: test
-    value: LCX2Y5GM
-    factorTypeId: oTmtc6KmQb77CaDTC
   - _id: pWeADdnYht6s2XmXy
     name: threemin
     value: '180'
@@ -110,6 +112,18 @@ factorTypes:
     name: Pair
     value: 6
     factorTypeId: b5miCkhM6uwYKF2Sn
+  - _id: zvEroQHdTehMmuyqf
+    name: 'true'
+    value: true
+    factorTypeId: PbMKWFHGq7qHwK6NL
+  - _id: Wj7Mr5Npee9zFp8pr
+    name: 'false'
+    value: false
+    factorTypeId: PbMKWFHGq7qHwK6NL
+  - _id: STrYPy3iToz6XDo9d
+    name: May4
+    value: 63E387C3
+    factorTypeId: oTmtc6KmQb77CaDTC
 lobbyConfigs:
   - timeoutType: lobby
     timeoutInSeconds: 300
