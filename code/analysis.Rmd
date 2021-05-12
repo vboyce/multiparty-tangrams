@@ -13,6 +13,7 @@ output:
 
 ```{r set-up, include=F}
 knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
 options(knitr.table.format = "html")
 library(tidyverse)
 library(jsonlite)
@@ -33,33 +34,32 @@ date_start=lubridate::ymd('2021-05-04')
 
 image_location="write-ups/images"
 ```
+# Payment
 
-<!--# Payment
+```{r}
 
-<!-- ```{r} -->
+d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`)
 
-<!-- d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`) -->
+d.games <- read_csv(here(data_location, 'games.csv')) %>%
+  select(gameId=`_id`, treatmentId, playerIds) %>%
+  left_join(d.treatments) %>%
+  mutate(playerIds=str_split(playerIds,",")) %>%
+  unnest(playerIds) %>%
+  select(playerId=playerIds, name)
 
-<!-- d.games <- read_csv(here(data_location, 'games.csv')) %>% -->
-<!--   select(gameId=`_id`, treatmentId, playerIds) %>% -->
-<!--   left_join(d.treatments) %>% -->
-<!--   mutate(playerIds=str_split(playerIds,",")) %>% -->
-<!--   unnest(playerIds) %>% -->
-<!--   select(playerId=playerIds, name) -->
-
-<!-- d.players <- read_csv(here(data_location, 'players.csv')) %>% -->
-<!--   rename(playerId=`_id`) %>% -->
-<!--   left_join(d.games) %>% -->
-<!--   select(data.bonus, playerId,id,data.bonus,name) %>% -->
-<!--     filter(!is.na(name)) %>% -->
-<!--   mutate(pc_bonus=case_when( -->
-<!--     name=="fourRotate" ~ 3, -->
-<!--     name=="threeRotate" ~ 1.5, -->
-<!--     T ~ 0 -->
-<!--   )) %>% -->
-<!--   mutate(bonus=round(data.bonus+pc_bonus,2), -->
-<!--          cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv")) -->
-<!-- ``` -->
+d.players <- read_csv(here(data_location, 'players.csv')) %>%
+  rename(playerId=`_id`) %>%
+  left_join(d.games) %>%
+  select(data.bonus, playerId,id,data.bonus,name) %>%
+    filter(!is.na(name)) %>%
+  mutate(pc_bonus=case_when(
+    name=="fourRotate" ~ 3,
+    name=="threeRotate" ~ 1.5,
+    T ~ 0
+  )) %>%
+  mutate(bonus=round(data.bonus+pc_bonus,2),
+         cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv"))
+```
 
 # Pre-process
 
@@ -114,10 +114,10 @@ summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>
             num_rounds=max(repNum)) %>% 
   arrange(numPlayers)
 
-knitr::kable(summary)
-
+#knitr::kable(summary)
+message("Full games")
 summary %>% filter(num_rounds==5) %>% group_by(numPlayers) %>% tally()
-
+message("Partial games")
 summary %>% filter(num_rounds!=5) %>% group_by(numPlayers) %>% tally()
 ```
 
@@ -167,7 +167,9 @@ d.chat <- d.chat.raw %>%
 
 ```
 
-Everything here has bootstrapped 95% CIs.
+Everything here has bootstrapped 95% CIs. 
+
+Should find better curves to fit, but using quadratic to allow for some curvature.
 
 ```{r}
 # ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
@@ -180,7 +182,8 @@ Everything here has bootstrapped 95% CIs.
 ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   facet_wrap(~role, nrow=1)+
   scale_color_brewer(palette="Dark2")+
-     stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3))+
+    geom_smooth(method=glm, formula=y~poly(x,2))+
+     stat_summary(fun.data = "mean_cl_boot")+
   labs(title="Number of words", y="Number of words", x="Round number")+
   theme(legend.position="bottom")
 
@@ -192,7 +195,8 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
 d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
   summarize(pct_corr=sum(correct)) %>% 
   ggplot(aes(x=repNum, y=pct_corr, color=as.factor(numPlayers)))+
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+      geom_smooth(method=lm)+
+  stat_summary(fun.data = "mean_cl_boot")+
   #geom_point()+
   scale_color_brewer(palette="Dark2")+
   scale_y_continuous(breaks=c(0,3,6,9,12), limits = c(0,12))+
@@ -209,6 +213,7 @@ d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>%
   #summarize(time=mean(time)) %>% 
   ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
   #geom_jitter(width=.2, height=0, alpha=.1)+
+      geom_smooth(method=lm)+
       stat_summary(fun.data = "mean_cl_boot")+
   scale_y_continuous(limits = c(0,180))+
     scale_color_brewer(palette="Dark2")+
@@ -218,6 +223,7 @@ d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>%
 #ggsave(here(image_location, 'time.pdf'), width=6, height=3)
 
 ```
+
 
 
 ```{r}
@@ -235,16 +241,18 @@ d.chat.lagged <- d.chat %>%
   filter(role=="speaker") %>%
   mutate(prev_correct_round=correct)
 
-ggplot(d.chat.lagged, aes(x=repNum, y=total_num_words, color=prev_correct_round))+
-  facet_wrap(~numPlayers, nrow=1) +
+ggplot(d.chat.lagged, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~prev_correct_round, nrow=1) +
     scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+      #geom_smooth(method=lm)+
+      stat_summary(fun.data = "mean_cl_boot")+
     labs(title="Utterance length", y="Number of words", x="Round number")
 
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_correct_round))+
-  facet_wrap(~numPlayers, nrow=1) +
+ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=as.factor(numPlayers)))+
+  facet_wrap(~prev_correct_round, nrow=1) +
     scale_color_brewer(palette="Dark2")+
-      stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+      #geom_smooth(method=lm)+
+      stat_summary(fun.data = "mean_cl_boot")+
     labs(title="Change in utterance length", y="Log change in words", x="Round number")
 
 # ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_correct_round))+
