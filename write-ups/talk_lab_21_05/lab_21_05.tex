@@ -63,15 +63,18 @@
 }
 \title{Extending communication games to more players}
 \author{Veronica Boyce}
+\date{LangCog Lab Meeting}
 \begin{document}
 
 \begin{frame}
 \maketitle
-
-\end{frame}
-
-\begin{frame}
-	THIS IS WHERE WE THANK COLLABORATORS AND FUNDING!
+\pause
+\begin{tikzpicture}[remember picture,overlay]
+\node[xshift=1.5cm,yshift=1.2cm] at (current page.south west) {\includegraphics[width=.2\textwidth]{../images/mike.jpg}};
+\node[xshift=-2.5cm,yshift=1.2cm] at (current page.south) {\includegraphics[width=.2\textwidth]{../images/noah.jpg}};
+\node[xshift=0cm,yshift=1.2cm] at (current page.south) {\includegraphics[width=.2\textwidth]{../images/robert.jpeg}};\pause
+\node[xshift=-2.5cm,yshift=1.2cm] at (current page.south east) {\includegraphics[width=.4\textwidth]{../images/hai.jpg}};
+\end{tikzpicture}
 \end{frame}
 
 
@@ -169,18 +172,28 @@ Words tend to drop out in syntactic units
 	Semantics converge within and diverge between groups
 \end{frame}
 
+
+\begin{frame}{Yoon \& Brown-Schmidt 2019}
+	Speaker talks to multiple matchers \\
+	
+	
+	\includegraphics[width=\textwidth]{../images/yoon_diagram.png}
+	
+	Examine speaker's utterance length, elaborations, disfluencies
+	%length, elaboration, disfluencies
+\end{frame}
 %
-\begin{frame}{FYP}
-	What are the dynamics of pact formation between groups? \pause
-	 Replicate Hawkins et al to compare groups of 2/3/4 communicators
+\begin{frame}{First Year Project}
+	Dynamics of pact formation in larger groups \pause
+	
+	Compare groups of 2/3/4 communicators
 	\begin{itemize}
-		\item Look for differential reduction
-		\item 
+		\item Look for differential reduction \pause
 	\end{itemize} 
 Rotate who is the knowledgeable speaker
 \begin{itemize}
 	\item Chosen for participant experience
-	\item Stronger measure of convergence
+	\item Stronger measure of alignment
 \end{itemize}
 
 \end{frame}
@@ -190,82 +203,86 @@ Implemented in Empirica (Almaatouq et al 2020)
  \includegraphics[width=.9\textwidth]{../images/interface.PNG}
 \end{frame}
 
+\begin{frame}{Experiment Framework}
+	\only<1>{\begin{tikzpicture}[remember picture,overlay]
+	\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/listener_correct.png}};
+		\node[yshift=1cm] at (current page.south) {Bonus: 4 points};
+		\end{tikzpicture}}
+\only<2>{\begin{tikzpicture}[remember picture,overlay]
+\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/listener_wrong.png}};
+			\node[yshift=1cm] at (current page.south) {Bonus: 0 points};
+			\end{tikzpicture}}
+\only<3>{\begin{tikzpicture}[remember picture,overlay]
+	\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/speaker_feedback.png}};
+\node[yshift=1cm] at (current page.south) {Bonus: Average of listeners = (2/3) * 4 points};
+
+	\end{tikzpicture}}
+\end{frame}
 \begin{frame}{Recruitment}
-	Goal of 20 complete games in each of 2/3/4 player (60 games, 180 participants)
+	Goal: 20 games in each of 2/3/4 player 
+	
 	Each game has 6 blocks of 12 tangrams
-	Actual population:
+	\medskip
+	
+	Actual recruitment:
 	\begin{itemize}
-		\item YY 4-player games (+ XX partial)
-		\item YY 3-player games (+ ZZ partial)
-		\item ZZ 2-player games (+ CC partial)
+		\item 15 2-player games (+ 4 partial)
+		\item 18 3-player games (+ 2 partial)
+		\item 20 4-player games (+ 1 partial)
 	\end{itemize}
 Include all complete blocks
-REWARD STRUCTURE!!!!
+
 \end{frame}
 
 
 \begin{frame}{Results -- Accuracy}
 	\includegraphics[width=\textwidth]{../images/accuracy.pdf}
-	Accuracy is uniformly high, but seems to increase
+	Accuracy is high and increasing
 \end{frame}
 
 \begin{frame}{Results -- Speed}
 	
 	\includegraphics[width=\textwidth]{../images/time.pdf}
 	Listeners choose faster in later rounds
-	
+
 \end{frame}
 
 \begin{frame}{Reduction}
 \includegraphics[width=\textwidth]{../images/words.pdf}
-OVERALL PICTURE HERE
-Plan to remove chit-chat
+Number of words reduces over rounds
+Caution: Non-referential utterances not yet removed
 \end{frame}
 
 \begin{frame}{Reduction}
-	\includegraphics[width=\textwidth]{../images/words.pdf}
-Broken out by tangram
+	\includegraphics[width=\textwidth]{../images/words_lines.pdf}
+Group variability
 \end{frame}
 
-\begin{frame}
-	TODO wacky when to reduce charts here
+\begin{frame}{Reduction}
+	\includegraphics[width=\textwidth]{../images/words_tangrams.pdf}
+Tangrams vary in nameability
 \end{frame}
 
-\begin{frame}
-	Future steps:
-	- clean up analyses and run models to confirm what we already see
-	--> reduce less for more players
-	Why? and How?
-	--> what are the differences in language
-	Semantic analyses -- how do statements change across rounds (and as a product of if they got it right?)
-	How do these trajectories change for number of players?
-	Check for Listener-Listener interactions
+
+
+\begin{frame}{Planned Analyses}
+	\begin{itemize}
+		\item Remove chit-chat, model reduction
+		\item Semantic convergence in games
+		\item Impact of speaker accuracy
+	\end{itemize}
 \end{frame}
 
 
 \begin{frame}{Possible future directions}
-	Want to understand how references are formed more generally
-	\begin{itemize}
-	\item Very flexible framework \pause
-	\item Quantify how far the key findings generalize \pause
-	\item Explore mechanisms and untangle theories \pause
-\end{itemize}
- Possible knobs:\pause
+	Want to understand how references are formed more generally \pause
+	
+	Possible directions:
 \begin{itemize}
-
-	\item Target images \pause
+	\item Different target images
 	\item Curriculum learning
 \end{itemize}
 
-\end{frame}
-
-
-\begin{frame}{Bigger picture}
-	\begin{itemize}
-		\item Connections to teaching \pause
-		\item Tie this into modelling work \pause
-		\item Dataset for training AI agents for conversation
-	\end{itemize}
 \end{frame}
 
 \begin{frame}{Comments, Questions?}
@@ -279,15 +296,6 @@ Broken out by tangram
 
 \appendix
 
-\begin{frame}{Yoon \& Brown-Schmidt 2019}
-Speaker talks to multiple matchers of different knowledge levels\\
-
-
-\includegraphics[width=\textwidth]{../images/yoon_diagram.png}
-
-Examine speaker's utterances for length, elaborations, disfluencies
-%length, elaboration, disfluencies
-\end{frame}
 
 \end{document}
 

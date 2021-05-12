@@ -19,6 +19,7 @@ library(tidyverse)
 library(jsonlite)
 library(here)
 library(rlang)
+library(lme4)
 theme_set(theme_bw())
 
 ParseJSONColumn <- function(x) {
@@ -34,31 +35,30 @@ date_start=lubridate::ymd('2021-05-04')
 
 image_location="write-ups/images"
 ```
-# Payment
 
 ```{r}
-
-d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`)
-
-d.games <- read_csv(here(data_location, 'games.csv')) %>%
-  select(gameId=`_id`, treatmentId, playerIds) %>%
-  left_join(d.treatments) %>%
-  mutate(playerIds=str_split(playerIds,",")) %>%
-  unnest(playerIds) %>%
-  select(playerId=playerIds, name)
-
-d.players <- read_csv(here(data_location, 'players.csv')) %>%
-  rename(playerId=`_id`) %>%
-  left_join(d.games) %>%
-  select(data.bonus, playerId,id,data.bonus,name) %>%
-    filter(!is.na(name)) %>%
-  mutate(pc_bonus=case_when(
-    name=="fourRotate" ~ 3,
-    name=="threeRotate" ~ 1.5,
-    T ~ 0
-  )) %>%
-  mutate(bonus=round(data.bonus+pc_bonus,2),
-         cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv"))
+# This was for determining participant bonuses using the version of data with PID
+# d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`)
+# 
+# d.games <- read_csv(here(data_location, 'games.csv')) %>%
+#   select(gameId=`_id`, treatmentId, playerIds) %>%
+#   left_join(d.treatments) %>%
+#   mutate(playerIds=str_split(playerIds,",")) %>%
+#   unnest(playerIds) %>%
+#   select(playerId=playerIds, name)
+# 
+# d.players <- read_csv(here(data_location, 'players.csv')) %>%
+#   rename(playerId=`_id`) %>%
+#   left_join(d.games) %>%
+#   select(data.bonus, playerId,id,data.bonus,name) %>%
+#     filter(!is.na(name)) %>%
+#   mutate(pc_bonus=case_when(
+#     name=="fourRotate" ~ 3,
+#     name=="threeRotate" ~ 1.5,
+#     T ~ 0
+#   )) %>%
+#   mutate(bonus=round(data.bonus+pc_bonus,2),
+#          cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv"))
 ```
 
 # Pre-process
@@ -75,7 +75,8 @@ d.chat.raw <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000) %>%
   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>%
   unnest(data.chat) %>%
   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
-  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) 
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) %>% 
+  write_csv(here(data_location, 'raw_chat.csv'))
 
 d.round_results.raw <- read_csv(here(data_location,'rounds.csv'),guess_max=10000) %>% 
   filter(createdAt >= date_start) %>% 
@@ -122,21 +123,19 @@ summary %>% filter(num_rounds!=5) %>% group_by(numPlayers) %>% tally()
 ```
 
 
-<!--
-<!-- # Demographics -->
-<!-- ```{r demographics} -->
-<!-- d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>% -->
-<!--   filter(createdAt >= date_start) %>%  -->
-<!--   left_join(d.games, by = c('gameId')) %>%  -->
-<!--     rename_with(~ gsub("data.", "", .x, fixed = TRUE)) -->
+# Demographics
+```{r demographics}
+d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
+  filter(createdAt >= date_start) %>%
+  left_join(d.games, by = c('gameId')) %>%
+    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
 
-<!-- ``` -->
+```
+```{r feedback}
 
-<!-- ```{r feedback} -->
+#d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
 
-<!-- d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable() -->
-
-<!-- ``` -->
+```
 
 
 
@@ -172,6 +171,14 @@ Everything here has bootstrapped 95% CIs.
 Should find better curves to fit, but using quadratic to allow for some curvature.
 
 ```{r}
+for_model <- d.chat %>% filter(role=="speaker") %>% 
+  select(total_num_words, repNum, tangram, numPlayers)
+crappy_model <- lmer(total_num_words~repNum*numPlayers+(1|tangram), for_model)
+
+summary(crappy_model)
+```
+
+```{r}
 # ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
 #   facet_wrap(~tangram, nrow=2)+
 #   scale_color_brewer(palette="Dark2")+
@@ -187,7 +194,17 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   labs(title="Number of words", y="Number of words", x="Round number")+
   theme(legend.position="bottom")
 
-
+blah <- d.chat %>% filter(role=="speaker") %>% 
+  group_by(repNum, numPlayers, gameId) %>% 
+  summarize(words=sum(total_num_words))
+ggplot(blah, aes(x=repNum, y=words, color=as.factor(numPlayers), group=gameId))+
+  facet_wrap(~numPlayers, nrow=1)+
+  #facet_wrap(~tangram)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(alpha=.3,method=glm, se=F)+
+     #stat_summary(fun.data = "mean_cl_boot")+
+  labs(title="Number of words", y="Number of words", x="Round number")+
+  theme(legend.position="bottom")
 
 ```
 
