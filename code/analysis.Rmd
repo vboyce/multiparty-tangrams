@@ -189,37 +189,62 @@ summary(crappy_model)
 ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   facet_wrap(~role, nrow=1)+
   scale_color_brewer(palette="Dark2")+
-    geom_smooth(method=glm, formula=y~poly(x,2))+
+    geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
      stat_summary(fun.data = "mean_cl_boot")+
-  labs(title="Number of words", y="Number of words", x="Round number")+
+    scale_y_continuous(limits = c(0,50))+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="bottom")
 
-blah <- d.chat %>% filter(role=="speaker") %>% 
-  group_by(repNum, numPlayers, gameId) %>% 
-  summarize(words=sum(total_num_words))
-ggplot(blah, aes(x=repNum, y=words, color=as.factor(numPlayers), group=gameId))+
+ggsave(here(image_location, 'words.pdf'), width=6, height=3)
+```
+
+```{r}
+d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   facet_wrap(~numPlayers, nrow=1)+
-  #facet_wrap(~tangram)+
   scale_color_brewer(palette="Dark2")+
-    geom_line(alpha=.3,method=glm, se=F)+
-     #stat_summary(fun.data = "mean_cl_boot")+
-  labs(title="Number of words", y="Number of words", x="Round number")+
-  theme(legend.position="bottom")
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
+
+ggsave(here(image_location, 'words_lines.pdf'), width=6, height=3)
+
+```
+
+```{r}
+d.chat %>% filter(role=="speaker") %>% 
+ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~tangram)+
+  scale_color_brewer(palette="Dark2")+
+    #geom_smooth(method=glm, formula=y~poly(x,2), se=T, alpha=.1)+
+      geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+       stat_summary(fun.data = "mean_cl_boot", size=.2)+
+  labs(title="Tangram variability", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="right")
+
+ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=5)
 
 ```
 
 ```{r accuracy}
 d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
-  summarize(pct_corr=sum(correct)) %>% 
-  ggplot(aes(x=repNum, y=pct_corr, color=as.factor(numPlayers)))+
-      geom_smooth(method=lm)+
-  stat_summary(fun.data = "mean_cl_boot")+
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum, y=correct.num, color=as.factor(numPlayers)))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   #geom_point()+
   scale_color_brewer(palette="Dark2")+
-  scale_y_continuous(breaks=c(0,3,6,9,12), limits = c(0,12))+
-  labs(x="Round Number", y="Number correctly selected", title= "Overall accuracy increases over repetitions")
+  #scale_y_continuous(limits = c(0,1))+
+  labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")
 
-#ggsave(here(image_location, 'accuracy.pdf'), width=6, height=3)
+ggsave(here(image_location, 'accuracy.pdf'), width=6, height=3)
 
 ```
 
@@ -229,15 +254,16 @@ d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>%
   filter(correct==T) %>% 
   #summarize(time=mean(time)) %>% 
   ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
-  #geom_jitter(width=.2, height=0, alpha=.1)+
-      geom_smooth(method=lm)+
-      stat_summary(fun.data = "mean_cl_boot")+
+  geom_jitter(width=.4, height=0, alpha=.03)+
+geom_smooth(method = "glm", formula = y~x,
+                      method.args = list(family = gaussian(link = 'log')))+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   scale_y_continuous(limits = c(0,180))+
     scale_color_brewer(palette="Dark2")+
   labs(x="Round Number", y="Time to selection in seconds",
-       title="People choose faster in later rounds")
+       title="People choose faster in later rounds", color="Player count")
 
-#ggsave(here(image_location, 'time.pdf'), width=6, height=3)
+ggsave(here(image_location, 'time.pdf'), width=6, height=3)
 
 ```
 
