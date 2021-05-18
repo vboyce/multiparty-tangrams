@@ -3,9 +3,9 @@
 \usecolortheme{dove}
 \usepackage{appendixnumberbeamer}
 %\setbeamersize{text margin left=20pt,text margin right=20pt,}
-\useoutertheme{miniframes}
+\useoutertheme{default}
 \beamertemplatenavigationsymbolsempty 
-\setbeamertemplate{mini frames}{}
+\setbeamertemplate{headline}{}
 \setbeamertemplate{itemize item}{\textbullet}
 
 \addtobeamertemplate{navigation symbols}{}{
@@ -77,22 +77,56 @@
 \end{tikzpicture}
 \end{frame}
 
+\begin{frame}
+	BLAH BLAH  BIG PICTURE
+\end{frame}
 
-\begin{frame}{Why study communication?}
+\begin{frame}{Clark \& Wilkes-Gibbs 1986}
 	\pause
-	Verbal communication is a key method of human interaction.\\ \pause
-	% share ideas, teach each other, 
-	We communicate and understand more than surface meaning.\\ \pause
+	\vspace{-.2cm}
+	\begin{center}
+		\includegraphics[width=.7\textwidth]{../images/clark_tangrams.png}
+	\end{center}
+	\vspace{-.4cm}
+	\pause
+	\begin{small}
+		\begin{enumerate}
+			\setlength{\itemsep}{-2pt}
+			
+			\item All right, the next one looks like a person who's ice skating, except, they're sticking two arms out in front. \pause
+			\item Um, the next one's the person ice skating that has two arms? \pause
+			\item The fourth one is the person ice skating, with two arms. \pause
+			\item The next one's the ice skater. \pause
+			\item The fourth one's the ice skater. \pause
+			\item The ice skater.
+		\end{enumerate}
+	\end{small}
+\end{frame}
+
+
+\begin{frame}{Clark \& Wilkes-Gibbs 1986}
 	
-	Some of this is conventionalized, but some is dynamic. \\
-	
-%	Verbal communication is a key part of human interaction: we use it to ask for objects, teach
-%	facts to others, and express our feelings. We tailor our communication depending on who we are
-%	talking to according to our prior interactions with them, what words they know, and what they know
-%	about the topic being discussed. This adaptation is dynamic; over the course of a conversation,
-%	shared terminology and shorthands naturally arise.
+	\includegraphics[width=.48\textwidth]{../images/clark_words.png}
+	\includegraphics[width=.5\textwidth]{../images/clark_turns.png}	
 	
 \end{frame}
+
+%\begin{frame}{Why study communication?}
+%	BAD PART STARTS HERE
+%
+%	Verbal communication is a key method of human interaction.\\ 
+%	% share ideas, teach each other, 
+%	We communicate and understand more than surface meaning.\\ 
+%	
+%	Some of this is conventionalized, but some is dynamic. \\
+%	
+%%	Verbal communication is a key part of human interaction: we use it to ask for objects, teach
+%%	facts to others, and express our feelings. We tailor our communication depending on who we are
+%%	talking to according to our prior interactions with them, what words they know, and what they know
+%%	about the topic being discussed. This adaptation is dynamic; over the course of a conversation,
+%%	shared terminology and shorthands naturally arise.
+%	
+%\end{frame}
 
 \begin{frame}{Partner-specific adaptation}\pause
 		How do referring expressions develop?\pause
@@ -110,34 +144,8 @@
 \end{frame}
 
 %
-\begin{frame}{Clark \& Wilkes-Gibbs 1986}
-	\pause
-	\vspace{-.2cm}
-\begin{center}
-	\includegraphics[width=.7\textwidth]{../images/clark_tangrams.png}
-	\end{center}
-\vspace{-.4cm}
-\pause
-\begin{small}
-\begin{enumerate}
-	\setlength{\itemsep}{-2pt}
 
-	\item All right, the next one looks like a person who's ice skating, except, they're sticking two arms out in front. \pause
-	\item Um, the next one's the person ice skating that has two arms? \pause
-	\item The fourth one is the person ice skating, with two arms. \pause
-	\item The next one's the ice skater. \pause
-	\item The fourth one's the ice skater. \pause
-	\item The ice skater.
-	\end{enumerate}
-\end{small}
-\end{frame}
 
-\begin{frame}{Clark \& Wilkes-Gibbs 1986}
-	
-	\includegraphics[width=.48\textwidth]{../images/clark_words.png}
-		\includegraphics[width=.5\textwidth]{../images/clark_turns.png}	
-		
-\end{frame}
 %
 \begin{frame}{Hawkins, Frank, \& Goodman 2020}
 Scaling up with web-based experiments
@@ -177,7 +185,9 @@ Scaling up with web-based experiments
 	%length, elaboration, disfluencies
 \end{frame}
 
-
+\begin{frame}
+	END BAD PART
+\end{frame}
 %
 \begin{frame}{First Year Project}
 	Dynamics of alignment in larger groups \pause
@@ -196,20 +206,21 @@ Rotate who is the knowledgeable speaker
 
 \begin{frame}{Experiment Framework}
 Implemented in Empirica (Almaatouq et al 2020) 
- \includegraphics[width=.9\textwidth]{../images/interface.PNG}
+%TODO describe what this is
+ \includegraphics[width=\textwidth]{../images/interface.PNG}
 \end{frame}
 
 \begin{frame}{Experiment Framework}
 	\only<1>{\begin{tikzpicture}[remember picture,overlay]
-	\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/listener_correct.png}};
+	\node[] at (current page.center) {\includegraphics[width=.8\textwidth]{../images/listener_correct.png}};
 		\node[yshift=1cm] at (current page.south) {Bonus: 4 points};
 		\end{tikzpicture}}
 \only<2>{\begin{tikzpicture}[remember picture,overlay]
-\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/listener_wrong.png}};
+\node[] at (current page.center) {\includegraphics[width=.8\textwidth]{../images/listener_wrong.png}};
 			\node[yshift=1cm] at (current page.south) {Bonus: 0 points};
 			\end{tikzpicture}}
 \only<3>{\begin{tikzpicture}[remember picture,overlay]
-	\node[yshift=-.5cm] at (current page.center) {\includegraphics[width=.7\textwidth]{../images/speaker_feedback.png}};
+	\node[] at (current page.center) {\includegraphics[width=.8\textwidth]{../images/speaker_feedback.png}};
 \node[yshift=1cm] at (current page.south) {Bonus: Average of listeners = (2/3) * 4 points};
 
 	\end{tikzpicture}}
@@ -221,7 +232,7 @@ Implemented in Empirica (Almaatouq et al 2020)
 	
 	\medskip
 	
-	Actual recruitment:
+	Actual recruitment (over 3 days):
 	\begin{itemize}
 		\item 15 2-player games (+ 4 partial)
 		\item 18 3-player games (+ 2 partial)
@@ -232,53 +243,186 @@ Include all complete blocks
 \end{frame}
 
 
-\begin{frame}{Results -- Accuracy}
+\begin{frame}{Results:  Accuracy is high and increasing}
 	\includegraphics[width=\textwidth]{../images/accuracy.pdf}
-	Accuracy is high and increasing
+
 \end{frame}
 
-\begin{frame}{Results -- Speed}
+\begin{frame}{Results: 	Faster in later rounds}
 	
 	\includegraphics[width=\textwidth]{../images/time.pdf}
-	Listeners choose faster in later rounds
+
 
 \end{frame}
 
-\begin{frame}{Reduction}
+\begin{frame}{Results: Reduction in words over time}
 \includegraphics[width=\textwidth]{../images/words.pdf}
-Number of words reduces over rounds\\
-Caution: Non-referential utterances not yet removed
+
+
 \end{frame}
 
-\begin{frame}{Reduction}
+\begin{frame}{Results: Variability in reduction rate}
+	Most groups/tangrams reduce gradually
 	\includegraphics[width=\textwidth]{../images/words_lines.pdf}
-Variability
 \end{frame}
 
-\begin{frame}{Reduction}
+\begin{frame}{Results: Tangrams vary in nameability}
 	\includegraphics[width=\textwidth]{../images/words_tangrams.pdf}
-Tangrams vary in nameability
+\end{frame}
+
+\begin{frame}{Example: iBaby}
+	\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-1.5cm,yshift=-3cm] at (current page.north east) 
+	{\includegraphics[width=.2\textwidth]{../images/tangram_H.png}};
+	\end{tikzpicture}
+	
+		\begin{enumerate}
+			\setlength{\itemsep}{-2pt}
+			\item A(S):Looks like a letter 'i'\\
+			C: does it look like with its hand out or not\\
+			B: \^{}\\
+			A(S): no hand it is just a head and a body.\\
+			C: oke\\
+			A(S): more like a baby that has been swaddled in a blanket\\
+			\item B(S): swaddled baby\\
+			B(S): I\\
+			B(S): i\\
+			\item C(S): the baby i \\
+			\item D(S): baby swaddled, looks like an i\\
+			\item A(S): swaddled baby\\
+			\item B(S): iBaby
+		\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Example: Skydiving ghost superman}
+	\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-1.5cm,yshift=-3cm] at (current page.north east) 
+	{\includegraphics[width=.2\textwidth]{../images/tangram_C.png}};
+	\end{tikzpicture}
+	\begin{enumerate}
+		\setlength{\itemsep}{-2pt}
+		\item A(S):flying man\\
+		A(S): like superman \\
+		A(S): hands in the air\\
+		A(S): like skydiving
+		\item B(S): the diver with no legs\\
+		A: ok
+		\item C(S): This one looks like a ghost to me, but you called it superman or skydiver\\
+		A: ok no legs?\\
+		C(S): Correct
+		A: ok
+		\item A(S): ghost, superman, skydiver
+		\item B(S): sky diver, ghost\\
+		A: ok\\
+		\item C(S): Skydiving ghost superman
+	\end{enumerate}
+	
+\end{frame}
+
+\begin{frame}{Example: Karate kid}
+	\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-1.5cm,yshift=-3cm] at (current page.north east) 
+	{\includegraphics[width=.2\textwidth]{../images/tangram_A.png}};
+	\end{tikzpicture}
+	\begin{enumerate}
+		\setlength{\itemsep}{-2pt}
+		\item A(S): Similar to the karate kid movie\\
+		A(S): the crane kick\\
+		B: Haha! Does it look like they have dangly sleeves!\\
+		C: I don't know that one.\\
+		A(S): yes\\
+		D:yes i see, thats a good explenation.\\
+	\end{enumerate}
+	
+\end{frame}
+
+\begin{frame}{Example: Lack of shorthand}
+	\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-.5cm,yshift=-2cm] at (current page.north east) 
+	{\includegraphics[width=.2\textwidth]{../images/tangram_J.png}};
+	\end{tikzpicture}
+	\vspace{-20pt}
+	\begin{footnotesize}
+	\begin{enumerate}
+		\setlength{\itemsep}{-2pt}
+		\item A(S):Diamond on top. Body with no real arms or legs. The body is shaped like a boot with the diamond on top.\\
+		C: Is the boot pointed left or right?\\
+		
+		\item B(S): diamond on top, large body beneath it. Left is a straight line all the way down, small variations on the right to the main body\\
+		\item C(S): Diamond in center on top. Left side straight, right side carved out like a vase.\\
+		\item D(S): Diamond head, flat topped body, straight on the left side with two triangles pointing out on the left\\
+		D(S): *on the right\\
+		\item A(S): Diamond on top. Left side is straight, right side is obstructed, looks like a boot\\
+		B: what do you mean by obstructed?\\
+		A(S): The left side of the body is right, right side has bents in it	\\
+		\item B(S): Diamond on top of a long large body/rectangle. Left side is complete, right side has bits missing
+	\end{enumerate}
+	\end{footnotesize}
 \end{frame}
 
 
 
-\begin{frame}{Planned Analyses}
+\begin{frame}{Example: Meta doesn't always help}
+	\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-1cm,yshift=-2cm] at (current page.north east) 
+	{\includegraphics[width=.2\textwidth]{../images/tangram_L.png}};
+	\end{tikzpicture}
+	\vspace{-20pt}
+	\begin{footnotesize}
+		\begin{enumerate}
+			\setlength{\itemsep}{-2pt}
+			\item ...A(S): yes, the legs are like a zig zag\\
+			C: CODE name ZIGZAG	\\
+			A(S):	There are no legs upwards
+			\item B(S): okay so similar to begger guy but no foot pointing up\\
+			B(S): its like a zigzag\\
+			B(S): i forgot the code name\\
+			D: zigzag yea\\
+			A: The one standing with knees bent	listener\\
+			B(S): yeah\\
+			B(S): standing \\
+			C: Yeah zigzag
+			\item C(S):	The begger with no foot coming out from the left\\
+			B: zigzag\\
+			C(S):	zigzag it is\\
+			C(S):	sorry i forgot\\
+			\item D(S):	zigzag
+			\item A(S):	zigzag	
+			\item B(S):	beggar guy\\
+			B(S): zigzag
+			
+		\end{enumerate}
+	\end{footnotesize}
+\end{frame}
+\begin{frame}{Future analyses: Semantics}
+		\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=-2.5cm,yshift=-3.2cm] at (current page.north east) 
+		{\includegraphics[width=.4\textwidth]{../images/hawkins_semantics.png}};
+	\end{tikzpicture}
+
 	\begin{itemize}
-		\item Remove chit-chat, model reduction
-		\item Semantic convergence in games
-		\item Impact of speaker accuracy
+		\item Convergence by group size
+		\item Accuracy \& convergence
+		\item Geometric v metaphorical language
+		\item Where/when are (atypical) concepts introduced?
 	\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Possible future directions}
-	Understand how references are formed more generally \pause
+\begin{frame}{Future directions}
+How far does this generalize?
+ \begin{itemize}
+ 	\item group size
+ 	\item item sets
+ 	\item game paradigms
+ \end{itemize}
 	
-	Possible directions: \pause
+What makes communication more efficient?
 \begin{itemize}
-	\item Different target images \pause
-	\item Curriculum learning \pause
-	\item Larger groups
+	\item Background knowledge
+	\item Curriculum learning
 \end{itemize}
 
 \end{frame}
@@ -287,8 +431,8 @@ Tangrams vary in nameability
 	Looking for feedback on
 	\smallskip
 	\begin{itemize}
-	\item What analyses would be interesting?
-	\item What's the next study?
+	\item Analyses
+	\item Future data sets
 	\end{itemize}
 \end{frame}
 

@@ -143,8 +143,8 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
 
 
 ```{r chat}
-d.chat <- d.chat.raw %>%
-  #filter(role == 'speaker') %>%
+d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  filter(!is.chitchat) %>% 
   filter(!is.na(target)) %>% 
   mutate(text = gsub("\\n", '', fixed = T, text),
          text = gsub("[/?/.]", ' ', text),
