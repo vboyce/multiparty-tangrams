@@ -20,6 +20,10 @@ library(jsonlite)
 library(here)
 library(rlang)
 library(lme4)
+library(brms)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 ParseJSONColumn <- function(x) {
@@ -171,14 +175,6 @@ Everything here has bootstrapped 95% CIs.
 Should find better curves to fit, but using quadratic to allow for some curvature.
 
 ```{r}
-for_model <- d.chat %>% filter(role=="speaker") %>% 
-  select(total_num_words, repNum, tangram, numPlayers)
-crappy_model <- lmer(total_num_words~repNum*numPlayers+(1|tangram), for_model)
-
-summary(crappy_model)
-```
-
-```{r}
 # ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
 #   facet_wrap(~tangram, nrow=2)+
 #   scale_color_brewer(palette="Dark2")+
@@ -195,9 +191,9 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
      stat_summary(fun.data = "mean_cl_boot")+
     scale_y_continuous(limits = c(0,50))+
   labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
-  theme(legend.position="right")
+  theme(legend.position="bottom")
 
-ggsave(here(image_location, 'words.pdf'), width=6, height=3)
+ggsave(here(image_location, 'words.pdf'), width=6, height=4)
 ```
 
 ```{r}
@@ -214,7 +210,7 @@ ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="null")
 
-ggsave(here(image_location, 'words_lines.pdf'), width=6, height=3)
+ggsave(here(image_location, 'words_lines.pdf'), width=6, height=4)
 
 ```
 
@@ -227,9 +223,9 @@ ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
       geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
        stat_summary(fun.data = "mean_cl_boot", size=.2)+
   labs(title="Tangram variability", y="Number of words", x="Round number", color="Player count")+
-  theme(legend.position="right")
+  theme(legend.position="bottom")
 
-ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=5)
+ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=6)
 
 ```
 
@@ -242,9 +238,11 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   #geom_point()+
   scale_color_brewer(palette="Dark2")+
   #scale_y_continuous(limits = c(0,1))+
-  labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")
+  labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")+
+    theme(legend.position="bottom")
 
-ggsave(here(image_location, 'accuracy.pdf'), width=6, height=3)
+
+ggsave(here(image_location, 'accuracy.pdf'), width=6, height=4)
 
 ```
 
@@ -261,15 +259,33 @@ geom_smooth(method = "glm", formula = y~x,
   scale_y_continuous(limits = c(0,180))+
     scale_color_brewer(palette="Dark2")+
   labs(x="Round Number", y="Time to selection in seconds",
-       title="People choose faster in later rounds", color="Player count")
+       title="People choose faster in later rounds", color="Player count")+
+  theme(legend.position = "bottom")
 
-ggsave(here(image_location, 'time.pdf'), width=6, height=3)
+ggsave(here(image_location, 'time.pdf'), width=6, height=4)
+
+```
+# Models
+
+```{r, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file="model1",                            prior=priors, control=list(adapt_delta=.95))
+
+         
 
 ```
 
-
-
-```{r}
+```{r, include=F}
 d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
 d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
   left_join(d.prev.speaker) %>% unique() %>% mutate(repNum=repNum+1)
@@ -284,46 +300,35 @@ d.chat.lagged <- d.chat %>%
   filter(role=="speaker") %>%
   mutate(prev_correct_round=correct)
 
-ggplot(d.chat.lagged, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
-  facet_wrap(~prev_correct_round, nrow=1) +
-    scale_color_brewer(palette="Dark2")+
-      #geom_smooth(method=lm)+
-      stat_summary(fun.data = "mean_cl_boot")+
-    labs(title="Utterance length", y="Number of words", x="Round number")
 
-ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=as.factor(numPlayers)))+
-  facet_wrap(~prev_correct_round, nrow=1) +
-    scale_color_brewer(palette="Dark2")+
-      #geom_smooth(method=lm)+
-      stat_summary(fun.data = "mean_cl_boot")+
-    labs(title="Change in utterance length", y="Log change in words", x="Round number")
+model_input <- d.chat.lagged %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId),
+         was_INcorrect=ifelse(!prev_correct_round,1,0))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
 
-# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_correct_round))+
-#   facet_wrap(~numPlayers, nrow=1) +
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-#     labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
-# 
-# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word, color=prev_all_correct_round))+
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-#     labs(title="Change in utterance length", y="Log change in words", x="Round number")
-# 
-# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char, color=prev_all_correct_round))+
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-#     labs(title="Change in utterance length", y="Log change in  chars", x="Round number")
-# 
-# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_word_trial, color=prev_correct_trial))+
-#     facet_wrap(~numPlayers, nrow=1) +
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-#     labs(title="Change in utterance length next trial", y="Log change in words", x="Round number")
-# 
-# ggplot(d.chat.lagged, aes(x=repNum, y=reduction_char_trial, color=prev_correct_trial))+
-#     facet_wrap(~numPlayers, nrow=1) +
-#     scale_color_brewer(palette="Dark2")+
-#       stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-#     labs(title="Change in utterance length next trial", y="Log change in  chars", x="Round number")
+model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file="speaker_acc",                         prior=priors, control=list(adapt_delta=.95))
+
+         
+```
+
+
+
+
+```{r}
+
+summary(model)
+
+```
+```{r}
+
+
+summary(model_speaker_acc)
 
 ```
