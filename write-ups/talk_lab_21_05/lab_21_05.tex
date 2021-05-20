@@ -261,8 +261,7 @@ Include all complete blocks
 \end{frame}
 
 \begin{frame}{\large Results: Reduction in words over time}
-\includegraphics[width=\textwidth]{../images/words.pdf}
-
+	\includegraphics[width=\textwidth]{../images/words.pdf}
 
 \end{frame}
 
@@ -273,6 +272,15 @@ Include all complete blocks
 
 \begin{frame}{\large Results: Tangrams vary in nameability}
 	\includegraphics[width=\textwidth]{../images/words_tangrams.pdf}
+		\begin{tikzpicture}[remember picture,overlay]
+	\node[xshift=3.4cm,yshift=.4cm] at (current page.west) 
+	{\includegraphics[width=.1\textwidth, trim={2cm 2cm 2cm 2cm}, clip]{../images/tangram_E.png}};
+	\node[xshift=2.3cm,yshift=2.9cm] at (current page.south) 
+	{\includegraphics[width=.1\textwidth, trim={2cm 2cm 2cm 2cm}, clip]{../images/tangram_K.png}};
+	\node[xshift=-.3cm,yshift=-2.1cm] at (current page.north) 
+	{\includegraphics[width=.1\textwidth, trim={2cm 2cm 2cm 2cm}, clip]{../images/tangram_B.png}};
+	
+	\end{tikzpicture}
 \end{frame}
 
 \begin{frame}{\large Results: Models}
@@ -413,7 +421,7 @@ Include all complete blocks
 \end{frame}
 \begin{frame}{\large Future analyses: Semantics}
 		\begin{tikzpicture}[remember picture,overlay]
-	\node[xshift=-2.5cm,yshift=-3.2cm] at (current page.north east) 
+	\node[xshift=-2.3cm,yshift=-3.2cm] at (current page.north east) 
 		{\includegraphics[width=.4\textwidth]{../images/hawkins_semantics.png}};
 	\end{tikzpicture}
 
