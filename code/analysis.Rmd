@@ -38,6 +38,8 @@ data_location="data/study1"
 date_start=lubridate::ymd('2021-05-04')
 
 image_location="write-ups/images"
+
+model_location="code/models"
 ```
 
 ```{r}
@@ -279,7 +281,7 @@ priors <- c(
   set_prior("normal(0, 10)", class="sd"),
   set_prior("lkj(1)",       class="cor"))
 
-model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file="model1",                            prior=priors, control=list(adapt_delta=.95))
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_1"),                            prior=priors, control=list(adapt_delta=.95))
 
          
 
@@ -313,7 +315,7 @@ priors <- c(
   set_prior("normal(0, 10)", class="sd"),
   set_prior("lkj(1)",       class="cor"))
 
-model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file="speaker_acc",                         prior=priors, control=list(adapt_delta=.95))
+model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "speaker_acc"),                         prior=priors, control=list(adapt_delta=.95))
 
          
 ```
