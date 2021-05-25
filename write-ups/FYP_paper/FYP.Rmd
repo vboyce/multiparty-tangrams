@@ -116,11 +116,13 @@ d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude)
 
 **TODOs**:
 - mention pre-reg
-- cite Robert in methods
-- figures
+- add figure of set-up
+- figure sizing
+- model results
 - intro
 - results
 - discussion
+- any new analyses to add??
 
 # Methods
 
@@ -129,8 +131,6 @@ We recruited participants to play a repeated reference game in groups of 2-4. Pa
 We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. 
 
 ## Participants
-
-
 
 ```{r, include=F}
 summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
@@ -156,18 +156,20 @@ We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020
 
 We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020]. Code for running this experiment is available at GITHUB URL. From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages that explained the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
 
-Once the game started, participants saw screens like FIGURE TODO. Each trial, the speaker had to describe the highlighted tangram image so that the listeners could identify it and click it. All participants were free to use the chat box to communicate. Once all listeners has selected (or a 3-minute timer had run out), participants were given feedback. Listeners only learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners points. These points translated into cents of performance bonus at the end of the experiment. 
+Once the game started, participants saw screens like FIGURE TODO. Each trial, the speaker had to describe the highlighted tangram image so that the listeners could identify it and click it. All participants were free to use the chat box to communicate. Listeners could only click once the speaker had sent a message. Once all listeners has selected (or a 3-minute timer had run out), participants were given feedback. Listeners only learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners points. These points translated into cents of performance bonus at the end of the experiment. 
 
 In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, 2 times in 3-player games and once or twice in 4-player games.
 
 After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
 
 ## Data analysis
-The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about well or fast the task was going and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses.
+I skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about well or fast the task was going and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses.
 
 We used `r cite_r("r-references.bib", footnote=T)` for all our analyses.
 
 # Results
+
+In general groups showed expected patterns. They had high and increasing accuracy, coupled with faster response times, and decreases in utterance length showing the classic reduction pattern. 
 
 ```{r chat, include=F}
 d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
@@ -192,96 +194,6 @@ d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>%
          role = role %|% "listener")
 
 ```
-
-
-
-(ref:accuracy) TODO
-
-```{r accuracy, out.height="25%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:accuracy)"}
-
-d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum, y=correct.num, color=as.factor(numPlayers)))+
-geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  #geom_point()+
-  scale_color_brewer(palette="Dark2")+
-  #scale_y_continuous(limits = c(0,1))+
-  labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")+
-    theme(legend.position="bottom")
-
-
-
-```
-Look accuracy \@ref(fig:accuracy) Most groups were accurate in their selections, with accuracy rising over rounds
-
-(ref:time) TODO
-
-```{r time, out.height="25%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:time)"}
-
-d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
-  filter(correct==T) %>% 
-  #summarize(time=mean(time)) %>% 
-  ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
-  geom_jitter(width=.4, height=0, alpha=.03)+
-geom_smooth(method = "glm", formula = y~x,
-                      method.args = list(family = gaussian(link = 'log')))+
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  scale_y_continuous(limits = c(0,180))+
-    scale_color_brewer(palette="Dark2")+
-  labs(x="Round Number", y="Time to selection in seconds",
-       title="People choose faster in later rounds", color="Player count")+
-  theme(legend.position = "bottom")
-
-
-```
-
-Look time \@ref(fig:time)
-
-
-(ref:total-words) The total number of words speakers and listeners said each block. Length of utterances decreases over time. Note: y-axis clipped at 50 which hides a few speaker outliers. 
-
-```{r total-words, out.height="25%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:total-words)"}
-
-
-ggplot(d.chat, aes(x=repNum+1, y=total_num_words, color=as.factor(numPlayers)))+
-  facet_wrap(~role, nrow=1)+
-  scale_color_brewer(palette="Dark2")+
-    geom_jitter(alpha=.05)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-     stat_summary(fun.data = "mean_cl_boot")+
-    scale_y_continuous(limits = c(0,50))+
-  labs(y="Number of words", x="Block number", color="Player count")+
-  theme(legend.position="bottom")
-
-```
-Look words \@ref(fig:total-words)
-
-
-
-(ref:word-lines) TODO
-
-```{r variability, out.height="25%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:word-lines)"}
-
-d.chat %>% filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
-  summarize(words=sum(total_num_words)) %>% 
-ggplot(aes(x=repNum+1, y=words, color=as.factor(numPlayers)))+
-  facet_wrap(~numPlayers, nrow=1)+
-  scale_color_brewer(palette="Dark2")+
-    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
-    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
-    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  labs( y="Number of words", x="Block number", color="Player count")+
-  theme(legend.position="null")
-
-
-```
-Look words \@ref(fig:variability)
-
-
-
 ```{r, include=F}
 model_input <- d.chat %>% filter(role=="speaker") %>% 
   mutate(block=repNum,
@@ -299,7 +211,6 @@ model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangr
          
 
 ```
-
 ```{r, include=F}
 d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
 d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
@@ -333,16 +244,100 @@ model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block
          
 ```
 
-
-
-
 ```{r}
 
-fixef(model)
-fixef(model)
+fem1 <- fixef(model)
+fem2 <- fixef(model_speaker_acc)
 ```
 
+(ref:accuracy) Listeners have high accuracy which increases of the course of the game, although accuracy increases less in 4-player games than smaller games. Accuracy rates are shown for each block, error bars are bootstrapped 95% CIs. 
+
+```{r accuracy, out.height="35%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:accuracy)"}
+
+d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=as.factor(numPlayers)))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  #geom_point()+
+  scale_color_brewer(palette="Dark2")+
+  #scale_y_continuous(limits = c(0,1))+
+  labs(x="Block Number", y="Fraction correct", color="Player count")+
+    theme(legend.position="bottom")
+
+
+
+```
+Most groups were accurate in their selections, with accuracy rising over rounds (Fig \@ref(fig:accuracy)). This indicates that speakers were usually successful at conveying the intended referents. While on average games of each size increase in accuracy, 4-player games show lower gains in accuracy than smaller games. We do not have a clear explanation for why this is, whether it is reliable, or what pattern to expect for even larger (ex. 5 person) games. 
+
+
+(ref:time) Listeners selected images faster in later blocks. Only times to correct responses are shown.
+
+```{r time, out.height="35%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:time)"}
+
+d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
+  filter(correct==T) %>% 
+  #summarize(time=mean(time)) %>% 
+  ggplot(aes(x=repNum+1, y=time, color=as.factor(numPlayers)))+
+  geom_jitter(width=.4, height=0, alpha=.03)+
+geom_smooth(method = "glm", formula = y~x,
+                      method.args = list(family = gaussian(link = 'log')))+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  scale_y_continuous(limits = c(0,180))+
+    scale_color_brewer(palette="Dark2")+
+  labs(x="Block Number", y="Time to selection in seconds", color="Player count")+
+  theme(legend.position = "bottom")
+
+
+```
+Participants selected images faster in later rounds (Fig \@ref(fig:time)). There is wide variability, but appears to be an unintuitive effect of group size with fastest selection in 2-player games, but 4-player games being faster than 3-player games. This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure.
+
+
+(ref:total-words) Speaker and listeners say fewer words in later blocks. Note: y-axis clipped at 50 which hides a few speaker outliers. 
+
+```{r total-words, out.height="35%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:total-words)"}
+
+ggplot(d.chat, aes(x=repNum+1, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~role, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+     stat_summary(fun.data = "mean_cl_boot")+
+    scale_y_continuous(limits = c(0,50))+
+  labs(y="Number of words", x="Block number", color="Player count")+
+  theme(legend.position="bottom")
+
+```
+The main effect of interest is whether speakers and listeners reduce in the number of words they say over the course of rounds. As shown in Fig \@ref(fig:total-words), the number of words produced does decrease. Listeners often don't talk much, but are more likely to ask questions or make clarification in early rounds. Speakers make longer utterances in early blocks and reduce to shorter utterances in later blocks. Notably, this shortening pattern occurs even as speakers rotate. In aggregate, the effect of being one block later is `r round(fem1["block","Estimate"],2)` [`r round(fem1["block", "Q2.5"],2)`,`r round(fem1["block","Q97.5"],2)`] words. The overall effect of having more players in a group is  `r round(fem1["numPlayers","Estimate"],2)` [`r round(fem1["numPlayers", "Q2.5"],2)`,`r round(fem1["numPlayers","Q97.5"],2)`] per additional player. This estimate is uncertain because of a relatively small number of groups and wide group-level variability. 
+
+
+(ref:word-lines) Words said by the speaker for each tangram in each group. Each referent/group trajectory is a thin line; aggregate curve is bolded. No outliers were omitted.
+
+```{r variability, out.height="35%", fig.width=6, fig.height=4, fig.pos='h', fig.cap="(ref:word-lines)"}
+
+d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum+1, y=words, color=as.factor(numPlayers)))+
+  facet_wrap(~numPlayers, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+  labs( y="Number of words", x="Block number", color="Player count")+
+  theme(legend.position="null")
+
+
+```
+This variability can be seen in Fig \@ref(fig:variability). While the averaged data shows a smooth reduction in the number of words, individual trajectories for specific tangrams in specific groups are more varied. Reduction is not monotonic, as some later speakers use more words than were used in earlier rounds. 
+
+Because the ground truth answers are not provided to listeners who make mistakes, they may not learn what utterance was referring to (unless they ask in the chat). What happens if a listener gets a tangram wrong and then is the speaker on the next block? For that tangram, they are unlikely to build off the previous descriptionsn and conventions that they don't understand. In contrast, a speaker who previously got the tangram right is reasonably likely to continue the conceptualization used so far and conventionalize it more, such as by reducing unneeded details. In aggregate hypothesizes that speakers should say more words if they got that tangram wrong the previous round that not, after controlling for other effects. This is borne out; speakers say `r round(fem2["was_INcorrect","Estimate"],2)` [`r round(fem2["was_INcorrect", "Q2.5"],2)`,`r round(fem2["was_INcorrect","Q97.5"],2)`] more words when previously wrong. 
+
+
+
+
 # Discussion
+TODO effects/interpretation of speaker rotation and feedback regime
 
 \newpage
 
