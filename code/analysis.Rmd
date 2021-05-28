@@ -267,6 +267,22 @@ geom_smooth(method = "glm", formula = y~x,
 ggsave(here(image_location, 'time.pdf'), width=6, height=4)
 
 ```
+
+```{r}
+d.chat %>% filter(role=="speaker") %>% 
+  mutate(all_correct=countCorrect==numPlayers-1) %>% 
+    group_by(repNum, numPlayers, gameId, tangram, all_correct) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=all_correct))+
+  #facet_wrap(~all_correct)+
+  scale_color_brewer(palette="Dark2")+
+  geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Was everyone correct?")+
+  theme(legend.position="bottom")
+
+
+```
 # Models
 
 ```{r, include=F}
