@@ -5,3 +5,13 @@ node_modules
 .DS_Store
 .Rproj.user
 experiments/tangram/local.json
+data/pilotB/*
+data/pilotC/*
+*.toc
+*.synctex.gz
+*.snm
+*.out
+*.nav
+*.log
+*.aux
+code/models/*
