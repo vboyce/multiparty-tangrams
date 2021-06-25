@@ -1,8 +1,8 @@
 ---
 title: "FYP Analysis"
 output:
-  html_document: default
-  pdf_document: default
+  html_document: 
+    toc: true
 ---
 
 
@@ -63,9 +63,8 @@ model_location="code/models"
 #          cost=round(bonus*4/3,2)) %>% write_csv(here(data_location, "player_payments.csv")) %>% select(id,bonus) %>% write_csv(here(data_location,"for_prolific.csv"))
 ```
 
-# Pre-process
 
-```{r, include=F, echo=F}
+```{r, include=F, eval=F}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
@@ -101,7 +100,7 @@ d.round_results.raw <- read_csv(here(data_location,'rounds.csv'),guess_max=10000
   filter(playerId!=speaker)
 
 #only include rounds that finished
-rounds_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers,repNum) %>% tally() %>% filter(n!=12*(numPlayers-1)) %>% select(gameId,repNum)
+rounds_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers,repNum) %>% tally() %>% filter(n!=12*(numPlayers-1)) %>% select(gameId,repNum) %>% write_rds(here(data_location,"rounds_exclude.rds"))
 
 d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude) %>% write_rds(here(data_location,'round_results.rds'))
 
@@ -110,6 +109,7 @@ d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude) %>% write_
 
 ```{r} 
 d.round_results <- read_rds(here(data_location,"round_results.rds"))
+rounds_exclude <- read_rds(here(data_location, "rounds_exclude.rds"))
 ```
 
 
@@ -130,8 +130,7 @@ summary %>% filter(num_rounds!=5) %>% group_by(numPlayers) %>% tally()
 ```
 
 
-# Demographics
-```{r demographics}
+```{r demographics, eval=F}
 d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
   filter(createdAt >= date_start) %>%
   left_join(d.games, by = c('gameId')) %>%
@@ -211,7 +210,7 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="bottom")
 
-ggsave(here(image_location, 'words.pdf'), width=6, height=4)
+#ggsave(here(image_location, 'words.pdf'), width=6, height=4)
 ```
 
 ```{r}
@@ -228,25 +227,7 @@ ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="null")
 
-ggsave(here(image_location, 'words_lines.pdf'), width=6, height=4)
-
-```
-Pre any listener commentary
-
-```{r}
-d.chat.pre %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
-  summarize(words=sum(total_num_words)) %>% 
-ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
-  facet_wrap(~numPlayers, nrow=1)+
-  scale_color_brewer(palette="Dark2")+
-    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
-    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
-    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  labs(title="Words from speaker per tangram before a listener says anything", y="Number of words", x="Round number", color="Player count")+
-  theme(legend.position="null")
-
+#ggsave(here(image_location, 'words_lines.pdf'), width=6, height=4)
 
 ```
 
@@ -261,7 +242,7 @@ ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   labs(title="Tangram variability", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="bottom")
 
-ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=6)
+#ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=6)
 
 ```
 
@@ -278,11 +259,9 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
     theme(legend.position="bottom")
 
 
-ggsave(here(image_location, 'accuracy.pdf'), width=6, height=4)
+#ggsave(here(image_location, 'accuracy.pdf'), width=6, height=4)
 
 ```
-
-
 ```{r time}
 d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
   filter(correct==T) %>% 
@@ -298,7 +277,7 @@ geom_smooth(method = "glm", formula = y~x,
        title="People choose faster in later rounds", color="Player count")+
   theme(legend.position = "bottom")
 
-ggsave(here(image_location, 'time.pdf'), width=6, height=4)
+#ggsave(here(image_location, 'time.pdf'), width=6, height=4)
 
 ```
 
@@ -317,6 +296,7 @@ ggplot(aes(x=repNum, y=words, color=all_correct))+
 
 
 ```
+
 # Models
 
 ```{r, include=F}
@@ -331,7 +311,7 @@ priors <- c(
   set_prior("normal(0, 10)", class="sd"),
   set_prior("lkj(1)",       class="cor"))
 
-model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_acc"),                            prior=priors, control=list(adapt_delta=.95))
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model1"),                            prior=priors, control=list(adapt_delta=.95))
 
          
 
@@ -370,22 +350,43 @@ model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block
          
 ```
 
-```{r first-rounds, include=F}
-model_input <- d.chat %>% filter(role=="speaker") %>% 
-  mutate(block=repNum,
-         words=total_num_words,
-         tangram_group=str_c(tangram, gameId)) %>% 
-  filter(block %in% c(0,1))
-         
-priors <- c(
-  set_prior("normal(20, 20)", class="Intercept"),
-  set_prior("normal(0, 10)", class="b"),
-  set_prior("normal(0, 10)", class="sd"),
-  set_prior("lkj(1)",       class="cor"))
 
-model_first_2_rounds <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId), data=model_input,file=here(model_location, "model_2rounds"),                            prior=priors, control=list(adapt_delta=.95))
 
-         
+
+
+Overall model predicting number of speaker words from block and player count. 
+
+```{r}
+
+summary(model)
+
+```
+
+
+
+```{r}
+
+
+summary(model_speaker_acc)
+
+```
+
+# Pre any listener commentary
+
+```{r}
+d.chat.pre %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
+  facet_wrap(~numPlayers, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram before a listener says anything", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
+
 
 ```
 
@@ -407,11 +408,31 @@ model_no_backchannel <- brm(words ~ block * numPlayers + (block|tangram)+ (1|pla
 
 ```
 
-Overall model predicting number of speaker words from block and player count. 
+
+
+What's the model look like if we discard anything post listener talking? There's an effect of block, but not a large effect of number of players, no interaction. 
 
 ```{r}
+summary(model_no_backchannel)
+```
 
-summary(model)
+# First two rounds only
+```{r first-rounds, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  filter(block %in% c(0,1))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_first_2_rounds <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId), data=model_input,file=here(model_location, "model_2rounds"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
 
 ```
 
@@ -421,21 +442,12 @@ Speaker's experience at talking about these images is confounded with player cou
 summary(model_first_2_rounds)
 ```
 
-What's the model look like if we discard anything post listener talking? There's an effect of block, but not a large effect of number of players, no interaction. 
-
-```{r}
-summary(model_no_backchannel)
-```
-
-```{r}
 
 
-summary(model_speaker_acc)
 
-```
 # Pre-process for NLP
 
-```{r}
+```{r, eval=F}
 
 exchanges <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
   filter(is.chitchat==F) %>% 
@@ -450,9 +462,8 @@ combined <- exchanges %>%
   write_csv(here("data/study1/combined.csv"))
 ```
 
-# Post-process for NLP
 
-## Content analyses
+# Content analyses
 
 Very rough -- haven't done spelling  correction or "stop words wrt tangram" filtering
 Of words the speaker says in the last round, when were they said by the speaker in earlier rounds for the same tangram?
@@ -473,7 +484,29 @@ ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPl
 ```
 Overlap is higher in 2 than more than two situations. There also appears to be a "same player" effect -- note the higher amount for rounds 1 and 3 relative to 2 and 4 for 2 player, and 1 relative to others in 4 player. 
 
-Maybe can run a logistic model predicting if a final word occurred in earlier round as ~ round_num*numPlayer + same_speaker ? 
+Ran a first-pass logistic model looking at match ~ block * numPlayers + same_speaker. 
+```{r}
+same_speaker <- matches %>% 
+  filter(later_rep==5) %>% 
+  mutate(same_speaker=ifelse(earlier_rep%%numPlayers==5%%numPlayers,1,0),
+         match.num=ifelse(match, 1,0)) %>% 
+    mutate(target=str_extract(target,"[A-Z]")) %>% 
+  select(gameId,target,block=earlier_rep,numPlayers,match, same_speaker)
+  
+  priors <- c(
+  set_prior("normal(0, 1)", class="Intercept"),
+  set_prior("normal(0, 1)", class="b"),
+  set_prior("normal(0, 1)", class="sd")#,
+  #set_prior("lkj(1)",       class="cor")
+  )
+
+# model_conventions <- brm(match ~ block * numPlayers + same_speaker + (1|gameId), data=same_speaker,file=here(model_location, "model_convention"),family=bernoulli(link="logit"),  prior=priors, control=list(adapt_delta=.95))
+
+  model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
+         
+summary(model_conventions)
+
+```
 
 ```{r}
 matches %>% filter(match) %>% 
