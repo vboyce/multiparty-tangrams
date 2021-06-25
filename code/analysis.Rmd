@@ -4,11 +4,7 @@ output:
   html_document: default
   pdf_document: default
 ---
-**TODOs**:
 
-- Pay participants, calculate bonuses (including for problems -- see prolific messages), pay again
-- chat processing --> output chat, tag, reimport (not for first sample!)
-- Actual Bayesian stuff
 
 
 ```{r set-up, include=F}
@@ -69,7 +65,7 @@ model_location="code/models"
 
 # Pre-process
 
-```{r}
+```{r, include=F, echo=F}
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
@@ -107,12 +103,17 @@ d.round_results.raw <- read_csv(here(data_location,'rounds.csv'),guess_max=10000
 #only include rounds that finished
 rounds_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers,repNum) %>% tally() %>% filter(n!=12*(numPlayers-1)) %>% select(gameId,repNum)
 
-d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude)
+d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude) %>% write_rds(here(data_location,'round_results.rds'))
 
 ```
 
 
-```{r}
+```{r} 
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
+```
+
+
+```{r, include=F, eval=F}
 summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
            mutate(time= time %|% 180) %>% 
   summarize(max_time=max(time)) %>% 
@@ -136,9 +137,6 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
   left_join(d.games, by = c('gameId')) %>%
     rename_with(~ gsub("data.", "", .x, fixed = TRUE))
 
-```
-```{r feedback}
-
 #d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
 
 ```
@@ -149,7 +147,7 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
 
 
 ```{r chat}
-d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
   filter(!is.chitchat) %>% 
   filter(!is.na(target)) %>% 
   mutate(text = gsub("\\n", '', fixed = T, text),
@@ -159,6 +157,12 @@ d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>%
          tangram = gsub('.png', '', tangram, fixed=TRUE),
          utt_length_chars = str_length(text), 
          utt_length_words = str_count(text, "\\W+") + 1) %>%
+  group_by(gameId, trialNum, repNum, tangram) %>% 
+  mutate(is.firstutter=ifelse(role!="speaker",F,NA)) %>% 
+  fill(c("is.firstutter"), .direction="down") %>% 
+  mutate(is.firstutter= is.firstutter %|% T) 
+
+d.chat <- d.chat.filter %>% 
   group_by(gameId, trialNum, repNum, tangram, playerId, role, countCorrect, numPlayers) %>%
   summarize(text = paste0(text, collapse = ', '),
             total_num_words = sum(utt_length_words) %>% as.numeric(),
@@ -169,6 +173,18 @@ d.chat <- read_csv(here(data_location, "filtered_chat.csv")) %>%
          total_num_words= total_num_words %|% 0,
          total_num_chars= total_num_chars %|% 0,
          role = role %|% "listener")
+
+d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, playerId, is.firstutter,role, countCorrect, numPlayers) %>%
+  summarize(text = paste0(text, collapse = ', '),
+            total_num_words = sum(utt_length_words) %>% as.numeric(),
+            total_num_chars = sum(utt_length_chars) %>% as.numeric()) %>%
+  anti_join(rounds_exclude) %>% 
+  ungroup() %>% 
+  mutate(text = text %|% "",
+         total_num_words= total_num_words %|% 0,
+         total_num_chars= total_num_chars %|% 0,
+         role = role %|% "listener") %>% 
+  filter(is.firstutter)
 
 ```
 
@@ -213,6 +229,24 @@ ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   theme(legend.position="null")
 
 ggsave(here(image_location, 'words_lines.pdf'), width=6, height=4)
+
+```
+Pre any listener commentary
+
+```{r}
+d.chat.pre %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
+  facet_wrap(~numPlayers, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram before a listener says anything", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
+
 
 ```
 
@@ -297,7 +331,7 @@ priors <- c(
   set_prior("normal(0, 10)", class="sd"),
   set_prior("lkj(1)",       class="cor"))
 
-model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_1"),                            prior=priors, control=list(adapt_delta=.95))
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_acc"),                            prior=priors, control=list(adapt_delta=.95))
 
          
 
@@ -336,17 +370,123 @@ model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block
          
 ```
 
+```{r first-rounds, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  filter(block %in% c(0,1))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
 
+model_first_2_rounds <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId), data=model_input,file=here(model_location, "model_2rounds"),                            prior=priors, control=list(adapt_delta=.95))
 
+         
+
+```
+
+```{r pre-backchannel, include=F}
+model_input <- d.chat.pre %>%
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_no_backchannel <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_no_back"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+Overall model predicting number of speaker words from block and player count. 
 
 ```{r}
 
 summary(model)
 
 ```
+
+Speaker's experience at talking about these images is confounded with player count. However, this isn't true in the first two rounds, so we can limit to that. 
+```{r}
+
+summary(model_first_2_rounds)
+```
+
+What's the model look like if we discard anything post listener talking? There's an effect of block, but not a large effect of number of players, no interaction. 
+
+```{r}
+summary(model_no_backchannel)
+```
+
 ```{r}
 
 
 summary(model_speaker_acc)
 
 ```
+# Pre-process for NLP
+
+```{r}
+
+exchanges <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  filter(is.chitchat==F) %>% 
+  select( -index, -stageIds, -is.chitchat, -submitted, -speaker, -createdAt, -row_id) %>% 
+  rename(utterance=text) %>% 
+  #filter(gameId=="3WzEi9zkHF77vdTw5") %>% 
+  write_csv(here("data/study1/exchanges.csv"))
+
+combined <- exchanges %>% 
+    group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, role, countCorrect) %>%
+  summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
+  write_csv(here("data/study1/combined.csv"))
+```
+
+# Post-process for NLP
+
+## Content analyses
+
+Very rough -- haven't done spelling  correction or "stop words wrt tangram" filtering
+Of words the speaker says in the last round, when were they said by the speaker in earlier rounds for the same tangram?
+
+```{r}
+d.numPlayer <- d.round_results %>% select(numPlayers, gameId)
+matches <- read_csv(here("data/study1/content/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
+
+
+
+location_first_match <- matches %>% 
+  filter(later_rep==5) %>% 
+  group_by(earlier_rep,gameId,numPlayers) %>% 
+  summarize(overlap=mean(match))
+
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_wrap(~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")
+```
+Overlap is higher in 2 than more than two situations. There also appears to be a "same player" effect -- note the higher amount for rounds 1 and 3 relative to 2 and 4 for 2 player, and 1 relative to others in 4 player. 
+
+Maybe can run a logistic model predicting if a final word occurred in earlier round as ~ round_num*numPlayer + same_speaker ? 
+
+```{r}
+matches %>% filter(match) %>% 
+  filter(later_rep==5) %>% 
+  mutate(target=str_extract(target,"[A-Z]")) %>% 
+  group_by(target, gameId,numPlayers) %>% 
+  summarize(early=min(earlier_rep)) %>% 
+  group_by(target, numPlayers,early) %>% 
+  tally() %>% 
+  group_by(numPlayers) %>% 
+  summarize(pct=n/sum(n),
+            early=early) %>% 
+  ggplot(aes(x=numPlayers, y=pct, fill=as.factor(early)))+geom_col(position="stack")
+  
+```
+Want to look at how early these content words are introduced -- this is not the right graph for it, but there seems to be a lot more conventions staying from the first round in 2 player. Will need to check after doing elimination of non-content words. 
