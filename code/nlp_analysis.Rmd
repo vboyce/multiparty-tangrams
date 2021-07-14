@@ -1,0 +1,268 @@
+---
+title: "FYP NLP Analysis"
+output:
+  html_document: 
+    toc: true
+---
+
+
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+##Data import constants
+data_location="data/study1"
+
+
+date_start=lubridate::ymd('2021-05-04')
+
+image_location="write-ups/images"
+
+model_location="code/models"
+```
+
+
+# Pre-process for NLP
+
+```{r, eval=F}
+
+exchanges <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  filter(is.chitchat==F) %>% 
+  select( -index, -stageIds, -is.chitchat, -submitted, -speaker, -createdAt, -row_id) %>% 
+  rename(utterance=text) %>% 
+  #filter(gameId=="3WzEi9zkHF77vdTw5") %>% 
+  write_csv(here(data_location,"exchanges.csv"))
+
+combined <- exchanges %>% 
+    group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, role, countCorrect) %>%
+  summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
+  write_csv(here(data_location,"combined.csv"))
+
+speaker_collapsed <- exchanges %>% 
+  filter(role=="speaker") %>% 
+  group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, countCorrect) %>%
+  summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
+  write_csv(here(data_location,"speaker_collapsed.csv"))
+```
+
+
+# Content analyses
+
+Very rough -- haven't done spelling  correction or "stop words wrt tangram" filtering
+Of words the speaker says in the last round, when were they said by the speaker in earlier rounds for the same tangram?
+
+```{r}
+d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
+matches <- read_csv(here("data/study1/content/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
+
+
+
+location_first_match <- matches %>% 
+  filter(later_rep==5) %>% 
+  group_by(earlier_rep,gameId,numPlayers) %>% 
+  summarize(overlap=mean(match))
+
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_wrap(~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")
+```
+Overlap is higher in 2 than more than two situations. There also appears to be a "same player" effect -- note the higher amount for rounds 1 and 3 relative to 2 and 4 for 2 player, and 1 relative to others in 4 player. 
+
+Ran a first-pass logistic model looking at match ~ block * numPlayers + same_speaker. 
+```{r}
+same_speaker <- matches %>% 
+  filter(later_rep==5) %>% 
+  mutate(same_speaker=ifelse(earlier_rep%%numPlayers==5%%numPlayers,1,0),
+         match.num=ifelse(match, 1,0)) %>% 
+    mutate(target=str_extract(target,"[A-Z]")) %>% 
+  select(gameId,target,block=earlier_rep,numPlayers,match, same_speaker)
+  
+  priors <- c(
+  set_prior("normal(0, 1)", class="Intercept"),
+  set_prior("normal(0, 1)", class="b"),
+  set_prior("normal(0, 1)", class="sd")#,
+  #set_prior("lkj(1)",       class="cor")
+  )
+
+# model_conventions <- brm(match ~ block * numPlayers + same_speaker + (1|gameId), data=same_speaker,file=here(model_location, "model_convention"),family=bernoulli(link="logit"),  prior=priors, control=list(adapt_delta=.95))
+
+  model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
+         
+summary(model_conventions)
+
+```
+
+```{r}
+matches %>% filter(match) %>% 
+  filter(later_rep==5) %>% 
+  mutate(target=str_extract(target,"[A-Z]")) %>% 
+  group_by(target, gameId,numPlayers) %>% 
+  summarize(early=min(earlier_rep)) %>% 
+  group_by(target, numPlayers,early) %>% 
+  tally() %>% 
+  group_by(numPlayers) %>% 
+  summarize(pct=n/sum(n),
+            early=early) %>% 
+  ggplot(aes(x=numPlayers, y=pct, fill=as.factor(early)))+geom_col(position="stack")
+  
+```
+Want to look at how early these content words are introduced -- this is not the right graph for it, but there seems to be a lot more conventions staying from the first round in 2 player. Will need to check after doing elimination of non-content words. 
+
+# Vector analysis
+
+Stab 1 at vector analysis: we drop listener utterances & concatenate all speaker utterances / trial 
+NB: haven't done any spell check or good stop word fixing
+
+```{r helpers}
+# note: cor expects featurs to be in columns so we transpose
+get_sim_matrix = function(df, F_mat, method = 'cosine') {
+  feats = F_mat[df$feature_ind,]
+  if(method == 'cor') {
+    return(cor(t(feats), method = 'pearson'))
+  } else if (method == 'euclidean') {
+    return(as.matrix(dist(feats, method = 'euclidean')))
+  } else if (method == 'cosine') {
+    return(as.matrix(lsa::cosine(t(feats))))
+  } else {
+    stop(paste0('unknown method', method))
+  }
+}
+
+# note this does de-duplicated version
+flatten_sim_matrix <- function(cormat, ids) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    dim1 = ids[row(cormat)[ut]],
+    dim2 = ids[col(cormat)[ut]],
+    sim  = as.numeric(cormat[ut])
+  ) %>%
+    mutate(dim1 = as.character(dim1),
+           dim2 = as.character(dim2))
+}
+
+make_within_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          .$repNum)) %>%
+    mutate(rep1 = as.numeric(dim1), 
+           rep2 = as.numeric(dim2)) 
+}
+
+make_across_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          as.character(.$combinedId)))
+}
+```
+
+
+```{r, eval=F}
+## Note that this will not knit and may need to be commented out for knitting
+library(reticulate)
+np <- import("numpy")
+mat = np$load(here('data/study1/content/feats_tangrams_embeddings_rawavg.npy'))
+saveRDS(mat, here('data/study1/content/feats_tangrams_embeddings_rawavg.RData'))
+```
+
+```{r}
+M_mat = read_csv(here('data/study1/content/meta_tangrams_embeddings.csv'), 
+                na = c('[nan]'), quote = '"') %>%  
+  mutate(feature_ind = row_number()) %>%
+  select(-X1) 
+
+F_mat <- readRDS(here('data/study1/content/feats_tangrams_embeddings_rawavg.RData'))
+
+```
+
+
+
+
+
+## Within
+Within a group, between round n & n+1, what predicts similarity? 
+Note: speaker is guaranteed to change for n-n+1, so predictors are numPlayers, round and 1|group, 1|target
+
+```{r within-prep}
+
+within_data <- M_mat %>% 
+  group_by(gameId, target, numPlayers) %>% 
+  make_within_df(F_mat, 'cosine') 
+
+within_adj <- within_data %>% 
+  filter(rep2==rep1+1) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r within}
+
+within.model <- lmer(sim ~ rep1*numPlayers +(1|target), data=within_adj)
+
+summary(within.model)
+```
+
+```{r sim to last}
+sim_to_last_data <- within_data %>% 
+  filter(rep2==5) %>% 
+  filter(rep1!=rep2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+sim_to_last.model <- lmer(sim ~ rep1*numPlayers +(1|target), data=sim_to_last_data)
+
+summary(sim_to_last.model)
+```
+
+
+```{r sim to first}
+sim_to_first_data <- within_data %>% 
+  filter(rep1==0) %>% 
+  filter(rep1!=rep2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+sim_to_first.model <- lmer(sim ~ rep2*numPlayers +(1|target), data=sim_to_first_data)
+
+summary(sim_to_first.model)
+```
+*** Note that sim_to_last and sim_to_first have confound of who the speaker is!
+
+
+## Across
+```{r across-prep}
+across_data <- M_mat %>% 
+  group_by(target, numPlayers) %>% 
+  mutate(combinedId=str_c(gameId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("gameId_1","repNum_1"), convert=T) %>% 
+  separate(dim2, into=c("gameId_2","repNum_2"), convert=T) %>% 
+  filter(gameId_1!=gameId_2 & repNum_1==repNum_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r across}
+
+across.model <- lmer(sim ~numPlayers*repNum_1 + (1|target), data=across_data)
+
+summary(across.model)
+```
+Larger sim is more similar (smaller angle of difference). With more players, there's more similarity (less divergence). With more rounds, there's less similarity. Divergence is slower with more players (interaction term). 
