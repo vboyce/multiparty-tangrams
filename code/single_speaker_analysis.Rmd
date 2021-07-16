@@ -1,0 +1,280 @@
+---
+title: "FYP Analysis of Yoon & Brown-Schmidt data"
+output:
+  html_document: 
+    toc: true
+---
+
+
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+##Data import constants
+data_location="data/single_speaker"
+
+image_location="write-ups/images"
+
+model_location="code/models"
+```
+
+# Recap of data
+
+In Exp 1, D talked with M1 for 4 rounds. In some conditions, then talked to M2 for 4 rounds. (So, 4 or 8 total)
+In Exp 2, D same as above except sometimes then talked to M3 for 4 rounds. (So, 4,8, or 12 total)
+In Exp 3, D always talked with M1/2/3 together for 5 rounds. 
+
+Role is maintained across block. Except in Exp 3, they basically do the experiment twice (with different stims) with two people as director. 
+
+Each block of rounds used 16 images. Exp 1 stims are subset of Exp 2 which is subset of Exp 3. 
+
+Exp 1 - 28 groups of 4 people
+Exp 2 - 35 groups of 5 people
+Exp 3 - 14 groups of 7 people (x2 = 28 directors -- subId goes up to 28)
+
+
+```{r prep}
+
+a <- readxl::read_xlsx(here(data_location, "E1_sorting.xlsx")) %>% 
+  rename(wordlength=description) %>% 
+  mutate(experiment="exp1") %>% 
+  mutate(round=ifelse(partner=="M2", round+4, round))
+b <- readxl::read_xlsx(here(data_location, "E2_sorting.xlsx")) %>% 
+  rename(wordlength=description) %>% 
+  mutate(experiment="exp2") %>% 
+  mutate(round=case_when(
+  partner=="M2"~ round+4,
+  partner=="M3" ~round+8,
+  T ~ round))
+c <- readxl::read_xlsx(here(data_location, "E3_sorting.xlsx")) %>% mutate(experiment="exp3", partner="M1") %>% rename(round=Round)
+
+all <- a %>% union(b) %>% union(c)
+```
+
+# Pretty pictures
+
+```{r}
+all  %>% ggplot( aes(x=round, y=wordlength, color=experiment))+
+  scale_color_brewer(palette="Dark2")+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+  coord_cartesian(ylim=c(0,20), xlim=c(1,12))
+
+
+
+```
+
+# Prep NLP
+
+```{r prep-nlp}
+
+combined <-all %>% 
+  mutate(gameId=str_c(experiment,subID,sep="_"),
+         role="speaker") %>% 
+  select(role, gameId, target=TrialID, repNum=round, utterance=transcription) %>% 
+  write_csv(here(data_location,"combined.csv"))
+```
+
+# Content analyses
+
+```{r}
+# want to know which rounds went how long
+max_round <- combined %>% group_by(gameId, target) %>% summarize(max=max(repNum)) %>% filter(max %in% c(4,8,12,5))
+ # note there's a few games that do weird things! probably due to transcription errors, so we skip ones where last round wasn't existent
+```
+It's a big unclear what the right way to split this stuff up. 
+
+So, rather than do it by experiment, we do it by how many rounds happen, since this effects what the max is. 
+So, 4 and 8 are across exp 1 & 2, 5 is just exp 3, and 12 is a subset of exp 2.
+
+```{r}
+matches <- read_csv(here(data_location,"word_matches.csv")) %>% 
+  left_join(max_round, by=c("gameId", "target")) %>% 
+  separate(gameId, into=c("experiment","gameId")) %>% 
+  filter(earlier_rep>0) %>% 
+  filter(!is.na(max))#0 isn't a real round here...
+
+
+
+location_first_match <- matches %>% 
+  filter(later_rep==max) %>% 
+    mutate(max=as.factor(max)) %>%
+  group_by(earlier_rep,gameId, experiment, max) %>% 
+  summarize(overlap=mean(match))
+
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=max, group=max))+
+  geom_jitter(alpha=.5,width=.2, height=0)+
+  facet_grid(~max)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")
+```
+
+The other comparison is always using round 4 as the end point (because it's the max shared). Expt's 1 and 2 should be interchangeable, comparison is them v 3. More people slows things down. 
+
+```{r}
+location_match_fourth <- matches %>% 
+  filter(later_rep==4) %>% 
+  group_by(earlier_rep,gameId, experiment) %>% 
+  summarize(overlap=mean(match))
+
+ggplot(location_match_fourth, aes(x=earlier_rep, y=overlap, color=experiment, group=experiment))+
+  geom_jitter(alpha=.5,width=.2, height=0)+
+  facet_grid(~experiment) +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")
+```
+
+
+```{r}
+matches %>% filter(match) %>% 
+  filter(later_rep==max) %>% 
+  group_by(target, word, gameId,max) %>% 
+  summarize(early=min(earlier_rep)) %>% 
+  group_by(gameId, max,early) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  group_by(max, gameId) %>% 
+  summarize(pct=n/sum(n),
+            early=early) %>% 
+  ggplot(aes(x=early, y=pct, color=as.factor(max)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))
+
+  
+```
+Most conventions start in round 1, although we also see bumps 5 and 9 which makes sense. 
+
+# Vector analysis
+
+
+```{r helpers}
+# note: cor expects featurs to be in columns so we transpose
+get_sim_matrix = function(df, F_mat, method = 'cosine') {
+  feats = F_mat[df$feature_ind,]
+  if(method == 'cor') {
+    return(cor(t(feats), method = 'pearson'))
+  } else if (method == 'euclidean') {
+    return(as.matrix(dist(feats, method = 'euclidean')))
+  } else if (method == 'cosine') {
+    return(as.matrix(lsa::cosine(t(feats))))
+  } else {
+    stop(paste0('unknown method', method))
+  }
+}
+
+# note this does de-duplicated version
+flatten_sim_matrix <- function(cormat, ids) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    dim1 = ids[row(cormat)[ut]],
+    dim2 = ids[col(cormat)[ut]],
+    sim  = as.numeric(cormat[ut])
+  ) %>%
+    mutate(dim1 = as.character(dim1),
+           dim2 = as.character(dim2))
+}
+
+make_within_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          .$repNum)) %>%
+    mutate(rep1 = as.numeric(dim1), 
+           rep2 = as.numeric(dim2)) 
+}
+
+make_across_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          as.character(.$combinedId)))
+}
+```
+
+
+```{r, eval=F}
+## Note that this will not knit and may need to be commented out for knitting
+library(reticulate)
+np <- import("numpy")
+mat = np$load(here(data_location,'feats_tangrams_embeddings_rawavg.npy'))
+saveRDS(mat, here(data_location,'feats_tangrams_embeddings_rawavg.RData'))
+```
+
+```{r}
+M_mat = read_csv(here(data_location,'meta_tangrams_embeddings.csv'), 
+                na = c('[nan]'), quote = '"') %>%  
+  mutate(feature_ind = row_number()) %>%
+  select(-X1) %>% 
+  mutate(groupId=gameId) %>% 
+  separate(gameId, into=c("experiment","gameId")) %>% 
+  mutate(multi=ifelse(experiment=="exp3",1,0))
+
+F_mat <- readRDS(here(data_location,'feats_tangrams_embeddings_rawavg.RData'))
+
+```
+
+
+
+
+
+## Within
+Within a group, between round n & n+1, what predicts similarity? 
+
+To avoid problems of switching listeners and all that, we're going to cut things off after round 4. Note there are still problems with targets being weirdly distributed
+
+```{r within-prep, cache=T}
+
+within_data <- M_mat %>% 
+  group_by(groupId, target, multi) %>% 
+  make_within_df(F_mat, 'cosine') 
+
+within_adj <- within_data %>% 
+  filter(rep2==rep1+1) %>% 
+  filter(rep2<5) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r within}
+
+within.model <- lmer(sim ~ rep1*multi +(1|target), data=within_adj)
+
+summary(within.model)
+```
+Become more similar in later rounds (which means 3-4 v earlier). This is slightly reduced in the talking to 3 at once versus 1 on 1. (Could try to do clever modelling to try to incorporate group variation and rounds > 4).
+
+## Across
+```{r across-prep, cache=T}
+across_data <- M_mat %>% 
+  group_by(target, multi) %>% 
+  mutate(combinedId=str_c(groupId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("expId_1","gameId_1","repNum_1"), convert=T) %>% 
+  separate(dim2, into=c("expId_2","gameId_2","repNum_2"), convert=T) %>% 
+  filter(gameId_1!=gameId_2 | expId_1!=expId_2) %>% 
+    filter(repNum_1==repNum_2) %>% 
+  filter(repNum_1<5) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r across}
+
+across.model <- lmer(sim ~multi*repNum_1 + (1|target), data=across_data)
+
+summary(across.model)
+```
+groups are less similar over rounds (again, up to 4 rounds), more listeners = more similar & slightly slower divergence. 
