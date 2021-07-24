@@ -39,7 +39,7 @@ model_location="code/models"
 ```
 
 ```{r}
-# This was for determining participant bonuses using the version of data with PID
+##This was for determining participant bonuses using the version of data with PID
 # d.treatments <- read_csv(here(data_location, 'treatments.csv')) %>% rename(treatmentId=`_id`)
 # 
 # d.games <- read_csv(here(data_location, 'games.csv')) %>%
@@ -104,8 +104,13 @@ rounds_exclude <- d.round_results.raw %>% group_by(gameId,numPlayers,repNum) %>%
 
 d.round_results <-  d.round_results.raw %>% anti_join(rounds_exclude) %>% write_rds(here(data_location,'round_results.rds'))
 
+d.round_results <- read_rds(here("data/study1","round_results.rds")) %>% union(d.round_results) %>% write_rds(here("data/study1","round_results.rds"))
+  
+rounds_exclude <-read_rds(here("data/study1","rounds_exclude.rds")) %>% union(rounds_exclude) %>% write_rds(here("data/study1","rounds_exclude.rds"))
 ```
 
+TODO: have joined rounds & exclude 
+NEED TO DEAL WITH CHAT! & FILE LOCATIONS
 
 ```{r} 
 d.round_results <- read_rds(here(data_location,"round_results.rds"))
