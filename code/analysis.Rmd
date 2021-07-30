@@ -65,6 +65,8 @@ model_location="code/models"
 
 
 ```{r, include=F, eval=F}
+
+data_location <- "data/study1b"
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
@@ -108,17 +110,42 @@ d.round_results <- read_rds(here("data/study1","round_results.rds")) %>% union(d
   
 rounds_exclude <-read_rds(here("data/study1","rounds_exclude.rds")) %>% union(rounds_exclude) %>% write_rds(here("data/study1","rounds_exclude.rds"))
 ```
+```{r, eval=F}
+d.correct <- d.round_results %>% 
+  group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
+           numPlayers,countCorrect,speaker,tangram) %>% 
+  summarize(realCorrect=sum(ifelse(correct,1,0)))
 
-TODO: have joined rounds & exclude 
-NEED TO DEAL WITH CHAT! & FILE LOCATIONS
+d.round_results %>% left_join(d.correct) %>% write_rds(here(data_location,"round_results.rds"))
+
+
+```
+
+```{r demographics, eval=F}
+d.exit.survey.a <- read_csv(here("data/study1a", 'player-inputs.csv')) %>%
+  filter(createdAt >= date_start) %>%
+  left_join(d.games, by = c('gameId')) %>%
+    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
+
+d.exit.survey.b <- read_csv(here("data/study1b", 'player-inputs.csv')) %>%
+  filter(createdAt >= date_start) %>%
+  left_join(d.games, by = c('gameId')) %>%
+    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
+#d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
+
+```
+
 
 ```{r} 
 d.round_results <- read_rds(here(data_location,"round_results.rds"))
 rounds_exclude <- read_rds(here(data_location, "rounds_exclude.rds"))
+
 ```
 
 
-```{r, include=F, eval=F}
+How long full games took
+
+```{r}
 summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
            mutate(time= time %|% 180) %>% 
   summarize(max_time=max(time)) %>% 
@@ -128,22 +155,36 @@ summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>
   arrange(numPlayers)
 
 #knitr::kable(summary)
+
 message("Full games")
-summary %>% filter(num_rounds==5) %>% group_by(numPlayers) %>% tally()
-message("Partial games")
-summary %>% filter(num_rounds!=5) %>% group_by(numPlayers) %>% tally()
-```
 
-
-```{r demographics, eval=F}
-d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
-  filter(createdAt >= date_start) %>%
-  left_join(d.games, by = c('gameId')) %>%
-    rename_with(~ gsub("data.", "", .x, fixed = TRUE))
-
-#d.exit.survey %>% select( language, fair, chatUseful, feedback, time) %>% knitr::kable()
+summary %>% filter(num_rounds==5) %>% 
+  group_by(numPlayers) %>% 
+  summarize(games=n(),
+            min_time=min(total_time) %>% round(),
+            `25th_time`=quantile(total_time, .25)%>% round(),
+            median_time=quantile(total_time, .5)%>% round(),
+            `75th_time`=quantile(total_time, .75)%>% round(),
+            max_time=max(total_time)%>% round()) 
 
 ```
+
+```{r}
+# Figure out what 5 & 6 games completed
+
+player_game <- read_csv(here("data/study1b/player-rounds.csv")) %>% select(playerId,gameId) %>% unique()
+player_id <- read_csv(here("data/players.csv")) %>% select(playerId=`_id`,id)
+summary %>% filter(numPlayers %in% c(5,6)) %>% filter(num_rounds==5) %>% left_join(player_game) %>% left_join(player_id) %>% mutate(bonus=2.7) %>% select(id,bonus) %>% write_csv(here("data/for_bonus.csv"))
+```
+
+It shouldn't be possible to have times > 180 b/c the timer is 3 min
+
+```{r}
+d.round_results %>% filter(time>180) %>% group_by(gameId,playerId,numPlayers) %>% tally()
+```
+
+Not sure what is going on -- whether the timer was faulty in reality (took > 180) or whether the time recording was off. 
+
 
 
 
@@ -154,7 +195,7 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
 d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
   filter(!is.chitchat) %>% 
   filter(!is.na(target)) %>% 
-  mutate(text = gsub("\\n", '', fixed = T, text),
+  mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
          text = gsub("[/?/.]", ' ', text),
          text = str_squish(text),
          tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
@@ -167,18 +208,18 @@ d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) %>%
   mutate(is.firstutter= is.firstutter %|% T) 
 
 d.chat <- d.chat.filter %>% 
-  group_by(gameId, trialNum, repNum, tangram, playerId, role, countCorrect, numPlayers) %>%
+  group_by(gameId, trialNum, repNum, tangram, playerId, role, numPlayers) %>%
   summarize(text = paste0(text, collapse = ', '),
             total_num_words = sum(utt_length_words) %>% as.numeric(),
             total_num_chars = sum(utt_length_chars) %>% as.numeric()) %>%
   anti_join(rounds_exclude) %>% 
-  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "countCorrect", "numPlayers")) %>% 
+  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
   mutate(text = text %|% "",
          total_num_words= total_num_words %|% 0,
          total_num_chars= total_num_chars %|% 0,
          role = role %|% "listener")
 
-d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, playerId, is.firstutter,role, countCorrect, numPlayers) %>%
+d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, playerId, is.firstutter,role, numPlayers) %>%
   summarize(text = paste0(text, collapse = ', '),
             total_num_words = sum(utt_length_words) %>% as.numeric(),
             total_num_chars = sum(utt_length_chars) %>% as.numeric()) %>%
@@ -216,6 +257,15 @@ ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   theme(legend.position="bottom")
 
 #ggsave(here(image_location, 'words.pdf'), width=6, height=4)
+
+ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~role, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
 ```
 
 ```{r}
@@ -227,8 +277,8 @@ ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   facet_wrap(~numPlayers, nrow=1)+
   scale_color_brewer(palette="Dark2")+
     geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
-    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
-    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="null")
 
@@ -241,8 +291,8 @@ d.chat %>% filter(role=="speaker") %>%
 ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
   facet_wrap(~tangram)+
   scale_color_brewer(palette="Dark2")+
-    #geom_smooth(method=glm, formula=y~poly(x,2), se=T, alpha=.1)+
-      geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), se=T, alpha=.1)+
+    #  geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
        stat_summary(fun.data = "mean_cl_boot", size=.2)+
   labs(title="Tangram variability", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="bottom")
@@ -250,6 +300,10 @@ ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
 #ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=6)
 
 ```
+
+
+Note: count correct has some issues so we should rederive this from the players.
+(maybe something to do with multiple clients trying to update server at same time???)
 
 ```{r accuracy}
 d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
@@ -267,6 +321,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
 #ggsave(here(image_location, 'accuracy.pdf'), width=6, height=4)
 
 ```
+
 ```{r time}
 d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
   filter(correct==T) %>% 
@@ -286,21 +341,6 @@ geom_smooth(method = "glm", formula = y~x,
 
 ```
 
-```{r}
-d.chat %>% filter(role=="speaker") %>% 
-  mutate(all_correct=countCorrect==numPlayers-1) %>% 
-    group_by(repNum, numPlayers, gameId, tangram, all_correct) %>% 
-  summarize(words=sum(total_num_words)) %>% 
-ggplot(aes(x=repNum, y=words, color=all_correct))+
-  #facet_wrap(~all_correct)+
-  scale_color_brewer(palette="Dark2")+
-  geom_jitter(alpha=.05)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Was everyone correct?")+
-  theme(legend.position="bottom")
-
-
-```
 
 # Models
 
@@ -321,6 +361,8 @@ model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangr
          
 
 ```
+
+Block and numPlayers both have main effects, but no interaction.
 
 ```{r, include=F}
 d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
@@ -387,8 +429,8 @@ ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   facet_wrap(~numPlayers, nrow=1)+
   scale_color_brewer(palette="Dark2")+
     geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
-    geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
-    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   labs(title="Words from speaker per tangram before a listener says anything", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="null")
 
@@ -415,7 +457,9 @@ model_no_backchannel <- brm(words ~ block * numPlayers + (block|tangram)+ (1|pla
 
 
 
-What's the model look like if we discard anything post listener talking? There's an effect of block, but not a large effect of number of players, no interaction. 
+What's the model look like if we discard anything post listener talking? There's an effect of block, no effect on numPlayers, and some interaction. 
+
+Hard to interpret since more people may jump in sooner. 
 
 ```{r}
 summary(model_no_backchannel)

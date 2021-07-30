@@ -46,18 +46,18 @@ model_location="code/models"
 exchanges <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
   filter(is.chitchat==F) %>% 
   select( -index, -stageIds, -is.chitchat, -submitted, -speaker, -createdAt, -row_id) %>% 
-  rename(utterance=text) %>% 
+  rename(utterance=spellchecked) %>% 
   #filter(gameId=="3WzEi9zkHF77vdTw5") %>% 
   write_csv(here(data_location,"exchanges.csv"))
 
 combined <- exchanges %>% 
-    group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, role, countCorrect) %>%
+    group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, role, realCorrect) %>%
   summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
   write_csv(here(data_location,"combined.csv"))
 
 speaker_collapsed <- exchanges %>% 
   filter(role=="speaker") %>% 
-  group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, countCorrect) %>%
+  group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, realCorrect) %>%
   summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
   write_csv(here(data_location,"speaker_collapsed.csv"))
 ```
@@ -65,13 +65,13 @@ speaker_collapsed <- exchanges %>%
 
 # Content analyses
 
-Very rough -- haven't done spelling  correction or "stop words wrt tangram" filtering
+Now with spelling correction and stop word elimination!
 
 Of words the speaker says in the last round, when were they said by the speaker in earlier rounds for the same tangram?
 
 ```{r}
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
-matches <- read_csv(here("data/study1/content/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
+matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
 
 
@@ -80,8 +80,13 @@ location_first_match <- matches %>%
   group_by(earlier_rep,gameId,numPlayers) %>% 
   summarize(overlap=mean(match))
 
-ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_wrap(~numPlayers)+
-    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_grid(.~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")+
+  theme(legend.position="bottom")
+
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPlayers)))+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  theme(legend.position="bottom")
 ```
 
 Overlap is higher in 2 than more than two situations. There also appears to be a "same player" effect -- note the higher amount for rounds 1 and 3 relative to 2 and 4 for 2 player, and 1 relative to others in 4 player. 
@@ -127,12 +132,12 @@ matches %>% filter(match) %>%
   
 ```
 
-Want to look at how early these content words are introduced -- this is not the right graph for it, but there seems to be a lot more conventions staying from the first round in 2 player. Will need to check after doing elimination of non-content words. 
+Want to look at how early these content words are introduced -- this is not the right graph for it, but there seems to be a lot more conventions staying from the first round in 2 player. 
+
 
 # Vector analysis
 
 Stab 1 at vector analysis: we drop listener utterances & concatenate all speaker utterances / trial 
-NB: haven't done any spell check or good stop word fixing
 
 ```{r helpers}
 # note: cor expects featurs to be in columns so we transpose
@@ -181,17 +186,17 @@ make_across_df <- function(M_mat, F_mat, method) {
 ## Note that this will not knit and may need to be commented out for knitting
 library(reticulate)
 np <- import("numpy")
-mat = np$load(here('data/study1/content/feats_tangrams_embeddings_rawavg.npy'))
-saveRDS(mat, here('data/study1/content/feats_tangrams_embeddings_rawavg.RData'))
+mat = np$load(here('data/study1/feats_tangrams_embeddings_rawavg.npy'))
+saveRDS(mat, here('data/study1/feats_tangrams_embeddings_rawavg.RData'))
 ```
 
 ```{r}
-M_mat = read_csv(here('data/study1/content/meta_tangrams_embeddings.csv'), 
+M_mat = read_csv(here('data/study1/meta_tangrams_embeddings.csv'), 
                 na = c('[nan]'), quote = '"') %>%  
   mutate(feature_ind = row_number()) %>%
   select(-X1) 
 
-F_mat <- readRDS(here('data/study1/content/feats_tangrams_embeddings_rawavg.RData'))
+F_mat <- readRDS(here('data/study1/feats_tangrams_embeddings_rawavg.RData'))
 
 ```
 
