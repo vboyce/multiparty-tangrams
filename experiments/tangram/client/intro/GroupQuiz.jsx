@@ -49,11 +49,7 @@ export default class GroupQuiz extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { game, player } = this.props;
-
-    //it should be this.state.nParticipants !== "3" but we don't have "treatment" in QUIZ
-    console.log(player.get("scoreOption") !== "matter")
-    console.log(player.get("tangramCount") !== "12" )
+    const { game, player } = this.props; 
     
     if (
       player.get("nParticipants") !== game.treatment.playerCount.toString() ||
