@@ -8,25 +8,14 @@ import { Checkbox } from "@blueprintjs/core";
 
 export default class GroupQuiz extends React.Component {
 
-  /*state = {
-    nParticipants: "",
-    scoreOption: "",
-    tangramCount: "",
-    timeOut: "",
-    chat: "",
-    pictures: ""
-  };*/
-
   componentDidMount() {
     const { game, player } = this.props;
     document.querySelector("main").scrollTo(0,0)
-    //this.state.num_players = game.treatment.playerCount;
   }
 
   handleChange = (event) => {
     const { game, player } = this.props;
     const el = event.currentTarget;
-    //this.setState({ [el.name]: el.value.trim().toLowerCase() });
     player.set(el.name, el.value.trim().toLowerCase());
   };
 
@@ -35,14 +24,12 @@ export default class GroupQuiz extends React.Component {
     const el = event.currentTarget;
     console.log("el", el);
     console.log("ev", event);
-    //this.setState({ [el.name]: el.value });
     player.set(el.name, el.value)
   };
 
   handleEnabledChange = (event) => {
     const { game, player } = this.props;
     const el = event.currentTarget;
-    //this.setState({ [el.name]: !this.state[el.name] });
     player.set(el.name, !player.get(el.name))
 
   };
@@ -58,12 +45,6 @@ export default class GroupQuiz extends React.Component {
       player.get("timeOut") !== "0" ||
       player.get("chat") !== "anyone" ||
       player.get("pictures") !== "different"
-      /*this.state.nParticipants !== this.state.num_players.toString() ||
-      this.state.scoreOption !== "matter" ||
-      this.state.tangramCount !== "12"  ||
-      this.state.timeOut !== "0" ||
-      this.state.chat !== "anyone" ||
-      this.state.pictures !== "different"*/
       ) {
       AlertToaster.show({
         message:
@@ -76,7 +57,6 @@ export default class GroupQuiz extends React.Component {
 
   render() {
     const { hasPrev, onPrev, game, treatment, player } = this.props;
-    //console.log(player)
     return (
       <Centered>
         <div className="quiz">
