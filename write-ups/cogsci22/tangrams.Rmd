@@ -1,0 +1,770 @@
+---
+title: "Emergence of conventions in group communication: Evidence from 2-6 player reference games"
+bibliography: library.bib
+csl: apa6.csl
+document-params: "10pt, letterpaper"
+
+author-information: > 
+    \author{{\large \bf Morton Ann Gernsbacher (MAG@Macc.Wisc.Edu)} \\ Department of Psychology, 1202 W. Johnson Street \\ Madison, WI 53706 USA
+    \AND {\large \bf Sharon J.~Derry (SDJ@Macc.Wisc.Edu)} \\ Department of Educational Psychology, 1025 W. Johnson Street \\ Madison, WI 53706 USA}
+
+abstract: >
+    In repeated reference games where a speaker describes the same set of images to a listener over a series of rounds, the number of words used decreases as the pair converge on ad-hoc names for the images. The dynamics of this efficient reference formation is well-studied in dyads; however much communication takes place in larger groups, which are rarely studied in this paradigm. The current work extends iterated reference games to groups of 2-4 people who rotate between speaker and listener roles in an online game with text-based communication. Across 53 games and more than 50K total words, we find high accuracy and patterns of reduction regardless of group size.
+    
+keywords: >
+    Add your choice of indexing terms or keywords; kindly use a semi-colon; between each term.
+    
+output: cogsci2016::cogsci_paper
+#final-submission: \cogscifinalcopy
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
+                      fig.pos = "tb", fig.path='figs/',
+                      echo=F, warning=F, cache=F, 
+                      message=F, sanitize = T)
+```
+
+```{r, libraries}
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+```
+
+---
+title: "FYP Analysis"
+output:
+  html_document: 
+    toc: true
+---
+
+
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+library(viridis)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+##Data import constants
+data_location="data/study1"
+
+
+
+
+image_location="write-ups/images"
+
+model_location="code/models"
+
+```
+
+
+```{r}
+#we exclude rounds where no one talked (this is our criteria for "they weren't playing anymore")
+# this is better than if no one submitted b/c maybe people fail to click on some round?
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+
+d.round_results <-  read_rds(here(data_location,'round_results.rds'))
+
+# b/c countCorrect was being bad
+d.correct <- d.round_results %>% 
+  group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
+           numPlayers,countCorrect,speaker,tangram) %>% 
+  summarize(realCorrect=sum(ifelse(correct,1,0)))
+
+
+d.exit_survey <- read_csv(here(data_location,"exit_survey.csv"))
+  
+```
+How many games
+
+```{r}
+d.round_results %>% group_by(gameId, numPlayers) %>% 
+  summarize(max_rep=max(repNum)) %>% 
+  mutate(game_length=ifelse(max_rep==5,"complete","partial")) %>% 
+  group_by(numPlayers, game_length) %>% 
+  tally() %>% 
+  pivot_wider(names_from="game_length",values_from="n")
+```
+
+How long full games took
+
+```{r}
+summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
+           mutate(time= time %|% 180) %>% 
+  summarize(max_time=max(time)) %>% 
+  group_by(gameId, numPlayers) %>% 
+  summarize(total_time=sum(max_time)/60,
+            num_rounds=max(repNum)) %>% 
+  arrange(numPlayers)
+
+message("Full games")
+
+summary %>% filter(num_rounds==5) %>% 
+  group_by(numPlayers) %>% 
+  summarize(games=n(),
+            min_time=min(total_time) %>% round(),
+            `25th_time`=quantile(total_time, .25)%>% round(),
+            median_time=quantile(total_time, .5)%>% round(),
+            `75th_time`=quantile(total_time, .75)%>% round(),
+            max_time=max(total_time)%>% round()) 
+
+```
+
+
+It shouldn't be possible to have times > 180 b/c the timer is 3 min
+
+```{r}
+d.round_results %>% filter(time>180) %>% group_by(gameId,playerId,numPlayers) %>% tally()
+```
+
+Not sure what is going on -- whether the timer was faulty in reality (took > 180) or whether the time recording was off. 
+
+
+
+
+# Pretty pictures
+
+
+```{r chat}
+
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
+d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  filter(!is.chitchat) %>% 
+  filter(!is.na(target)) %>% 
+  mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
+         text = gsub("[/?/.]", ' ', text),
+         text = str_squish(text),
+         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
+         tangram = gsub('.png', '', tangram, fixed=TRUE),
+         utt_length_chars = str_length(text), 
+         utt_length_words = str_count(text, "\\W+") + 1) %>%
+  group_by(gameId, trialNum, repNum, tangram) %>% 
+  mutate(is.firstutter=ifelse(role!="speaker",F,NA)) %>% 
+  fill(c("is.firstutter"), .direction="down") %>% 
+  mutate(is.firstutter= is.firstutter %|% T) 
+
+d.chat <- d.chat.filter %>% 
+  group_by(gameId, trialNum, repNum, tangram, playerId, role, numPlayers) %>%
+  summarize(text = paste0(text, collapse = ', '),
+            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
+            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
+  inner_join(rounds_include) %>% 
+  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
+  mutate(text = text %|% "",
+         total_num_words= total_num_words %|% 0,
+         total_num_chars= total_num_chars %|% 0,
+         role = role %|% "listener")
+
+d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, playerId, is.firstutter,role, numPlayers) %>%
+  summarize(text = paste0(text, collapse = ', '),
+            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
+            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
+  inner_join(rounds_include) %>% 
+  ungroup() %>% 
+  mutate(text = text %|% "",
+         total_num_words= total_num_words %|% 0,
+         total_num_chars= total_num_chars %|% 0,
+         role = role %|% "listener") %>% 
+  filter(is.firstutter)
+
+```
+
+Everything here has bootstrapped 95% CIs. 
+
+Should find better curves to fit, but using quadratic to allow for some curvature.
+
+```{r}
+# ggplot(d.chat, aes(x=repNum, y=total_num_words, color=role))+
+#   facet_wrap(~tangram, nrow=2)+
+#   scale_color_brewer(palette="Dark2")+
+#      stat_summary(fun.data = "mean_cl_boot")+
+#   labs(title="Number of words", y="Number of words", x="Round number")+
+#   theme(legend.position="bottom")
+
+ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~role, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+    scale_y_continuous(limits = c(0,50))+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
+
+#ggsave(here(image_location, 'words.pdf'), width=6, height=4)
+
+ggplot(d.chat, aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~role, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
+```
+
+```{r for-hai}
+speaker_only <- d.chat %>% filter(role=="speaker")
+
+s_count <- speaker_only %>% ungroup() %>% select(playerId) %>% unique()
+
+p_count <- d.round_results %>% select(playerId) %>% unique()
+ggplot(speaker_only, aes(x=repNum+1, y=total_num_words, color=as.factor(numPlayers), group=as.factor(numPlayers)))+
+  scale_color_viridis(discrete=T, direction=-1)+
+    geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), se=F, size=1.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot", size=.5)+
+    scale_y_continuous(limits = c(0,50))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Words from speaker", x="Round", color="Players")+
+  theme(legend.position="right", axis.text=element_text(size=14), 
+        axis.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.title=element_text(size=14))
+
+ggsave(here(image_location, 'speaker_words.pdf'), width=5, height=3)
+ggsave(here(image_location, 'speaker_words.png'), device="png", type="cairo",width=5, height=3)
+
+
+d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=as.factor(numPlayers)))+
+geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), size=.5)+
+  scale_color_viridis(discrete=T, direction=-1)+
+    scale_x_continuous(breaks=seq(1,6))+
+  labs(x="Round", y="Selection Accuracy", color="Players")+
+  theme(legend.position="right", axis.text=element_text(size=14), 
+        axis.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.title=element_text(size=14))
+
+
+ggsave(here(image_location, 'slide_accuracy.pdf'), width=5, height=3)
+ggsave(here(image_location, 'slide_accuracy.png'),device="png", type="cairo", width=5, height=3)
+
+```
+
+```{r}
+d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
+  facet_wrap(~numPlayers, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
+
+#ggsave(here(image_location, 'words_lines.pdf'), width=6, height=4)
+
+```
+
+```{r}
+d.chat %>% filter(role=="speaker") %>% 
+ggplot(aes(x=repNum, y=total_num_words, color=as.factor(numPlayers)))+
+  facet_wrap(~tangram)+
+  scale_color_brewer(palette="Dark2")+
+    geom_smooth(method=glm, formula=y~poly(x,2), se=T, alpha=.1)+
+    #  geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+       stat_summary(fun.data = "mean_cl_boot", size=.2)+
+  labs(title="Tangram variability", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
+
+#ggsave(here(image_location, 'words_tangrams.pdf'), width=8, height=6)
+
+```
+
+
+Note: count correct has some issues so we should rederive this from the players.
+(maybe something to do with multiple clients trying to update server at same time???)
+
+```{r accuracy}
+d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum, y=correct.num, color=as.factor(numPlayers)))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  #geom_point()+
+  scale_color_brewer(palette="Dark2")+
+  #scale_y_continuous(limits = c(0,1))+
+  labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")+
+    theme(legend.position="bottom")
+
+
+#ggsave(here(image_location, 'accuracy.pdf'), width=6, height=4)
+
+```
+
+```{r time}
+d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
+  filter(correct==T) %>% 
+  #summarize(time=mean(time)) %>% 
+  ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
+  geom_jitter(width=.4, height=0, alpha=.03)+
+geom_smooth(method = "glm", formula = y~x,
+                      method.args = list(family = gaussian(link = 'log')))+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  scale_y_continuous(limits = c(0,180))+
+    scale_color_brewer(palette="Dark2")+
+  labs(x="Round Number", y="Time to selection in seconds",
+       title="People choose faster in later rounds", color="Player count")+
+  theme(legend.position = "bottom")
+
+#ggsave(here(image_location, 'time.pdf'), width=6, height=4)
+
+```
+
+
+# Models
+
+**Note: All of this needs to be re-run!**
+```{r, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model1"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+Block and numPlayers both have main effects, but no interaction.
+
+```{r, include=F}
+d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
+d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
+  left_join(d.prev.speaker) %>% unique() %>% mutate(repNum=repNum+1)
+
+
+d.chat.lagged <- d.chat %>%
+  ungroup() %>% 
+  select(gameId, playerId, trialNum, repNum, playerId, role, tangram, total_num_words, numPlayers) %>%
+  left_join(d.prev.round) %>%
+  mutate(reduction_word=log(total_num_words)-log(total_num_words_prev)) %>%
+  filter(repNum>0) %>%
+  filter(role=="speaker") %>%
+  mutate(prev_correct_round=correct)
+
+
+model_input <- d.chat.lagged %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId),
+         was_INcorrect=ifelse(!prev_correct_round,1,0))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "speaker_acc"),                         prior=priors, control=list(adapt_delta=.95))
+
+         
+```
+
+
+
+
+
+Overall model predicting number of speaker words from block and player count. 
+
+```{r}
+
+summary(model)
+
+```
+
+
+
+```{r}
+
+
+summary(model_speaker_acc)
+
+```
+
+# Pre any listener commentary
+
+```{r}
+d.chat.pre %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, numPlayers, gameId,tangram, groupxtangram) %>% 
+  summarize(words=sum(total_num_words)) %>% 
+ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
+  facet_wrap(~numPlayers, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per tangram before a listener says anything", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
+
+
+```
+
+```{r pre-backchannel, include=F}
+model_input <- d.chat.pre %>%
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_no_backchannel <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_no_back"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+
+
+What's the model look like if we discard anything post listener talking? There's an effect of block, no effect on numPlayers, and some interaction. 
+
+Hard to interpret since more people may jump in sooner. 
+
+```{r}
+summary(model_no_backchannel)
+```
+
+# First two rounds only
+```{r first-rounds, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  filter(block %in% c(0,1))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_first_2_rounds <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId), data=model_input,file=here(model_location, "model_2rounds"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+Speaker's experience at talking about these images is confounded with player count. However, this isn't true in the first two rounds, so we can limit to that. 
+```{r}
+
+summary(model_first_2_rounds)
+```
+
+
+
+
+Verbal communication is an integral part of our daily lives. We coordinate schedules with partners, socialize with friends over board games, learn and teach in seminar classes, and listen to podcasts. Our communicative environments range in size from one-on-one to small group to large group to broadcast, but the goal of efficient communication is held in common. One necessity for efficient communication is shared reference expressions; when referring to a thing or an idea, it needs some sort of name that the interlocutors will jointly understand. In many cases, there are widely shared conventionalized expressions, but in other cases, spontaneous ad-hoc expressions are needed.
+
+The formation of these new reference expressions is well-studied in dyadic contexts; however, dynamics may be different in larger groups, which are less studied. Our current work builds on the dyadic reference game tradition by extending it to small groups.
+
+The typical paradigm for studying partner-specific referring expressions is an iterated reference game with asymmetric knowledge. That is, each round there is a speaker who knows what the target is and a listener who does not have this information. In @clarkReferringCollaborativeProcess1986, each speaker described 12 tangrams in order, so their listener could correctly order the images.  After receiving feedback, the pair repeated the task with the same images but a new order, for a total of 6 repeats. Crucially, @clarkReferringCollaborativeProcess1986 found that reference expressions condense over the course of repeated reference to the same image. Early descriptions are long and make reference to multiple features in the image, but by later rounds definite shorthand names are used.
+
+Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations using a text-based communication interface. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a cued version of the iterated reference experiment. On each trial, the speaker saw one image highlighted and described it to the listener who clicked on what they thought the target was. Both players received feedback before moving on to the next target image. All images were highlighted each block, for a total of 6 blocks. Speakers produced fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
+
+While this reduction pattern is robust for dyads, less is known about the how utterances are adapted in larger groups. A couple of studies point to some potential difficulties in trying to communicate with multiple people at once. 
+
+@yoonAudienceDesignMultiparty2019 had speakers complete a sorting task with some listeners, so that they would have a common ground of shared names for the images. Then in a test phase, the speaker described these images to a group of either all knowledgeable listeners from the sorting task, new listeners who had not done the sorting task, or a mix of knowledgeable and new listeners. Speakers produced longer utterances when any new listeners were present than with only experienced listeners. This might predict slower reduction in larger groups where there will inevitably be some variability in how people understand reference expressions. These studies included 3-hour experiments that were very time and labor intensive, but some of the questions about group dynamics may be addressable in online experiments taking advantage of natural variation in understanding without artificially inducing large knowledge differences. 
+
+It's difficult to communicate with naive listeners, but it can be even harder to communicate with someone with entrenched preconceptions. @weberCulturalConflictMerger2003 induced these conceptual differences by having two pairs of people (each pair representing a "firm") do an iterated reference game with the same set of pictures. After 20 rounds, there was a "merger" where the listener from one group joined the other group. The reference game continued with the speaker communicating to both their original listener and the new listener. After the merger, there was a jump in how long it took either listener to make a selection. Even after several more rounds, listeners were still not as fast as before the merger. With larger groups of people all speaking together, there's a greater chance for different people to independently develop different conceptualizations of an image, and it may be difficult for them to understand each other or agree on a common term of reference. 
+
+
+Studies vary in whether the same participant keeps the speaker role the entire game [ex. @clarkReferringCollaborativeProcess1986] or whether the roles rotate [ex. pre-merger rounds of @weberCulturalConflictMerger2003]. Role rotation makes the paradigm more similar to collaborative puzzle-solving exercises also used to study conventions [@garrodConversationCoordinationConvention1994; @ibarraFlexibilityConceptualPacts2016].
+
+In general, listeners expect conventions to be maintained, but they are not surprised to new descriptions of a familiar object if it comes from a new speaker [@metzingWhenConceptualPacts2003] or if a new listener is present [@yoonAdjustingConceptualPacts2014]. It's unclear how these expectations map onto a group of people rotating roles in the task who are all present the entire time. Do later speakers count as new, or are they expected to follow conventions they've already heard? Do additional non-new listeners license changes in descriptions?
+
+In this work, we extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2-4 players who rotate between speaker and listener roles. We compare accuracy and reduction rates in groups of different sizes. 
+
+# Methods
+
+(ref:game) Screenshot of the speaker's view. Participants see all 12 tangram images.
+
+```{r game, out.height="40%", fig.pos='h', fig.cap="(ref:game)", fig.align="center"}
+
+knitr::include_graphics(here(image_location, "interface.PNG"))
+
+
+```
+We adapted the methods of @hawkinsCharacterizingDynamicsLearning2020, adjusting them to work for multi-player games with rotating speakers. Participants played a repeated reference game where a speaker saw an array of tangrams with one indicated (Fig \@ref(fig:game)) and had to communicate which figure to click to the listeners using the chat box.  Within each block, each of the 12 tangrams was the target once, and the speaker role rotated each block, so all participants were the speaker at least once. Games ran for a total of 6 blocks. We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. The experiment was implemented in Empirica [@almaatouqEmpiricaVirtualLab2021]; materials to run the experiment, as well as data and code are available at at https://github.com/vboyce/FYP. 
+
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistration is at https://osf.io/cn9f4.
+
+## Participants
+
+```{r, include=F}
+summary <- d.round_results %>% group_by(trialNum, repNum, gameId, numPlayers) %>% 
+           mutate(time= time %|% 180) %>% 
+  summarize(max_time=max(time)) %>% 
+  group_by(gameId, numPlayers) %>% 
+  summarize(total_time=sum(max_time)/60,
+            num_trials=max(trialNum)) %>% 
+  arrange(numPlayers) %>% 
+  mutate(complete=ifelse(num_trials==71,T,F)) %>% 
+  group_by(numPlayers,complete) %>% 
+  tally()
+```
+
+Participants were recruited using the Prolific platform between 4th and 10th of May 2021. We screened for participants who were fluent, native English speakers. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, and \$10 for 4-player games (with the intention of a \$10 hourly rate using pilot studies to estimate median game lengths), in addition to up to \$2.88 in performance bonuses.
+
+Our intended sample size was 20 complete games in each group size, but we ended up with `r summary[2,3]` complete 2-player games (`r summary[1,3]`  partial), `r summary[4,3]` complete 3-player games (`r summary[3,3]`  partial), and `r summary[6,3]` complete 4-player games (`r summary[5,3]`  partial). We excluded incomplete blocks from analyses, but included complete blocks from partial games. (Partial games occurred when a participant disconnected early, for example due to internet trouble.)
+
+## Materials
+We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020 and @clarkReferringCollaborativeProcess1986 (see Fig \@ref(fig:game)). These images were displayed in a grid with order randomized for each participant. The same images were used every block. 
+
+## Procedure
+
+We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2021]. Code for running this experiment is available at https://github.com/vboyce/FYP. From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
+
+Once the game started, participants saw screens like Fig \@ref(fig:game). Each trial, the speaker had to describe the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. Once all listeners had selected (or a 3-minute timer had run out), participants were given feedback. Listeners only learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into cents of performance bonus at the end of the experiment. 
+
+In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, 2 times in 3-player games and once or twice in 4-player games.
+
+After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
+
+## Data analysis
+
+
+
+I skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about well or fast the task was going and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
+
+# Results
+
+We find results generally in line with previous work on dyads. Overall, participants had high and increasing accuracy, coupled with faster response times, and decreases in utterance length showing the classic reduction pattern. 
+
+
+
+Most groups were accurate in their selections, with accuracy rising over blocks (Fig \@ref(fig:accuracy)). This indicates that speakers were usually successful at conveying the intended referents. Participants are more accurate in later blocks .   4-player games show lower gains in accuracy than smaller games, but neither the number of players nor the interaction of players and block are reliably different from 0. We do not have a clear explanation for this possible difference or what pattern to expect for even larger (ex. 5 person) games. 
+
+(ref:time) Listeners selected images faster in later blocks. Only times to correct responses are shown.
+
+
+
+Participants selected images faster in later blocks (Fig \@ref(fig:time)), although there is wide variability. This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure.
+
+
+(ref:total-words) Speaker and listeners say fewer words in later blocks. Note: y-axis clipped at 50 which hides a few speaker outliers. 
+
+
+The main effect of interest is whether speakers and listeners reduce in the number of words they say over the course of repeated reference. As shown in Fig \@ref(fig:total-words), the number of words produced does decrease. Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. Speakers make longer utterances in early blocks and reduce to shorter utterances in later blocks. Notably, this shortening pattern occurs even as speakers rotate. In aggregate, the effect of being one block later is ] words. The overall effect of having more players in a group is   words per additional player.  This estimate is uncertain because of a relatively small number of groups and wide group-level variability. 
+
+
+(ref:word-lines) Words said by the speaker for each tangram in each group. Each referent/group trajectory is a thin line; aggregate curve is bolded. No outliers were omitted.
+
+
+This variability can be seen in Fig \@ref(fig:variability). While the averaged data shows a smooth reduction in the number of words, individual trajectories for specific tangrams in specific groups are more varied. Reduction is not monotonic, as some later speakers use more words than were used in earlier blocks. 
+
+Because the ground truth answers are not provided to listeners who make mistakes, they may not learn what an utterance referred to (unless they ask in the chat). What happens if a listener gets a tangram wrong and then is the speaker on the next block? For that tangram, they are unlikely to build off the previous description they didn't understand. In contrast, a speaker who previously got the tangram right is likely to continue the conceptualization used so far and conventionalize it more, such as by reducing unneeded details. Taken together, this leads to the hypothesis that speakers should say more words when they got the tangram wrong the previous block, after controlling for other effects. This is borne out; speakers say 
+
+# Discussion
+
+The overall pattern of utterances shortening over repeated reference extends to groups of 3 or 4 people talking together and rotating between speaker and listener roles. Rotating speakers gives a stronger interpretation of reduction as conceptual agreement because more people have to produce the shorthand names. 
+
+We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020. This low level of feedback means that there isn't a way for people to find out what was meant for utterances they initially did not understand outside of the verbal communication channel (or process of elimination). Similarly, speakers don't have direct access to how well their partners did in the previous block. Real-life communicative situations vary in what extra-textual feedback exists, but we do show that people can work around their initial confusion to eventually understand utterances, rather than just memorizing pairings after the first occurrence. 
+
+
+
+
+This is a rich data set consisting of TODO words across TODO referring expressions by TODO speakers, in addition to clarifications questions and comments from listeners. In this set of analyses, we rely on the easy to calculate measures of accuracy, speed, and word counts as proxies for the content of the utterances. In future analyses, it would be useful to do content analysis to understand how and when concepts are introduce and conventionalized and how much the semantics of utterances varies block to block (and speaker to speaker) depending on group size. 
+
+We demonstrate that it is feasible to extend iterated reference game paradigms to small groups of participants using an online platform, and thus rapidly gather high quality utterance data from a number of games. We found that the widely observed pattern of partner specific adaptation and reduction extends to 3 and 4 person games.  Inter-group variability suggests that a closer look at interpersonal communication dynamics, for example, comparing the semantic content of utterances of players in the same or different games is warranted. A closer analysis of the utterances may yield information about how humans adapt language quickly, and the dataset may be useful for training artificial agents to use and understand language more dynamically. 
+
+<!--
+# General Formatting Instructions 
+
+For general information about authoring in markdown, see **[here](http://rmarkdown.rstudio.com/authoring_basics.html).**
+
+The entire content of a paper (including figures, references, and anything else) can be no longer than six pages in the \textbf{initial submission}. In the \textbf{final submission}, the text of the paper, including an author line, must fit on six pages. Up to one additional page can be used for acknowledgements and references.
+
+The text of the paper should be formatted in two columns with an
+overall width of 7 inches (17.8 cm) and length of 9.25 inches (23.5
+cm), with 0.25 inches between the columns. Leave two line spaces
+between the last author listed and the text of the paper; the text of
+the paper (starting with the abstract) should begin no less than 2.75 inches below the top of the
+page. The left margin should be 0.75 inches and the top margin should
+be 1 inch.  \textbf{The right and bottom margins will depend on
+whether you use U.S. letter or A4 paper, so you must be sure to
+measure the width of the printed text.} Use 10~point Times Roman
+with 12~point vertical spacing, unless otherwise specified.
+
+The title should be in 14~point bold font, centered. The title should
+be formatted with initial caps (the first letter of content words
+capitalized and the rest lower case). In the initial submission, the
+phrase ``Anonymous CogSci submission'' should appear below the title,
+centered, in 11~point bold font.  In the final submission, each
+author's name should appear on a separate line, 11~point bold, and
+centered, with the author's email address in parentheses. Under each
+author's name list the author's affiliation and postal address in
+ordinary 10~point type.
+
+Indent the first line of each paragraph by 1/8~inch (except for the
+first paragraph of a new section). Do not add extra vertical space
+between paragraphs.
+
+
+# First-Level Headings
+
+First level headings should be in 12 point , initial caps, bold and
+centered. Leave one line space above the heading and 1/4~line space
+below the heading.
+
+## Second-Level Headings
+
+Second level headings should be 11 point , initial caps, bold, and
+flush left. Leave one line space above the heading and 1/4~ line
+space below the heading.
+
+### Third-Level Headings
+
+Third-level headings should be 10 point , initial caps, bold, and flush
+left. Leave one line space above the heading, but no space after the
+heading.
+
+# Formalities, Footnotes, and Floats
+
+Use standard APA citation format. Citations within the text should
+include the author's last name and year. If the authors' names are
+included in the sentence, place only the year in parentheses, as in
+[-@NewellSimon1972a], but otherwise place the entire reference in
+parentheses with the authors and year separated by a comma
+[@NewellSimon1972a]. List multiple references alphabetically and
+separate them by semicolons [@ChalnickBillman1988a; @NewellSimon1972a]. 
+Use the et. al. construction only after listing all the authors to a
+publication in an earlier reference and for citations with four or
+more authors.
+
+For more information on citations in RMarkdown, see **[here](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html#citations).**
+
+## Footnotes
+
+Indicate footnotes with a number\footnote{Sample of the first
+footnote.} in the text. Place the footnotes in 9 point type at the
+bottom of the page on which they appear. Precede the footnote with a
+horizontal rule.\footnote{Sample of the second footnote.} You can also use 
+markdown formatting to include footnotes using this syntax [^1].
+
+[^1]: Sample of a markdown footnote.
+
+## Figures
+
+All artwork must be very dark for purposes of reproduction and should
+not be hand drawn. Number figures sequentially, placing the figure
+number and caption, in 10 point, after the figure with one line space
+above the caption and one line space below it. If necessary, leave extra white space at
+the bottom of the page to avoid splitting the figure and figure
+caption. You may float figures to the top or bottom of a column, or
+set wide figures across both columns.
+
+## Two-column images
+
+You can read local images using png package for example and plot 
+it like a regular plot using grid.raster from the grid package. 
+With this method you have full control of the size of your image. **Note: Image must be in .png file format for the readPNG function to work.**
+
+You might want to display a wide figure across both columns. To do this, you change the `fig.env` chunk option to `figure*`. To align the image in the center of the page, set `fig.align` option to `center`. To format the width of your caption text, you set the `num.cols.cap` option to `2`.
+
+```{r 2-col-image, fig.env = "figure*", fig.pos = "h", fig.width=4, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "This image spans both columns. And the caption text is limited to 0.8 of the width of the document."}
+img <- png::readPNG("figs/walrus.png")
+grid::grid.raster(img)
+```
+
+## One-column images
+
+Single column is the default option, but if you want set it explicitly, set `fig.env` to `figure`. Notice that the `num.cols` option for the caption width is set to `1`.
+
+```{r image, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=2, fig.height=2, set.cap.width=T, num.cols.cap=1, fig.cap = "One column image."}
+img <- png::readPNG("figs/lab_logo_stanford.png")
+grid::grid.raster(img)
+```
+
+
+## R Plots
+
+You can use R chunks directly to plot graphs. And you can use latex floats in the
+fig.pos chunk option to have more control over the location of your plot on the page. For more information on latex placement specifiers see **[here](https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions)**
+
+```{r plot, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=2, fig.height=2, fig.cap = "R plot" }
+x <- 0:100
+y <- 2 * (x + rnorm(length(x), sd = 3) + 3)
+
+ggplot2::ggplot(data = data.frame(x, y), 
+                aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+
+## Tables
+
+Number tables consecutively; place the table number and title (in
+10 point) above the table with one line space above the caption and
+one line space below it, as in Table 1. You may float
+tables to the top or bottom of a column, set wide tables across both
+columns.
+
+You can use the xtable function in the xtable package.
+
+```{r xtable, results="asis"}
+n <- 100
+x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+
+tab1 <- xtable::xtable(summary(out)$coef, digits=c(0, 2, 2, 1, 2), 
+                       caption = "This table prints across one column.")
+
+print(tab1, type="latex", comment = F, table.placement = "H")
+```
+-->
+# Acknowledgements
+
+Place acknowledgments (including funding information) in a section at
+the end of the paper.
+
+# References 
+
+```{r}
+# References will be generated automatically by Pandoc and included here.
+# The following code is some latex to format the bibliography. Do not remove it.
+```
+
+\setlength{\parindent}{-0.1in} 
+\setlength{\leftskip}{0.125in}
+\noindent
