@@ -37,6 +37,10 @@ date_start=lubridate::ymd('2021-05-04')
 image_location="write-ups/images"
 
 model_location="code/models"
+
+data_location_a <- "data/study1a"
+data_location_b <- "data/study1b"
+
 ```
 
 ```{r}
@@ -71,7 +75,6 @@ model_location="code/models"
 
 ```{r, include=F, eval=F}
 
-data_location_a <- "data/study1a"
 d.games <- read_csv(here(data_location_a, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
@@ -120,7 +123,6 @@ d.exit.survey <- read_csv(here(data_location_a, 'player-inputs.csv')) %>%
 
 ```{r, include=F, eval=F}
 
-data_location_b <- "data/study1b"
 d.games <- read_csv(here(data_location_b, 'games.csv')) %>% 
   rename(gameId = `_id`) %>% 
     filter(createdAt >= date_start)
@@ -437,9 +439,59 @@ geom_smooth(method = "glm", formula = y~x,
 
 # Models
 
-**Note: All of this needs to be re-run!**
-```{r, include=F}
-model_input <- d.chat %>% filter(role=="speaker") %>% 
+```{r model-acc}
+acc_input <- d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  mutate(block=repNum,
+         tangram_group=str_c(tangram, gameId))
+
+priors <- c(set_prior("normal(0,1)", class="b"))#, #we're doing logistic, so these are reasonable b/c transform
+                     # set_prior("normal(0,1)", class="sd"))
+
+model <- brm(correct.num ~ block*numPlayers, 
+             family=bernoulli(link="logit"),
+             data=acc_input, 
+             file=here(model_location, "acc_model"), prior=priors, control=list(adapt_delta=.95))
+```
+
+```{r model-time}
+#note: there were some issues with time recording, source unknown. We exclude the obvious errors where time > 180, but it's probably still a bit dodgy?
+time_input <- d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
+  filter(correct==T) %>% 
+  filter(time<181) %>% 
+  filter(time>0) %>% 
+  mutate(block=repNum,
+         tangram_group=str_c(tangram, gameId))
+
+priors <- c(set_prior("normal(0,100)", class="Intercept"),
+            set_prior("normal(0,50)", class="b"))
+
+model <- brm(time ~ block*numPlayers , 
+             data=time_input, 
+             file=here(model_location, "time_model"), prior=priors, control=list(adapt_delta=.95))
+
+```
+
+```{r model-listener, include=F}
+listener_input <- d.chat %>% filter(role=="listener") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(0, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=listener_input,file=here(model_location, "listener_model"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+```{r model-speaker, include=F}
+speaker_input <- d.chat %>% filter(role=="speaker") %>% 
   mutate(block=repNum,
          words=total_num_words,
          tangram_group=str_c(tangram, gameId))
@@ -450,15 +502,14 @@ priors <- c(
   set_prior("normal(0, 10)", class="sd"),
   set_prior("lkj(1)",       class="cor"))
 
-model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model1"),                            prior=priors, control=list(adapt_delta=.95))
+model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=speaker_input,file=here(model_location, "speaker_model"),                            prior=priors, control=list(adapt_delta=.95))
 
          
 
 ```
 
-Block and numPlayers both have main effects, but no interaction.
 
-```{r, include=F}
+```{r speaker-acc, include=F}
 d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
 d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
   left_join(d.prev.speaker) %>% unique() %>% mutate(repNum=repNum+1)
@@ -491,26 +542,6 @@ model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block
          
 ```
 
-
-
-
-
-Overall model predicting number of speaker words from block and player count. 
-
-```{r}
-
-summary(model)
-
-```
-
-
-
-```{r}
-
-
-summary(model_speaker_acc)
-
-```
 
 # Pre any listener commentary
 

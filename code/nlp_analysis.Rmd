@@ -96,19 +96,18 @@ Ran a first-pass logistic model looking at match ~ block * numPlayers + same_spe
 ```{r}
 same_speaker <- matches %>% 
   filter(later_rep==5) %>% 
-  mutate(same_speaker=ifelse(earlier_rep%%numPlayers==5%%numPlayers,1,0),
+  mutate(same_speaker=ifelse(earlier_rep%%numPlayers==later_rep%%numPlayers,1,0),
          match.num=ifelse(match, 1,0)) %>% 
     mutate(target=str_extract(target,"[A-Z]")) %>% 
   select(gameId,target,block=earlier_rep,numPlayers,match, same_speaker)
   
   priors <- c(
   set_prior("normal(0, 1)", class="Intercept"),
-  set_prior("normal(0, 1)", class="b"),
-  set_prior("normal(0, 1)", class="sd")#,
+  set_prior("normal(0, 1)", class="b"))#,
   #set_prior("lkj(1)",       class="cor")
-  )
+  #)
 
-# model_conventions <- brm(match ~ block * numPlayers + same_speaker + (1|gameId), data=same_speaker,file=here(model_location, "model_convention"),family=bernoulli(link="logit"),  prior=priors, control=list(adapt_delta=.95))
+# model_conventions <- brm(match ~ block * numPlayers + same_speaker, data=same_speaker,file=here(model_location, "model_convention"),family=bernoulli(link="logit"),  prior=priors, control=list(adapt_delta=.95))
 
   model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
          
