@@ -1,9 +1,10 @@
 ---
-title: "Two's company, six is chaos: conventions emerge regardless"
+title: "Two's company but six is a crowd: emergence of conventions in multiparty communication games"
 bibliography: library.bib
 csl: apa6.csl
 document-params: "10pt, letterpaper"
-
+header-includes:
+  - \usepackage{booktabs}
 author-information: > 
     \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University
     \AND {\large \bf Robert Hawkins (rdhawkins@princeton.edu)} \\ Neuroscience Institute \\ Princeton University
@@ -11,25 +12,17 @@ author-information: >
     \AND {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
-    TODO In repeated reference games where a speaker describes the same set of images to a listener over a series of rounds, the number of words used decreases as the pair converge on ad-hoc names for the images. The dynamics of this efficient reference formation is well-studied in dyads; however much communication takes place in larger groups, which are rarely studied in this paradigm. The current work extends iterated reference games to groups of 2-6 people who rotate between speaker and listener roles in an online game with text-based communication. Across TODO games and more than TODO K total words, we find high accuracy and patterns of reduction regardless of group size.
+    In repeated reference games where a speaker describes the same set of images to a listener over a series of rounds, the number of words used decreases as the pair converge on ad-hoc names for the images. The dynamics of this efficient reference formation is well-studied in dyads; however much communication takes place in larger groups, which are rarely studied in this paradigm. The current work extends iterated reference games to groups of 2-6 people who rotate between speaker and listener roles in an online game with text-based communication. Across 98 games, 390 participants, and and 116K total words, we find high accuracy and patterns of reduction regardless of group size.
     
 keywords: >
-    TODO;Add your choice of indexing terms or keywords; kindly use a semi-colon; between each term.
+    Communication; Reference game;Convention;Reduction;
     
 output: cogsci2016::cogsci_paper
 #final-submission: \cogscifinalcopy
 ---
-
-# TODOs
-
-Do we include fun anecdotes? 
-
-check what current empirica citaiton is
-
- facts to include: num games, num words overall
  
- 
-# Intro
+# Introduction
+
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
                       fig.pos = "tb", fig.path='figs/',
@@ -52,6 +45,7 @@ library(rstan)
 library(viridis)
 library(cowplot)
 library(tidybayes)
+library(kableExtra)
 ```
 
 
@@ -117,13 +111,12 @@ stats <- function(model, row){
   
 ```
 
-TODO re-write intro!
-[blah blah communication in non-dyads] Verbal communication is an integral part of our daily lives. We coordinate schedules with partners, socialize with friends over board games, learn and teach in seminar classes, and listen to podcasts. Our communicative environments range in size from one-on-one to small group to large group to broadcast, but the goal of efficient communication is held in common. One necessity for efficient communication is shared reference expressions; when referring to a thing or an idea, it needs some sort of name that the interlocutors will jointly understand. In many cases, there are widely shared conventionalized expressions, but in other cases, spontaneous ad-hoc expressions are needed.
+Verbal communication is an integral part of our daily lives. We coordinate schedules with partners, socialize with friends over board games, learn and teach in seminar classes, and listen to podcasts. Our communicative environments range in size from one-on-one to small group to large group to broadcast, but the goal of efficient communication is held in common. One necessity for efficient communication is shared reference expressions; when referring to a thing or an idea, it needs some sort of name that the interlocutors will jointly understand. In many cases, there are widely shared conventionalized expressions, but in other cases, spontaneous ad-hoc expressions are needed.
 
-[hole to fill] The formation of these new reference expressions is well-studied in dyadic contexts; however, dynamics may be different in larger groups, which are less studied. Our current work builds on the dyadic reference game tradition by extending it to small groups.
+The formation of these new reference expressions is well-studied in dyadic contexts; however, dynamics may be different in larger groups, which are less studied. Our current work builds on the dyadic reference game tradition by extending it to small groups.
 
 ## Dyadic reference games
-The typical paradigm for studying partner-specific referring expressions is an iterated reference game with asymmetric knowledge. That is, each round there is a speaker who knows what the target is and a listener who does not have this information. In @clarkReferringCollaborativeProcess1986, each speaker described 12 tangrams in order, so their listener could correctly order the images.  After receiving feedback, the pair repeated the task with the same images but a new order, for a total of 6 repeats. Crucially, @clarkReferringCollaborativeProcess1986 found that reference expressions condense over the course of repeated reference to the same image. Early descriptions are long and make reference to multiple features in the image, but by later rounds definite shorthand names are used.
+The typical paradigm for studying partner-specific referring expressions is an iterated reference game with asymmetric knowledge. That is, each round there is a speaker who knows what the target is and a listener who does not have this information, and tries to select the target from a pool of possibilities. In @clarkReferringCollaborativeProcess1986, each speaker described 12 tangram shapes in order, so their listener could correctly order the images.  After receiving feedback, the pair repeated the task with the same images but a new order, for a total of 6 repeats. Crucially, @clarkReferringCollaborativeProcess1986 found that reference expressions condense over the course of repeated reference to the same image. Early descriptions are long and make reference to multiple features in the image, but in later iterations, definite shorthand names are used.
 
 Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations using a text-based communication interface. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a cued version of the iterated reference experiment. On each trial, the speaker saw one image highlighted and described it to the listener who clicked on what they thought the target was. Both players received feedback before moving on to the next target image. All images were highlighted each block, for a total of 6 blocks. Speakers produced fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
 
@@ -134,16 +127,25 @@ While this reduction pattern is robust for dyads, less is known about the how ut
 
 It's difficult to communicate with naive listeners, but it can be even harder to communicate with someone with entrenched preconceptions. @weberCulturalConflictMerger2003 induced these conceptual differences by having two pairs of people (each pair representing a "firm") do an iterated reference game with the same set of pictures. After 20 rounds, there was a "merger" where the listener from one group joined the other group. The reference game continued with the speaker communicating to both their original listener and the new listener. After the merger, there was a jump in how long it took either listener to make a selection. Even after several more rounds, listeners were still not as fast as before the merger. With larger groups of people all speaking together, there's a greater chance for different people to independently develop different conceptualizations of an image, and it may be difficult for them to understand each other or agree on a common term of reference. 
 
-But what's the dose-response curve? 
+One open question is what the relationship between number of people and the success of the communication. More people seems to make communication slower and more difficult, but by how much? Does adding a 4th person increase the difficulty more or less than adding a 3rd did?
 
 ## Conventions across speakers
-[set-up that there's an expectation of consistency w/i speaker except when new people join -- what is it when everyone's been together?]
-Studies vary in whether the same participant keeps the speaker role the entire game [ex. @clarkReferringCollaborativeProcess1986] or whether the roles rotate [ex. pre-merger rounds of @weberCulturalConflictMerger2003]. Role rotation makes the paradigm more similar to collaborative puzzle-solving exercises also used to study conventions [@garrodConversationCoordinationConvention1994; @ibarraFlexibilityConceptualPacts2016].
-
-In general, listeners expect conventions to be maintained, but they are not surprised to new descriptions of a familiar object if it comes from a new speaker [@metzingWhenConceptualPacts2003] or if a new listener is present [@yoonAdjustingConceptualPacts2014]. It's unclear how these expectations map onto a group of people rotating roles in the task who are all present the entire time. Do later speakers count as new, or are they expected to follow conventions they've already heard? Do additional non-new listeners license changes in descriptions?
+In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, they are not suprised to hear different descriptions of a familiar object if it comes from a new speaker who just entered the room [@metzingWhenConceptualPacts2003] or if a new listener is present[@yoonAdjustingConceptualPacts2014]. It's unclear how these expectations map onto a group of people rotating roles in the task who are all present the entire time. Do later speakers count as new, or are they expected to follow conventions they've already heard? Do additional non-new listeners license changes in descriptions? 
 
 ## Present work
-In this work, we extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2-6 players who rotate between speaker and listener roles. We compare accuracy and reduction rates in groups of different sizes. 
+To address some of these questions, we extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2-6 players who rotate between speaker and listener roles. We compare accuracy and reduction rates in groups of different sizes. This paradigm allows us to confirm that that these findings in dyads extend to larger groups. 
+
+1. Accuracy will increase across blocks.
+
+2. Listeners will respond faster in later blocks.
+
+3. Speakers will reduce their utterances (produce fewer words) in later blocks.
+
+Additionally, we will be able to test for trends across group size on the following two questions.  
+
+4. Do smaller groups use shorter utterances and reduce faster than larger groups?  
+
+5. Is there more overlap in how speakers describe each image in smaller or larger groups? 
 
 
 ```{r chat}
@@ -191,14 +193,22 @@ d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, play
 
 ```
 
+```{r count}
+# For abstract (and elsewhere) count things!
+
+games <- d.round_results %>% select(gameId) %>% unique() %>% nrow() # 98
+
+players <- d.round_results %>% select(gameId, numPlayers) %>% unique() %>% summarize(players=sum(numPlayers)) # 390
+
+words <- d.chat %>% ungroup() %>% select(total_num_words) %>% summarize(words=sum(total_num_words)) #116000
+
+```
+
 
 
 # Methods
 
-
-
-TODO methods summary!
-We adapted the methods of @hawkinsCharacterizingDynamicsLearning2020, adjusting them to work for multi-player games with rotating speakers. Participants played a repeated reference game where a speaker saw an array of tangrams with one indicated (Fig \ref{game} and had to communicate which figure to click to the listeners using the chat box.  Within each block, each of the 12 tangrams was the target once, and the speaker role rotated each block, so all participants were the speaker at least once. Games ran for a total of 6 blocks. We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. The experiment was implemented in Empirica [@almaatouqEmpiricaVirtualLab2020]; materials to run the experiment, as well as data and code are available at TODO anonymous OSF clone <!--at https://github.com/vboyce/FYP-->. 
+Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Fig \ref{game} and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at TODO anonymous OSF clone. <!--at https://github.com/vboyce/FYP-->. 
 
 We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistration is at https://osf.io/cn9f4. TODO check anonymity
 
@@ -227,16 +237,14 @@ tab1 <- xtable::xtable(summary, align="lccc",
 print(tab1, type="latex", comment = F, include.rownames=F, table.placement = "H")
 ```
 
-Participants were recruited using the Prolific platform between May and July 2021. We screened for participants who were fluent, native English speakers. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses.
-
-
+Participants were recruited using the Prolific platform between May and July 2021. We screened for participants who were fluent native English speakers. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses. A total of 390 people participated. 
 
 ## Materials
-We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020 and @clarkReferringCollaborativeProcess1986 (see Fig \ref{game}). These images were displayed in a grid with order randomized for each participant. The same images were used every block. 
+We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020 and @clarkReferringCollaborativeProcess1986 (see Fig \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as "top left" were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block. 
 
 ## Procedure
 
-We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020]. Code for running this experiment is available at TODO anonymize https://github.com/vboyce/FYP. From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
+We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020].  From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
 
 ```{r game, fig.env = "figure", fig.pos = "H", fig.align='center', out.width="100%", set.cap.width=T, num.cols.cap=1,  fig.cap = "Screenshot of the speaker's view. Participants see all 12 tangram images.\\label{game}"}
 img <- png::readPNG(here(image_location, "interface.PNG"))
@@ -258,13 +266,17 @@ ggdraw()+
 
 
 ```
-Once the game started, participants saw screens like Fig \ref{game}. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback. Listeners only learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into cents of performance bonus at the end of the experiment. 
+
+Once the game started, participants saw screens like Fig \ref{game}. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. 
+
+### Feedback
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Fig \ref{feedback}). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment. 
 
 In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games.
 
 After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
 
-## Data pre-processing 
+## Data pre-processing and exclusions
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well or fast the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
@@ -272,9 +284,12 @@ Our intended sample size was 20 complete games in each group size, but we ended 
 
 # Results
 
-Across groups of all sizes, participants did well at the task, accurately identifying the tangrams most of the time. In later blocks, participants were faster, and fewer words were used to achieve increasing levels of accuracy. This replicates the classic pattern of reduction found in dyadic versions of the game. 
+Our first set of research questions were whether the classic findings of accuracy, speed, and reduction that are characteristic of two-player repeated reference games generalized to larger groups. 
 
-## Speed and Accuracy
+## Accuracy and Speed
+
+### Accuracy is high and increasing.
+
 ```{r model-acc}
 acc_input <- d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
   mutate(correct.num=ifelse(correct,1,0)) %>% 
@@ -292,7 +307,7 @@ model <- brm(correct.num ~ block*numPlayers,
 acc <- show_summary(model)
 ```
 
-```{r accuracy, fig.env="figure", fig.pos = "H", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "Accuracy TODO \\label{accuracy}" }
+```{r accuracy, fig.env="figure", fig.pos = "H", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "Player's accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \\label{accuracy}" }
 d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
   mutate(correct.num=ifelse(correct,1,0)) %>% 
   ggplot(aes(x=repNum+1, y=correct.num, color=as.factor(numPlayers)))+
@@ -300,14 +315,14 @@ geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), size=.5)+
   scale_color_viridis(discrete=T, direction=-1)+
     scale_x_continuous(breaks=seq(1,6))+
-  labs(x="Round", y="Selection Accuracy", color="Players")+
+  labs(x="Block", y="Selection Accuracy", color="Players")+
   theme(legend.position="right")
 
 ```
 
-Most groups were accurate in their selections, with accuracy rising over blocks (Fig \ref{accuracy}).  Participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`). 
+Most individuals were accurate in their selections, with accuracy rising across blocks (Fig \ref{accuracy}).  In a logistic model of accuracy, participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`). 
 
-
+### Participants speed up in later blocks.
 ```{r model-time}
 #note: there were some issues with time recording, source unknown. We exclude the obvious errors where time > 180, but it's probably still a bit dodgy?
 time_input <- d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
@@ -328,12 +343,12 @@ time <- show_summary(model)
 
 ```
 
-```{r time, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=5, fig.height=3, fig.cap = "Listeners selected images faster in later blocks. Only times to correct responses are shown.\\label{time}" }
+```{r time, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=5, fig.height=3, fig.cap = "How long listeners took to select a figure in seconds by block and group size. Listeners selected images faster in later blocks. Only times for correct responses are shown.\\label{time}" }
 d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
   filter(correct==T) %>% 
   filter(time<181) %>% 
   #summarize(time=mean(time)) %>% 
-  ggplot(aes(x=repNum, y=time, color=as.factor(numPlayers)))+
+  ggplot(aes(x=repNum+1, y=time, color=as.factor(numPlayers)))+
   geom_jitter(width=.4, height=0, alpha=.03)+
 geom_smooth(method = "glm", formula = y~x,
                       method.args = list(family = gaussian(link = 'log')))+
@@ -341,29 +356,20 @@ geom_smooth(method = "glm", formula = y~x,
   scale_y_continuous(limits = c(0,180))+
       scale_x_continuous(breaks=seq(1,6))+
  scale_color_viridis(discrete=T, direction=-1)+ 
-  labs(x="Round", y="Time to select (s)", color="Players")+
+  labs(x="Block", y="Time to select (s)", color="Players")+
   theme(legend.position = "right")
 
 ```
 
 
-Participants selected images faster in later blocks (Fig \ref{time}), although there is wide variability. In a linear model, the participants are faster each block (`r stats(time,1)`) and are slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. [? TODO stats]
+Participants selected images faster in later blocks (Fig \ref{time}), although there was wide variability. In a linear model of selection time, participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
 
-## Convention 
+## Reduction
 
-```{r words, fig.env = "figure*", fig.pos = "ht", out.width="100%", fig.width=8, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Speaker and listeners say fewer words in later blocks. Note: y-axis clipped at 50 which hides a few speaker outliers. \\label{words}"}
-ggplot(d.chat, aes(x=repNum+1, y=total_num_words, color=as.factor(numPlayers), group=as.factor(numPlayers)))+
-  facet_wrap(~role, nrow=1)+
-  scale_color_viridis(discrete=T, direction=-1)+
-    geom_jitter(alpha=.05)+
-    geom_smooth(method=glm, formula=y~poly(x,2), se=F, size=1.3)+
-     stat_summary(fun.data = "mean_cl_boot", size=.5)+
-    scale_y_continuous(limits = c(0,50))+
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Words produced", x="Round", color="Players")+
-  theme(legend.position="right")
+The key finding in dyadic reference games is that speakers produce shorter utterances as conventionalized names for the images arise. We replicate this finding in larger groups. Both speakers and listeners reduce the amount they say over the course of blocks. 
 
-```
+### Listeners rarely talk.
+
 ```{r model-listener}
 listener_input <- d.chat %>% filter(role=="listener") %>% 
   mutate(block=repNum,
@@ -381,7 +387,22 @@ model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangr
          
 listener <- show_summary(model)
 ```
-Both speakers and listeners reduce the amount they say over the course of blocks.  As shown in Fig \ref{words}, the number of words produced does decrease. Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said, they say less in later blocks (`r stats(listener, 1)`), but there is no clear effect of game size (`r stats(listener,4)`). 
+
+Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said, there is an effect of block (`r stats(listener, 1)`), but no clear effect of game size (`r stats(listener,4)`). 
+
+
+### Speakers utterances reduce in length. 
+
+```{r variability, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "Number of words from speaker (total, across all 12 figures) in a block. Each colored line is one group, the overall trend is shown in black. Across group size, the number of words decreases as conventions emerge, but convention formation is not a smooth process, and there is variability between speakers.\\label{variability}" }
+d.chat %>% filter(role=="speaker") %>% group_by(gameId,numPlayers,repNum) %>% 
+  summarize(words=sum(total_num_words)) %>% ggplot(aes(x=repNum+1, color=as.factor(numPlayers), y=words, ))+geom_line(aes(group=gameId))+facet_wrap(~numPlayers, nrow=1)+
+  geom_smooth(method=glm, formula=y~poly(x,2), se=F, color="black")+
+  scale_color_viridis(discrete=T, direction=-1)+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Total words from speaker", x="Block", color="Players")+
+  theme(legend.position="none")
+
+```
 
 ```{r model-speaker}
 speaker_input <- d.chat %>% filter(role=="speaker") %>% 
@@ -400,9 +421,18 @@ model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangr
 speaker <- show_summary(model)
 
 ```
+ As shown in Fig \ref{variability}, the number of words produced by speakers decreases over the course of rounds. This is true in aggregate, but also true for many groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model, the effect of being one block later is `r stats(speaker,1)`. 
+ 
+### Larger groups say more. 
+One open question about larger groups was whether they would produce longer utterances or reduce more slowly than speakers in smaller groups. The overall effect of having more players in a group is `r stats(speaker,4)` per additional player. There is no clear interaction between block and group size `r stats(speaker,2)`.  
 
-Speakers make longer utterances in early blocks and reduce to shorter utterances in later blocks. In aggregate, the effect of being one block later is `r stats(speaker,1)`. The overall effect of having more players in a group is `r stats(speaker,4)` per additional player.  Notably, this shortening pattern occurs even as speakers rotate. This estimate is uncertain because of a relatively small number of groups and wide group-level variability. TODO modelling!
 
+
+
+## Development of conventions 
+One broad question is how speakers decide when to follow a previously established description and repeat it, perhaps in a reduced form, and when to use a different conceptualization. 
+
+### When speakers don't know the convention
 ```{r speaker-acc}
 d.prev.speaker <- d.chat %>% ungroup() %>%  filter(role=="speaker") %>% select(gameId,repNum, tangram, total_num_words_prev=total_num_words)
 d.prev.round <- d.chat %>% ungroup() %>% select(playerId, correct, tangram, gameId, repNum) %>% 
@@ -437,41 +467,11 @@ speaker_acc <- show_summary(model_speaker_acc)
          
 ```
 
-Because the ground truth answers are not provided to listeners who make mistakes, they may not learn what an utterance referred to (unless they ask in the chat). What happens if a listener gets a tangram wrong and then is the speaker on the next block? For that tangram, they are unlikely to build off the previous description they didn't understand. In contrast, a speaker who previously got the tangram right is likely to continue the conceptualization used so far and conventionalize it more, such as by reducing unneeded details. Taken together, this leads to the hypothesis that speakers should say more words when they got the tangram wrong the previous block, after controlling for other effects. This is borne out; speakers say `r stats(speaker_acc,6)`. 
+In these games with limited feedback, listeners who got a tangram wrong don't have a way of knowing what the right answer was unless they ask for clarification in the chat. This means that if a speaker got a tangram wrong as a listener in the previous block, they may not know the conventional description that does with it, and thus are unlikely to follow it.  If we assume that reduction is a sign of convention development, this predicts speakers should say more words when they got the tangram wrong the previous block, after controlling for other effects. This is borne out; speakers say more words for tangrams after they were incorrect (`r stats(speaker_acc,6)`). 
 
+### Where do conventions come from?
 
-
-
-
-
-
-
-
-
-
-
-## Variability
-
-While the averaged data shows a smooth reduction in the number of words, individual trajectories for specific tangrams in specific groups are more varied. Reduction is not monotonic, as some later speakers use more words than were used in earlier blocks. 
-
-```{r variability, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "Number of words from speaker (total, across all 12 figures) in a block. Convention formation is not a smooth process, and some later speakers in some groups used more words than their earlier speakers.\\label{variability}" }
-d.chat %>% filter(role=="speaker") %>% group_by(gameId,numPlayers,repNum) %>% 
-  summarize(words=sum(total_num_words)) %>% ggplot(aes(x=repNum+1, color=as.factor(numPlayers), y=words, group=gameId))+geom_line()+facet_wrap(~numPlayers, nrow=1)+
-  scale_color_viridis(discrete=T, direction=-1)+
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Total words from speaker", x="Round", color="Players")+
-  theme(legend.position="none")
-
-```
-
-
-
-
-## Content similarity
-
-TODO might want to pick better analyses??
-
-```{r similarity, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "The fraction of content words used by the speaker in the last block that were used to describe the same tangram in an earlier block. TODO better caption\\label{similarity}" }
+```{r similarity, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "The fraction of content words used by the speaker in the last block that were used to describe the same tangram in an earlier block. Overlap is higher in smaller games.\\label{similarity}" }
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
 matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
@@ -493,42 +493,99 @@ ggplot(location_first_match, aes(x=earlier_rep+1, y=overlap, color=as.factor(num
 
 ```
 
-TODO the brm won't run so using glm, but that means we cache and also I need to figure out how to extract numbers from it. 
-
 ```{r, cache=T}
 same_speaker <- matches %>% 
   filter(later_rep==5) %>% 
   mutate(same_speaker=ifelse(earlier_rep%%numPlayers==later_rep%%numPlayers,1,0),
          match.num=ifelse(match, 1,0)) %>% 
     mutate(target=str_extract(target,"[A-Z]")) %>% 
-  select(gameId,target,block=earlier_rep,numPlayers,match, same_speaker)
+  select(gameId,target,block=earlier_rep,numPlayers,match, same_speaker) %>% 
+  group_by(gameId,target,block, numPlayers, same_speaker) %>% 
+  summarize(overlap=mean(match))
   
   priors <- c(
   set_prior("normal(0, 1)", class="Intercept"),
-  set_prior("normal(0, 1)", class="b"))#,
+  set_prior("normal(0, 1)", class="b"),
+  set_prior("normal(0,1)", class="sd"))
   #set_prior("lkj(1)",       class="cor")
   #)
 
-# model_conventions <- brm(match ~ block * numPlayers + same_speaker, data=same_speaker,file=here(model_location, "model_convention"),family=bernoulli(link="logit"),  prior=priors, control=list(adapt_delta=.95))
+ model_conventions <- brm(overlap ~ block * numPlayers + same_speaker + (1|gameId)+(1|target), data=same_speaker,file=here(model_location, "model_convention"),  prior=priors, control=list(adapt_delta=.95))
 
-  model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
+  #model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
          
-conventions <- model_conventions
+conventions <- show_summary(model_conventions)
+
+
+```
+
+[TODO: check methods] Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words from the speakers last block utterances and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Fig \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap `r stats(conventions,1)`.  Blocks with the same speaker as the last round have more overlap `r stats(conventions,5)`; this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks `r stats(conventions,4)`, but there is no interaction between blocks and game size `r stats(conventions,2)`. Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker. 
+
+
+### Examples
+
+While most groups did form conventions for most tangrams, it's illustrative to look at what happens when this doesn't happen. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long, and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
+
+```{r diamond}
+diamond <- tribble(~`Block`, ~`Person`, ~Text,
+                 "1","A(S)","Diamond on top. Body with no real arms or legs. The body is shaped like a boot with the diamond on top.",
+		"","C", "Is the boot pointed left or right?",
+		"2", "B(S)", "diamond on top, large body beneath it. Left is a straight line all the way down, small variations on the right to the main body",
+		"3", "C(S)", "Diamond in center on top. Left side straight, right side carved out like a vase.",
+		"4", "D(S)", "Diamond head, flat topped body, straight on the left side with two triangles pointing out on the left",
+		"","D(S)" ,"*on the right",
+	"5" ,"A(S)", "Diamond on top. Left side is straight, right side is obstructed, looks like a boot",
+	"", 	"B", "what do you mean by obstructed?",
+		"", "A(S)", "The left side of the body is right, right side has bents in it",
+		"6", "B(S)", "Diamond on top of a long large body/rectangle. Left side is complete, right side has bits missing")
+
+knitr::kable(diamond, caption = "Excerpt from a group that did not reduce very much. The speaker for each round is marked with (S). Figure under discussion is row 3, column 3 in Figure \\ref{game}.\\label{diamond}",  format="latex", booktabs=TRUE) %>% 
+kable_styling(full_width = F) %>%
+column_spec(3, width = "16em")
+
+```
+
+A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
+
+```{r zigzag}
+
+zigzag <- tribble(~Block, ~Person, ~`Text`,
+ "1", "A(S)" , "[...] yes, the legs are like a zig zag",
+		"",	"C", "CODE name ZIGZAG",
+			"","A(S)",	"There are no legs upwards",
+			"2", "B(S)", "okay so similar to begger guy but no foot pointing up",
+			"","B(S)", "its like a zigzag",
+			"","B(S)", "i forgot the code name",
+			"","D", "zigzag yea",
+			"","A", "The one standing with knees bent",
+			"","B(S)", "yeah",
+			"","B(S)" ,"standing",
+			"", "C", "Yeah zigzag",
+			"3", "C(S)",	"The begger with no foot coming out from the left",
+			"","B", "zigzag",
+			"","C(S)",	"zigzag it is",
+			"","C(S)",	"sorry i forgot",
+			"4", "D(S)",	"zigzag",
+		"5", "A(S)",	"zigzag",	
+			"6", "B(S)",	"beggar guy",
+			"", "B(S)" ,"zigzag")
+
+knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Figure under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE)%>%
+column_spec(3, width = "16em")
 
 
 ```
 
 # Discussion
 
-The overall pattern of utterances shortening over repeated reference extends to groups of 3 or 4 people talking together and rotating between speaker and listener roles. Rotating speakers gives a stronger interpretation of reduction as conceptual agreement because more people have to produce the shorthand names. 
+The overall patterns present in dyadic repeated reference games generalize to small groups of participants. Selection accuracy increases over rounds at the same time as listeners speed up their selections. Speakers reduce the length of their descriptive utterances as they conventionalize on concepts for each image.
 
-We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020. This low level of feedback means that there isn't a way for people to find out what was meant for utterances they initially did not understand outside of the verbal communication channel (or process of elimination). Similarly, speakers don't have direct access to how well their partners did in the previous block. Real-life communicative situations vary in what extra-textual feedback exists, but we do show that people can work around their initial confusion to eventually understand utterances, rather than just memorizing pairings after the first occurrence. 
+Group size does make a difference, as larger groups talk more and are slower than smaller groups. There is also more diversity in how images are described within larger groups. This could just be from slower convergence to a conventions, or from parallel competing conceptualizations favored by different speakers. 
 
-This is a rich data set consisting of TODO words across TODO referring expressions by TODO speakers, in addition to clarifications questions and comments from listeners. In this set of analyses, we rely on the easy to calculate measures of accuracy, speed, and word counts as proxies for the content of the utterances. In future analyses, it would be useful to do content analysis to understand how and when concepts are introduce and conventionalized and how much the semantics of utterances varies block to block (and speaker to speaker) depending on group size. 
+The patterns of reduction are robust to speaker rotation and the lack of gold-standard feedback to listeners. Not only do speakers say less in later repetitions than they themselves said earlier, speakers later in the order say less than speakers earlier in the rotation.  We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020. This low level of feedback means that there isn't a way for people to find out what was meant for utterances they initially did not understand outside of the verbal communication channel (or process of elimination). Similarly, speakers don't have direct access to how well their partners did in the previous block. Real-life communicative situations vary in what extra-textual feedback exists, but we do show that people can work around their initial confusion to eventually understand utterances, rather than just memorizing pairings after the first occurrence. 
 
-We demonstrate that it is feasible to extend iterated reference game paradigms to small groups of participants using an online platform, and thus rapidly gather high quality utterance data from a number of games. We found that the widely observed pattern of partner specific adaptation and reduction extends to 3 and 4 person games.  Inter-group variability suggests that a closer look at interpersonal communication dynamics, for example, comparing the semantic content of utterances of players in the same or different games is warranted. A closer analysis of the utterances may yield information about how humans adapt language quickly, and the dataset may be useful for training artificial agents to use and understand language more dynamically. 
+This is a rich data set that  may yield more information about how humans adapt language quickly, and the dataset may be useful for training artificial agents to use and understand language more dynamically. 
 
-justify my low info high rotation format
 <!--
 # General Formatting Instructions 
 
