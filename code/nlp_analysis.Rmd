@@ -89,6 +89,24 @@ ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPl
   theme(legend.position="bottom")
 ```
 
+```{r}
+d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
+matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
+
+foobar <- matches %>% filter(later_rep==5) %>% 
+  filter(match) %>% 
+  group_by(gameId,target,word, numPlayers) %>% 
+  summarize(earliest_rep=min(earlier_rep)) %>% 
+  group_by(gameId, numPlayers, earliest_rep) %>% 
+  tally() %>% 
+  group_by(gameId,numPlayers) %>% 
+  summarize(pct=n/sum(n), earliest_rep=earliest_rep)
+
+san_check <- foobar %>% group_by(gameId,numPlayers) %>% summarize(san=sum(pct))
+ggplot(foobar, aes(x=earliest_rep, y=pct, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_grid(.~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")+
+  theme(legend.position="bottom")
+```
 Overlap is higher in 2 than more than two situations. There also appears to be a "same player" effect -- note the higher amount for rounds 1 and 3 relative to 2 and 4 for 2 player, and 1 relative to others in 4 player. 
 
 Ran a first-pass logistic model looking at match ~ block * numPlayers + same_speaker. 
