@@ -93,6 +93,8 @@ ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=as.factor(numPl
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
 matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
+matches %>% filter(later_rep==5) %>% filter(word=="karate") %>% filter(earlier_rep==0) %>% filter(gameId=="2928FF7GcrkeFiDkh") %>% filter(target=="/experiment/tangram_A.png")
+
 foobar <- matches %>% filter(later_rep==5) %>% 
   filter(match) %>% 
   group_by(gameId,target,word, numPlayers) %>% 
