@@ -206,9 +206,9 @@ words <- d.chat %>% ungroup() %>% select(total_num_words) %>% summarize(words=su
 
 # Methods
 
-Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game} and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at TODO anonymous OSF clone. <!--at https://github.com/vboyce/FYP-->. 
+Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game} and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2.
 
-We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistration is at https://osf.io/cn9f4. TODO check anonymity
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistrations are at https://osf.io/cn9f4/?view_only=7fdacd698b24465cb1a8699050af5bfc and  https://osf.io/rpz67?view_only=5284203e2b644fc5ac39cf3e723b9a7e.
 
 ## Participants
 
@@ -244,23 +244,23 @@ We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020
 
 We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020].  From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
 
-```{r game, fig.env = "figure", fig.pos = "H", fig.align='center', out.width="100%", set.cap.width=T, num.cols.cap=1,  fig.cap = "Screenshot of the speaker's view. Participants see all 12 tangram images.\\label{game}"}
-img <- png::readPNG(here(image_location, "interface.PNG"))
-grid::grid.raster(img)
-```
 
-```{r feedback, fig.env = "figure", fig.pos = "H", fig.align='center', out.width="100%", fig.width=10,fig.height=6, set.cap.width=T, num.cols.cap=1,  fig.cap = "Screenshots of feedback for speakers and listners. Speakers (A) saw what figure each person chose, indicated by the matching icons. Listeners only learned if their selection was correct (B) or incorrect (C). Listeners were not shown what other listeners chose. \\label{feedback}"}
-speaker <- png::readPNG(here(image_location, "speaker_feedback.png"))
-l_correct <- png::readPNG(here(image_location,"listener_correct.png"))
-l_wrong <- png::readPNG(here(image_location,"listener_wrong.png"))
+```{r interface, fig.env = "figure*", fig.pos = "h", fig.width=6, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = " Speaker's view during selection phase (A). Participants see all 12 tangram images. During the feedback stage, Speakers (B) saw what figure each person chose, indicated by the matching icons. Listeners only learned if their selection was correct (C) or incorrect (D). Listeners were not shown what other listeners chose. \\label{game}"}
+
+img <- png::readPNG(here(image_location, "interface_crop.png"))
+speaker <- png::readPNG(here(image_location, "speaker_feedback_crop.png"))
+l_correct <- png::readPNG(here(image_location,"listener_correct_crop.png"))
+l_wrong <- png::readPNG(here(image_location,"listener_wrong_crop.png"))
 
 ggdraw()+
-  draw_image(speaker, scale=.45, x=.1, y=0, halign = 0, valign=.5)+
-    draw_image(l_correct, scale=.45, x=.5, y=.5, halign = 0, valign=0)+
-    draw_image(l_wrong, scale=.45, x=.5, y=0, halign = 0, valign=0)+
-  draw_label("A", x=.1, y=.75, size=14)+
-    draw_label("B", x=.5, y=.8, size=14)+
-    draw_label("C", x=.5, y=.2, size=14)
+  draw_image(img, x=.01, y=0,halign = 0, valign=0)+
+  draw_image(speaker, scale=.7, x=.5, y=.2, halign = 0, valign=0)+
+    draw_image(l_correct, scale=.3, x=.8, y=.6, halign = 0, valign=0)+
+    draw_image(l_wrong, scale=.3, x=.8, y=.1, halign = 0, valign=0)+
+  draw_label("B", x=.5, y=.9, size=10)+
+  draw_label("A", x=.03, y=.9, size=10)+
+    draw_label("C", x=.78, y=.9, size=10)+
+    draw_label("D", x=.78, y=.4, size=10)
 
 
 ```
@@ -268,7 +268,7 @@ ggdraw()+
 Once the game started, participants saw screens like Figure \ref{game}. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection. 
 
 ### Feedback
-Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{feedback}). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. In contrast with prior work  [@hawkinsCharacterizingDynamicsLearning2020] that told all listeners the right answer during the feedback stage, as we were concerned that listeners could learn arbitrary mappings just based on the pairing of what the speaker said and what turned out to be the right answer, without understanding the convention. Without this backchannel, listeners would need to learn the conventions just via the communication channel, which provides a stricter test of how well a group can converge on a convention.
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{game}). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. In contrast with prior work  [@hawkinsCharacterizingDynamicsLearning2020] that told all listeners the right answer during the feedback stage, as we were concerned that listeners could learn arbitrary mappings just based on the pairing of what the speaker said and what turned out to be the right answer, without understanding the convention. Without this backchannel, listeners would need to learn the conventions just via the communication channel, which provides a stricter test of how well a group can converge on a convention.
 
 Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment. 
 
@@ -311,7 +311,7 @@ acc <- show_summary(model) %>% write_rds(here(model_location,"acc_summ.rds"))
 acc <- read_rds(here(model_location,"acc_summ.rds"))
 ```
 
-```{r accuracy, fig.env="figure", fig.pos = "H", fig.align = "center", out.width="100%", fig.width=5, fig.height=3, fig.cap = "Player's accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \\label{accuracy}" }
+```{r accuracy, fig.env="figure", fig.pos = "H", fig.align = "center", out.width="100%", fig.width=5, fig.height=2.5, fig.cap = "Player's accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \\label{accuracy}" }
 d.round_results %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
   mutate(correct.num=ifelse(correct,1,0)) %>% 
   ggplot(aes(x=repNum+1, y=correct.num, color=as.factor(numPlayers)))+
@@ -352,7 +352,7 @@ time <- read_rds(here(model_location,"time_summ.rds"))
 ```
 
 
-```{r time, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=5, fig.height=3, fig.cap = "How long listeners took to select a figure in seconds by block and group size. Listeners selected images faster in later blocks. Only times for correct responses are shown.\\label{time}" }
+```{r time, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=5, fig.height=2.5, fig.cap = "How long listeners took to select a figure in seconds by block and group size. Listeners selected images faster in later blocks. Only times for correct responses are shown.\\label{time}" }
 d.round_results %>% group_by(playerId, repNum, gameId, numPlayers) %>% 
   filter(correct==T) %>% 
   filter(time<181) %>% 
@@ -494,8 +494,8 @@ In these games with limited feedback, listeners who got a tangram wrong don't ha
 
 ### Where do conventions come from?
 
-```{r similarity, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were used to describe the same tangram in each earlier block. Overlap is higher in smaller games.\\label{similarity}" }
-d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId)
+```{r similarity, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were used to describe the same tangram in each earlier block. Overlap is higher in smaller games.\\label{similarity}" }
+d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
 matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
 
@@ -514,6 +514,29 @@ ggplot(location_first_match, aes(x=earlier_rep+1, y=overlap, color=as.factor(num
 
 
 
+```
+
+```{r convention, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were first used by the speaker in a given round. More words are new in the 6th block in larger games; more words are first used in early blocks in 2-player games. \\label{convention}" }
+d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
+matches <- read_csv(here("data/study1/word_matches.csv"))  %>% left_join(d.numPlayer, by="gameId")
+
+never <- matches %>% filter(later_rep==5) %>% group_by(numPlayers, gameId, target, word) %>% summarize(blah=sum(match)) %>% filter(blah==0) %>% mutate(earliest_rep=5) %>% select(gameId, target, word, numPlayers, earliest_rep)
+convention <- matches %>% filter(later_rep==5) %>% 
+  filter(match) %>% 
+  group_by(gameId,target,word, numPlayers) %>% 
+  summarize(earliest_rep=min(earlier_rep)) %>% 
+  union(never) %>% 
+  group_by(gameId, numPlayers, earliest_rep) %>% 
+  tally() %>% 
+  group_by(gameId,numPlayers) %>% 
+  summarize(pct=n/sum(n), earliest_rep=earliest_rep)
+
+ggplot(convention, aes(x=earliest_rep+1, y=pct, color=as.factor(numPlayers)))+
+  geom_jitter(alpha=.5,width=.2, height=0)+facet_grid(.~numPlayers)+
+    scale_color_viridis(discrete=T, direction=-1)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")+
+  labs(x="Block of first use", y="Fraction starting in block")+
+  theme(legend.position="none")
 ```
 
 ```{r same-speaker, include=F}
@@ -545,7 +568,9 @@ conventions <- read_rds(here(model_location,"conventions_summ.rds"))
 ```
 
 
-[TODO: check methods] Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words from the speakers last block utterances and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap `r stats(conventions,1)`.  Blocks with the same speaker as the last round have more overlap `r stats(conventions,5)`; this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks `r stats(conventions,4)`, but there is no interaction between blocks and game size `r stats(conventions,2)`. Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker. 
+Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap `r stats(conventions,1)`.  Blocks with the same speaker as the last round have more overlap `r stats(conventions,5)`; this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks `r stats(conventions,4)`, but there is no interaction between blocks and game size `r stats(conventions,2)`. One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+
+Another view of this is to look at when these words were first introduced by the speaker (Figure \ref{convention}). A greater fraction of 6th block words are new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originate in the 1st or 2nd blocks.  Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. 
 
 
 ### Examples
@@ -565,7 +590,7 @@ diamond <- tribble(~`Block`, ~`Person`, ~Text,
 		"", "A(S)", "The left side of the body is right, right side has bents in it",
 		"6", "B(S)", "Diamond on top of a long large body/rectangle. Left side is complete, right side has bits missing")
 
-knitr::kable(diamond, caption = "Excerpt from a group that did not reduce very much. The speaker for each round is marked with (S). Figure under discussion is row 3, column 3 in Figure \\ref{game}.\\label{diamond}",  format="latex", booktabs=TRUE) %>% 
+knitr::kable(diamond, caption = "Excerpt from a group that did not reduce very much. The speaker for each round is marked with (S). Figure under discussion is row 3, column 3 in Figure \\ref{game}.\\label{diamond}",  format="latex", booktabs=TRUE, linesep="") %>% 
 kable_styling(full_width = F) %>%
 column_spec(3, width = "16em")
 
@@ -596,7 +621,7 @@ zigzag <- tribble(~Block, ~Person, ~`Text`,
 			"6", "B(S)",	"beggar guy",
 			"", "B(S)" ,"zigzag")
 
-knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Figure under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE)%>%
+knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Figure under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE, linesep="")%>%
 column_spec(3, width = "16em")
 
 
