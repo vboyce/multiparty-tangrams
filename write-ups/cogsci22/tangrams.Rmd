@@ -117,13 +117,13 @@ Verbal communication is an integral part of our daily lives. We coordinate sched
 The formation of these new reference expressions is well-studied in dyadic contexts; however, dynamics may be different in larger groups, which are less studied. Our current work builds on the dyadic reference game tradition by extending it to small groups.
 
 ## Multi-party communication
-The challenge of for speakers when there are multiple listeners is that they must choose utterances that will be effective to listeners who may have different background knowledge. One possibility is that speakers 'aim low', trying to be understood by all parties independently, leading to longer descriptions that focus on the quirks of the listeners who are struggling the most. For example, if a speaker is trying to communicate with an experienced listener and a naive listener, they use longer, more elaborated descriptions than if they were only communicating with an experienced listener [@yoonAdjustingConceptualPacts2014]. This suggests that communication will be slowed down when more listeners are present.
+One challenge of group communication is that speakers must communicate to listeners with varied background knowledge. Speakers could 'aim low' to be understood by all parties independently, leading to longer utterances tailored to the listeners who are struggling the most. For instance, a speaker communicating with an experienced listener and a naive listener uses more elaborated descriptions than if only communicating with an experienced listener [@yoonAdjustingConceptualPacts2014]. This predicts larger groups will be slower to communicate.
 
-Another possibility is that speakers integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. When some of the listeners are naive and need longer descriptions, speakers tailor utterances to them; however, speakers make fewer accommodations when there are 3 knowledgeable listeners and only 1 naive listener compared to when the fraction of naive listeners is higher [@yoonAudienceDesignMultiparty2019]. This suggests that there may be non-linear relationships between group size and communication speed, as the speaker aims to be informative to most listeners, but without necessarily accomodating outlier listeners. 
+Speakers could instead integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. For example, speakers use shorter utterances and make fewer accommodations when there are 3 knowledgeable listeners and only 1 naive listener compared to when the fraction of naive listeners is higher [@yoonAudienceDesignMultiparty2019]. This also predicts larger groups may be slower, but this pattern may be non-linear and asymptote at a point. 
 
-Communication can be slower and more tense when there are disagreements on how to conceptualize certain referents. When a speaker-listener pair was merged with an additional listener from another pair, the new listener had different expectations about what the key features of the referents were [@weberCulturalConflictMerger2003]. After the addition of the new listener, there was a jump in how long it took either listener to make a selection; this slowness persisted for several rounds. @weberCulturalConflictMerger2003 reported that some new listeners expressed frustration when speakers were describing images in terms of features other than the ones they were used to. The larger the group, the more difficult it may be for everyone to agree on a common conceptualization. 
+Communication can be slower and more tense when there are disagreements on how to conceptualize certain referents. When a listener switches groups, they bring preconceptions about how to conceptualize the references [@weberCulturalConflictMerger2003]. The addition of the new listener slows both listeners down for multiple rounds. @weberCulturalConflictMerger2003 reported that some new listeners expressed frustration when speakers were describing images in terms of features other than the ones they were used to. Larger groups may have more difficulty agreeing on common conceptualizations, which could slow them down and lead to friction.
 
-Work on multi-party communication strongly suggests that more people will make communication slower and more elaborated, but this work has focused on the addition of a new listener into a pair or group that had built up some shared representations. This leaves open the question of how group size influences the speed of representation formations to start. 
+Work on multi-party communication has focused on the addition of a new listener into a pair or group that had built up some shared representations. This leaves open the question of how group size influences the process of convention formation. 
 
 ## Convention formation
 Over the course of repeated reference to the same set of images with the same partner, people develop short-hand conventional names for each object. Early descriptions are long and make reference to multiple features in the image, but in later iterations, definite shorthand names are used [@clarkReferringCollaborativeProcess1986]. Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations using a text-based communication interface. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers produced fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
@@ -406,7 +406,7 @@ Listeners often don't talk much, but are more likely to ask questions or make cl
 
 ### Speakers utterances reduce in length. 
 
-```{r variability, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "Number of words from speaker (total, across all 12 figures) in a block. Each colored line is one group, the overall trend is shown in black. Across group size, the number of words decreases as conventions emerge, but convention formation is not a smooth process, and there is variability between speakers.\\label{variability}" }
+```{r variability, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "Number of words from speaker (total, across all 12 figures) in a block. Each colored line is one group, the overall trend is shown in black. Across group size, the number of words decreases as conventions emerge, but convention formation is not a smooth process, and there is variability between speakers.\\label{variability}" }
 d.chat %>% filter(role=="speaker") %>% group_by(gameId,numPlayers,repNum) %>% 
   summarize(words=sum(total_num_words)) %>% ggplot(aes(x=repNum+1, color=as.factor(numPlayers), y=words, ))+geom_line(aes(group=gameId))+facet_wrap(~numPlayers, nrow=1)+
   geom_smooth(method=glm, formula=y~poly(x,2), se=F, color="black")+
@@ -494,7 +494,7 @@ In these games with limited feedback, listeners who got a tangram wrong don't ha
 
 ### Where do conventions come from?
 
-```{r similarity, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were used to describe the same tangram in each earlier block. Overlap is higher in smaller games.\\label{similarity}" }
+```{r similarity, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were used to describe the same tangram in each earlier block. Overlap is higher in smaller games.\\label{similarity}" }
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
 matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
@@ -516,7 +516,7 @@ ggplot(location_first_match, aes(x=earlier_rep+1, y=overlap, color=as.factor(num
 
 ```
 
-```{r convention, fig.env="figure", fig.pos = "H", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were first used by the speaker in a given round. More words are new in the 6th block in larger games; more words are first used in early blocks in 2-player games. \\label{convention}" }
+```{r convention, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were first used by the speaker in a given round. More words are new in the 6th block in larger games; more words are first used in early blocks in 2-player games. \\label{convention}" }
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
 matches <- read_csv(here("data/study1/word_matches.csv"))  %>% left_join(d.numPlayer, by="gameId")
 
@@ -577,6 +577,9 @@ Another view of this is to look at when these words were first introduced by the
 
 While most groups did form conventions for most tangrams, it's illustrative to look at what happens when this doesn't happen. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long, and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
 
+
+A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
+
 ```{r diamond}
 diamond <- tribble(~`Block`, ~`Person`, ~Text,
                  "1","A(S)","Diamond on top. Body with no real arms or legs. The body is shaped like a boot with the diamond on top.",
@@ -596,7 +599,6 @@ column_spec(3, width = "16em")
 
 ```
 
-A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
 
 ```{r zigzag}
 
