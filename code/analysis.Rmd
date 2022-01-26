@@ -552,7 +552,8 @@ d.chat.pre %>%
   summarize(words=sum(total_num_words)) %>% 
 ggplot(aes(x=repNum, y=words, color=as.factor(numPlayers)))+
   facet_wrap(~numPlayers, nrow=1)+
-  scale_color_brewer(palette="Dark2")+
+  scale_color_brew
+er(palette="Dark2")+
     geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
     #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
@@ -616,3 +617,58 @@ Speaker's experience at talking about these images is confounded with player cou
 summary(model_first_2_rounds)
 ```
 
+# Pre-speaker repeats
+Not sure if this is okay since unbalanced.
+
+```{r , include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  filter(block < numPlayers)
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_test <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId), data=model_input,file=here(model_location, "model_pre_repeat"),                            prior=priors, control=list(adapt_delta=.95))
+
+        
+
+model_test2 <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_pre_repeat2"),                            prior=priors, control=list(adapt_delta=.95))
+
+         
+
+```
+
+Speaker's experience at talking about these images is confounded with player count. However, this isn't true in the first two rounds, so we can limit to that. 
+```{r}
+
+summary(model_test)
+```
+
+# What if we code for speaker experience?
+```{r , include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  mutate(speaker.repeat=ifelse(block<numPlayers,0,1))
+  
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_test3 <- brm(words ~ block * numPlayers + block * speaker.repeat+(block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_code_repeat"),                            prior=priors, control=list(adapt_delta=.95))
+
+        
+
+
+
+
+```

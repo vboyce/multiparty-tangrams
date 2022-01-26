@@ -12,7 +12,7 @@ author-information: >
     \AND {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
-  From classrooms to dinner parties, many of our everyday conversations take place in larger groups where speakers address multiple listeners at once. Such multiparty settings raise a number of challenges for classical theories of communication, which have largely focused on dyadic interactions. In this study, we investigate how speakers adapt their referring expressions over time as a function of the feedback they receive from multiple parties.  We collected a large corpus of multiparty repeated reference games (98 games, 390 participants, 116K words) where speakers designed referring expressions for groups of 1 to 5 listeners.  We find that speakers initially produce longer utterances when addressing more listeners, but that groups are able to converge to more efficient conventions regardless of the number of listeners. These findings contribute to understanding how shared viewpoints and concepts develop. TODO fix bigger picture statement
+  From classrooms to dinner parties, many of our everyday conversations take place in larger groups where speakers address multiple listeners at once. Such multiparty settings raise a number of challenges for classical theories of communication, which largely focus on dyadic interactions. In this study, we investigated how speakers adapt their referring expressions over time as a function of the feedback they receive from multiple parties.  We collected a large corpus of multiparty repeated reference games (98 games, 390 participants, 116K words) where speakers designed referring expressions for groups of 1 to 5 listeners.  We found that speakers initially produced longer utterances when addressing more listeners, but that groups were able to converge to more efficient conventions regardless of the number of listeners. These findings contribute to understanding how shared viewpoints and concepts develop. 
 
     
 keywords: >
@@ -109,7 +109,10 @@ show_summary <- function(model){
 stats <- function(model, row){
   str_c(model[row,1],": Est=", model[row,2], ", CrI=", model[row,3])
 }
-  
+
+stats_text  <- function(model, row){
+  str_c( model[row,2], " (CrI=", model[row,3],")")
+}
 ```
 
 Verbal communication is an integral part of our daily lives. We coordinate schedules with partners, socialize with friends over board games, learn and teach in seminar classes, and listen to podcasts. Our communicative environments range in size from one-on-one to small group to large group to broadcast, but the goal of efficient communication is held in common. One necessity for efficient communication is shared reference expressions; when referring to a thing or an idea, it needs some sort of name that the interlocutors will jointly understand. In many cases, there are widely shared conventionalized expressions, but in other cases, spontaneous ad-hoc expressions are needed.
@@ -121,7 +124,7 @@ One challenge of group communication is that speakers must communicate to listen
 
 Speakers could instead integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. For example, speakers use shorter utterances and make fewer accommodations when there are 3 knowledgeable listeners and only 1 naive listener compared to when the fraction of naive listeners is higher [@yoonAudienceDesignMultiparty2019]. This also predicts larger groups may be slower, but this pattern may be non-linear and asymptote at a point. 
 
-Communication can be slower and more tense when there are disagreements on how to conceptualize certain referents. When a listener switches groups, they bring preconceptions about how to conceptualize the references [@weberCulturalConflictMerger2003]. The addition of the new listener slows both listeners down for multiple rounds. @weberCulturalConflictMerger2003 reported that some new listeners expressed frustration when speakers were describing images in terms of features other than the ones they were used to. Larger groups may have more difficulty agreeing on common conceptualizations, which could slow them down and lead to friction.
+Communication is slower when there are disagreements on how to conceptualize certain referents. When a listener switches groups, they bring preconceptions about how to conceptualize the references [@weberCulturalConflictMerger2003]. The addition of the new listener slows both listeners down for multiple rounds. @weberCulturalConflictMerger2003 reported that some new listeners expressed frustration when speakers were describing images in terms of features other than the ones they were used to. Larger groups may have more difficulty agreeing on common conceptualizations, which could slow them down and lead to friction.
 
 Work on multi-party communication has focused on the addition of a new listener into a pair or group that had built up some shared representations. This leaves open the question of how group size influences the process of convention formation. 
 
@@ -206,7 +209,7 @@ words <- d.chat %>% ungroup() %>% select(total_num_words) %>% summarize(words=su
 
 # Methods
 
-Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game} and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2.
+Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2.
 
 We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistrations are at https://osf.io/cn9f4/?view_only=7fdacd698b24465cb1a8699050af5bfc and  https://osf.io/rpz67?view_only=5284203e2b644fc5ac39cf3e723b9a7e.
 
@@ -324,7 +327,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) +
 
 ```
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy, participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (` r stats(acc,2)`). 
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy, participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
 
 ### Participants speed up in later blocks.
 
@@ -438,13 +441,39 @@ speaker <- show_summary(model) %>% write_rds(here(model_location,"speaker_summ.r
 speaker <- read_rds(here(model_location,"speaker_summ.rds"))
 ```
 
- As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds. This is true in aggregate, but also true for many groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model, the effect of being one block later is `r stats(speaker,1)`. 
- 
+ As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds. This is true in aggregate, but also true for many groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model, the effect of being one block later is `r stats_text(speaker,1)`. 
+
+
+```{r repeat-speakers, include=F}
+model_input <- d.chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId)) %>% 
+  mutate(speaker.repeat=ifelse(block<numPlayers,0,1))
+  
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_repeat_speaker <- brm(words ~ block * numPlayers + block * speaker.repeat+(block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_code_repeat"),                            prior=priors, control=list(adapt_delta=.95))
+
+speaker_repeats <- show_summary(model_repeat_speaker) %>% write_rds(here(model_location,"speaker_repeat_summ.rds"))
+```
+
+```{r}
+repeat_speaker <- read_rds(here(model_location,"speaker_repeat_summ.rds"))
+```
+
 ### Larger groups say more. 
 
-One open question about larger groups was whether they would produce longer utterances or reduce more slowly than speakers in smaller groups. The overall effect of having more players in a group is `r stats(speaker,4)` per additional player. There is no clear interaction between block and group size `r stats(speaker,2)`. This is consistent with predictions from audience design that with more listeners to accommodate, the speaker may hedge with multiple conceptualizations. Larger groups also have more listeners who may ask clarifying questions that the speaker feels the need to respond to. 
+One open question about larger groups was whether they would produce longer utterances or reduce more slowly than speakers in smaller groups. The overall effect of having more players in a group is `r stats_text(speaker,4)` per additional player. There is no clear interaction between block and group size (`r stats(speaker,2)`). This is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications. 
 
+### Speaker experience does not fully explain group size effects. 
 
+One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To control for this, we add a variable to the model to code for whether the speaker has been speaker in an earlier block. Repeat speakers do use fewer words (`r stats(repeat_speaker,6)`), but there are still effects of group size (`r stats(repeat_speaker,5)`) and block (`r stats(repeat_speaker,1)`). The effects of block and repeat speaker are subadditive (`r stats(repeat_speaker,3)`), and there is minimal interaction between block and group size (`r stats(repeat_speaker,2)`). 
 
 
 ## Development of conventions 
@@ -516,7 +545,7 @@ ggplot(location_first_match, aes(x=earlier_rep+1, y=overlap, color=as.factor(num
 
 ```
 
-```{r convention, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were first used by the speaker in a given round. More words are new in the 6th block in larger games; more words are first used in early blocks in 2-player games. \\label{convention}" }
+```{r convention, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=2.5, fig.cap = "The fraction of content words used by the speaker in the final (6th) block that were first used by the speaker in a given block. More words are new in the 6th block in larger games; more words are first used in early blocks in 2-player games. \\label{convention}" }
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
 matches <- read_csv(here("data/study1/word_matches.csv"))  %>% left_join(d.numPlayer, by="gameId")
 
@@ -568,7 +597,7 @@ conventions <- read_rds(here(model_location,"conventions_summ.rds"))
 ```
 
 
-Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap `r stats(conventions,1)`.  Blocks with the same speaker as the last round have more overlap `r stats(conventions,5)`; this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks `r stats(conventions,4)`, but there is no interaction between blocks and game size `r stats(conventions,2)`. One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
 
 Another view of this is to look at when these words were first introduced by the speaker (Figure \ref{convention}). A greater fraction of 6th block words are new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originate in the 1st or 2nd blocks.  Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. 
 
@@ -623,7 +652,7 @@ zigzag <- tribble(~Block, ~Person, ~`Text`,
 			"6", "B(S)",	"beggar guy",
 			"", "B(S)" ,"zigzag")
 
-knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Figure under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE, linesep="")%>%
+knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Tangram under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE, linesep="")%>%
 column_spec(3, width = "16em")
 
 
@@ -631,20 +660,20 @@ column_spec(3, width = "16em")
 
 # Discussion
 
-The overall patterns present in dyadic repeated reference games generalize to small groups of participants. Selection accuracy increases over rounds at the same time as listeners speed up their selections. Speakers reduce the length of their descriptive utterances as they conventionalize on concepts for each image.
+We ran repeated reference games with groups of 2-6 players; these games show the same patterns previously observed in dyadic reference games. Selection accuracy increases over rounds at the same time as listeners speed up their selections. Crucially, speakers reduce the length of their descriptive utterances as they conventionalize on concepts for each image. Because speakers rotated, this reduction finding is robust: not only do speakers say less in later repetitions than they themselves said earlier, speakers later in the order say less than speakers earlier in the rotation.   
 
-Group size does make a difference, as larger groups talk more and are slower than smaller groups. There is also more diversity in how images are described within larger groups. This could just be from slower convergence to a conventions, or from parallel competing conceptualizations favored by different speakers. 
+The trajectory of reduction is dependent on several factors including group size, whether the current speaker correctly identified the tangram in the prior block, and whether the current speaker is new to being speaker. 
 
-The patterns of reduction are robust to speaker rotation and the lack of gold-standard feedback to listeners. Not only do speakers say less in later repetitions than they themselves said earlier, speakers later in the order say less than speakers earlier in the rotation.   
+Bigger groups differ from smaller groups in a number of ways. There are more people who the speaker is trying to communicate to, but there are also more people who might interrupt and ask questions. There are more people who can have their own opinions about what each image looks like. This leads to more diversity in how images are described across blocks. This could just be from slower convergence to a conventions, or from parallel competing conceptualizations favored by different speakers. 
 
 ## Future work
-There are a number of design parameters in this experiment that could effect the patterns of reduction. It remains to future work to vary these parameters and determine which are relevant. Luckily, with an online implementation, recruiting for and running experiments is relatively easy, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. 
+Iterations on this experimental paradigm can start to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is quick, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. 
 
-We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020. This low level of feedback means that there isn't a way for people to find out what was meant for utterances they initially did not understand outside of the verbal communication channel (or process of elimination). Similarly, speakers don't have direct access to how well their partners did in the previous block. Real-life communicative situations vary in what extra-textual feedback exists, but we do show that people can work around their initial confusion to eventually understand utterances, rather than just memorizing pairings after the first occurrence. These were fairly unfavorable settings where we limited the amount of information flow. Future experiments could see whether making more things public by making selections visible to all during the feedback stage changes the amount of reduction observed. 
+We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020.  Real-life communicative situations vary in what sort of feedback exists; this experiment mimics a situation with low feedback. Future experiments could determine the effects of more public knowledge by making selections visible to all during the feedback stage. 
 
-Additionally, while each participant had a nickname, color, and icon to identify them, individual identity was not especially salient. Future experiments could make the individual identity of each participant more salient by showing their responses in a consistent location on the screen, or allowing participants to get to know each other first. Different design choices in the interaction provide simuations for different contexts in which reference is established in nomal life.
+While each participant was identified with a nickname, color, and icon, individual identity was not especially salient. Future experiments could increase salience by showing each participants progress in a separate location on the screen or allowing participants to get to know each other first. Different design choices in the interaction provide simulations for different real-life referring situations.
 
-This is a rich data set that  may yield more information about how humans adapt language quickly, and the dataset may be useful for training artificial agents to use and understand language more dynamically. 
+While much is left to be explored, this initial data set provides a rich corpus of how humans adapt language dynamically to communicate. 
 
 <!--
 # General Formatting Instructions 
@@ -793,10 +822,6 @@ tab1 <- xtable::xtable(summary(out)$coef, digits=c(0, 2, 2, 1, 2),
 print(tab1, type="latex", comment = F, table.placement = "H")
 ```
 -->
-# Acknowledgements
-
-Place acknowledgments (including funding information) in a section at
-the end of the paper.
 
 # References 
 
