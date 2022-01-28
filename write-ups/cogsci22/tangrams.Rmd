@@ -113,6 +113,16 @@ stats <- function(model, row){
 stats_text  <- function(model, row){
   str_c( model[row,2], " (CrI=", model[row,3],")")
 }
+
+form <- function(model){
+ dep <- as.character(model$formula[2])
+ ind <- as.character(model$formula[3])
+ 
+ str_c(dep," ~ ",ind) %>% str_replace_all(" ","") %>% 
+  str_replace_all("\\*"," $\\\\times$ ") %>% 
+  str_replace_all("\\+", "&nbsp;+ ") %>% 
+   str_replace_all("~", "$\\\\sim$ ")
+}
 ```
 
 Verbal communication is an integral part of our daily lives. We coordinate schedules with partners, socialize with friends over board games, learn and teach in seminar classes, and listen to podcasts. Communicative environments range in size from one-on-one dialogue to broadcast communication to large groups, but the goal of efficient communication is shared across these. Shared referring expressions are a necessity for efficient communication; a thing or an idea needs some sort of name that the interlocutors will jointly understand. In many cases, there are widely shared conventionalized expressions for objects or ideas, but in other cases, spontaneous ad-hoc expressions must be invented. 
@@ -312,10 +322,12 @@ model <- brm(correct.num ~ block*numPlayers,
              file=here(model_location, "acc_model"), prior=priors, control=list(adapt_delta=.95))
 
 acc <- show_summary(model) %>% write_rds(here(model_location,"acc_summ.rds"))
+acc_spec <- model$formula %>% write_rds(here(model_location, "acc_spec.rds"))
 ```
 
 ```{r}
 acc <- read_rds(here(model_location,"acc_summ.rds"))
+acc_spec <- read_rds(here(model_location,"acc_spec.rds"))
 ```
 
 ```{r accuracy, fig.env="figure", fig.pos = "H", fig.align = "center", out.width="100%", fig.width=5, fig.height=2.5, fig.cap = "Player's accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \\label{accuracy}" }
@@ -331,7 +343,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) +
 
 ```
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy, participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy (`r form(acc_spec)`), participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
 
 ### Participants speed up in later blocks.
 
@@ -352,10 +364,13 @@ model <- brm(time ~ block*numPlayers ,
              file=here(model_location, "time_model"), prior=priors, control=list(adapt_delta=.95))
 
 time <- show_summary(model) %>% write_rds(here(model_location,"time_summ.rds"))
+time_spec <- model$formula %>% write_rds(here(model_location, "time_spec.rds"))
+
 ```
 
 ```{r}
 time <- read_rds(here(model_location,"time_summ.rds"))
+time_spec <- read_rds(here(model_location,"time_spec.rds"))
 ```
 
 
@@ -378,7 +393,7 @@ geom_smooth(method = "glm", formula = y~x,
 ```
 
 
-Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time, participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
+Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time (`r form(time_spec)`), participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
 
 ## Reduction
 
@@ -402,14 +417,18 @@ model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangr
 
          
 listener <- show_summary(model) %>% write_rds(here(model_location,"listener_summ.rds"))
+listener_spec <- model$formula %>% write_rds(here(model_location, "listener_spec.rds"))
+
 ```
 
 ```{r}
 listener <- read_rds(here(model_location,"listener_summ.rds"))
+listener_spec <- read_rds(here(model_location,"listener_spec.rds"))
 ```
 
-Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said, there is an effect of block (`r stats(listener, 1)`), but no clear effect of game size (`r stats(listener,4)`). 
+Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said [^1], there is an effect of block (`r stats(listener, 1)`), but no clear effect of game size (`r stats(listener,4)`). 
 
+[^1]: `r form(listener_spec)`
 
 ### Speakers utterances reduce in length. 
 
@@ -439,14 +458,20 @@ priors <- c(
 model <- brm(words ~ block * numPlayers + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=speaker_input,file=here(model_location, "speaker_model"),                            prior=priors, control=list(adapt_delta=.95))
 
 speaker <- show_summary(model) %>% write_rds(here(model_location,"speaker_summ.rds"))
+speaker_spec <- model$formula %>% write_rds(here(model_location, "speaker_spec.rds"))
+
+
 ```
 
 ```{r}
 speaker <- read_rds(here(model_location,"speaker_summ.rds"))
+speaker_spec <- read_rds(here(model_location,"speaker_spec.rds"))
+
 ```
 
- As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds. This is true in aggregate, but also true for many groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model, the effect of being one block later is `r stats_text(speaker,1)`. 
+ As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds. This is true in aggregate, but also true for many groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model[^2], the effect of being one block later is `r stats_text(speaker,1)`. 
 
+[^2]: `r form(speaker_spec)`
 
 ```{r repeat-speakers, include=F}
 model_input <- d.chat %>% filter(role=="speaker") %>% 
@@ -465,10 +490,13 @@ priors <- c(
 model_repeat_speaker <- brm(words ~ block * numPlayers + block * speaker.repeat+(block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "model_code_repeat"),                            prior=priors, control=list(adapt_delta=.95))
 
 speaker_repeats <- show_summary(model_repeat_speaker) %>% write_rds(here(model_location,"speaker_repeat_summ.rds"))
+speaker_repeat_spec <- model_repeat_speaker$formula %>% write_rds(here(model_location, "speaker_repeat_spec.rds"))
+
 ```
 
 ```{r}
 repeat_speaker <- read_rds(here(model_location,"speaker_repeat_summ.rds"))
+repeat_speaker_spec <- read_rds(here(model_location,"speaker_repeat_spec.rds"))
 ```
 
 ### Larger groups say more. 
@@ -477,8 +505,9 @@ One open question about larger groups was whether they would produce longer utte
 
 ### Speaker experience does not fully explain group size effects. 
 
-One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To control for this, we add a variable to the model to code for whether the speaker has been speaker in an earlier block. Repeat speakers do use fewer words (`r stats(repeat_speaker,6)`), but there are still effects of group size (`r stats(repeat_speaker,5)`) and block (`r stats(repeat_speaker,1)`). The effects of block and repeat speaker are subadditive (`r stats(repeat_speaker,3)`), and there is minimal interaction between block and group size (`r stats(repeat_speaker,2)`). 
+One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To control for this, we add a variable coding for whether the speaker has been speaker in an earlier block[^3]. Repeat speakers do use fewer words (`r stats(repeat_speaker,6)`), but there are still effects of group size (`r stats(repeat_speaker,5)`) and block (`r stats(repeat_speaker,1)`). The effects of block and repeat speaker are subadditive (`r stats(repeat_speaker,3)`), and there is minimal interaction between block and group size (`r stats(repeat_speaker,2)`). 
 
+[^3]: `r form(repeat_speaker_spec)`
 
 ## Development of conventions 
 One broad question is how speakers decide when to follow a previously established description and repeat it, perhaps in a reduced form, and when to use a different conceptualization. 
@@ -516,14 +545,20 @@ priors <- c(
 model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+ (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId), data=model_input,file=here(model_location, "speaker_acc"),                         prior=priors, control=list(adapt_delta=.95))
 
 speaker_acc <- show_summary(model_speaker_acc) %>% write_rds(here(model_location,"speaker_acc_summ.rds"))
+speaker_acc_spec <- model_speaker_acc$formula %>% write_rds(here(model_location, "speaker_acc_spec.rds"))
+
 ```
 
 ```{r}
 speaker_acc <- read_rds(here(model_location,"speaker_acc_summ.rds"))
+speaker_acc_spec <- read_rds(here(model_location,"speaker_acc_spec.rds"))
+
 ```
 
 
-In these games with limited feedback, listeners who got a tangram wrong don't have a way of knowing what the right answer was unless they ask for clarification in the chat. This means that if a speaker got a tangram wrong as a listener in the previous block, they may not know the conventional description that does with it, and thus are unlikely to follow it.  If we assume that reduction is a sign of convention development, this predicts speakers should say more words when they got the tangram wrong the previous block, after controlling for other effects. This is borne out; speakers say more words for tangrams after they were incorrect (`r stats(speaker_acc,6)`). 
+In these games with limited feedback, listeners who got a tangram wrong don't have a way of knowing what the right answer was unless they ask for clarification in the chat. This means that if a speaker got a tangram wrong as a listener in the previous block, they may not know the conventional description that does with it, and thus are unlikely to follow it.  If we assume that reduction is a sign of convention development, this predicts speakers should say more words when they got the tangram wrong the previous block, after controlling for other effects. This is borne out[^4]; speakers say more words for tangrams after they were incorrect (`r stats(speaker_acc,6)`). 
+
+[^4]: `r form(speaker_acc_spec)`
 
 ### Where do conventions come from?
 
@@ -594,14 +629,19 @@ same_speaker <- matches %>%
   #model_conventions <- glm(match ~ block * numPlayers + same_speaker, data=same_speaker ,family=binomial)
          
 conventions <- show_summary(model_conventions) %>% write_rds(here(model_location,"conventions_summ.rds"))
+convention_spec <- model_conventions$formula %>% write_rds(here(model_location, "convention_spec.rds"))
 ```
 
 ```{r}
 conventions <- read_rds(here(model_location,"conventions_summ.rds"))
+convention_spec <- read_rds(here(model_location,"convention_spec.rds"))
+
 ```
 
 
-Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block, later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. To do this, we took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. This let us calculate a fraction overlap between the last round utterance and earlier rounds, shown in Figure \ref{similarity}. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this is easiest to see in the peaks for rounds 2 and 4 in the 2 player games. Larger groups lead to less overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+
+[^5]: `r form(convention_spec)`
 
 Another view of this is to look at when these words were first introduced by the speaker (Figure \ref{convention}). A greater fraction of 6th block words are new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originate in the 1st or 2nd blocks.  Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. 
 
