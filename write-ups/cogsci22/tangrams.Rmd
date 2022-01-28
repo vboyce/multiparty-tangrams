@@ -12,7 +12,7 @@ author-information: >
     \AND {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
-  From classrooms to dinner parties, many of our everyday conversations take place in larger groups where speakers address multiple listeners at once. Such multiparty settings raise a number of challenges for classical theories of communication, which largely focus on dyadic interactions. In this study, we investigated how speakers adapt their referring expressions over time as a function of the feedback they receive from multiple parties.  We collected a large corpus of multiparty repeated reference games (98 games, 390 participants, 116K words) where speakers designed referring expressions for groups of 1 to 5 listeners.  We found that speakers initially produced longer utterances when addressing more listeners, but that groups were able to converge to more efficient conventions regardless of the number of listeners. These findings contribute to understanding how shared viewpoints and concepts develop. 
+  From classrooms to dinner parties, many of our everyday conversations take place in larger groups where speakers address multiple listeners at once. Such multiparty settings raise a number of challenges for classical theories of communication, which largely focus on dyadic interactions. In this study, we investigated how speakers adapt their referring expressions over time as a function of the feedback they receive from multiple parties.  We collected a large corpus of multiparty repeated reference games (98 games, 390 participants, 116K words) where speakers designed referring expressions for groups of 1 to 5 listeners. Larger groups tended to use more words total and introduce more new words; nonetheless, most groups were able to converge to more efficient conventions regardless of the number of listeners.
 
     
 keywords: >
@@ -121,9 +121,9 @@ The formation of these new reference expressions is well-studied in dyadic conte
 
 ## Dyadic reference games
 
-@clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard. Two participants see the same set of tangram figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure tend to emerge. 
+@clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard. Two participants see the same set of tangram figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure tend to emerge; this shortening of utterances is called 'reduction'. 
 
-Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations using a text-based communication interface. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers produced fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
+Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations using a text-based communication interface. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
 
 ## Multi-party communication
 While in a dyad, the speaker can tailor their utterances to the one listener, in large groups, speakers must balance the competing needs of different listeners. 
@@ -138,7 +138,7 @@ In general, listeners expect speakers to maintain conventions and stick to descr
 Work on multi-party communication has focused on the addition of a new person into a pair or group that had built up some shared representations. Our present work complements this by examining the effect of group size during the process of convention formation. 
 
 ## Present work
-We extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2-6 players who rotate between speaker and listener roles. We compare accuracy and reduction rates in groups of different sizes. This paradigm allows us to confirm that that these findings in dyads extend to larger groups. 
+We extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2-6 players who rotate between speaker and listener roles. We compare accuracy and reduction patterns in groups of different sizes. This paradigm allows us to confirm that that these findings in dyads extend to larger groups. 
 
 1. Accuracy will increase across blocks.
 
@@ -605,14 +605,6 @@ Another angle to look at conventions is to take the speaker's utterances in the 
 
 Another view of this is to look at when these words were first introduced by the speaker (Figure \ref{convention}). A greater fraction of 6th block words are new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originate in the 1st or 2nd blocks.  Overall, this suggests that in smaller groups, conventions reduce and stabilize sooner, perhaps because fewer people need to implicitly agree on them. 
 
-
-### Examples
-
-While most groups did form conventions for most tangrams, it's illustrative to look at what happens when this doesn't happen. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long, and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
-
-
-A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
-
 ```{r diamond}
 diamond <- tribble(~`Block`, ~`Person`, ~Text,
                  "1","A(S)","Diamond on top. Body with no real arms or legs. The body is shaped like a boot with the diamond on top.",
@@ -631,6 +623,15 @@ kable_styling(full_width = F) %>%
 column_spec(3, width = "16em")
 
 ```
+
+### Examples
+
+While most groups did form conventions for most tangrams, it's illustrative to look at what happens when this doesn't happen. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long, and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
+
+
+A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
+
+
 
 
 ```{r zigzag}
@@ -664,18 +665,23 @@ column_spec(3, width = "16em")
 
 # Discussion
 
-We ran repeated reference games with groups of 2-6 players; these games show the same patterns previously observed in dyadic reference games. Selection accuracy increases over rounds at the same time as listeners speed up their selections. Crucially, speakers reduce the length of their descriptive utterances as they conventionalize on concepts for each image. Because speakers rotated, this reduction finding is robust: not only do speakers say less in later repetitions than they themselves said earlier, speakers later in the order say less than speakers earlier in the rotation.   
+We ran repeated reference games with groups of 2-6 players to see if three patterns from dyadic reference games generalized and test for two trends across group size, as layed out in the Introduction. 
 
-The trajectory of reduction is dependent on several factors including group size, whether the current speaker correctly identified the tangram in the prior block, and whether the current speaker is new to being speaker. 
+Consistent with dyadic games, listener's selection accuracy increased over blocks (prediction 1) at the same time as listeners sped up their selections (prediction 2). 
+Crucially, speakers reduce the length of their descriptive utterances as they conventionalize on concepts for each image (prediction 3). Because speakers rotated, this reduction finding is robust: not only do speakers say less in later repetitions than they themselves said earlier, speakers later in the order say less than speakers earlier in the rotation.   
 
-Bigger groups differ from smaller groups in a number of ways. There are more people who the speaker is trying to communicate to, but there are also more people who might interrupt and ask questions. There are more people who can have their own opinions about what each image looks like. This leads to more diversity in how images are described across blocks. This could just be from slower convergence to a conventions, or from parallel competing conceptualizations favored by different speakers. 
+This reduction varies with group size; smaller groups use shorter utterances, but this does not significantly interact with block (question 4). The trajectory of reduction also depended on whether the current speaker correctly identified the tangram in the prior block and whether the current speaker was new to being speaker. This pattern is consistent with both the 'aim low' and 'aim middle' hypotheses.
+
+Smaller groups showed more agreement in how each tangram was identified across blocks (question 5); the overlap between descriptions in the first 5 blocks to the final block was higher, and words in the final block tended to originate earlier. The greater diversity in how images are described in larger groups could be explained by slower convergence to a convention or parallel competing conceptualizations favored by different speakers.
+
+We don't know what aspects of group size drive these trends as bigger groups differ from smaller groups in a number of ways. Larger groups more people for the speaker to communicate to, but also more people who might interrupt with questions, and more people who have opinions about what each image looks like. 
+
+## Limitations
+Group interactions are rich, and this experiment is necessarily a schematic simplification. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment. Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community.  Reference is only one goal out of many possible communicative goals, and the tangram images are artificial. 
+We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020; this imitates situations where interlocuters can't show each other examples, but it's not representative of all communicative environments. Our text-based online paradigm meant that participant's individual identities were not especially salient. Communication takes place in a plethora of situations; our experiment provides some insight, but misses many complexities. 
 
 ## Future work
-Iterations on this experimental paradigm can start to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is quick, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. 
-
-We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020.  Real-life communicative situations vary in what sort of feedback exists; this experiment mimics a situation with low feedback. Future experiments could determine the effects of more public knowledge by making selections visible to all during the feedback stage. 
-
-While each participant was identified with a nickname, color, and icon, individual identity was not especially salient. Future experiments could increase salience by showing each participants progress in a separate location on the screen or allowing participants to get to know each other first. Different design choices in the interaction provide simulations for different real-life referring situations.
+Iterations on this experimental paradigm could start to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is feasible, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. 
 
 While much is left to be explored, this initial data set provides a rich corpus of how humans adapt language dynamically to communicate. 
 
