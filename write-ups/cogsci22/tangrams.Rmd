@@ -27,7 +27,7 @@ output: cogsci2016::cogsci_paper
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
                       fig.pos = "tb", fig.path='figs/',
-                      echo=F, warning=F, cache=F, 
+                      echo=F, warning=F, cache=TRUE, 
                       message=F, sanitize = T)
 ```
 
@@ -213,9 +213,7 @@ words <- d.chat %>% ungroup() %>% select(total_num_words) %>% summarize(words=su
 
 # Methods
 
-Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. Code to run the experiment, as well as data and analysis code are available at https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2.
-
-We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. Our preregistrations are at https://osf.io/cn9f4/?view_only=7fdacd698b24465cb1a8699050af5bfc and  https://osf.io/rpz67?view_only=5284203e2b644fc5ac39cf3e723b9a7e.
+Building on the methods of @hawkinsCharacterizingDynamicsLearning2020, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker.   We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.^[Code to run the experiment, as well as data and analysis code are available at https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2.] We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study.^[Our preregistrations are at https://osf.io/cn9f4/?view_only=7fdacd698b24465cb1a8699050af5bfc and  https://osf.io/rpz67?view_only=5284203e2b644fc5ac39cf3e723b9a7e.]
 
 ## Participants
 
@@ -257,7 +255,7 @@ We implemented the experiment using Empirica, a Javascript-based platform for ru
 img <- png::readPNG(here(image_location, "interface_crop.png"))
 speaker <- png::readPNG(here(image_location, "speaker_feedback_crop.png"))
 l_correct <- png::readPNG(here(image_location,"listener_correct_crop.png"))
-l_wrong <- png::readPNG(here(image_location,"listener_wrong_crop.png"))
+l_wrong <- png::readPNG(here(image_location, "listener_wrong_crop.png"))
 
 ggdraw()+
   draw_image(img, x=.01, y=0,halign = 0, valign=0)+
@@ -286,14 +284,14 @@ After the game finished, participants were given a survey asking for optional de
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well or fast the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
-Our intended sample size was 20 complete games in each group size, but we ended up with fewer as shown in Table \ref{parts}.  We excluded incomplete blocks from analyses, but included complete blocks from partial games. (Partial games occurred when a participant disconnected early, for example due to internet trouble.)
+Our intended sample size was 20 complete games in each group size, but we ended up with fewer (Table \ref{parts}).  We excluded incomplete blocks from analyses, but included complete blocks from partial games. (Partial games occurred when a participant disconnected early, for example due to internet trouble.)
 
 # Results
 
-
-
 ## Accuracy and Speed
-Our first question was whether accuracy and speed increased. 
+
+Our first question was whether accuracy and speed increased.
+
 ### Accuracy is high and increasing.
 
 ```{r model-acc, include=F}
@@ -553,7 +551,7 @@ In these games with limited feedback, listeners who got a tangram wrong don't ha
 
 ### Smaller groups reduce and stabilize conventions sooner.
 
-```{r similarity, fig.env = "figure*", fig.pos = "h", fig.width=9, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2,out.width="80%", fig.cap = "Comparison of the content words is the final (6th) block to words in previous blocks. A shows the proportion 6th block content words found in each prior block. B shows the proportion 6th block content words that were first used by the speaker in each block. Smaller games have higher overlap and a greater proportion of words originating earlier. \\label{convention}" }
+```{r similarity, fig.env = "figure*", fig.pos = "h", fig.width=9, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2,out.width="80%", fig.cap = "Comparison of the content words is the final (6th) block to words in previous blocks. A shows the proportion 6th block content words found in each prior block. B shows the proportion 6th block content words that were first used by the speaker in each block. Smaller games have higher overlap and a greater proportion of words originating earlier. \\label{similarity}" }
 d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
 matches <- read_csv(here("data/study1/word_matches.csv")) %>% left_join(d.numPlayer, by="gameId")
 
@@ -627,7 +625,7 @@ convention_spec <- read_rds(here(model_location,"convention_spec.rds"))
 ```
 
 
-Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds. Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds.^[Contentful words were defined as all words with a part of speech identified by the Spacy (\url{http://spacy.io}) tagger as being a noun, verb, or adjective; that were not on the Spacy stop word list; and that did not have a lemma in the set ['look','like','body','person','man','guy'], a list generated as being extremely common "management" vocabulary across tangrams.] Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
 
 [^5]: `r form(convention_spec)`
 
