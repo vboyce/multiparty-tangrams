@@ -315,7 +315,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) +
 
 ```
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy (`r form(acc_spec)`), participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy^[`r form(acc_spec)` This and all subsequent regression models were run in brms with weakly regularizing priors.], participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
 
 ### Participants speed up in later blocks.
 
@@ -366,7 +366,7 @@ geom_smooth(method = "glm", formula = y~x,
 ```
 
 
-Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time (`r form(time_spec)`), participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
+Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time^[`r form(time_spec)`], participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
 
 ## Reduction
 
@@ -625,11 +625,16 @@ convention_spec <- read_rds(here(model_location,"convention_spec.rds"))
 ```
 
 
-Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds.^[Contentful words were defined as all words with a part of speech identified by the Spacy (\url{http://spacy.io}) tagger as being a noun, verb, or adjective; that were not on the Spacy stop word list; and that did not have a lemma in the set ['look','like','body','person','man','guy'], a list generated as being extremely common "management" vocabulary across tangrams.] Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
+Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds.^[Contentful words were defined as all words in a referential message with a part of speech identified by the Spacy (\url{http://spacy.io}) tagger as being a noun, verb, or adjective; that were not on the Spacy stop word list; and that did not have a lemma in the set ['look','like','body','person','man','guy'], a list generated as being extremely common vocabulary across tangrams.] Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
 
 [^5]: `r form(convention_spec)`
 
 Another way to measure conventions is to look at when these words were first introduced by the speaker (Figure \ref{similarity}B). A greater fraction of 6th block words are new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originate in the 1st or 2nd blocks.  Overall, conventions reduce and stabilize sooner in smaller groups, perhaps because fewer people need to implicitly agree on them. 
+
+### Groups varied in their strategies and reduction. 
+
+While most groups did form conventions for most tangrams, it's illustrative to look at a case where a group did not. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
+
 
 ```{r diamond}
 diamond <- tribble(~`Block`, ~`Person`, ~Text,
@@ -646,13 +651,10 @@ diamond <- tribble(~`Block`, ~`Person`, ~Text,
 
 knitr::kable(diamond, caption = "Excerpt from a group that did not reduce very much. The speaker for each round is marked with (S). Figure under discussion is row 3, column 3 in Figure \\ref{game}.\\label{diamond}",  format="latex", booktabs=TRUE, linesep="") %>%
 kable_styling(full_width = F) %>%
-column_spec(3, width = "16em")
+column_spec(3, width = "16em") %>% kable_styling(latex_options="H")
 
 ```
 
-### Groups varied in their strategies and reduction. 
-
-While most groups did form conventions for most tangrams, it's illustrative to look at a case where a group did not. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
 
 
 A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
@@ -684,7 +686,7 @@ zigzag <- tribble(~Block, ~Person, ~`Text`,
 			"", "B(S)" ,"zigzag")
 
 knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Tangram under discussion is row 1, column 4 in Figure \\ref{game}. \\label{zigzag}", format="latex",booktabs = TRUE, linesep="") %>%
-column_spec(3, width = "16em")
+column_spec(3, width = "16em") 
 
 
 ```
