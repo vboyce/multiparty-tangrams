@@ -16,7 +16,7 @@ abstract: >
 
     
 keywords: >
-    Communication; Reference game; Convention; Reduction;
+    Pragmatics; Communication; Reference game; Convention; Reduction; Efficiency
     
 output: cogsci2016::cogsci_paper
 #final-submission: \cogscifinalcopy
@@ -141,9 +141,9 @@ One possible approach for speakers is to 'aim low' and produce utterances tailor
 
 Another strategy for speakers is to integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. In @yoonAudienceDesignMultiparty2019, speakers play a reference game with a set of listeners, and then communicate to a mixed group of experienced and new listeners. In trials with 3 experienced listeners and 1 naive listener, speakers used shorter utterances and made fewer accommodations to naive listeners than in groups with a greater fraction of naive listeners. Both of these strategies predict that larger groups will be slower to converge than smaller groups, but differ in whether the the slowest listeners will be included.
 
-Disagreements about how to conceptualize referents can also slow groups down. In @weberCulturalConflictMerger2003, pairs of participants played a reference game with the same image sets before a listener switched groups and joined a different pair. The addition of the new listener slowed both listeners down for multiple rounds. When a listener switched groups, they brought preconceptions about how to conceptualize the references, and there was conflict between how the new listener wanted images described and how the speaker was used to describing the images. This result predicts that, with more perspectives in play, larger groups may have more difficulty agreeing on common conceptualizations.
+Disagreements about how to conceptualize referents can also slow groups down. In @weberCulturalConflictMerger2003, pairs of participants played a reference game with the same image sets before a listener switched groups and joined a different pair, making a group of three. The addition of the new listener slowed both listeners down for multiple rounds. When a listener switched groups, they brought preconceptions about how to conceptualize the references, and there was conflict between how the new listener wanted images described and how the speaker was used to describing the images. This result predicts that, with more perspectives in play, larger groups may have more difficulty agreeing on common conceptualizations.
 
-In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, they are not surprised to hear different descriptions of a familiar object if it comes from a new speaker who just entered the room [@metzingWhenConceptualPacts2003]. It's unclear what this finding predicts about new speakers who were present as fellow listeners during prior blocks -- will do listeners expect them to maintain the convention? 
+In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, they are not surprised to hear different descriptions of a familiar object if it comes from a new speaker who just entered the room [@metzingWhenConceptualPacts2003]. It's unclear what this finding predicts about new speakers who were present as fellow listeners during prior blocks -- will listeners expect them to maintain the convention? 
 
 Work on multi-party communication has focused on the addition of a new person into a pair or group that had built up some shared representations. Our present work complements this prior work by examining the effect of group size during the process of convention formation. 
 
@@ -242,7 +242,7 @@ tab1 <- xtable::xtable(summary, align="lccc",
 print(tab1, type="latex", comment = F, include.rownames=F, table.placement = "H")
 ```
 
-Participants were recruited using the Prolific platform between May and July 2021. We screened for participants who were fluent native English speakers. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses. A total of 390 people participated. 
+We recruited participants between May and July 2021 using the Prolific platform; participants had all self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses. A total of 390 people each participated in one game. 
 
 ## Materials
 We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020 and @clarkReferringCollaborativeProcess1986 (see Figure \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as "top left" were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block. 
@@ -491,7 +491,7 @@ Our third question was whether smaller groups would use fewer words or reduce fa
 
 ### Larger groups say more. 
 
-The overall effect of having more players in a group is `r stats_text(speaker,4)` per additional player. There is no clear interaction between block and group size (`r stats(speaker,2)`). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications. 
+The overall effect of having more players in a group is `r stats_text(speaker,4)` words from the speaker per trial per additional player. There is no clear interaction between block and group size (`r stats(speaker,2)`). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications. 
 
 ### Speaker experience does not fully explain group size effects. 
 
@@ -657,7 +657,7 @@ column_spec(3, width = "16em")
 While most groups did form conventions for most tangrams, it's illustrative to look at a case where a group did not. Table \ref{diamond} shows the transcript of a 4-person groups for a specific figure where they described it geometrically every round, leading to long and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
 
 
-A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams in shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
+A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
 
 
 
@@ -702,11 +702,11 @@ This reduction varies with group size; smaller groups use shorter utterances, bu
 
 Smaller groups showed more agreement in how each tangram was identified across blocks (question 5); the overlap between descriptions in the first 5 blocks to the final block was higher, and words in the final block tended to originate earlier. The greater diversity in how images are described in larger groups could be explained by slower convergence to a convention or parallel competing conceptualizations favored by different speakers.
 
-We don't know what aspects of group size drive these trends as bigger groups differ from smaller groups in a number of ways. Larger groups more people for the speaker to communicate to, but also more people who might interrupt with questions, and more people who have opinions about what each image looks like. 
+We don't know what aspects of group size drive these trends as bigger groups differ from smaller groups in a number of ways. Larger groups have more people for the speaker to communicate to, but also more people who might interrupt with questions, and more people who have opinions about what each image looks like. 
 
 ## Limitations
 Group interactions are rich, and this experiment is necessarily a schematic simplification. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment. Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community.  Reference is only one goal out of many possible communicative goals, and the tangram images are artificial. 
-We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020; this regime imitates situations where interlocuters can't show each other examples, but it's not representative of all communicative environments. Our text-based online paradigm meant that participant's individual identities were not especially salient. Communication takes place in a plethora of situations; our experiment provides some insight, but misses many complexities. 
+We provided less feedback than previous studies such as @hawkinsCharacterizingDynamicsLearning2020; this regime imitates situations where interlocuters can't show each other examples, but it's not representative of all communicative environments. Our text-based online paradigm meant that participants' individual identities were not especially salient. Communication takes place in a plethora of situations; our experiment provides some insight, but misses many complexities. 
 
 ## Future work
 Iterations on this experimental paradigm could start to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is feasible, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. 
