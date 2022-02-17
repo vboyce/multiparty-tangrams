@@ -20,7 +20,6 @@ export default class Tangram extends React.Component {
         const count=round.get("countCorrect")
         round.set("countCorrect", count+1)
       }
-      player.set("timeClick", Date.now()-stage.startTimeAt)
       if (!round.get('submitted')){
         speaker.stage.submit()
         round.set('submitted', true)

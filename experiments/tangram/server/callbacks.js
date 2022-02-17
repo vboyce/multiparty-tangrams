@@ -38,7 +38,6 @@ Empirica.onRoundStart((game, round) => {
       round.set('speaker', player._id)
     }
     player.set('clicked', false);
-    player.set('timeClick', false);
   });
 });
 
@@ -79,7 +78,7 @@ Empirica.onStageEnd((game, round, stage) => {
       const correctAnswer = round.get('target');
       round.set('player_' + player._id + '_response', player.get('clicked'));
       round.set('player_' + player._id+ '_correct', correctAnswer == player.get('clicked')); 
-      round.set('player_' + player._id + '_time', player.get('timeClick'));
+      round.set('player_' + player._id + '_time', player.stage.submittedAt - stage.startTimeAt); 
     });
 }
 });
