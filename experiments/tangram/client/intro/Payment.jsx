@@ -23,8 +23,9 @@ export default class Overview extends React.Component {
             treatment.playerCount==4 ? "You will recieve a $3 bonus for being in a 4 player game, in addition to $7 base pay. " : 
             treatment.playerCount==5 ? "You will receive $11 base pay.":
             treatment.playerCount==6 ? "You will receive $11 base pay.":
-            "You will recieve $7 base pay. "}  </strong> 
-            You will also be able to earn up to <strong> $2.88</strong> in additional bonuses depending on your performance in the game. </p>
+            "You will recieve $7 base pay. "}  </strong> </p><p>
+            <strong> {treatment.rotateSpeaker ? "": "If you are randomly assigned to the speaker role, you will receive a $2 bonus for your extra effort."} </strong>
+            Regardless of the role you are assigned, you will be able to earn up to <strong> $2.88</strong> in additional bonuses depending on your performance in the game. </p>
 
             <p>Please only do this study if you will be available for the given amount of time, otherwise please return it. In this study, you will be interacting with other participants via a chat box. 
                 If you have concerns about the behavior of other participants or any other issues, please contact us via Prolific. </p>
