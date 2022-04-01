@@ -16,10 +16,6 @@ export default class Tangram extends React.Component {
         player.get('clicked') === false &
         player.get('role') == 'listener') {
       player.set("clicked", tangram)
-      if(player.get("clicked")==round.get("target")){
-        const count=round.get("countCorrect")
-        round.set("countCorrect", count+1)
-      }
       if (!round.get('submitted')){
         speaker.stage.submit()
         round.set('submitted', true)

@@ -60,6 +60,22 @@ Empirica.onStageStart((game, round, stage) => {
 Empirica.onStageEnd((game, round, stage) => {
   if (stage.name=="selection"){
     const players = game.players;
+    let numcorrect=0
+    players.forEach(player => {
+      const currScore = player.get("bonus") || 0;
+      if (player.get("role")=="speaker"){
+      }
+      else{
+      const selectedAnswer = player.get("clicked");
+      const target = round.get('target');
+      const iscorrect=selectedAnswer==target ? 1 : 0
+      numcorrect=numcorrect+iscorrect
+      //console.log(player)
+      //console.log(iscorrect)
+      }
+    })
+    round.set("countCorrect",numcorrect)
+    //console.log(round.get("countCorrect"))
     // Update player scores
     players.forEach(player => {
       const currScore = player.get("bonus") || 0;
