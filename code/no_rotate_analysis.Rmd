@@ -6,7 +6,7 @@ output:
 ---
 
 
-
+# Much prep(rocessing)
 ```{r set-up, include=F}
 knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
 knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
@@ -174,7 +174,6 @@ summary %>% filter(num_rounds==5) %>%
 
 
 
-# Pretty pictures
 
 
 ```{r chat}
@@ -256,8 +255,12 @@ rod.chat <- rod.chat.filter %>%
 
 combined_results <- d.round_results %>% mutate(rotate="single") %>% union(rod.round_results) %>% filter(numPlayers==6)
 combined_chat <- d.chat %>% mutate(rotate="single") %>% union(rod.chat) %>% filter(numPlayers==6)
+
+all_results <- d.round_results %>% mutate(rotate="single") %>% union(rod.round_results) 
+all_chat <- d.chat %>% mutate(rotate="single") %>% union(rod.chat) 
 ```
 
+# Many graphs
 
 Everything here has bootstrapped 95% CIs. 
 
@@ -355,3 +358,259 @@ geom_smooth(method = "glm", formula = y~x,
 
 
 ```
+
+
+
+# Models
+
+Warning many of these have less than maximal mixed effects. 
+
+```{r model-acc}
+acc_input <- combined_results %>% group_by(playerId,repNum, gameId, rotate) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  mutate(block=repNum,
+         tangram_group=str_c(tangram, gameId))
+
+priors <- c(set_prior("normal(0,1)", class="b"))#, #we're doing logistic, so these are reasonable b/c transform
+                     # set_prior("normal(0,1)", class="sd"))
+
+model <- brm(correct.num ~ block*rotate, 
+             family=bernoulli(link="logit"),
+             data=acc_input, 
+             cores = 4,
+             file=here(model_location, "6ronoro_acc_model"), prior=priors, control=list(adapt_delta=.95))
+summary(model)
+```
+
+
+```{r model-time}
+#note: there were some issues with time recording, source unknown. We exclude the obvious errors where time > 180, but it's probably still a bit dodgy?
+#VB 220414: time recording issues were fixed for the 6noro, but may have been present in the 6ro
+time_input <- combined_results %>% group_by(playerId, repNum, gameId, rotate) %>% 
+  filter(correct==T) %>% 
+  filter(time<181) %>% 
+  filter(time>0) %>% 
+  mutate(block=repNum,
+         tangram_group=str_c(tangram, gameId))
+
+priors <- c(set_prior("normal(0,100)", class="Intercept"),
+            set_prior("normal(0,50)", class="b"))
+
+model <- brm(time ~ block*rotate , 
+             data=time_input, 
+             cores = 4,
+             file=here(model_location, "6ronoro_time_model"), prior=priors, control=list(adapt_delta=.95))
+
+summary(model)
+```
+
+```{r model-speaker}
+speaker_input <- combined_chat %>% filter(role=="speaker") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model <- brm(words ~ block * rotate + (block|tangram)+ (1|playerId)+(1|tangram_group)+(block|gameId),
+             cores = 4,
+             data=speaker_input,file=here(model_location, "6ronoro_speaker_model"),                            prior=priors, control=list(adapt_delta=.95))
+
+
+summary(model)
+```
+
+```{r model-listener, include=F, eval=FALSE}
+listener_input <-combined_chat%>% filter(role=="listener") %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(0, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 10)", class="sd")#,
+  #set_prior("lkj(1)",       class="cor")
+  )
+
+model <- brm(words ~ block * rotate + (1|playerId),
+             cores = 4,
+             data=listener_input,file=here(model_location, "6ronoro_listener_model"),                            prior=priors, control=list(adapt_delta=.95))
+
+summary(model)
+
+```
+
+# Do people reduce more when listeners do better?
+
+```{r}
+total_correct <- combined_results %>% ungroup() %>% select(gameId, trialNum, tangram, repNum, realCorrect, rotate) %>% unique()
+last_round_correct <- combined_chat %>%ungroup()%>% filter(role=="speaker")%>% select(gameId,tangram, repNum, total_num_words, rotate) %>% left_join(total_correct) %>% rename(oldCorrect=realCorrect,oldwords=total_num_words) %>% mutate(repNum=repNum+1)
+
+current <-combined_chat%>% ungroup() %>%  filter(role=="speaker")%>% filter(repNum>0) %>% 
+  select(rotate, gameId, repNum,total_num_words, tangram, playerId) %>% left_join(last_round_correct) %>% mutate(logchange=log(total_num_words/oldwords)) %>%
+  filter(!is.na(oldCorrect)) %>% #VB 220415: not sure how we got NAs in here
+  mutate(all_correct=ifelse(oldCorrect==5,1,0))
+
+
+ggplot(current, aes(x=repNum, y=logchange, color=as.factor(oldCorrect)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~rotate)
+
+ggplot(current, aes(x=repNum, y=logchange, color=as.factor(all_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~rotate)
+
+ggplot(current, aes(x=repNum, y=total_num_words, color=as.factor(oldCorrect)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~rotate)
+
+ggplot(current, aes(x=repNum, y=total_num_words, color=as.factor(all_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~rotate)
+```
+
+These look pretty different from Robert's. The word count is pretty coarse (we eliminate blatant chitchat, but didn't subdivide lines with some referential language). More is said when people get things wrong than right, but it's not clear if it's reduction vs how hard it was or where they were starting from. 
+
+```{r reduction-correctness,include=F,eval=F}
+speaker_input <- current %>% 
+  mutate(block=repNum,
+         words=total_num_words,
+         tangram_group=str_c(tangram, gameId))
+         
+priors <- c(
+  set_prior("normal(20, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"))
+
+model <- brm(words ~ block * rotate*oldCorrect ,
+             cores = 4,
+             data=speaker_input,file=here(model_location, "6ronoro_test"),                            prior=priors, control=list(adapt_delta=.95))
+
+summary(model)
+```
+
+For bonus fun, look at all the rotate data. 
+
+```{r}
+total_correct <- all_results %>% ungroup() %>% select(gameId, trialNum, tangram, repNum, realCorrect, rotate, numPlayers) %>% unique()
+last_round_correct <- all_chat %>%ungroup()%>% filter(role=="speaker")%>% select(gameId,tangram, repNum, total_num_words, rotate, numPlayers) %>% left_join(total_correct) %>% rename(oldCorrect=realCorrect,oldwords=total_num_words) %>% mutate(repNum=repNum+1)
+
+current <-all_chat%>% ungroup() %>%  filter(role=="speaker")%>% filter(repNum>0) %>% 
+  select(rotate, gameId, repNum,total_num_words, tangram, playerId, numPlayers) %>% left_join(last_round_correct) %>% mutate(logchange=log(total_num_words/oldwords)) %>%
+  filter(!is.na(oldCorrect)) %>% #VB 220415: not sure how we got NAs in here
+  mutate(all_correct=ifelse(oldCorrect==numPlayers-1,1,0),
+         pct_correct=oldCorrect/(numPlayers-1),
+         group=str_c(numPlayers,rotate))
+
+
+ggplot(current, aes(x=repNum, y=logchange, color=as.factor(pct_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~group)+  scale_color_viridis(discrete=T, direction=-1)
+
+ggplot(current, aes(x=repNum, y=logchange, color=as.factor(all_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~group)+  scale_color_viridis(discrete=T, direction=-1)
+
+ggplot(current, aes(x=repNum, y=total_num_words, color=as.factor(pct_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~group)+  scale_color_viridis(discrete=T, direction=-1)
+
+ggplot(current, aes(x=repNum, y=total_num_words, color=as.factor(all_correct)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), geom="line")+
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+facet_wrap(~group) + scale_color_viridis(discrete=T, direction=-1)
+
+```
+
+
+
+# NLP prep
+
+```{r, eval=F, include=F}
+
+exchanges <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  filter(is.chitchat==F) %>% 
+  select( -index, -stageIds, -is.chitchat, -submitted, -speaker, -createdAt, -row_id) %>% 
+  rename(utterance=spellchecked) %>% 
+  #filter(gameId=="3WzEi9zkHF77vdTw5") %>% 
+  write_csv(here(data_location,"exchanges.csv"))
+
+combined <- exchanges %>% 
+    group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target, role) %>%
+  summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
+  filter(!utterance=="NA") %>% #VB 220414: make it so the read in in jupyter doesn't choke
+  write_csv(here(data_location,"combined.csv"))
+
+speaker_collapsed <- exchanges %>% 
+  filter(role=="speaker") %>% 
+  group_by(gameId, targetNum, repNum,trialNum,numPlayers,playerId, target) %>%
+  summarize(utterance = paste0(utterance, collapse = ' ')) %>% 
+  write_csv(here(data_location,"speaker_collapsed.csv"))
+```
+
+
+# Content analyses
+
+
+Of words the speaker says in the last round, when were they said by the speaker in earlier rounds for the same tangram?
+
+```{r}
+d.numPlayer <- read_rds(here(data_location,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
+matches <- read_csv(here(data_location,"word_matches.csv")) %>% left_join(d.numPlayer, by="gameId") %>% mutate(numPlayers="6ro")
+
+old  <- read_rds(here(rotate_data_loc,'round_results.rds')) %>% select(numPlayers, gameId) %>% unique()
+oldmatches <- read_csv(here(rotate_data_loc,"word_matches.csv")) %>% left_join(old, by="gameId") %>% mutate(numPlayers=as.character(numPlayers))
+
+all_matches <- matches %>% union(oldmatches)
+
+
+
+location_first_match <- all_matches %>% 
+  filter(later_rep==5) %>% 
+  group_by(earlier_rep,gameId,numPlayers) %>% 
+  summarize(overlap=mean(match))
+
+ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=numPlayers))+geom_jitter(alpha=.5,width=.2, height=0)+facet_grid(.~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")+
+  theme(legend.position="bottom")
+
+# ggplot(location_first_match, aes(x=earlier_rep, y=overlap, color=numPlayers))+
+#     stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+#   theme(legend.position="bottom")
+```
+
+```{r}
+
+never <- all_matches %>% filter(later_rep==5) %>% group_by(numPlayers, gameId, target, word) %>% summarize(blah=sum(match)) %>% filter(blah==0) %>% mutate(earliest_rep=5) %>% select(gameId, target, word, numPlayers, earliest_rep)
+foobar <- all_matches %>% filter(later_rep==5) %>% 
+  filter(match) %>% 
+  group_by(gameId,target,word, numPlayers) %>% 
+  summarize(earliest_rep=min(earlier_rep)) %>% 
+  union(never) %>% 
+  group_by(gameId, numPlayers, earliest_rep) %>% 
+  tally() %>% 
+  group_by(gameId,numPlayers) %>% 
+  summarize(pct=n/sum(n), earliest_rep=earliest_rep)
+
+ggplot(foobar, aes(x=earliest_rep+1, y=pct, color=as.factor(numPlayers)))+geom_jitter(alpha=.5,width=.2, height=0)+facet_grid(.~numPlayers)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2), color="black")+
+  geom_hline(yintercept=1/6)+
+  theme(legend.position="bottom")
+```
+
+```{r}
+# all_matches %>% filter(match) %>% 
+#   filter(later_rep==5) %>% 
+#   group_by(target, word, gameId,numPlayers) %>% 
+#   summarize(early=min(earlier_rep)) %>% 
+#   group_by(gameId, numPlayers,early) %>% 
+#   tally() %>% 
+#   ungroup() %>% 
+#   group_by(numPlayers, gameId) %>% 
+#   summarize(pct=n/sum(n),
+#             early=early) %>% 
+#   ggplot(aes(x=early, y=pct, color=as.factor(numPlayers)))+stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))
+
+  
+```
+
+
+
+
+(TODO vector analysis)
+
