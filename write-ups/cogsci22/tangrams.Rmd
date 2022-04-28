@@ -7,9 +7,9 @@ header-includes:
   - \usepackage{booktabs}
 author-information: > 
     \author{{\large \bf Veronica Boyce (vboyce@stanford.edu)} \\ Department of Psychology \\ Stanford University
-    \AND {\large \bf Robert Hawkins (rdhawkins@princeton.edu)} \\ Neuroscience Institute \\ Princeton University
-    \AND {\large \bf Noah Goodman (ngoodman@stanford.edu)} \\ Departments of Computer Science, Psychology \\ Stanford University
-    \AND {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
+    \And {\large \bf Robert D. Hawkins (rdhawkins@princeton.edu)} \\ Princton Neuroscience Institute \\ Princeton University
+    \AND {\large \bf Noah D. Goodman (ngoodman@stanford.edu)} \\ Departments of Psychology and Computer Science \\ Stanford University
+    \And {\large \bf Michael C. Frank (mcfrank@stanford.edu)} \\ Department of Psychology \\ Stanford University}
 
 abstract: >
   From classrooms to dinner parties, many of our everyday conversations take place in larger groups where speakers address multiple listeners at once. Such multiparty settings raise a number of challenges for classical theories of communication, which largely focus on dyadic interactions. In this study, we investigated how speakers adapt their referring expressions over time as a function of the feedback they receive from multiple parties.  We collected a large corpus of multiparty repeated reference games (98 games, 390 participants, 116K words) where speakers designed referring expressions for groups of 1 to 5 listeners. Larger groups tended to use more words total and to introduce more new words; nonetheless, most groups were able to converge to more efficient conventions regardless of the number of listeners.
@@ -19,7 +19,7 @@ keywords: >
     Pragmatics; Communication; Reference game; Convention; Reduction; Efficiency
     
 output: cogsci2016::cogsci_paper
-#final-submission: \cogscifinalcopy
+final-submission: \cogscifinalcopy
 ---
  
 # Introduction
@@ -132,11 +132,12 @@ The formation of these new reference expressions is well-studied in dyadic conte
 
 @clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @kraussChangesReferencePhrases1964;@kraussConcurrentFeedbackConfirmation1966]. Two participants see the same set of tangram figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. 
 
-Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms. 
+Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms.^[We use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
 <!-- ## Multi-party communication -->
 
-How does this process proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005].
-One possible approach for speakers is to 'aim low' and produce utterances tailored to the least knowledgeable listener [@yoonAimLowMechanisms2018a]. For instance, in @yoonAdjustingConceptualPacts2014, speakers developed conventions with one listener but then used longer descriptions with a new listener. 
+How does this process proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. Prior work has focused on manipulating knowledge states by adding new listeners to established groups.
+
+
 
 
 ```{r interface, fig.env = "figure*", fig.pos = "t!", fig.width=6, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "All participants saw all 12 tangram images. (A) Speaker's view during selection phase. (B) During the feedback stage, speakers saw what figure each person chose, but listeners only learned if their selection was correct or incorrect. Listeners were not shown what other listeners chose. \\label{game}", cache=FALSE}
@@ -145,11 +146,11 @@ img <- png::readPNG(here(image_location, "merged_fig2.png"))
 grid::grid.raster(img)
 ```
 
-Another strategy for speakers is to integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. In @yoonAudienceDesignMultiparty2019, speakers played a reference game with a set of listeners, and then communicated to a mixed group of experienced and new listeners. In trials with 3 experienced listeners and 1 naive listener, speakers used shorter utterances and made fewer accommodations to naive listeners than in groups with a greater fraction of naive listeners. Both of these strategies predict that larger groups will be slower to converge than smaller groups, but differ in whether the slowest listeners will be included.
+In this context, one approach for speakers is to 'aim low' and produce utterances tailored to the least knowledgeable listener [@yoonAimLowMechanisms2018a]. For instance, in @yoonAdjustingConceptualPacts2014, speakers developed conventions with one listener but then used longer descriptions with a new listener. Another strategy for speakers is to integrate across listeners and balance efficiency with informativeness by 'aiming in the middle'. In @yoonAudienceDesignMultiparty2019, speakers communicating to a mixed group of 3 experienced listeners and 1 naive listener used shorter utterances and made fewer accommodations than they did in groups with a greater fraction of naive listeners. Both of these strategies predict that larger groups will be slower to converge than smaller groups.
 
 Disagreements about how to conceptualize referents can also slow groups down. In @weberCulturalConflictMerger2003, pairs of participants played a reference game with the same image sets before a listener switched groups and joined a different pair, making a group of three. The addition of the new listener slowed both listeners down for multiple rounds. When a listener switched groups, they brought preconceptions about how the pictures should be described which conflicted with how the speaker was used to describing the images. This result predicts that, with more perspectives in play, larger groups may have more difficulty agreeing on common conceptualizations.
 
-In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, listeners were not surprised to hear different descriptions of a familiar object if it came from a new speaker who had just entered the room [@metzingWhenConceptualPacts2003]. It's unclear what this finding predicts about new speakers who are present as fellow listeners during prior blocks -- will listeners expect them to maintain the convention? 
+In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, listeners were not surprised to hear different descriptions of a familiar object if it came from a new speaker who had just entered the room [@metzingWhenConceptualPacts2003]. It's unclear what this finding predicts about new speakers who are present as fellow listeners during prior blocks -- will listeners expect them to maintain conventions? 
 
 Work on multi-party communication has focused on the addition of a new person into a pair or group that had built up some shared representations. Our present work complements this prior work by examining the effect of group size during the process of convention formation. We extend the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 to games for 2--6 players who rotate between speaker and listener roles. This paradigm allows us to confirm that these findings in dyads extend to larger groups: that accuracy and speed will increase across blocks (question 1) and that speakers will reduce their utterances (produce fewer words) in later blocks (question 2). Additionally, we will be able to test for trends across group size, allowing us to ask whether smaller groups use shorter utterances and reduce faster than larger groups (question 3) and how conventions emerge in larger groups (question 4). In sum, these analyses will fill a gap in the literature by providing a basic characterization of how convention-formation and communication occurs in larger groups.
 
@@ -268,7 +269,7 @@ After the game finished, participants were given a survey asking for optional de
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well or fast the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
-Our intended sample size was 20 complete games in each group size, but we ended up with fewer (Table \ref{parts}).  We excluded incomplete blocks from analyses, but included complete blocks from partial games (e.g., when a participant disconnected early).
+Our intended sample size was 20 complete games in each group size, but we ended up with fewer due to games not filling or  participants disconnecting early (Table \ref{parts}).  We excluded incomplete blocks from analyses, but included complete blocks from partial games.
 
 # Results
 
