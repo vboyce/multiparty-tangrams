@@ -1,0 +1,264 @@
+---
+title: "Embeddings"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F, cache=T)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+library(tidytext)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+##Data import constants
+data_location="data/study1"
+
+
+date_start=lubridate::ymd('2021-05-04')
+
+image_location="write-ups/images"
+
+model_location="code/models"
+```
+
+# Pre-wrangle
+
+Want a data format that has the utterances divied up for throwing into sbert
+
+take 1:
+- divide on end punctuation (.!?) and on returns
+- include speaker and listener (easy to filter later)
+
+?: do we use the pre or post filtered/cleaned?
+here we'll use raw (no spellcheck, no filter)
+```{r prep,}
+
+raw_text <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(sentence))
+
+
+#sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
+pre_sbert <- raw_text %>% write_csv("pre_sbert.csv")
+```
+
+# Interlude
+This is where they need to get embedding with jupyter
+
+# Post-wrangle
+
+```{r, include=F, eval=F}
+library(reticulate)
+np <- import("numpy")
+mat = np$load('post_sbert.npy')
+saveRDS(mat,'post_sbert.RData')
+```
+
+We embed each sentence separately, but then average across the embeddings to get a vector for each player:trial combo.
+
+```{r, include=F,}
+ssb <- pre_sbert %>% bind_cols(readRDS('post_sbert.RData')  %>% as_tibble())
+
+
+grouped <- ssb %>%
+  mutate(tangram=str_sub(target,-5,-5)) %>% 
+  group_by(gameId,targetNum,repNum, trialNum, numPlayers,playerId,tangram,role) %>% 
+  summarize(across(starts_with('V'), mean)) %>% 
+  ungroup() 
+
+F_mat <- grouped %>% select(starts_with("V")) %>% as.matrix() #Features
+M_mat <- grouped %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+```
+
+
+```{r helpers}
+# note: cor expects features to be in columns so we transpose
+get_sim_matrix = function(df, F_mat, method = 'cosine') {
+  feats = F_mat[df$feature_ind,]
+  if(method == 'cor') {
+    return(cor(t(feats), method = 'pearson'))
+  } else if (method == 'euclidean') {
+    return(as.matrix(dist(feats, method = 'euclidean')))
+  } else if (method == 'cosine') {
+    return(as.matrix(lsa::cosine(t(feats))))
+  } else {
+    stop(paste0('unknown method', method))
+  }
+}
+
+# note this does de-duplicated version
+flatten_sim_matrix <- function(cormat, ids) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    dim1 = ids[row(cormat)[ut]],
+    dim2 = ids[col(cormat)[ut]],
+    sim  = as.numeric(cormat[ut])
+  ) %>%
+    mutate(dim1 = as.character(dim1),
+           dim2 = as.character(dim2))
+}
+
+make_within_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          .$repNum)) %>%
+    mutate(rep1 = as.numeric(dim1), 
+           rep2 = as.numeric(dim2)) 
+}
+
+make_across_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          as.character(.$combinedId)))
+}
+```
+
+# Caveats to interpretation
+
+This is done on the raw transcripts. Some things that could contribute to "similarity" include larger strings (because there will be averaging, which tends to bring things in) and more non-reference language which we expect to be more uniform (maybe?). 
+
+We could attempt to "solve" these in future by a) annotating for the "reference" expression (or using cleaned transcript as a half way point), b) not averaging sentences together. 
+
+Models are quick and dirty and so aren't well centered b/c 0 is really not meaningful for numPlayers. Should fix later if we think these directions are promising.
+
+# Across game divergence: 
+
+Do tangram descriptions diverge sooner in smaller groups?
+How similar are descriptions of the same tangram in the same block across games?
+
+(only looking at speaker utts)
+
+Within the same tangram, repNum, and numPlayers, but across different games
+
+```{r }
+
+game_divergence <- M_mat %>% 
+  filter(role=="speaker") %>% 
+  group_by(tangram,repNum, numPlayers) %>% 
+  mutate(combinedId=str_c(gameId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("gameId_1","repNum_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("gameId_2","repNum_2"), convert=T, sep="_") %>% 
+  filter(gameId_1!=gameId_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+
+m_divergence <- lmer(sim ~ numPlayers * repNum + (1|tangram), data=game_divergence)
+
+summary(m_divergence)
+```
+Similarity is higher in larger games and earlier in the games. 
+
+We check again allowing games to vary by number of players, but only by 1. 
+
+Within the same tangram, repNum, and numPlayers, but across different games
+
+```{r }
+
+game_divergence_across <- M_mat %>% 
+  filter(role=="speaker") %>% 
+  group_by(tangram,repNum,) %>% 
+  mutate(combinedId=str_c(numPlayers,gameId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("nP1","gameId_1","repNum_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("nP2","gameId_2","repNum_2"), convert=T, sep="_") %>% 
+  filter(gameId_1!=gameId_2) %>% 
+  ungroup() %>% 
+  mutate(largernP=ifelse(nP1>nP2,nP1,nP2),
+         smallernP=ifelse(nP1>nP2,nP2,nP1)) %>% 
+  filter(smallernP+1==largernP) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim))
+  
+
+
+m_divergence_across <- lmer(sim ~ largernP * repNum + (1|tangram), data=game_divergence_across)
+
+summary(m_divergence_across)
+```
+
+Again, similarity is higher in larger games (so 5-6 more similar than 2-3) and reduces over rounds. 
+
+This is the kinda thing that could be driven by outlier games, so mixed effects would be good, but it's pairwise, so that's at least somewhat complicated.
+
+# Within game specialization
+
+(only looking at speaker utts)
+
+in a game, in a round, how different are the descriptions for different tangrams?
+
+Within game, repNum, numPlayers, between tangrams
+
+```{r }
+
+tangram_distinctive <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(gameId,repNum, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum, numPlayers,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","numPlayers_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","numPlayers_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(numPlayers_1)) %>% 
+  filter(!is.na(repNum_1)) %>% 
+  ungroup()
+
+m_distinctive <- lmer(sim~repNum_1*numPlayers_1+(1|gameId), data=tangram_distinctive)
+
+summary(m_distinctive)
+```
+Earlier reps have more similarity, as do large games.  (Substantial game to game variation)
+
+# Tangram description evolution
+How similar is a tangram description on round N to N+1 as a function of rep and game size?
+
+```{r }
+
+tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum, numPlayers,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","numPlayers_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","numPlayers_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(numPlayers_1)) %>% 
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+  filter(earlier+1==later) %>% 
+  ungroup()
+
+m_change <- lmer(sim~earlier*numPlayers_1+(1|gameId)+(1|tangram), data=tangram_change)
+
+summary(m_change)
+```
+Pairs of adjacent rounds have more similar descriptions when the rounds are later (4-5 is closer than 0-1). Descriptions are more similar with larger groups in 0-1, but less similar in larger groups in 2-3, 3-4, and 4-5.
+
+
+# TODO future
+Also apply this to the 6p-norotate data.
+
+Is there anything good to do with listener data?
+
+Can we correlate distinctiveness with listener success?
+
+How to look for "same speaker" effects? Would want to do same tangram over all the rounds and then use final (or first round) distance, and same speaker? (or anchor with always first or always last round). 
