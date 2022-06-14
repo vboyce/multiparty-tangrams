@@ -18,6 +18,7 @@ library(lme4)
 library(brms)
 library(rstan)
 library(tidytext)
+library(viridis)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
@@ -161,7 +162,15 @@ game_divergence <- M_mat %>%
   mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
   ungroup()
 
+```
 
+```{r}
+ggplot(game_divergence, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
+```{r, eval=F}
 m_divergence <- lmer(sim ~ numPlayers * repNum + (1|tangram), data=game_divergence)
 
 summary(m_divergence)
@@ -188,7 +197,15 @@ game_divergence_across <- M_mat %>%
   filter(smallernP+1==largernP) %>% 
   mutate(sim = ifelse(is.nan(sim), NA, sim))
   
+```
 
+```{r}
+ggplot(game_divergence_across, aes(x=repNum,y=sim,color=as.factor(smallernP)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
+```{r, eval=F}
 
 m_divergence_across <- lmer(sim ~ largernP * repNum + (1|tangram), data=game_divergence_across)
 
@@ -212,20 +229,29 @@ Within game, repNum, numPlayers, between tangrams
 tangram_distinctive <- M_mat %>% 
     filter(role=="speaker") %>% 
   group_by(gameId,repNum, numPlayers) %>% 
-  mutate(combinedId=str_c(repNum, numPlayers,tangram,sep="_")) %>% 
+  mutate(combinedId=tangram) %>% 
   make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("repNum_1","numPlayers_1","target_1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("repNum_2","numPlayers_2","target_2"), convert=T, sep="_") %>% 
+  rename(tangram1=dim1,tangram2=dim2) %>% 
   mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
-  filter(!is.na(numPlayers_1)) %>% 
-  filter(!is.na(repNum_1)) %>% 
+  filter(tangram1!=tangram2) %>% 
   ungroup()
+```
 
+```{r}
+ggplot(tangram_distinctive, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
+
+```{r, eval=F}
 m_distinctive <- lmer(sim~repNum_1*numPlayers_1+(1|gameId), data=tangram_distinctive)
 
 summary(m_distinctive)
 ```
-Earlier reps have more similarity, as do large games.  (Substantial game to game variation)
+
+Earlier reps have more similarity, as do large games. 
+
 
 # Tangram description evolution
 How similar is a tangram description on round N to N+1 as a function of rep and game size?
@@ -235,26 +261,138 @@ How similar is a tangram description on round N to N+1 as a function of rep and 
 tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
   group_by(tangram, gameId, numPlayers) %>% 
-  mutate(combinedId=str_c(repNum, numPlayers,tangram,sep="_")) %>% 
+  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
   make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("repNum_1","numPlayers_1","target_1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("repNum_2","numPlayers_2","target_2"), convert=T, sep="_") %>% 
+  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
   mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
-  filter(!is.na(numPlayers_1)) %>% 
   filter(!is.na(repNum_1)) %>% 
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
          earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
   filter(earlier+1==later) %>% 
   ungroup()
+```
 
+```{r}
+ggplot(tangram_change, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
+```{r, eval=F}
 m_change <- lmer(sim~earlier*numPlayers_1+(1|gameId)+(1|tangram), data=tangram_change)
 
 summary(m_change)
 ```
+
 Pairs of adjacent rounds have more similar descriptions when the rounds are later (4-5 is closer than 0-1). Descriptions are more similar with larger groups in 0-1, but less similar in larger groups in 2-3, 3-4, and 4-5.
 
+## sample transcript
 
+A semi-random selection of games & tangrams, trying to get some diversity.
+Similarity is between that rep and the next later.
+
+```{r}
+sample_text <- pre_sbert %>% filter(gameId=="zqcX66GZiQS8bA6Ff") %>% 
+  filter(role=="speaker") %>% 
+  filter(target=="/experiment/tangram_A.png")
+
+distances <- tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  filter(gameId=="zqcX66GZiQS8bA6Ff") %>% 
+  filter(tangram=="A") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+  filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,sim)
+
+sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
+  select(repNum,sentence,sim) %>% knitr::kable()
+```
+
+```{r}
+sample_text <- pre_sbert %>% filter(gameId=="2928FF7GcrkeFiDkh") %>% 
+  filter(role=="speaker") %>% 
+  filter(target=="/experiment/tangram_F.png")
+
+distances <- tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  filter(gameId=="2928FF7GcrkeFiDkh") %>% 
+  filter(tangram=="F") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+  filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,sim)
+
+sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
+  select(repNum,sentence,sim) %>% knitr::kable()
+```
+
+```{r}
+sample_text <- pre_sbert %>% filter(gameId=="znSiJdhs7sWk5xhgA") %>% 
+  filter(role=="speaker") %>% 
+  filter(target=="/experiment/tangram_E.png")
+
+distances <- tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  filter(gameId=="znSiJdhs7sWk5xhgA") %>% 
+  filter(tangram=="E") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+  filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,sim)
+
+sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
+  select(repNum,sentence,sim) %>% knitr::kable()
+```
+
+```{r}
+sample_text <- pre_sbert %>% filter(gameId=="55uXKbqaShw7M2wCX") %>% 
+  filter(role=="speaker") %>% 
+  filter(target=="/experiment/tangram_E.png")
+
+distances <- tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  filter(gameId=="55uXKbqaShw7M2wCX") %>% 
+  filter(tangram=="E") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+  filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,sim)
+
+sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
+  select(repNum,sentence,sim) %>% knitr::kable()
+```
 # TODO future
+
 Also apply this to the 6p-norotate data.
 
 Is there anything good to do with listener data?
