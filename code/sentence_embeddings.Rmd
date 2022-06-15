@@ -7,7 +7,7 @@ output:
 
 
 ```{r set-up, include=F}
-knitr::opts_chunk$set(echo = FALSE, warning=F, message=F, cache=T)
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F, cache=F)
 knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
 options(knitr.table.format = "html")
 library(tidyverse)
@@ -30,6 +30,10 @@ ParseJSONColumn <- function(x) {
 
 ##Data import constants
 data_location="data/study1"
+##Data import constants
+data_location_noro="data/study2a"
+
+
 
 
 date_start=lubridate::ymd('2021-05-04')
@@ -51,14 +55,20 @@ take 1:
 here we'll use raw (no spellcheck, no filter)
 ```{r prep,}
 
-raw_text <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+raw_text <- read_csv(here(data_location, "filtered_chat.csv")) %>%
   select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
   unnest_tokens(sentence, input=text, token="sentences") %>% 
-  filter(!is.na(sentence))
+  filter(!is.na(sentence)) %>% 
+  mutate(numPlayers=as.character(numPlayers))
 
+noro <- read_csv(here(data_location_noro, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(sentence)) %>% 
+  mutate(numPlayers="6noro")
 
 #sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
-pre_sbert <- raw_text %>% write_csv("pre_sbert.csv")
+pre_sbert <- raw_text %>%union(noro) %>%  write_csv("pre_sbert.csv")
 ```
 
 # Interlude
@@ -170,12 +180,8 @@ ggplot(game_divergence, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
     scale_color_viridis(discrete=T, direction=-1)
 ```
 
-```{r, eval=F}
-m_divergence <- lmer(sim ~ numPlayers * repNum + (1|tangram), data=game_divergence)
-
-summary(m_divergence)
-```
 Similarity is higher in larger games and earlier in the games. 
+See that 6noro starts out looking like a 6p games and ends looking like a 2-3 player game.
 
 We check again allowing games to vary by number of players, but only by 1. 
 
@@ -185,6 +191,7 @@ Within the same tangram, repNum, and numPlayers, but across different games
 
 game_divergence_across <- M_mat %>% 
   filter(role=="speaker") %>% 
+  filter(numPlayers!="6noro") %>% 
   group_by(tangram,repNum,) %>% 
   mutate(combinedId=str_c(numPlayers,gameId,repNum,sep="_")) %>% 
   make_across_df(F_mat, 'cosine') %>% 
@@ -205,14 +212,8 @@ ggplot(game_divergence_across, aes(x=repNum,y=sim,color=as.factor(smallernP)))+
     scale_color_viridis(discrete=T, direction=-1)
 ```
 
-```{r, eval=F}
 
-m_divergence_across <- lmer(sim ~ largernP * repNum + (1|tangram), data=game_divergence_across)
-
-summary(m_divergence_across)
-```
-
-Again, similarity is higher in larger games (so 5-6 more similar than 2-3) and reduces over rounds. 
+Again, similarity is higher in larger games (so 5-6 more similar than 2-3) and reduces over rounds. (We don't include 6noro here b/c it doesn't have a buddy.)
 
 This is the kinda thing that could be driven by outlier games, so mixed effects would be good, but it's pairwise, so that's at least somewhat complicated.
 
@@ -242,7 +243,7 @@ ggplot(tangram_distinctive, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
          geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
     scale_color_viridis(discrete=T, direction=-1)
 ```
-
+Again 6noro starts off looking like a 6p and ends looking like a 2p game. 
 
 ```{r, eval=F}
 m_distinctive <- lmer(sim~repNum_1*numPlayers_1+(1|gameId), data=tangram_distinctive)
@@ -261,31 +262,55 @@ How similar is a tangram description on round N to N+1 as a function of rep and 
 tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
   group_by(tangram, gameId, numPlayers) %>% 
-  mutate(combinedId=str_c(repNum,tangram,sep="_")) %>% 
+  mutate(combinedId=str_c(repNum,playerId,sep="_")) %>% 
   make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("repNum_1","target_1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("repNum_2","target_2"), convert=T, sep="_") %>% 
+  separate(dim1, into=c("repNum_1","p1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","p2"), convert=T, sep="_") %>% 
   mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
   filter(!is.na(repNum_1)) %>% 
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
-         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1),
+         samespeaker=ifelse(p1==p2,"same_speaker","diff_speaker")) 
+
+adjacent <- tangram_change %>% 
   filter(earlier+1==later) %>% 
   ungroup()
 ```
 
 ```{r}
-ggplot(tangram_change, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
+ggplot(adjacent, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
          geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
     scale_color_viridis(discrete=T, direction=-1)
 ```
 
-```{r, eval=F}
-m_change <- lmer(sim~earlier*numPlayers_1+(1|gameId)+(1|tangram), data=tangram_change)
-
-summary(m_change)
-```
+6noro has really similar descriptions throughout. 
 
 Pairs of adjacent rounds have more similar descriptions when the rounds are later (4-5 is closer than 0-1). Descriptions are more similar with larger groups in 0-1, but less similar in larger groups in 2-3, 3-4, and 4-5.
+
+## Speaker sim to first round
+
+
+
+```{r}
+
+to_first <- tangram_change %>% filter(earlier==0) %>% ungroup()
+ggplot(to_first, aes(x=later,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+
+```
+
+## Speaker sim to last round
+
+```{r}
+
+to_last <- tangram_change %>% filter(later==5) %>% ungroup()
+ggplot(to_last, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)
+
+```
+Here's where 6noro really looks like a 2p game. 
 
 ## sample transcript
 
@@ -295,7 +320,9 @@ Similarity is between that rep and the next later.
 ```{r}
 sample_text <- pre_sbert %>% filter(gameId=="zqcX66GZiQS8bA6Ff") %>% 
   filter(role=="speaker") %>% 
-  filter(target=="/experiment/tangram_A.png")
+  filter(target=="/experiment/tangram_A.png") %>% 
+  group_by(repNum) %>% 
+  summarize(text=str_c(sentence, collapse=" "))
 
 distances <- tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -310,17 +337,22 @@ distances <- tangram_change <- M_mat %>%
   filter(!is.na(repNum_1)) %>% 
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
          earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
-  filter(earlier+1==later) %>% 
-  ungroup() %>% select(earlier,sim)
+  #filter(earlier+1==later) %>% 
+  ungroup() %>% select(later,earlier,sim)
 
-sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
-  select(repNum,sentence,sim) %>% knitr::kable()
+distances %>% left_join(sample_text, by=c("earlier"="repNum")) %>% 
+  rename(earlierText=text) %>% left_join(sample_text, by=c("later"="repNum")) %>% 
+  rename(laterText=text) %>% select(earlier,later,earlierText,laterText,sim) %>% 
+  arrange(earlier,later) %>% 
+  knitr::kable(align=c("l"))
 ```
 
 ```{r}
 sample_text <- pre_sbert %>% filter(gameId=="2928FF7GcrkeFiDkh") %>% 
   filter(role=="speaker") %>% 
-  filter(target=="/experiment/tangram_F.png")
+  filter(target=="/experiment/tangram_F.png") %>% 
+  group_by(repNum) %>% 
+  summarize(text=str_c(sentence, collapse=" "))
 
 distances <- tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -335,17 +367,22 @@ distances <- tangram_change <- M_mat %>%
   filter(!is.na(repNum_1)) %>% 
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
          earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
-  filter(earlier+1==later) %>% 
-  ungroup() %>% select(earlier,sim)
+  #filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,later,sim)
 
-sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
-  select(repNum,sentence,sim) %>% knitr::kable()
+distances %>% left_join(sample_text, by=c("earlier"="repNum")) %>% 
+  rename(earlierText=text) %>% left_join(sample_text, by=c("later"="repNum")) %>% 
+  rename(laterText=text) %>% select(earlier,later,earlierText,laterText,sim) %>% 
+  arrange(earlier,later) %>% 
+  knitr::kable(align=c("l"))
 ```
 
 ```{r}
 sample_text <- pre_sbert %>% filter(gameId=="znSiJdhs7sWk5xhgA") %>% 
   filter(role=="speaker") %>% 
-  filter(target=="/experiment/tangram_E.png")
+  filter(target=="/experiment/tangram_E.png") %>% 
+  group_by(repNum) %>% 
+  summarize(text=str_c(sentence, collapse=" "))
 
 distances <- tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -361,16 +398,21 @@ distances <- tangram_change <- M_mat %>%
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
          earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
   filter(earlier+1==later) %>% 
-  ungroup() %>% select(earlier,sim)
+  ungroup() %>% select(earlier,later,sim)
 
-sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
-  select(repNum,sentence,sim) %>% knitr::kable()
+distances %>% left_join(sample_text, by=c("earlier"="repNum")) %>% 
+  rename(earlierText=text) %>% left_join(sample_text, by=c("later"="repNum")) %>% 
+  rename(laterText=text) %>% select(earlier,later,earlierText,laterText,sim) %>% 
+  arrange(earlier,later) %>% 
+  knitr::kable(align=c("l"))
 ```
 
 ```{r}
 sample_text <- pre_sbert %>% filter(gameId=="55uXKbqaShw7M2wCX") %>% 
   filter(role=="speaker") %>% 
-  filter(target=="/experiment/tangram_E.png")
+  filter(target=="/experiment/tangram_E.png") %>% 
+  group_by(repNum) %>% 
+  summarize(text=str_c(sentence, collapse=" "))
 
 distances <- tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -385,18 +427,55 @@ distances <- tangram_change <- M_mat %>%
   filter(!is.na(repNum_1)) %>% 
     mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
          earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1)) %>% 
-  filter(earlier+1==later) %>% 
-  ungroup() %>% select(earlier,sim)
+  #filter(earlier+1==later) %>% 
+  ungroup() %>% select(earlier,later,sim)
 
-sample_text %>% left_join(distances, by=c("repNum"="earlier")) %>% 
-  select(repNum,sentence,sim) %>% knitr::kable()
+distances %>% left_join(sample_text, by=c("earlier"="repNum")) %>% 
+  rename(earlierText=text) %>% left_join(sample_text, by=c("later"="repNum")) %>% 
+  rename(laterText=text) %>% select(earlier,later,earlierText,laterText,sim) %>% 
+  arrange(earlier,later) %>% 
+  knitr::kable(align=c("l"))
 ```
-# TODO future
 
-Also apply this to the 6p-norotate data.
+this example really raises the question of what to do with non-referential language (or dubiously deferential language). Like the sentiment in "good ol" and "our fave" and "haha" is also relevantly similar to later iterations, but it's not "reference per se"? 
+
+We could try to pull just the referential descriptions out?
+
+# Listener - listener - speaker alignment (same round)
+Include listener stuff
+group within game, within tangram, within round, across utterer
+
+code for includes speaker?
+
+```{r }
+reps_with_L <- M_mat %>% filter(role=="listener") %>% select(tangram,gameId,numPlayers,repNum) %>% unique()
+
+# if you don't do this inner join, it is very sad and wants to take forever
+lls_same_rep <- M_mat %>% 
+  inner_join(reps_with_L) %>% 
+  group_by(tangram, gameId, numPlayers, repNum) %>% 
+  mutate(combinedId=str_c(playerId,role,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("p1","r1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("p2","r2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+    mutate(has.speaker=ifelse(r1=="speaker","has_speaker",ifelse(r2=="speaker","has_speaker","listeners"))) %>% 
+  filter(p1!=p2) %>% 
+  ungroup()
+```
+
+```{r}
+ggplot(lls_same_rep, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
+    scale_color_viridis(discrete=T, direction=-1)+
+  facet_grid(.~has.speaker)
+
+```
+
+# TODO future
 
 Is there anything good to do with listener data?
 
 Can we correlate distinctiveness with listener success?
 
-How to look for "same speaker" effects? Would want to do same tangram over all the rounds and then use final (or first round) distance, and same speaker? (or anchor with always first or always last round). 
+How to look for "same speaker" effects? Would want to do same tangram over all the rounds and then use final (or first round) distance, and same speaker?. Where there's a same speaker is deeply confounded with group size!!!! 
