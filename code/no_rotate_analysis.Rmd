@@ -290,6 +290,32 @@ ggplot(combined_chat, aes(x=repNum, y=total_num_words, color=rotate))+
   theme(legend.position="bottom")
 ```
 
+```{r}
+
+ggplot(all_chat, aes(x=repNum, y=total_num_words, color=str_c(numPlayers,"_",rotate)))+
+  facet_wrap(~role, nrow=1)+
+  #scale_color_brewer(palette="Dark2")+
+  scale_color_viridis(discrete=T)+
+    geom_jitter(alpha=.05)+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+    scale_y_continuous(limits = c(0,50))+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
+
+
+ggplot(all_chat, aes(x=repNum, y=total_num_words, color=str_c(numPlayers,"_",rotate)))+
+  facet_wrap(~role, nrow=1)+
+    scale_color_viridis(discrete=T)+
+  #scale_color_brewer(palette="Dark2")+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+     stat_summary(fun.data = "mean_cl_boot")+
+  labs(title="Number of words", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="bottom")
+```
+
 
 
 ```{r}

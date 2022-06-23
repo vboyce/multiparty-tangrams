@@ -71,6 +71,33 @@ noro <- read_csv(here(data_location_noro, "filtered_chat.csv")) %>%
 pre_sbert <- raw_text %>%union(noro) %>%  write_csv("pre_sbert.csv")
 ```
 
+take two : we concatenate everything (with a space)
+ still no spellcheck or filtering
+ 
+```{r prep_concatenate,}
+
+raw_text <- read_csv(here(data_location, "filtered_chat.csv")) %>%
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  #unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(text)) %>% 
+  group_by(gameId, targetNum, repNum, trialNum, numPlayers, playerId, target, role) %>% 
+  summarize(sentence=str_c(text, collapse=" ")) %>% 
+  mutate(numPlayers=as.character(numPlayers)) %>% 
+  ungroup()
+
+noro <- read_csv(here(data_location_noro, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  #unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(text)) %>% 
+  group_by(gameId, targetNum, repNum, trialNum, numPlayers, playerId, target, role) %>% 
+  summarize(sentence=str_c(text, collapse=" ")) %>% 
+  ungroup() %>% 
+  mutate(numPlayers="6noro")
+
+#sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
+pre_sbert_concat <- raw_text %>%union(noro) %>%  write_csv("pre_sbert_concat.csv")
+```
+
 # Interlude
 This is where they need to get embedding with jupyter
 
@@ -83,6 +110,14 @@ mat = np$load('post_sbert.npy')
 saveRDS(mat,'post_sbert.RData')
 ```
 
+```{r, include=F, eval=F}
+library(reticulate)
+np <- import("numpy")
+mat = np$load('post_sbert_concat.npy')
+saveRDS(mat,'post_sbert_concat.RData')
+```
+
+## separate approach
 We embed each sentence separately, but then average across the embeddings to get a vector for each player:trial combo.
 
 ```{r, include=F,}
@@ -95,10 +130,42 @@ grouped <- ssb %>%
   summarize(across(starts_with('V'), mean)) %>% 
   ungroup() 
 
-F_mat <- grouped %>% select(starts_with("V")) %>% as.matrix() #Features
-M_mat <- grouped %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+
 ```
 
+
+
+
+
+## concat approach
+
+```{r, include=F,}
+sbert_concat <- pre_sbert_concat %>% bind_cols(readRDS('post_sbert_concat.RData')  %>% as_tibble()) %>% mutate(tangram=str_sub(target,-5,-5))
+
+
+
+```
+
+How different are average versus concat embeddings:
+
+```{r}
+# if there was only ever one line, it doesn't matter which approach
+test <- ssb %>%
+  mutate(tangram=str_sub(target,-5,-5)) %>% 
+  group_by(gameId,targetNum,repNum, trialNum, numPlayers,playerId,tangram,role) %>% 
+  summarize(across(starts_with('V'), mean),
+            n=n()) %>% 
+  ungroup() 
+
+test %>% nrow() #15040 total
+test %>% filter(n>1) %>% nrow() # 7565
+
+cols <- test %>% filter(n>1) %>% select(-starts_with("V"), -n)
+concat_select <- sbert_concat %>% select(gameId,targetNum,repNum, trialNum, numPlayers,playerId,tangram,role, starts_with("V")) %>% inner_join(cols) %>% mutate(type="concat") %>% union(test %>% filter(n>1) %>% select(-n) %>% mutate(type="average"))
+
+F_mat_test <- concat_select %>% select(starts_with("V")) %>% as.matrix() #Features
+M_mat_test <- concat_select %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+```
 
 ```{r helpers}
 # note: cor expects features to be in columns so we transpose
@@ -142,6 +209,33 @@ make_across_df <- function(M_mat, F_mat, method) {
 }
 ```
 
+```{r }
+
+foobar <- M_mat_test %>% 
+  group_by(gameId,targetNum,repNum, trialNum, numPlayers,playerId,tangram,role) %>% 
+  mutate(combinedId=type) %>% 
+  make_across_df(F_mat_test, 'cosine') %>% 
+  separate(dim1, into=c("type_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("type_2"), convert=T, sep="_") %>% 
+  filter(type_1!=type_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+About half of person-trial combos are single lines already, so the will have identical embeddings between the two methods. Of the other half, this is the cosine similarity distribution between the two methods (grouped by player count). 
+
+```{r}
+ggplot(foobar, aes(x=sim))+geom_density()+geom_boxplot()+facet_wrap(~numPlayers)
+```
+
+```{r}
+#F_mat <- grouped %>% select(starts_with("V")) %>% as.matrix() #Features
+#M_mat <- grouped %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+
+F_mat <- sbert_concat %>% select(starts_with("V")) %>% as.matrix() #Features
+M_mat <- sbert_concat %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+```
 # Caveats to interpretation
 
 This is done on the raw transcripts. Some things that could contribute to "similarity" include larger strings (because there will be averaging, which tends to bring things in) and more non-reference language which we expect to be more uniform (maybe?). 
