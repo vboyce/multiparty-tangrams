@@ -157,8 +157,6 @@ test <- ssb %>%
             n=n()) %>% 
   ungroup() 
 
-test %>% nrow() #15040 total
-test %>% filter(n>1) %>% nrow() # 7565
 
 cols <- test %>% filter(n>1) %>% select(-starts_with("V"), -n)
 concat_select <- sbert_concat %>% select(gameId,targetNum,repNum, trialNum, numPlayers,playerId,tangram,role, starts_with("V")) %>% inner_join(cols) %>% mutate(type="concat") %>% union(test %>% filter(n>1) %>% select(-n) %>% mutate(type="average"))
@@ -166,6 +164,8 @@ concat_select <- sbert_concat %>% select(gameId,targetNum,repNum, trialNum, numP
 F_mat_test <- concat_select %>% select(starts_with("V")) %>% as.matrix() #Features
 M_mat_test <- concat_select %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
 ```
+
+`r test %>% filter(n>1) %>% nrow()` of the `r `test %>% nrow()` person-trial combos were single line utterances to begin with, so these are the same embedding regardless of method. 
 
 ```{r helpers}
 # note: cor expects features to be in columns so we transpose
@@ -223,11 +223,16 @@ foobar <- M_mat_test %>%
 
 ```
 
-About half of person-trial combos are single lines already, so the will have identical embeddings between the two methods. Of the other half, this is the cosine similarity distribution between the two methods (grouped by player count). 
+Of the others, this is the cosine similarity distribution between the two methods (grouped by player count). 
 
 ```{r}
 ggplot(foobar, aes(x=sim))+geom_density()+geom_boxplot()+facet_wrap(~numPlayers)
 ```
+So, average similarity is .87ish for that half (and 1 for the just identical half), but there are some outliers thare lower than .8. 
+
+Switching below diagrams to use concatenate method. 
+
+(Still questions about cleaning etc.)
 
 ```{r}
 #F_mat <- grouped %>% select(starts_with("V")) %>% as.matrix() #Features
@@ -236,13 +241,13 @@ ggplot(foobar, aes(x=sim))+geom_density()+geom_boxplot()+facet_wrap(~numPlayers)
 F_mat <- sbert_concat %>% select(starts_with("V")) %>% as.matrix() #Features
 M_mat <- sbert_concat %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
 ```
+
 # Caveats to interpretation
 
 This is done on the raw transcripts. Some things that could contribute to "similarity" include larger strings (because there will be averaging, which tends to bring things in) and more non-reference language which we expect to be more uniform (maybe?). 
 
-We could attempt to "solve" these in future by a) annotating for the "reference" expression (or using cleaned transcript as a half way point), b) not averaging sentences together. 
+We could attempt to "solve" these in future by a) annotating for the "reference" expression (or using cleaned transcript as a half way point).
 
-Models are quick and dirty and so aren't well centered b/c 0 is really not meaningful for numPlayers. Should fix later if we think these directions are promising.
 
 # Across game divergence: 
 
@@ -409,7 +414,6 @@ Here's where 6noro really looks like a 2p game.
 ## sample transcript
 
 A semi-random selection of games & tangrams, trying to get some diversity.
-Similarity is between that rep and the next later.
 
 ```{r}
 sample_text <- pre_sbert %>% filter(gameId=="zqcX66GZiQS8bA6Ff") %>% 
@@ -541,6 +545,8 @@ group within game, within tangram, within round, across utterer
 
 code for includes speaker?
 
+(This is nonsense)
+
 ```{r }
 reps_with_L <- M_mat %>% filter(role=="listener") %>% select(tangram,gameId,numPlayers,repNum) %>% unique()
 
@@ -566,10 +572,75 @@ ggplot(lls_same_rep, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
 
 ```
 
+# Correlates of success!
+
+We want to look at whether properties of the utterances (like distinctiveness) are related to how successful people were that trial. 
+
+We're going to need to un upper-triangle this!
+
+```{r}
+
+success_ro <- read_rds(here(data_location,"round_results.rds")) %>% 
+  select(gameId,repNum,tangram,numPlayers,realCorrect) %>% 
+  mutate(pct_correct=realCorrect/(numPlayers-1)) %>% 
+  mutate(numPlayers=as.character(numPlayers))
+
+success_no_ro <- read_rds(here(data_location_noro,"round_results.rds")) %>% 
+  select(gameId,repNum,tangram,numPlayers,realCorrect) %>% 
+  mutate(pct_correct=realCorrect/(numPlayers-1)) %>% 
+  mutate(numPlayers="6noro")
+
+success <- success_ro %>% union(success_no_ro)
+```
+
+
+```{r }
+
+tangram_distinctive <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(gameId,repNum, numPlayers) %>% 
+  mutate(combinedId=tangram) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  rename(tangram1=dim1,tangram2=dim2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(tangram1!=tangram2) %>% 
+  ungroup()
+```
+First try grouping by rep and game
+```{r}
+success_grouped <- success %>% group_by(gameId, repNum, numPlayers) %>% summarize(pct_correct=mean(pct_correct))
+
+distinctive_grouped <- tangram_distinctive %>% filter(!is.na(sim)) %>% 
+  group_by(gameId, repNum, numPlayers) %>% 
+  summarize(sim=mean(sim)) %>% 
+  left_join(success_grouped) %>% 
+  filter(!is.na(pct_correct)) # should track down source of this discrepancy later!
+
+ggplot(distinctive_grouped, aes(x=sim,y=pct_correct,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.5)+geom_smooth(method = "glm", 
+    method.args = list(family = "binomial"), se=F)+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
+We can also un upper triangle this to look at a per tangram basis -- we see that more distinctive tangram descriptions (lower similarity) correlate with higher success rates. 
+
+(Note this is a correlation, causality is likely ... complicated and cyclic)
+
+```{r}
+distinctive_full <- tangram_distinctive %>% 
+  rename(tangram1=tangram2, tangram2=tangram1) %>% 
+  union(tangram_distinctive) %>% group_by(tangram1, numPlayers, repNum, gameId) %>% 
+  summarize(sim=mean(sim)) %>% 
+  rename(tangram=tangram1) %>% 
+  left_join(success)
+
+ggplot(distinctive_full, aes(x=sim,y=pct_correct,color=as.factor(numPlayers)))+
+         geom_jitter(alpha=.1)+geom_smooth(method = "glm", method.args = list(family = "binomial"), se=T)+
+    scale_color_viridis(discrete=T, direction=-1)
+```
+
 # TODO future
 
 Is there anything good to do with listener data?
-
-Can we correlate distinctiveness with listener success?
 
 How to look for "same speaker" effects? Would want to do same tangram over all the rounds and then use final (or first round) distance, and same speaker?. Where there's a same speaker is deeply confounded with group size!!!! 
