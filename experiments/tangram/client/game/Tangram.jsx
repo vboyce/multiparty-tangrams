@@ -54,9 +54,10 @@ export default class Tangram extends React.Component {
       })
     }
 
-
+    let feedback = []
     // Highlight clicked object in green if correct; red if incorrect
-    if(stage.name=="feedback" & (tangram == player.get('clicked') ||
+    if (game.get("feedback")=="limited"){ //this is "old" version
+      if(stage.name=="feedback" & (tangram == player.get('clicked') ||
      (player.get('role')== "speaker" & _.some(players, p => p.get("clicked") == tangram)))) {
       const color = tangram == target ? 'green' : 'red';
       _.extend(mystyle, {
@@ -65,7 +66,7 @@ export default class Tangram extends React.Component {
       })
     }
     
-    let feedback = []
+    
     if (player.get('role') == 'speaker' &  stage.name=="feedback"){
       players.forEach(player => {
         if (player.get('clicked')==tangram){
@@ -73,6 +74,26 @@ export default class Tangram extends React.Component {
         }
       })
     }
+  }
+
+  if (game.get("feedback")=="full"){ //this is "old" version
+    if(stage.name=="feedback" & _.some(players, p => p.get("clicked") == tangram)) {
+    const color = tangram == target ? 'green' : 'red';
+    _.extend(mystyle, {
+      "outline" :  `10px solid ${color}`,
+      "zIndex" : "9"
+    })
+  }
+  
+  if (stage.name=="feedback"){
+    players.forEach(player => {
+      if (player.get('clicked')==tangram){
+        feedback.push(<img src={player.get("avatar")} key="player" />)
+      }
+    })
+  }
+}
+
     
     return (
       <div

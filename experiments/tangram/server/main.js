@@ -50,6 +50,7 @@ Empirica.gameInit((game, treatment) => {
   // Sample whether to use tangram set A or set B
   game.set("targetSet", 'setA'); 
   game.set('context', targetSets['setA']);
+  game.set("feedback", treatment.feedback)
   const targets = game.get('context');
   const reps = treatment.rounds;
   const numTargets = targets.length;

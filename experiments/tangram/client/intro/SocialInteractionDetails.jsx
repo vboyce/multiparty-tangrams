@@ -99,8 +99,8 @@ export default class SocialInteractionDetails extends React.Component {
           <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through the all the pictures {treatment.rounds} times,
             so each picture can appear as the target multiple times.</p>
 
-            <p>The same person will be the Speaker for the entire game.</p>
-         
+            <p> {treatment.rotateSpeaker? "":"The same person will be the Speaker for the entire game."}
+            </p>         
  
           <p>
             You may communicate with your teammates through the in-game
@@ -112,8 +112,10 @@ export default class SocialInteractionDetails extends React.Component {
             Note that the game allows for simultaneous and real-time actions.
             Each trial will only end after all the listeners have made a selection (or the timer runs out).</p>
 
-            <p>At that time, everyone will be given feedback: the <b>Speaker</b> will see which picture
-            each Listener selected, and the <b>Listeners</b> will each see whether their selection was correct or not.</p>
+            <p>{treatment.feedback=="limited"? 
+            "At that time, everyone will be given feedback: the Speaker will see which picture" +
+            "each Listener selected, and the Listeners will each see whether their selection was correct or not.":
+            "At that time, you will see feedback on what everyone selected and whether they were correct or not."}</p>
 
             
          
