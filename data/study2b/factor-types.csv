@@ -1,0 +1,10 @@
+﻿_id,name,required,description,type,min,max,createdAt,archivedAt
+ZEfhsNBKfbQ6TGekv,playerCount,true,The Number of players participating in the given game.,Integer,1,,2022-03-30T19:57:33Z,
+kJddTH8X4Y6Df7SPA,selectionDuration,true,how many seconds do participants have to complete a tangram selection trial,String,,,2022-03-30T19:59:19Z,
+oTmtc6KmQb77CaDTC,submitCode,true,code for submission to prolific/mturk,String,,,2022-03-30T19:59:19Z,
+uWvpQqxyNi8Dz6CSn,rounds,false,number of rounds,Integer,1,,2022-03-30T19:59:19Z,
+tJ642Av4buu8Q5w73,feedbackDuration,false,how many seconds the feedback is displayed for,Integer,1,100,2022-03-30T19:59:19Z,
+ZkXeabrJhX4KfX8yj,listenerBonus,false,how much a listener is paid per correct answer (in cents),Integer,1,10,2022-03-30T19:59:19Z,
+PbMKWFHGq7qHwK6NL,rotateSpeaker,false,is there one speaker for the whole game or does it rotate,Boolean,2,,2022-03-30T19:59:19Z,
+b5miCkhM6uwYKF2Sn,speakerBonus,false,how much bonus the speaker gets *per listener* who gets it right,Integer,0,10,2022-07-13T19:16:32Z,2021-03-31T21:23:37Z
+ckLfENK7MBJFvZcvw,feedback,false,how much is shown,String,1,20,2022-07-13T19:16:32Z,
