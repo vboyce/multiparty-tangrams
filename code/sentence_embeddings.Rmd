@@ -248,7 +248,153 @@ This is done on the raw transcripts. Some things that could contribute to "simil
 
 We could attempt to "solve" these in future by a) annotating for the "reference" expression (or using cleaned transcript as a half way point).
 
+# Pretty for cogsci
+## Across game divergence
 
+Within the same tangram, repNum, and numPlayers, but across different games
+
+```{r }
+
+game_divergence <- M_mat %>% 
+  filter(role=="speaker") %>% 
+  filter(numPlayers!="6noro") %>% 
+  group_by(tangram,repNum, numPlayers) %>% 
+  mutate(combinedId=str_c(gameId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("gameId_1","repNum_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("gameId_2","repNum_2"), convert=T, sep="_") %>% 
+  filter(gameId_1!=gameId_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r, fig.width=4, fig.height=2.5}
+ggplot(game_divergence, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,tangram), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+
+  geom_smooth(formula=y~poly(x,2))+
+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="Players")+
+  theme(text=element_text(size=14), legend.position="bottom")+
+    scale_color_viridis(discrete=T, direction=-1)
+  #coord_cartesian(ylim=c(0.1,.6))
+
+ggsave(here(image_location, "sbert_diverge.png"))
+```
+
+## Within game divergence
+
+```{r }
+
+tangram_distinctive <- M_mat %>% 
+    filter(role=="speaker") %>% 
+    filter(numPlayers!="6noro") %>% 
+  group_by(gameId,repNum, numPlayers) %>% 
+  mutate(combinedId=tangram) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  rename(tangram1=dim1,tangram2=dim2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(tangram1!=tangram2) %>% 
+  ungroup()
+```
+
+
+```{r, fig.width=5, fig.height=2.5}
+ggplot(tangram_distinctive, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+
+  geom_smooth(formula=y~poly(x,2))+
+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity of descriptions \n of different tangrams within a game", x="Block", color="Players")+
+  theme(text=element_text(size=14))+
+    scale_color_viridis(discrete=T, direction=-1)
+  #coord_cartesian(ylim=c(0.1,.6))
+
+ggsave(here(image_location, "sbert_diverge_within.png"))
+```
+## Adjacent
+
+```{r }
+
+tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+    filter(numPlayers!="6noro") %>% 
+  group_by(tangram, gameId, numPlayers) %>% 
+  mutate(combinedId=str_c(repNum,playerId,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","p1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","p2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1),
+         samespeaker=ifelse(p1==p2,"same_speaker","diff_speaker")) 
+
+adjacent <- tangram_change %>% 
+  filter(earlier+1==later) %>% 
+  ungroup()
+```
+
+
+```{r fig.width=5, fig.height=2.5}
+
+to_first <- tangram_change %>% filter(earlier==0) %>% ungroup()
+left <- ggplot(to_first, aes(x=later+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity to ...", x="Block",title="first block")+
+  theme(text=element_text(size=14),legend.pos="none", plot.title=element_text(size=14, hjust=.5, vjust=.5, margin=margin(t=40, b=-30)))+
+    scale_color_viridis(discrete=T, direction=-1)+
+  coord_cartesian(ylim=c(0.2,1))
+
+#ggsave(here(image_location, "sbert_tofirst.png"))
+
+middle <- ggplot(adjacent, aes(x=earlier+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="", x="Block")+
+  ggtitle("next block")+
+  theme(text=element_text(size=14), legend.pos="none", plot.title=element_text(size=14,hjust=.5, vjust=.5, margin=margin(t=40, b=-30)), axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())+
+    scale_color_viridis(discrete=T, direction=-1)+
+  coord_cartesian(ylim=c(0.2,1))
+
+to_last <- tangram_change %>% filter(later==5) %>% ungroup()
+```
+
+```{r fig.width=4, fig.height=2.5}
+ ggplot(to_last, aes(x=earlier+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="Players", title="Similarity to description in final block")+
+  theme(text=element_text(size=14), plot.title=element_text(size=14,hjust=.5, vjust=.5, margin=margin(t=40, b=-30)))+
+    scale_color_viridis(discrete=T, direction=-1)+
+  coord_cartesian(ylim=c(0.2,1))
+
+ggsave(here(image_location, "sbert_tolast.png"))
+
+```
+
+```{r fig.width=5, fig.height=2.5}
+legend <- get_legend(right)
+yaxis <- get_y_axis(left)
+plots <- plot_grid(left,
+                   NULL,
+                   middle,
+                   NULL,
+                   right+theme(legend.position = "none"),
+                   nrow=1, rel_widths=c(7.5,-.2,6,-.2,6))
+
+plot_grid(plots, legend, nrow=1, rel_widths=c(1,.1))
+
+ggsave(here(image_location, "sbert_tofirst.png"))
+
+```
 # Across game divergence: 
 
 Do tangram descriptions diverge sooner in smaller groups?
