@@ -15,3 +15,9 @@ data/pilotC/*
 *.log
 *.aux
 code/models/*
+*/for_prolific.csv
+*/player_payments.csv
+*.tex
+*.npy
+*.Rdata
+
