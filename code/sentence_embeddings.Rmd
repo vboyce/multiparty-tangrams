@@ -32,9 +32,9 @@ ParseJSONColumn <- function(x) {
 data_location="data/study1"
 ##Data import constants
 data_location_noro="data/study2a"
+data_location_highfeed="data/study2b"
 
-
-
+colors=c("#FDE725FF","#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF", "#eb34eb","#e04b14" )
 
 date_start=lubridate::ymd('2021-05-04')
 
@@ -67,8 +67,14 @@ noro <- read_csv(here(data_location_noro, "filtered_chat.csv")) %>%
   filter(!is.na(sentence)) %>% 
   mutate(numPlayers="6noro")
 
+high_feed <- read_csv(here(data_location_highfeed, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(sentence)) %>% 
+  mutate(numPlayers="6highfeed")
+
 #sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
-pre_sbert <- raw_text %>%union(noro) %>%  write_csv("pre_sbert.csv")
+pre_sbert <- raw_text %>%union(noro) %>% union(high_feed) %>% write_csv("pre_sbert.csv")
 ```
 
 take two : we concatenate everything (with a space)
@@ -94,8 +100,17 @@ noro <- read_csv(here(data_location_noro, "filtered_chat.csv")) %>%
   ungroup() %>% 
   mutate(numPlayers="6noro")
 
+high_feed <- read_csv(here(data_location_highfeed, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  #unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(text)) %>% 
+  group_by(gameId, targetNum, repNum, trialNum, numPlayers, playerId, target, role) %>% 
+  summarize(sentence=str_c(text, collapse=" ")) %>% 
+  ungroup() %>% 
+  mutate(numPlayers="6highfeed")
+
 #sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
-pre_sbert_concat <- raw_text %>%union(noro) %>%  write_csv("pre_sbert_concat.csv")
+pre_sbert_concat <- raw_text %>%union(noro) %>% union(high_feed) %>%  write_csv("pre_sbert_concat.csv")
 ```
 
 # Interlude
@@ -118,6 +133,7 @@ saveRDS(mat,'post_sbert_concat.RData')
 ```
 
 ## separate approach
+[Deprecated] 
 We embed each sentence separately, but then average across the embeddings to get a vector for each player:trial combo.
 
 ```{r, include=F,}
@@ -140,7 +156,7 @@ grouped <- ssb %>%
 ## concat approach
 
 ```{r, include=F,}
-sbert_concat <- pre_sbert_concat %>% bind_cols(readRDS('post_sbert_concat.RData')  %>% as_tibble()) %>% mutate(tangram=str_sub(target,-5,-5))
+sbert_concat <- pre_sbert_concat %>% bind_cols(readRDS('post_sbert_concat.RData')  %>% as_tibble()) %>% mutate(tangram=str_sub(target,-5,-5)) 
 
 
 
@@ -248,12 +264,12 @@ This is done on the raw transcripts. Some things that could contribute to "simil
 
 We could attempt to "solve" these in future by a) annotating for the "reference" expression (or using cleaned transcript as a half way point).
 
-# Pretty for cogsci
+<!-- # Pretty for cogsci
 ## Across game divergence
 
-Within the same tangram, repNum, and numPlayers, but across different games
+Within the same tangram, repNum, and numPlayers, but across different games -->
 
-```{r }
+```{r include=F, eval=F}
 
 game_divergence <- M_mat %>% 
   filter(role=="speaker") %>% 
@@ -269,7 +285,7 @@ game_divergence <- M_mat %>%
 
 ```
 
-```{r, fig.width=4, fig.height=2.5}
+```{r, fig.width=4, fig.height=2.5, include=F, eval=F}
 ggplot(game_divergence, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
       stat_summary(aes(group=str_c(numPlayers,tangram), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
 
@@ -284,9 +300,9 @@ ggplot(game_divergence, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
 ggsave(here(image_location, "sbert_diverge.png"))
 ```
 
-## Within game divergence
+<!-- ## Within game divergence -->
 
-```{r }
+```{r include=F, eval=F}
 
 tangram_distinctive <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -301,7 +317,7 @@ tangram_distinctive <- M_mat %>%
 ```
 
 
-```{r, fig.width=5, fig.height=2.5}
+```{r, fig.width=5, fig.height=2.5, include=F, eval=F}
 ggplot(tangram_distinctive, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
       stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
 
@@ -315,9 +331,9 @@ ggplot(tangram_distinctive, aes(x=repNum+1,y=sim,color=as.factor(numPlayers)))+
 
 ggsave(here(image_location, "sbert_diverge_within.png"))
 ```
-## Adjacent
+<!--## Adjacent -->
 
-```{r }
+```{r include=F, eval=F}
 
 tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -339,7 +355,7 @@ adjacent <- tangram_change %>%
 ```
 
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=5, fig.height=2.5, eval=F, include=F}
 
 to_first <- tangram_change %>% filter(earlier==0) %>% ungroup()
 left <- ggplot(to_first, aes(x=later+1,y=sim,color=as.factor(numPlayers)))+
@@ -366,7 +382,7 @@ middle <- ggplot(adjacent, aes(x=earlier+1,y=sim,color=as.factor(numPlayers)))+
 to_last <- tangram_change %>% filter(later==5) %>% ungroup()
 ```
 
-```{r fig.width=4, fig.height=2.5}
+```{r fig.width=4, fig.height=2.5, eval=F, include=F}
  ggplot(to_last, aes(x=earlier+1,y=sim,color=as.factor(numPlayers)))+
       stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
   geom_smooth(formula=y~poly(x,2))+
@@ -380,7 +396,7 @@ ggsave(here(image_location, "sbert_tolast.png"))
 
 ```
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=5, fig.height=2.5, eval=F, include=F}
 legend <- get_legend(right)
 yaxis <- get_y_axis(left)
 plots <- plot_grid(left,
@@ -421,46 +437,12 @@ game_divergence <- M_mat %>%
 
 ```{r}
 ggplot(game_divergence, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
+        stat_summary(aes(group=str_c(numPlayers,tangram), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+geom_smooth(formula=y~poly(x,2))+
+    scale_color_manual(values=colors)
 ```
 
 Similarity is higher in larger games and earlier in the games. 
 See that 6noro starts out looking like a 6p games and ends looking like a 2-3 player game.
-
-We check again allowing games to vary by number of players, but only by 1. 
-
-Within the same tangram, repNum, and numPlayers, but across different games
-
-```{r }
-
-game_divergence_across <- M_mat %>% 
-  filter(role=="speaker") %>% 
-  filter(numPlayers!="6noro") %>% 
-  group_by(tangram,repNum,) %>% 
-  mutate(combinedId=str_c(numPlayers,gameId,repNum,sep="_")) %>% 
-  make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("nP1","gameId_1","repNum_1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("nP2","gameId_2","repNum_2"), convert=T, sep="_") %>% 
-  filter(gameId_1!=gameId_2) %>% 
-  ungroup() %>% 
-  mutate(largernP=ifelse(nP1>nP2,nP1,nP2),
-         smallernP=ifelse(nP1>nP2,nP2,nP1)) %>% 
-  filter(smallernP+1==largernP) %>% 
-  mutate(sim = ifelse(is.nan(sim), NA, sim))
-  
-```
-
-```{r}
-ggplot(game_divergence_across, aes(x=repNum,y=sim,color=as.factor(smallernP)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
-```
-
-
-Again, similarity is higher in larger games (so 5-6 more similar than 2-3) and reduces over rounds. (We don't include 6noro here b/c it doesn't have a buddy.)
-
-This is the kinda thing that could be driven by outlier games, so mixed effects would be good, but it's pairwise, so that's at least somewhat complicated.
 
 # Within game specialization
 
@@ -485,16 +467,10 @@ tangram_distinctive <- M_mat %>%
 
 ```{r}
 ggplot(tangram_distinctive, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+geom_smooth(formula=y~poly(x,2))+
+    scale_color_manual(values=colors)
 ```
-Again 6noro starts off looking like a 6p and ends looking like a 2p game. 
 
-```{r, eval=F}
-m_distinctive <- lmer(sim~repNum_1*numPlayers_1+(1|gameId), data=tangram_distinctive)
-
-summary(m_distinctive)
-```
 
 Earlier reps have more similarity, as do large games. 
 
@@ -524,8 +500,8 @@ adjacent <- tangram_change %>%
 
 ```{r}
 ggplot(adjacent, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
+         stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+geom_smooth(formula=y~poly(x,2))+
+    scale_color_manual(values=colors)
 ```
 
 6noro has really similar descriptions throughout. 
@@ -540,8 +516,8 @@ Pairs of adjacent rounds have more similar descriptions when the rounds are late
 
 to_first <- tangram_change %>% filter(earlier==0) %>% ungroup()
 ggplot(to_first, aes(x=later,y=sim,color=as.factor(numPlayers)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
+        stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+geom_smooth(formula=y~poly(x,2))+
+    scale_color_manual(values=colors)
 
 ```
 
@@ -551,8 +527,8 @@ ggplot(to_first, aes(x=later,y=sim,color=as.factor(numPlayers)))+
 
 to_last <- tangram_change %>% filter(later==5) %>% ungroup()
 ggplot(to_last, aes(x=earlier,y=sim,color=as.factor(numPlayers)))+
-         geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)
+        stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+geom_smooth(formula=y~poly(x,2))+
+    scale_color_manual(values=colors)
 
 ```
 Here's where 6noro really looks like a 2p game. 
@@ -713,8 +689,7 @@ lls_same_rep <- M_mat %>%
 ```{r}
 ggplot(lls_same_rep, aes(x=repNum,y=sim,color=as.factor(numPlayers)))+
          geom_jitter(alpha=.01)+geom_smooth(formula=y~poly(x,2))+
-    scale_color_viridis(discrete=T, direction=-1)+
-  facet_grid(.~has.speaker)
+scale_color_manual(values=colors)+  facet_grid(.~has.speaker)
 
 ```
 
