@@ -15,42 +15,102 @@ export default class ChatLog extends React.Component {
     const text = this.state.comment.trim();
     if (text !== "") {
       const { round, player } = this.props;
-      const room = player.get('roomId')
+      //const room = player.get('roomId')
       round.append("chat", {
         text,
         playerId: player._id,
         target: round.get('target'),
-        role: player.get('role')
+        role: player.get('role'), 
+        type: "message",
       });
       this.setState({ comment: "" });
     }
   };
 
+  handleEmoji = e => {
+    e.preventDefault();
+    const text = e.currentTarget.value;
+    console.log(text)
+      const { round, player } = this.props;
+      //const room = player.get('roomId')
+      round.append("chat", {
+        text,
+        playerId: player._id,
+        target: round.get('target'),
+        role: player.get('role'),
+        type: "message",
+      });
+    }
+
+
   render() {
     const { comment } = this.state;
-    const { messages, player } = this.props;
+    const { messages, player, game } = this.props;
 
-    return (
-      <div className="chat bp3-card">
-        <Messages messages={messages} player={player} />
-        <form onSubmit={this.handleSubmit}>
-          <div className="bp3-control-group">
-            <input
-              name="comment"
-              type="text"
-              className="bp3-input bp3-fill"
-              placeholder="Enter chat message"
-              value={comment}
-              onChange={this.handleChange}
-              autoComplete="off"
-            />
-            <button type="submit" className="bp3-button bp3-intent-primary">
-              Send
+
+    if (game.get("chat")=="limited" & player.get("role")=="listener"){
+      return(
+        <div className="chat bp3-card">
+          <Messages messages={messages} player={player} />
+          <button
+              type="button"
+              className="bp3-button"
+              value="&#10060;"
+              onClick={this.handleEmoji}
+            >
+              	&#10060;
             </button>
-          </div>
-        </form>
-      </div>
-    );
+            <button
+              type="button"
+              className="bp3-button"
+              value="&#128587;"
+              onClick={this.handleEmoji}
+            >
+              	&#128587;
+            </button>
+            <button
+              type="button"
+              className="bp3-button"
+              value="	&#9989;
+              "
+              onClick={this.handleEmoji}
+            >
+              	&#9989;
+            </button>
+            <button
+              type="button"
+              className="bp3-button"
+              value="	&#128514;"
+              onClick={this.handleEmoji}
+            >
+              	&#128514;
+            </button>
+              
+        </div>
+      )}
+    else{
+      return (
+        <div className="chat bp3-card">
+          <Messages messages={messages} player={player} />
+          <form onSubmit={this.handleSubmit}>
+            <div className="bp3-control-group">
+              <input
+                name="comment"
+                type="text"
+                className="bp3-input bp3-fill"
+                placeholder="Enter chat message"
+                value={comment}
+                onChange={this.handleChange}
+                autoComplete="off"
+              />
+              <button type="submit" className="bp3-button bp3-intent-primary">
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
+      );
+    }
   }
 }
 
@@ -68,7 +128,6 @@ class Messages extends React.Component {
   }
   render() {
     const { messages, player } = this.props;
-
     return (
       <div className="messages" ref={el => (this.messagesEl = el)}>
         {messages.length === 0 ? (
@@ -88,11 +147,12 @@ class Messages extends React.Component {
 
 class Message extends React.Component {
   render() {
-    const { text, subject } = this.props.message;
+    const { text, subject, type} = this.props.message;
     const { self } = this.props;
+    //console.log(type)
     return (
       <div className="message">
-        <Author player={subject} self={self} />
+        <Author player={subject} self={self} type={type}/>
         {text}
       </div>
     );

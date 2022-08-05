@@ -16,6 +16,14 @@ export default class Tangram extends React.Component {
         player.get('clicked') === false &
         player.get('role') == 'listener') {
       player.set("clicked", tangram)
+      round.append("chat", {
+        text: null,
+        playerId: player._id,
+        target: round.get('target'),
+        role: player.get('role'),
+        type: "selectionAlert",
+        time: Date.now()
+      });
       if (!round.get('submitted')){
         speaker.stage.submit()
         round.set('submitted', true)

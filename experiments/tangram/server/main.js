@@ -51,6 +51,7 @@ Empirica.gameInit((game, treatment) => {
   game.set("targetSet", 'setA'); 
   game.set('context', targetSets['setA']);
   game.set("feedback", treatment.feedback)
+  game.set("chat", treatment.chat)
   const targets = game.get('context');
   const reps = treatment.rounds;
   const numTargets = targets.length;
