@@ -11,6 +11,7 @@ import Consent from "./intro/Consent.jsx";
 import Payment from "./intro/Payment.jsx";
 import Overview from "./intro/Overview.jsx";
 import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
+import EmojiSocial from "./intro/EmojiSocial.jsx"
 import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
 import UIOverview from "./intro/UIOverview.jsx";
 import GroupQuiz from "./intro/GroupQuiz.jsx";
@@ -32,7 +33,10 @@ import customBreadcrumb from "./game/Breadcrumb.jsx";
 // different instruction steps depending on the assigned treatment.
 Empirica.introSteps((game, treatment) => {
   const steps = [Payment, Overview];
-  if (game.treatment.playerCount > 1) {
+  if (game.treatment.chat=="limited"){
+    steps.push(EmojiSocial);
+  }
+  else {
     steps.push(SocialInteractionDetails);
   }
   steps.push(MoreAboutBonus, UIOverview);
@@ -41,8 +45,8 @@ Empirica.introSteps((game, treatment) => {
     steps.push(GroupQuiz);
   } 
 
-  //return steps;
-  return [];
+  return steps;
+  //return [];
 });
 
 // The Round component containing the game UI logic.

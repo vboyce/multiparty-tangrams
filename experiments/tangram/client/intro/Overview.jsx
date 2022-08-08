@@ -59,9 +59,8 @@ export default class Overview extends React.Component {
 
           <p>
             After the Speaker sends a message, the Listeners will read it and 
-            <b> each click the picture they believe is the target</b>.  They are also
-            allowed to respond by sending messages back through the chatbox
-            until they are ready to make a selection. </p>
+            <b> each click the picture they believe is the target</b>. {treatment.chat=="limited"? "": "They are also allowed to respond by sending messages back through the chatbox "+
+            "until they are ready to make a selection."}  </p>
 
           <button
             type="button"

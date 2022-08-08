@@ -52,6 +52,7 @@ export default class ChatLog extends React.Component {
       return(
         <div className="chat bp3-card">
           <Messages messages={messages} player={player} />
+          <div className="bp3-button-group bp3-fill bp3-fill">
           <button
               type="button"
               className="bp3-button"
@@ -63,10 +64,10 @@ export default class ChatLog extends React.Component {
             <button
               type="button"
               className="bp3-button"
-              value="&#128587;"
+              value="&#129300;"
               onClick={this.handleEmoji}
             >
-              	&#128587;
+              	&#129300;
             </button>
             <button
               type="button"
@@ -85,7 +86,7 @@ export default class ChatLog extends React.Component {
             >
               	&#128514;
             </button>
-              
+            </div>
         </div>
       )}
     else{

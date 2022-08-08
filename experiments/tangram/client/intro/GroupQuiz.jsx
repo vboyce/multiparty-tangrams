@@ -38,12 +38,13 @@ export default class GroupQuiz extends React.Component {
     event.preventDefault();
     const { game, player } = this.props; 
     
+    var chat= game.treatment.chat=="limited" ? "speaker": "anyone"
     if (
       player.get("nParticipants") !== game.treatment.playerCount.toString() ||
       player.get("scoreOption") !== "matter" ||
       player.get("tangramCount") !== "12" ||
       player.get("timeOut") !== "0" ||
-      player.get("chat") !== "anyone" ||
+      player.get("chat") !== chat ||
       player.get("pictures") !== "different"
       ) {
       AlertToaster.show({
