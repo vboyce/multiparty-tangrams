@@ -96,7 +96,7 @@ export default class SocialInteractionDetails extends React.Component {
             <strong>progress to the next task when the time is up</strong> and will not get a bonus,
             so please stay focused.
           </p>
-          <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through the all the pictures {treatment.rounds} times,
+          <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through all the pictures {treatment.rounds} times,
             so each picture can appear as the target multiple times.</p>
 
             <p> {treatment.rotateSpeaker? "":"The same person will be the Speaker for the entire game."}
@@ -109,12 +109,12 @@ export default class SocialInteractionDetails extends React.Component {
             <strong> the Speaker must send a message before Listeners can make their selections</strong>.
           </p>
           <p>
-            Note that the game allows for simultaneous and real-time actions.
+            Note that the game allows for simultaneous and real-time actions. <strong>If the experiment seems slow or glitchy, you can refresh the page. </strong> 
             Each trial will only end after all the listeners have made a selection (or the timer runs out).</p>
 
             <p>{treatment.feedback=="limited"? 
             "At that time, everyone will be given feedback: the Speaker will see which picture" +
-            "each Listener selected, and the Listeners will each see whether their selection was correct or not.":
+            " each Listener selected, and the Listeners will each see whether their selection was correct or not.":
             "At that time, you will see feedback on what everyone selected and whether they were correct or not."}</p>
 
             

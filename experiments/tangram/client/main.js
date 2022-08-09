@@ -11,7 +11,7 @@ import Consent from "./intro/Consent.jsx";
 import Payment from "./intro/Payment.jsx";
 import Overview from "./intro/Overview.jsx";
 import SocialInteractionDetails from "./intro/SocialInteractionDetails.jsx";
-import EmojiSocial from "./intro/EmojiSocial.jsx"
+import EmojiSocial from "./intro/EmojiSocial.jsx";
 import MoreAboutBonus from "./intro/MoreAboutBonus.jsx";
 import UIOverview from "./intro/UIOverview.jsx";
 import GroupQuiz from "./intro/GroupQuiz.jsx";
@@ -26,7 +26,7 @@ import customBreadcrumb from "./game/Breadcrumb.jsx";
  Empirica.header(() => null);
 
 // Set the Consent Component you want to present players (optional).
-//Empirica.consent(Consent);
+Empirica.consent(Consent);
 
 // Introduction pages to show before they play the game (optional).
 // At this point they have been assigned a treatment. You can return

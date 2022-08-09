@@ -96,7 +96,7 @@ export default class SocialInteractionDetails extends React.Component {
             <strong>progress to the next task when the time is up</strong> and will not get a bonus,
             so please stay focused.
           </p>
-          <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through the all the pictures {treatment.rounds} times,
+          <p>There will be <b>12 pictures shown at a time</b>. As a group, you will go through all the pictures {treatment.rounds} times,
             so each picture can appear as the target multiple times. {treatment.rotateSpeaker? "":"The same person will be the Speaker for the entire game."}
             </p>         
  
@@ -106,19 +106,19 @@ export default class SocialInteractionDetails extends React.Component {
           </p>
           <p>
            <strong> Listeners cannot use the chat, instead, they can send the following messages by clicking buttons: </strong> </p>
-           <p> &#10060; for <strong>"I don't understand" </strong></p>
-        <p> &#129300; for <strong>"I sorta understand; please explain more" </strong></p>
-        <p> &#9989; for <strong>"I understand" </strong> </p>
+           <p> &#10060; for <strong>"I'm completely lost. I don't understand what you're saying at all." </strong></p>
+        <p> &#129300; for <strong>"I sorta understand; please explain more." </strong></p>
+        <p> &#9989; for <strong>" Got it! I know exactly what you mean!" </strong> </p>
         <p> &#128514; for <strong>"lol" </strong> </p>
 
         <p> These emoji messages will appear to the entire team.</p>
           <p>
-            Note that the game allows for simultaneous and real-time actions.
+            Note that the game allows for simultaneous and real-time actions. <strong>If the experiment seems slow or glitchy, you can refresh the page. </strong>
             Each trial will only end after all the listeners have made a selection (or the timer runs out).</p>
 
             <p>{treatment.feedback=="limited"? 
             "At that time, everyone will be given feedback: the Speaker will see which picture" +
-            "each Listener selected, and the Listeners will each see whether their selection was correct or not.":
+            " each Listener selected, and the Listeners will each see whether their selection was correct or not.":
             "At that time, you will see feedback on what everyone selected and whether they were correct or not."}</p>
 
             
