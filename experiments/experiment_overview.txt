@@ -1,0 +1,33 @@
+Recreating experiments:
+
+To the extent possible, as new conditions have been added, we've tried to make it so that with the appropriate experiment parameters, earlier experiments are still replicable. However, some bugs and typos have been fixed and the intro slides have been clarified. 
+
+To run experiments, these are the settings to use:
+
+For all experiments:
+selectionDuration: 180
+rounds: 6
+submitCode: (as appropriate for Prolific experiment)
+feedbackDuration: 5
+listenerBonus: 4
+playerCount: (however many players total)
+
+For experiment 1:
+rotateSpeaker: true
+feedback: limited
+chat: NA
+
+For experiment 2a:
+rotateSpeaker: false
+feedback: limited
+chat: NA
+
+For experiment 2b:
+rotateSpeaker: true
+feedback: full
+chat: NA
+
+For experiment 2c:
+rotateSpeaker: true
+feedback: limited
+chat: limited
