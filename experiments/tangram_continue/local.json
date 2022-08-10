@@ -1,0 +1,12 @@
+{
+  "admins": [
+    {
+      "username": "admin",
+      "password": "brownounces"
+    }
+  ],
+  "public": { 
+    "playerIdParam": "playerIdKey",
+    "playerIdParamExclusive": false 
+	}
+}
