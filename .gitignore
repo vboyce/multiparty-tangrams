@@ -22,5 +22,5 @@ code/models/*
 *.Rdata
 *.RData
 log
-server
+server_notes
 *cache*

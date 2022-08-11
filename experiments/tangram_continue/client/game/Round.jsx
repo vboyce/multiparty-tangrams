@@ -9,9 +9,10 @@ const setTimeout = function(player) {
   if(!player.get('exitTimeoutId')) {
     player.set('exitTimeoutId', Meteor.setTimeout(() => {
       player.set('exited', true);
-      //player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
+      player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
+      console.log(player.get("exited"))
       console.log("someone has been removed")
-    }, 15000)) //TODO longer
+    }, 5000)) //TODO longer
   }
 }
 const cancelTimeout = function(player) {
@@ -31,12 +32,6 @@ export default class Round extends React.Component {
       game.set("justStarted", false);
     } else {
       roundSound.play();
-      setInterval(() => {
-        //player.set("lastSeen", new Date())
-        const bar=Meteor.call("getServerTime")
-        console.log("here")
-        console.log(bar)
-      }, 2000);
     }
   }
 
@@ -45,10 +40,11 @@ export default class Round extends React.Component {
       game.players.forEach(player => {
         if (!player.online)
         { setTimeout(player)
-        console.log("warning")}
+        console.log("warning")
+      }
         else {
           cancelTimeout(player)
-          console.log("good")
+          //console.log("good")
         }
       })
     return (

@@ -42,7 +42,7 @@ export default class Task extends React.Component {
     "You are a listener. Please click on the image that the speaker describes.")}
     if (stage.name=="feedback"){
       if (player.get('role')=='speaker'){
-        role = round.get("countCorrect")+"/"+(game.treatment.playerCount-1)+ " listeners selected correctly!"
+        role = round.get("countCorrect")+"/"+(round.get("activePlayerCount")-1)+ " listeners selected correctly!"
       }
       else if (player.get("clicked")==target){
         role = "Your selection is CORRECT!"

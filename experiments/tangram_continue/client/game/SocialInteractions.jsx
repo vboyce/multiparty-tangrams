@@ -2,9 +2,11 @@ import React from "react";
 import EventLog from "./EventLog";
 import ChatLog from "./ChatLog";
 import Timer from "./Timer";
+import _ from "lodash";
 
 export default class SocialInteractions extends React.Component {
   renderPlayer(player, self = false) {
+    //console.log(player)
     return (
       <div className="player" key={player._id}>
         <span className="image"></span>
@@ -19,8 +21,9 @@ export default class SocialInteractions extends React.Component {
 
   render() {
     const { game, round, stage, player } = this.props;
-
-    const otherPlayers = _.reject(game.players, p => p._id === player._id);
+    const activePlayers= _.reject(game.players, p => p.get("exited"))
+    const otherPlayers = _.reject(activePlayers, p => p._id === player._id);
+    console.log(activePlayers)
     const messages = round.get("chat")
           .map(({ text, playerId, type }) => ({
             text,
