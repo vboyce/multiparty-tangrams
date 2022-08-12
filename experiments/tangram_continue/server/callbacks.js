@@ -13,10 +13,10 @@ Empirica.onGameStart((game) => {
 
   const roleList = game.get('roleList');
   const targets = game.get('context');
-
+  game.set("currentSpeaker", null)
   players.forEach((player, i) => {
     player.set("tangramURLs", _.shuffle(targets));
-    player.set("roleList", roleList[player._id]);
+    //player.set("roleList", roleList[player._id]);
     player.set("name", names[i]);
     player.set("avatar", `/avatars/jdenticon/${avatarNames[i]}`);
     player.set("nameColor", nameColors[i]);
@@ -29,6 +29,7 @@ Empirica.onGameStart((game) => {
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
 Empirica.onRoundStart((game, round) => {
+  
   const players = game.players;
   round.set("chat", []); 
   round.set("countCorrect",0);
@@ -36,11 +37,25 @@ Empirica.onRoundStart((game, round) => {
   round.set('submitted', false);
   round.set("activePlayerCount", game.get("activePlayerCount"));
   const activePlayers=_.reject(game.players, p => p.get("exited"))
-  //activePlayers.forEach(player => console.log(player._id));
-  const speakerPlayer = _.sample(activePlayers)
-  //console.log(speakerPlayer)
+
+
+  if (game.treatment.rotateSpeaker=="rotate"){
+    if (round.get("trialNum") % game.get("rotateInterval") ===0 ) {// time for a new speaker
+      game.set("currentSpeaker", game.get("speakerQueue").shift())
+      console.log(game.get("currentSpeaker"));
+      game.get("speakerQueue").push(game.get("currentSpeaker")) // move them to the end of the queue
+    }
+  } 
+  if (!game.get("currentSpeaker")){ // it's null either from start of game or from speaker quitting
+    console.log("here")
+    console.log(game.get("speakerQueue"))
+    game.set("currentSpeaker", game.get("speakerQueue").shift())
+    console.log(game.get("speakerQueue"))
+    console.log(game.get("currentSpeaker"));
+    game.get("speakerQueue").push(game.get("currentSpeaker")) // move them to the end of the queue
+  }
   activePlayers.forEach(player => {
-    if (player._id==speakerPlayer._id){
+    if (player._id==game.get("currentSpeaker")){
       player.set("role", "speaker")
       round.set('speaker', player._id)
     }
@@ -64,6 +79,7 @@ Empirica.onStageStart((game, round, stage) => {
       at: new Date(),
     },
   ]);
+  console.log(game.get("speakerQueue"))
 });
 
 // onStageEnd is triggered after each stage.
@@ -154,15 +170,30 @@ Empirica.onSet(
   ) => {
     // Compute score after player clicks
     if (key === "exited") {
+      const exitId = player._id
+      console.log("exited")
+      console.log(exitId)
+      game.set("speakerQueue", _.reject(game.get("speakerQueue"), p => p==exitId)) // somehow we need to use set and not just _.remove 
+      //to get it to update for round start??? idk but this seems to work
+      console.log("shorter queue?")
+      console.log(game.get("speakerQueue"))
+
       const activePlayers=_.reject(game.players, p => p.get("exited"))
       game.set("activePlayerCount", activePlayers.length);
     if (game.get("activePlayerCount") < 2){
-      activePlayers.forEach(player => {
-        player.set('exited', true);
-        player.exit("Oops, it looks like too many of your partners have disconnected, and you can't finish the experiment!");
+      activePlayers.forEach(p=> {
+        //p.set('exited', true);
+        p.exit("Oops, it looks like too many of your partners have disconnected, and you can't finish the experiment!");
       })
     }
-    game.players.forEach(player =>player.stage.submit());
+    if (player.data.role=="speaker"){ // person who disconnected was speaker
+      game.set("currentSpeaker", null)
+      game.players.forEach(p =>p.stage.submit());
+    }
+    else { 
+      const inactive = _.filter(game.players, p => p.get("exited"))
+      inactive.forEach (p => p.stage.submit())
+    }
   }
   }
 );

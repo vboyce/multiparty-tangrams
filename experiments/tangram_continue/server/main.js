@@ -52,6 +52,7 @@ Empirica.gameInit((game, treatment) => {
   game.set('context', targetSets['setA']);
   game.set("feedback", treatment.feedback)
   game.set("chat", treatment.chat)
+  game.set("rotateInterval", treatment.rotateInterval ? treatment.rotateInterval : 12)
   const targets = game.get('context');
   const reps = treatment.rounds;
   const numTargets = targets.length;
@@ -67,8 +68,9 @@ Empirica.gameInit((game, treatment) => {
   game.set("justStarted", true);
 
   // Make role list
-    game.set('roleList', createRoles(_.map(game.players, '_id'), info));
-
+    //game.set('roleList', createRoles(_.map(game.players, '_id'), info));
+    game.set("speakerQueue", _.shuffle(_.map(game.players, '_id')));
+    console.log(game.get("speakerQueue"))
     // Loop through repetition blocks
     _.times(reps, repNum => {
         mixed_targets=_.shuffle(targets)

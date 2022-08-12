@@ -33,8 +33,9 @@ data_location="data/study1"
 ##Data import constants
 data_location_noro="data/study2a"
 data_location_highfeed="data/study2b"
+data_location_emoji="data/study2c"
 
-colors=c("#FDE725FF","#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF", "#eb34eb","#e04b14" )
+colors=c("#FDE725FF","#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF", "#eb34eb","#e04b14", "#ff0000")
 
 date_start=lubridate::ymd('2021-05-04')
 
@@ -73,8 +74,14 @@ high_feed <- read_csv(here(data_location_highfeed, "filtered_chat.csv")) %>%
   filter(!is.na(sentence)) %>% 
   mutate(numPlayers="6highfeed")
 
+emoji <- read_csv(here(data_location_emoji, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(sentence)) %>% 
+  mutate(numPlayers="6emoji")
+
 #sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
-pre_sbert <- raw_text %>%union(noro) %>% union(high_feed) %>% write_csv("pre_sbert.csv")
+pre_sbert <- raw_text %>%union(noro) %>% union(high_feed) %>% union(emoji) %>% write_csv("pre_sbert.csv")
 ```
 
 take two : we concatenate everything (with a space)
@@ -109,8 +116,17 @@ high_feed <- read_csv(here(data_location_highfeed, "filtered_chat.csv")) %>%
   ungroup() %>% 
   mutate(numPlayers="6highfeed")
 
+emoji <- read_csv(here(data_location_emoji, "filtered_chat.csv")) %>% 
+  select(gameId,targetNum,repNum,trialNum,numPlayers,text, playerId, target, role) %>% 
+  #unnest_tokens(sentence, input=text, token="sentences") %>% 
+  filter(!is.na(text)) %>% 
+  group_by(gameId, targetNum, repNum, trialNum, numPlayers, playerId, target, role) %>% 
+  summarize(sentence=str_c(text, collapse=" ")) %>% 
+  ungroup() %>% 
+  mutate(numPlayers="6emoji")
+
 #sample <- raw_text %>% filter(gameId=="3WzEi9zkHF77vdTw5") %>% write_csv("sample.csv")
-pre_sbert_concat <- raw_text %>%union(noro) %>% union(high_feed) %>%  write_csv("pre_sbert_concat.csv")
+pre_sbert_concat <- raw_text %>%union(noro) %>% union(high_feed) %>% union(emoji) %>%  write_csv("pre_sbert_concat.csv")
 ```
 
 # Interlude

@@ -1,4 +1,5 @@
 import React from "react";
+import {  AlertToaster } from "meteor/empirica:core";
 
 import SocialInteractions from "./SocialInteractions.jsx";
 import Task from "./Task.jsx";
@@ -8,10 +9,20 @@ const gameSound = new Audio("experiment/bell.mp3");
 const setTimeout = function(player) {
   if(!player.get('exitTimeoutId')) {
     player.set('exitTimeoutId', Meteor.setTimeout(() => {
+      
+      if (player.get("role")=="speaker"){
+        AlertToaster.show({
+          message:
+            "Oops, the speaker disconnected! The game will continue without them, but we're skipping to the next image!",
+        });
+      }
+      else{AlertToaster.show({
+        message:
+          "Oops, one of the other players disconnected! The game will continue without them.",
+      });}
       player.set('exited', true);
       player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
-      console.log(player.get("exited"))
-      console.log("someone has been removed")
+      
     }, 5000)) //TODO longer
   }
 }
