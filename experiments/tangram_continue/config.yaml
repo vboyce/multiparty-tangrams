@@ -75,6 +75,7 @@ treatments:
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
+    archivedAt: 2022-07-13T18:09:30.070Z
   - name: triadRotate
     factorIds:
       - xWQjpcmpuWmZXGA7Q
@@ -162,6 +163,60 @@ treatments:
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
       - gjMzeXEASNnNzEGyz
+  - name: recording
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - WPMyAs4AHQkRbejSw
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+      - owZenExB498es2QBn
+  - name: testemoji
+    factorIds:
+      - xWQjpcmpuWmZXGA7Q
+      - pWeADdnYht6s2XmXy
+      - LMzjqBSyMLbrryc6X
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - Wj7Mr5Npee9zFp8pr
+      - gjMzeXEASNnNzEGyz
+      - 6oMpybFsCSGAGstWB
+  - name: testemoji2
+    factorIds:
+      - gK2vDSr5Yc2vPhFxq
+      - pWeADdnYht6s2XmXy
+      - LMzjqBSyMLbrryc6X
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+      - owZenExB498es2QBn
+      - 6oMpybFsCSGAGstWB
+  - name: testmoji3
+    factorIds:
+      - xWQjpcmpuWmZXGA7P
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - WPMyAs4AHQkRbejSw
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - Wj7Mr5Npee9zFp8pr
+      - owZenExB498es2QBn
+      - 6oMpybFsCSGAGstWB
+  - name: testtesttest
+    factorIds:
+      - gK2vDSr5Yc2vPhFxq
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+      - owZenExB498es2QBn
+      - HTypbt58boQQ8o7GB
 factorTypes:
   - _id: eccB2RajWGC4kcWQH
     name: playerCount
@@ -222,6 +277,20 @@ factorTypes:
     type: String
     min: 1
     max: 20
+  - _id: SBokuiYg3qFErBaAH
+    name: chat
+    description: 'do the listeners get real chat, or are they limited'
+    required: false
+    type: String
+    min: 1
+    max: 10
+  - _id: 4qEZYDLs7mx2hs7zk
+    name: rotateInterval
+    description: 'how many trials a speaker gets at a time, default 12'
+    required: false
+    type: Integer
+    min: 1
+    max: 100
 factors:
   - _id: H6mfXThg4jQ2annbb
     name: minute
@@ -320,6 +389,14 @@ factors:
     name: full
     value: full
     factorTypeId: ckLfENK7MBJFvZcvw
+  - _id: 6oMpybFsCSGAGstWB
+    name: limited
+    value: limited
+    factorTypeId: SBokuiYg3qFErBaAH
+  - _id: HTypbt58boQQ8o7GB
+    name: '2'
+    value: 2
+    factorTypeId: 4qEZYDLs7mx2hs7zk
 lobbyConfigs:
   - timeoutType: lobby
     timeoutInSeconds: 300
