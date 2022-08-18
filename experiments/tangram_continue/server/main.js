@@ -53,6 +53,7 @@ Empirica.gameInit((game, treatment) => {
   game.set("feedback", treatment.feedback)
   game.set("chat", treatment.chat)
   game.set("rotateInterval", treatment.rotateInterval ? treatment.rotateInterval : 12)
+  //console.log(game.get("rotateInterval"))
   const targets = game.get('context');
   const reps = treatment.rounds;
   const numTargets = targets.length;

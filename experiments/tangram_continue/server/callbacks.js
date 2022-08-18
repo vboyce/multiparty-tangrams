@@ -38,21 +38,29 @@ Empirica.onRoundStart((game, round) => {
   round.set("activePlayerCount", game.get("activePlayerCount"));
   const activePlayers=_.reject(game.players, p => p.get("exited"))
 
+  let queue=game.get("speakerQueue")
 
-  if (game.treatment.rotateSpeaker=="rotate"){
-    if (round.get("trialNum") % game.get("rotateInterval") ===0 ) {// time for a new speaker
-      game.set("currentSpeaker", game.get("speakerQueue").shift())
+  if (game.treatment.rotateSpeaker){
+    console.log(round.get("trialNum") % game.get("rotateInterval"));
+    //console.log(game.get("rotateInterval"));
+    console.log(round.get("trialNum") % game.get("rotateInterval") ==0 );
+    if (round.get("trialNum") % game.get("rotateInterval") ==0 ) {// time for a new speaker
+      game.set("currentSpeaker", queue.shift())
       console.log(game.get("currentSpeaker"));
-      game.get("speakerQueue").push(game.get("currentSpeaker")) // move them to the end of the queue
+      queue.push(game.get("currentSpeaker"));
+      //console.log(queue);
+      game.set("speakerQueue", queue) // move them to the end of the queue
+      console.log(game.get("speakerQueue"))
     }
   } 
   if (!game.get("currentSpeaker")){ // it's null either from start of game or from speaker quitting
-    console.log("here")
-    console.log(game.get("speakerQueue"))
-    game.set("currentSpeaker", game.get("speakerQueue").shift())
-    console.log(game.get("speakerQueue"))
-    console.log(game.get("currentSpeaker"));
-    game.get("speakerQueue").push(game.get("currentSpeaker")) // move them to the end of the queue
+    //console.log("here")
+    //console.log(game.get("speakerQueue"))
+
+    game.set("currentSpeaker", queue.shift())
+    queue.push(game.get("currentSpeaker"));
+    console.log(queue);
+    game.set("speakerQueue", queue) // move them to the end of the queue
   }
   activePlayers.forEach(player => {
     if (player._id==game.get("currentSpeaker")){
@@ -71,7 +79,9 @@ Empirica.onStageStart((game, round, stage) => {
   const players = game.players;
   console.debug("Round ", stage.name, "game", game._id, " started");
   const inactivePlayers=_.filter(game.players, p => p.get("exited"))
-  inactivePlayers.forEach(player => player.stage.submit())
+  console.log("inactive")
+  inactivePlayers.forEach(p => p.stage.submit());
+  //inactivePlayers.forEach(p => console.log(p.stage));
   stage.set("log", [
     {
       verb: stage.name + "Started",
@@ -79,7 +89,7 @@ Empirica.onStageStart((game, round, stage) => {
       at: new Date(),
     },
   ]);
-  console.log(game.get("speakerQueue"))
+  //console.log(game.get("speakerQueue"))
 });
 
 // onStageEnd is triggered after each stage.
@@ -192,6 +202,7 @@ Empirica.onSet(
     }
     else { 
       const inactive = _.filter(game.players, p => p.get("exited"))
+      inactive.forEach(p=>console.log(p._id));
       inactive.forEach (p => p.stage.submit())
     }
   }
