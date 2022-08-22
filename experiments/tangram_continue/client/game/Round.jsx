@@ -23,7 +23,7 @@ const setTimeout = function(player) {
       player.set('exited', true);
       player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
       
-    }, 5000)) //TODO longer
+    }, 15000)) //TODO longer
   }
 }
 const cancelTimeout = function(player) {

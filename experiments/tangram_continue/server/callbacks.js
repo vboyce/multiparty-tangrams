@@ -23,8 +23,10 @@ Empirica.onGameStart((game) => {
     player.set("bonus", 0);
   });
   game.set("activePlayerCount", game.players.length)
-
-})
+  if (game.players.length<2){ // not actually enough people
+    players.forEach(player =>{player.set('exited', true)
+    player.exit("Oops, there weren't enough other players to start the game!")})
+}})
 
 // onRoundStart is triggered before each round starts, and before onStageStart.
 // It receives the same options as onGameStart, and the round that is starting.
@@ -79,9 +81,9 @@ Empirica.onStageStart((game, round, stage) => {
   const players = game.players;
   console.debug("Round ", stage.name, "game", game._id, " started");
   const inactivePlayers=_.filter(game.players, p => p.get("exited"))
-  console.log("inactive")
-  inactivePlayers.forEach(p => p.stage.submit());
-  //inactivePlayers.forEach(p => console.log(p.stage));
+  //console.log("inactive")
+  //inactivePlayers.forEach(p => p.stage.submit());
+  inactivePlayers.forEach(p => console.log(p.exitAt));
   stage.set("log", [
     {
       verb: stage.name + "Started",
@@ -182,11 +184,11 @@ Empirica.onSet(
     if (key === "exited") {
       const exitId = player._id
       console.log("exited")
-      console.log(exitId)
+      //console.log(exitId)
       game.set("speakerQueue", _.reject(game.get("speakerQueue"), p => p==exitId)) // somehow we need to use set and not just _.remove 
       //to get it to update for round start??? idk but this seems to work
-      console.log("shorter queue?")
-      console.log(game.get("speakerQueue"))
+      //console.log("shorter queue?")
+      //console.log(game.get("speakerQueue"))
 
       const activePlayers=_.reject(game.players, p => p.get("exited"))
       game.set("activePlayerCount", activePlayers.length);
@@ -202,7 +204,7 @@ Empirica.onSet(
     }
     else { 
       const inactive = _.filter(game.players, p => p.get("exited"))
-      inactive.forEach(p=>console.log(p._id));
+      //inactive.forEach(p=>console.log(p._id));
       inactive.forEach (p => p.stage.submit())
     }
   }
