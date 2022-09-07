@@ -28,7 +28,10 @@ export default class Tangram extends React.Component {
         speaker.stage.submit()
         round.set('submitted', true)
       }
+      Meteor.setTimeout(()=> console.log(player.stage.submittedAt), 5)
       player.stage.submit()
+      console.log(player.stage.submittedAt)
+
 
     }
   };
