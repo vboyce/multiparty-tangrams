@@ -406,3 +406,8 @@ lobbyConfigs:
     timeoutInSeconds: 5
     timeoutStrategy: fail
     gameLobbyIds: []
+  - name: test
+    timeoutType: lobby
+    timeoutInSeconds: 20
+    timeoutStrategy: ignore
+    gameLobbyIds: []
