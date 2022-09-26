@@ -95,6 +95,7 @@ treatments:
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
+    archivedAt: 2022-09-26T18:34:50.482Z
   - name: trioRotate
     factorIds:
       - xWQjpcmpuWmZXGA7P
@@ -104,6 +105,7 @@ treatments:
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
+    archivedAt: 2022-09-26T18:34:49.037Z
   - name: test5
     factorIds:
       - Pcrt2kDc8zeyzPkSF
@@ -113,6 +115,7 @@ treatments:
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
+    archivedAt: 2022-09-26T18:34:48.408Z
   - name: testnoro
     factorIds:
       - xWQjpcmpuWmZXGA7Q
@@ -132,6 +135,7 @@ treatments:
       - XxGKfzAdshtarMJ8v
       - ivrbpviGCdXTDsEiZ
       - Wj7Mr5Npee9zFp8pr
+    archivedAt: 2022-09-26T18:34:47.356Z
   - name: 3test
     factorIds:
       - xWQjpcmpuWmZXGA7P
@@ -153,6 +157,7 @@ treatments:
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
       - gjMzeXEASNnNzEGyz
+    archivedAt: 2022-09-26T18:34:46.819Z
   - name: 6-full
     factorIds:
       - gK2vDSr5Yc2vPhFxq
@@ -163,6 +168,7 @@ treatments:
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
       - gjMzeXEASNnNzEGyz
+    archivedAt: 2022-09-26T18:34:46.304Z
   - name: recording
     factorIds:
       - xWQjpcmpuWmZXGA7P
@@ -173,6 +179,7 @@ treatments:
       - ivrbpviGCdXTDsEiZ
       - zvEroQHdTehMmuyqf
       - owZenExB498es2QBn
+    archivedAt: 2022-09-26T18:34:45.544Z
   - name: testemoji
     factorIds:
       - xWQjpcmpuWmZXGA7Q
@@ -184,6 +191,7 @@ treatments:
       - Wj7Mr5Npee9zFp8pr
       - gjMzeXEASNnNzEGyz
       - 6oMpybFsCSGAGstWB
+    archivedAt: 2022-09-26T18:34:44.637Z
   - name: testemoji2
     factorIds:
       - gK2vDSr5Yc2vPhFxq
@@ -195,6 +203,7 @@ treatments:
       - zvEroQHdTehMmuyqf
       - owZenExB498es2QBn
       - 6oMpybFsCSGAGstWB
+    archivedAt: 2022-09-26T18:34:43.948Z
   - name: testmoji3
     factorIds:
       - xWQjpcmpuWmZXGA7P
@@ -206,6 +215,7 @@ treatments:
       - Wj7Mr5Npee9zFp8pr
       - owZenExB498es2QBn
       - 6oMpybFsCSGAGstWB
+    archivedAt: 2022-09-26T18:34:42.974Z
   - name: testtesttest
     factorIds:
       - gK2vDSr5Yc2vPhFxq
@@ -217,6 +227,49 @@ treatments:
       - zvEroQHdTehMmuyqf
       - owZenExB498es2QBn
       - HTypbt58boQQ8o7GB
+    archivedAt: 2022-09-26T18:34:42.271Z
+  - name: 2_thick
+    factorIds:
+      - xWQjpcmpuWmZXGA7Q
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - Wj7Mr5Npee9zFp8pr
+      - gjMzeXEASNnNzEGyz
+  - name: 6_thick
+    factorIds:
+      - gK2vDSr5Yc2vPhFxq
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - Wj7Mr5Npee9zFp8pr
+      - gjMzeXEASNnNzEGyz
+  - name: 2_thin
+    factorIds:
+      - xWQjpcmpuWmZXGA7Q
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+      - owZenExB498es2QBn
+      - 6oMpybFsCSGAGstWB
+  - name: 6_thin
+    factorIds:
+      - gK2vDSr5Yc2vPhFxq
+      - pWeADdnYht6s2XmXy
+      - STrYPy3iToz6XDo9d
+      - bMLyzSZu2NMqPxMp3
+      - XxGKfzAdshtarMJ8v
+      - ivrbpviGCdXTDsEiZ
+      - zvEroQHdTehMmuyqf
+      - owZenExB498es2QBn
+      - 6oMpybFsCSGAGstWB
 factorTypes:
   - _id: eccB2RajWGC4kcWQH
     name: playerCount
@@ -409,5 +462,10 @@ lobbyConfigs:
   - name: test
     timeoutType: lobby
     timeoutInSeconds: 20
+    timeoutStrategy: ignore
+    gameLobbyIds: []
+  - name: start_anyway
+    timeoutType: lobby
+    timeoutInSeconds: 300
     timeoutStrategy: ignore
     gameLobbyIds: []

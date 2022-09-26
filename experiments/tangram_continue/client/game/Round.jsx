@@ -23,7 +23,7 @@ const setTimeout = function(player) {
       player.set('exited', true);
       player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
       
-    }, 15000)) //TODO longer
+    }, 30000)) //TODO longer
   }
 }
 const cancelTimeout = function(player) {
@@ -51,7 +51,7 @@ export default class Round extends React.Component {
       game.players.forEach(player => {
         if (!player.online)
         { setTimeout(player)
-        console.log("warning")
+        //console.log("warning")
       }
         else {
           cancelTimeout(player)

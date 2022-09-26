@@ -30,7 +30,7 @@ export default class ChatLog extends React.Component {
   handleEmoji = e => {
     e.preventDefault();
     const text = e.currentTarget.value;
-    console.log(text)
+    //console.log(text)
       const { round, player } = this.props;
       //const room = player.get('roomId')
       round.append("chat", {
