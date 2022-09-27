@@ -33,7 +33,7 @@ export default class Consent extends React.Component {
   }
 
   renderNoFirefox = () => {
-    console.log("this is fire fox");
+    //console.log("this is fire fox");
     return (
       <div className="consent">
         <h1 className="bp3-heading" style={{ textAlign: "center", color: "red" }}>

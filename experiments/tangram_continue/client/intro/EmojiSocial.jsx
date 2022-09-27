@@ -43,7 +43,7 @@ export default class SocialInteractionDetails extends React.Component {
   }
 
   render() {
-    console.log(this.props)
+    //console.log(this.props)
     const {game, hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
     const player = {
       _id: 0,

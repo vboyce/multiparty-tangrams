@@ -6,7 +6,7 @@ export default class UIOverview extends React.Component {
     const { hasPrev, hasNext, onNext, onPrev, treatment } = this.props;
     const imagePath ="experiment/interface.PNG"
 
-    console.log("imagePath", imagePath);
+    //console.log("imagePath", imagePath);
 
     return (
       <Centered>
