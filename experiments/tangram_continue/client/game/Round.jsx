@@ -21,6 +21,7 @@ const setTimeout = function(player) {
           "Oops, one of the other players disconnected! The game will continue without them.",
       });}
       player.set('exited', true);
+      player.set('role', "NA");
       player.exit("Oops, it looks like there was a connection problem, and you couldn't finish the experiment!")
       
     }, 30000)) //TODO longer
