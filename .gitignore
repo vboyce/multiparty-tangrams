@@ -25,6 +25,8 @@ log
 server_notes
 *cache*
 code/*.csv
-data/*.rds
+data/*/combined*
+data/*/exchanges*
+
 *ipynb_checkpoints*
 *rsconnect*
