@@ -24,3 +24,7 @@ code/models/*
 log
 server_notes
 *cache*
+code/*.csv
+data/*.rds
+*ipynb_checkpoints*
+*rsconnect*
