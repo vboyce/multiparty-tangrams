@@ -1,5 +1,0 @@
-﻿_id,name,timeoutType,timeoutInSeconds,timeoutStrategy,timeoutBots,extendCount,createdAt,archivedAt
-NteEjRQqSEtQBDMw5,,lobby,300,fail,,,2022-09-26T19:32:34Z,
-ej6PPvLLvLfQeoHWN,,lobby,5,fail,,,2022-09-26T19:32:34Z,
-R6qF3grEz9oct52Ay,test,lobby,20,ignore,,,2022-09-26T19:32:34Z,
-r5sT4Nx9twCTZDdTk,start_anyway,lobby,300,ignore,,,2022-09-26T19:32:34Z,
