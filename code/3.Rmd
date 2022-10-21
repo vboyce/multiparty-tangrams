@@ -194,12 +194,7 @@ summary %>% filter(num_rounds==5) %>%
 
 
 
-```{r}
-# foo <- read_csv(here(data_location, "draft_filter_chat.csv")) |> 
-#   mutate(is.chatchat=ifelse(chitchat=="x", T, F)) |> 
-#   select(-chitchat) |> 
-#   rename(spellchecked=spellcheck) |> write_csv(here(data_location, "filtered_chat.csv"))
-```
+
 
 ```{r chat}
 
