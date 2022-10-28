@@ -5,6 +5,16 @@ output:
     toc: true
 ---
 
+# Random todos for Veronica
+
+wth happened with game tGuW7nukBHY72yfXn in round 1? we don't have text from them then??
+
+check that role is correctly recording (post transition)
+check that when a player is exited they aren't still selecting 
+(I think these are not actual issues, but things that seemed to happen when some players were being non-cooperative)
+Might be an issue in a couple games - we are getting more correct answers that people still playing in a couple instances in a couple games! (a relatively rare issue, but look into anyway!)
+
+Confirm all sbert analyses on filtered data!
 
 # Much prep(rocessing)
 ```{r set-up, include=F}
@@ -17,6 +27,7 @@ library(here)
 library(rlang)
 library(lme4)
 library(brms)
+library(rstanarm)
 library(rstan)
 library(viridis)
 rstan_options(auto_write = TRUE)
@@ -131,13 +142,15 @@ d.exit.survey <- read_csv(here(data_location, 'player-inputs.csv')) %>%
 #we exclude rounds where no one talked (this is our criteria for "they weren't playing anymore")
 # this is better than if no one submitted b/c maybe people fail to click on some round?
 
-# update to the rule based on 8G6wdbdRa2nmYoNxk -- we exclude rounds where the *speaker* did not talk
 rounds_include <- (read_csv(here(data_location,'raw_chat.csv'))) %>% 
   filter(role=="speaker") %>% 
   filter(!is.na(text)) %>%
+  filter(gameId!="MhCsn5ZQTvFv49Bwy") |> # ***** just excluding this game by fiat -- the assigned speaker seemed to either really, really not be fluent or not understand the game. They do not provide descriptions and only barely answer when the listeners play 20 questions. ******
   select(gameId,numPlayers,repNum,targetNum) %>% unique() %>% 
   group_by(gameId,numPlayers,repNum) %>% tally() %>% 
-  filter(n==12) %>% select(gameId,repNum) %>% write_rds(here(data_location,"rounds_include.rds"))
+  filter(n==12) %>% select(gameId,repNum) |> 
+  left_join(d.games |> select(gameId,name)) |> 
+  write_rds(here(data_location,"rounds_include.rds"))
 
 d.round_results <-(read_csv(here(data_location,'raw_results.csv'))) %>% inner_join(rounds_include) %>% write_rds(here(data_location,'round_results.rds'))
 
@@ -153,24 +166,46 @@ d.exit_survey <- (read_csv(here(data_location,'exit.csv'))) %>%
   write_csv(here(data_location,"exit_survey.csv"))
   
 ```
-How many games
+# Descriptives
+
+How many games:
+
+Note -- one 6 p thick game excluded by fiat -- the assigned speaker seemed to either really, really not be fluent or not understand the game. They do not provide descriptions and only barely answer when the listeners play 20 questions.
+
+Aimed for 40 each. 
+
+Partial means it didn't go all the rounds, reduced means it has fewer people than it started out with. (Note we also started games even if they were incomplete, so there might be more classification adventures there. )
 
 ```{r}
 d.round_results <- read_rds(here(data_location, "round_results.rds")) 
 
-d.round_results%>% group_by(gameId,name) %>% 
-  summarize(max_rep=max(repNum)) %>% 
-  mutate(game_length=ifelse(max_rep==5,"complete","partial")) %>% 
+d.round_results%>% group_by(gameId,name, numPlayers) %>% 
+  summarize(max_rep=max(repNum),
+            min_active=min(activePlayerCount)) %>% 
+  mutate(game_length=case_when(
+    max_rep!=5 ~ "partial",
+    min_active!=numPlayers ~ "reduced",
+    T ~ "complete")) %>% 
   group_by(name, game_length) %>% 
   tally() %>% 
   pivot_wider(names_from="game_length",values_from="n")
 ```
 
+```{r}
+d.round_results |> select(gameId, name, numPlayers, trialNum, activePlayerCount) |> 
+  filter(name %in% c("6_thick", "6_thin")) |> 
+  unique() |> 
+  ggplot(aes(x=trialNum, fill=as.factor(activePlayerCount)))+geom_bar()+facet_grid(.~name)
+
+```
+
 How long full games took
+
+Note that this is inaccurate for games where some players kept the tab open but didn't respond (but we don't have an easy way to distinguish "exited" from "inactive, but tab open" in this record). 
 
 ```{r}
 summary <- d.round_results %>% group_by(trialNum, repNum, gameId, name) %>% 
-           mutate(time= time %|% 180) %>% 
+           mutate(time= time %|% 0) %>% # empties are either that they didn't answer or that they were already exited (should adjust recording for future!). This slighlty lowballs 
   summarize(max_time=max(time)) %>% 
   group_by(gameId, name) %>% 
   summarize(total_time=sum(max_time)/60,
@@ -201,9 +236,9 @@ summary %>% filter(num_rounds==5) %>%
 rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
 d.round_results <- read_rds(here(data_location,"round_results.rds"))
 
-d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) %>% 
+d.chat.filter <- read_csv(here(data_location, "filtered_chat.csv")) |> 
   filter(!is.chitchat) %>% 
-  filter(!is.na(target)) %>% 
+  filter(!is.na(target)) |> 
   mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
          text = gsub("[/?/.]", ' ', text),
          text = str_squish(text),
@@ -222,7 +257,7 @@ d.chat <- d.chat.filter %>%
             total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
             total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
   inner_join(rounds_include) %>% 
-  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
+  full_join(d.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers", "name")) %>% 
   mutate(text = text %|% "",
          total_num_words= total_num_words %|% 0,
          total_num_chars= total_num_chars %|% 0,
@@ -244,147 +279,47 @@ d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, play
 
 ```
 
-```{r rotate_data}
-rotate_data_loc <- "data/study1"
-
-ro_rounds_include <- read_rds(here(rotate_data_loc,"rounds_include.rds")) 
-rod.round_results <- read_rds(here(rotate_data_loc,"round_results.rds")) %>% mutate(rotate="rotate")
-rod.chat.filter <- read_csv(here(rotate_data_loc, "filtered_chat.csv")) %>% 
-  filter(!is.chitchat) %>% 
-  filter(!is.na(target)) %>% 
-  mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
-         text = gsub("[/?/.]", ' ', text),
-         text = str_squish(text),
-         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
-         tangram = gsub('.png', '', tangram, fixed=TRUE),
-         utt_length_chars = str_length(text), 
-         utt_length_words = str_count(text, "\\W+") + 1) %>%
-  group_by(gameId, trialNum, repNum, tangram) %>% 
-  mutate(is.firstutter=ifelse(role!="speaker",F,NA)) %>% 
-  fill(c("is.firstutter"), .direction="down") %>% 
-  mutate(is.firstutter= is.firstutter %|% T) 
-
-rod.chat <- rod.chat.filter %>% 
-  group_by(gameId, trialNum, repNum, tangram, playerId, role, numPlayers) %>%
-  summarize(text = paste0(text, collapse = ', '),
-            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
-            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
-  inner_join(ro_rounds_include) %>% 
-  full_join(rod.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
-  mutate(text = text %|% "",
-         total_num_words= total_num_words %|% 0,
-         total_num_chars= total_num_chars %|% 0,
-         role = role %|% "listener") %>% mutate(rotate="rotate")
-```
-
-```{r no_ro_data}
-no_rotate_data_loc <- "data/study2a"
-
-no_ro_rounds_include <- read_rds(here(no_rotate_data_loc,"rounds_include.rds")) 
-no_ro.round_results <- read_rds(here(no_rotate_data_loc,"round_results.rds")) %>% mutate(rotate="no_rotate")
-no_ro.chat.filter <- read_csv(here(no_rotate_data_loc, "filtered_chat.csv")) %>% 
-  filter(!is.chitchat) %>% 
-  filter(!is.na(target)) %>% 
-  mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
-         text = gsub("[/?/.]", ' ', text),
-         text = str_squish(text),
-         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
-         tangram = gsub('.png', '', tangram, fixed=TRUE),
-         utt_length_chars = str_length(text), 
-         utt_length_words = str_count(text, "\\W+") + 1) %>%
-  group_by(gameId, trialNum, repNum, tangram) %>% 
-  mutate(is.firstutter=ifelse(role!="speaker",F,NA)) %>% 
-  fill(c("is.firstutter"), .direction="down") %>% 
-  mutate(is.firstutter= is.firstutter %|% T) 
-
-no_ro.chat <- no_ro.chat.filter %>% 
-  group_by(gameId, trialNum, repNum, tangram, playerId, role, numPlayers) %>%
-  summarize(text = paste0(text, collapse = ', '),
-            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
-            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
-  inner_join(no_ro_rounds_include) %>% 
-  full_join(no_ro.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
-  mutate(text = text %|% "",
-         total_num_words= total_num_words %|% 0,
-         total_num_chars= total_num_chars %|% 0,
-         role = role %|% "listener") %>% mutate(rotate="no_rotate")
-```
-
-```{r 2b_data}
-feedback_data_loc <- "data/study2b"
-
-feedback_rounds_include <- read_rds(here(feedback_data_loc,"rounds_include.rds")) 
-feedback.round_results <- read_rds(here(feedback_data_loc,"round_results.rds")) %>% mutate(rotate="full_feedback")
-feedback.chat.filter <- read_csv(here(feedback_data_loc, "filtered_chat.csv")) %>% 
-  filter(!is.chitchat) %>% 
-  filter(!is.na(target)) %>% 
-  mutate(text = gsub("\\n", '', fixed = T, spellchecked), # note that this is using spellcorrected version!!!!
-         text = gsub("[/?/.]", ' ', text),
-         text = str_squish(text),
-         tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
-         tangram = gsub('.png', '', tangram, fixed=TRUE),
-         utt_length_chars = str_length(text), 
-         utt_length_words = str_count(text, "\\W+") + 1) %>%
-  group_by(gameId, trialNum, repNum, tangram) %>% 
-  mutate(is.firstutter=ifelse(role!="speaker",F,NA)) %>% 
-  fill(c("is.firstutter"), .direction="down") %>% 
-  mutate(is.firstutter= is.firstutter %|% T) 
-
-feedback.chat <- feedback.chat.filter %>% 
-  group_by(gameId, trialNum, repNum, tangram, playerId, role, numPlayers) %>%
-  summarize(text = paste0(text, collapse = ', '),
-            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
-            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric()) %>%
-  inner_join(feedback_rounds_include) %>% 
-  full_join(feedback.round_results, c("gameId", "trialNum", "repNum", "playerId", "tangram", "numPlayers")) %>% 
-  mutate(text = text %|% "",
-         total_num_words= total_num_words %|% 0,
-         total_num_chars= total_num_chars %|% 0,
-         role = role %|% "listener") %>% mutate(rotate="full_feedback")
-```
-
-```{r}
-combined_results <- d.round_results %>% mutate(rotate="emoji") %>% union(rod.round_results) %>% union(no_ro.round_results) %>% union(feedback.round_results) %>% filter(numPlayers %in% c(2,6)) %>% mutate(rotate=str_c(numPlayers,"p_",rotate))
-combined_chat <- d.chat %>% mutate(rotate="emoji") %>% union(rod.chat) %>% union(no_ro.chat) %>% union(feedback.chat) %>%  filter(numPlayers %in% c(2,6))%>% mutate(rotate=str_c(numPlayers,"p_",rotate))
-
-```
-
 # Many graphs
 
-Here we compare:
- - 6 player rotate (study 1)
- - 6 player no-rotate (study 2a)
- - 6 player rotate, high feedback (study 2b)
- - 6 player rotate, listeners communicate with 4 emojis (study 2c)
- - 2 player rotate (study 1) as a baseline 
  
 Everything here has bootstrapped 95% CIs. 
 
 Should find better curves to fit, but using quadratic to allow for some curvature.
 
-
-
-
 ```{r}
-combined_chat %>% filter(role=="speaker") %>% 
+d.chat %>% filter(role=="speaker") %>% 
     mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, numPlayers, gameId,tangram, groupxtangram, rotate) %>% 
-  summarize(words=sum(total_num_words)) %>% 
-ggplot(aes(x=repNum, y=words, color=rotate))+
-  facet_wrap(~rotate, nrow=1)+
+  group_by(repNum, gameId,tangram, groupxtangram, name) %>% 
+  summarize(words=sum(total_num_words)) |> 
+ggplot(aes(x=repNum, y=words, color=name))+
+  facet_wrap(.~name, nrow=1)+
   scale_color_brewer(palette="Dark2")+
-    geom_line(aes(group=groupxtangram), alpha=.1,method=glm, se=F)+
+    geom_line(aes(group=groupxtangram), alpha=.05,method=glm, se=F)+
+  coord_cartesian(y=c(0,60))+
     #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   labs(title="Words from speaker per tangram", y="Number of words", x="Round number", color="Player count")+
   theme(legend.position="null")
 
+d.chat %>% filter(role=="speaker") %>% 
+    #mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId, name) %>% 
+  summarize(words=sum(total_num_words)) |> #View()
+ggplot(aes(x=repNum, y=words, color=name))+
+  facet_wrap(.~name, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=gameId), alpha=.5,method=glm, se=F)+
+  #coord_cartesian(y=c(0,60))+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  labs(title="Words from speaker per round", y="Number of words", x="Round number", color="Player count")+
+  theme(legend.position="null")
 
 ```
 
 ```{r}
-combined_chat %>% filter(role=="speaker") %>% 
-ggplot(aes(x=repNum, y=total_num_words, color=rotate))+
+d.chat %>% filter(role=="speaker") %>% 
+ggplot(aes(x=repNum, y=total_num_words, color=name))+
   facet_wrap(~tangram)+
   scale_color_brewer(palette="Dark2")+
     geom_smooth(method=glm, formula=y~poly(x,2), se=T, alpha=.1)+
@@ -401,9 +336,10 @@ ggplot(aes(x=repNum, y=total_num_words, color=rotate))+
 ```{r accuracy}
 #Note: as a result of 5 high looking lower, we adjusted the inclusion criteria to exclude the game where people didn't select responses after the first round, but one listner kept sending "is anyone there?" type messages to the chat the *entire* game. (This is probably a minor software issue since maybe others had disconnected?)
 
-combined_results %>% group_by(playerId,repNum, gameId, numPlayers, rotate) %>% 
+d.round_results %>% group_by(playerId,repNum, gameId, name) %>% 
+  filter(response!="false") |> 
   mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum, y=correct.num, color=rotate))+
+  ggplot(aes(x=repNum, y=correct.num, color=name))+
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   #geom_point()+
@@ -412,20 +348,18 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   labs(x="Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")+
     theme(legend.position="bottom")
 
-
-combined_results %>% filter(numPlayers==6) %>% group_by(gameId, numPlayers, rotate, repNum) %>%   mutate(correct.num=ifelse(correct,1,0)) %>% summarize(total_corr=sum(correct.num)) %>% 
-ggplot(aes(x=repNum, y=total_corr, color=rotate))+geom_line(aes(group=gameId))+geom_point()+facet_grid(.~rotate)
-
-#rod.round_results %>% group_by(gameId, numPlayers, repNum) %>%   mutate(correct.num=ifelse(correct,1,0)) %>% summarize(total_corr=sum(correct.num)/(numPlayers-1)) %>% ggplot(aes(x=repNum, y=total_corr, color=numPlayers))+geom_line(aes(group=gameId))+geom_point()+facet_grid(.~numPlayers)
-
+  
 ```
 
+Note that this accuracy is of players who clicked something!
+
+
 ```{r time}
-combined_results %>% group_by(playerId, repNum, gameId, numPlayers, rotate) %>% 
+d.round_results %>% group_by(playerId, repNum, gameId, name) %>% 
   filter(correct==T) %>% 
   #summarize(time=mean(time)) %>% 
-  ggplot(aes(x=repNum, y=time, color=rotate))+
-  geom_jitter(width=.4, height=0, alpha=.03)+
+  ggplot(aes(x=repNum, y=time, color=name))+
+  geom_jitter(width=.4, height=0, alpha=.01)+
 geom_smooth(method = "glm", formula = y~x,
                       method.args = list(family = gaussian(link = 'log')))+
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
@@ -438,67 +372,372 @@ geom_smooth(method = "glm", formula = y~x,
 
 ```
 
-## How do people use emoji responses?
+# Prep Sbert
+Should we do this on filtered (chit-chat free) and/or spell checked sample?
+```{r, include=F, eval=F}
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
 
-
-```{r}
-listeners <- d.round_results %>% select(gameId, repNum, target, playerId)
-emoji <- d.listener %>% 
-  select(gameId,repNum, target, playerId, text) %>%
-  mutate(name=case_when(
-    text=="✅"~  "check",
-    text=="🤔" ~ "think",
-    text=="❌" ~ "x",
-    text=="😂" ~ "lol",
-  )) %>% 
-  full_join(listeners) %>% 
-  group_by(gameId, repNum, target, playerId, name) %>% 
-  count() %>% 
-  #mutate(n=ifelse(n>1, 1, n)) %>% #don't count it more if someone sent a lot of the same symbol
-  group_by(gameId, repNum, target, playerId) %>% 
-  pivot_wider(names_from=name, values_from=n, values_fill = 0) %>% 
-  rename(none="NA")
-```
-What fraction of listener-trials produce any emoji? (Grouped by game)
-
-```{r}
-# rate of any emoji
-
-emoji %>% mutate(total=lol+check+x+think, any=ifelse(total>0,1,0)) %>% 
-  group_by(gameId,repNum) %>% summarize(any=mean(any)) %>% 
-  ggplot(aes(x=repNum, y=any))+geom_jitter(width=.1, alpha=.5)+geom_smooth()
-```
-Of emoji that are used, what's the distribution?
-
-```{r}
-group_emoji <- emoji %>% group_by(gameId, repNum) %>% 
-  select(-target, -playerId, -none) %>% summarize(across(everything(), sum)) %>% 
-  mutate(total=lol+think+check+x,
-         lol=lol/total,
-         think=think/total,
-         check=check/total,
-         x=x/total) %>% 
-  pivot_longer(lol:x, names_to="emoji", values_to="pct")
-
-ggplot(group_emoji, aes(x=repNum, y=pct, color=emoji, group=emoji))+geom_jitter(width=.1)+geom_smooth()
-```
-
-A few people sent many copies of the same emoji over the course of a single trial which could sway things, so we check by binarizing by did that listener produce that emoji on that trial and then summarizing. 
-
-```{r}
-#outlier robustness
-binary_emoji <- emoji %>% group_by(gameId, repNum) %>% 
-  select(-target, -playerId, -none) %>% 
-  mutate(across(everything(), ~ifelse(.x>1,1,.x))) %>% 
-summarize(across(everything(), sum)) %>% 
-  mutate(total=lol+think+check+x,
-         lol=lol/total,
-         think=think/total,
-         check=check/total,
-         x=x/total) %>% 
-  pivot_longer(lol:x, names_to="emoji", values_to="pct")
-
-ggplot(binary_emoji, aes(x=repNum, y=pct, color=emoji))+geom_jitter(width=.1)+geom_smooth()
+d.pre.sbert <- read_csv(here(data_location, "filtered_chat.csv")) |> 
+  #filter(!is.chitchat) %>% 
+  filter(!is.na(target)) |> 
+    filter(!is.na(text)) %>% 
+  mutate(tangram = gsub('/experiment/tangram_', '', target, fixed=TRUE),
+         tangram = gsub('.png', '', tangram, fixed=TRUE)) %>%
+  inner_join(rounds_include) |>
+  separate(name, into=c("playerCond","channelCond")) |> 
+  select(gameId, targetNum, repNum, trialNum, playerCond, channelCond, activePlayerCount,playerId, tangram, role, text) |>
+  group_by(gameId, targetNum, repNum, trialNum, playerCond, channelCond, activePlayerCount,playerId, tangram, role) |>  summarize(sentence=str_c(text, collapse=" ")) |> 
+  ungroup() |> 
+  write_csv(here(data_location,"pre_sbert.csv"))
 ```
 
 
+```{r, include=F, eval=F}
+library(reticulate)
+np <- import("numpy")
+mat = np$load(here(data_location,'post_sbert.npy'))
+saveRDS(mat,here(data_location,'post_sbert.RData'))
+
+```
+
+```{r}
+sbert_concat <- read_csv(here(data_location,"pre_sbert.csv")) |>   bind_cols(readRDS(here(data_location,'post_sbert.RData'))  %>% as_tibble())
+
+F_mat <- sbert_concat %>% select(starts_with("V")) %>% as.matrix() #Features
+M_mat <- sbert_concat %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
+```
+
+```{r helpers}
+# note: cor expects features to be in columns so we transpose
+get_sim_matrix = function(df, F_mat, method = 'cosine') {
+  feats = F_mat[df$feature_ind,]
+  if(method == 'cor') {
+    return(cor(t(feats), method = 'pearson'))
+  } else if (method == 'euclidean') {
+    return(as.matrix(dist(feats, method = 'euclidean')))
+  } else if (method == 'cosine') {
+    return(as.matrix(lsa::cosine(t(feats))))
+  } else {
+    stop(paste0('unknown method', method))
+  }
+}
+
+# note this does de-duplicated version
+flatten_sim_matrix <- function(cormat, ids) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    dim1 = ids[row(cormat)[ut]],
+    dim2 = ids[col(cormat)[ut]],
+    sim  = as.numeric(cormat[ut])
+  ) %>%
+    mutate(dim1 = as.character(dim1),
+           dim2 = as.character(dim2))
+}
+
+make_within_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          .$repNum)) %>%
+    mutate(rep1 = as.numeric(dim1), 
+           rep2 = as.numeric(dim2)) 
+}
+
+make_across_df <- function(M_mat, F_mat, method) {
+  M_mat %>%
+    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
+                          as.character(.$combinedId)))
+}
+```
+
+# Sbert results
+
+## Across game divergence
+
+```{r}
+
+game_divergence <- M_mat %>% 
+  filter(role=="speaker") %>% 
+  group_by(tangram,repNum, channelCond,playerCond) %>% 
+  mutate(combinedId=str_c(gameId,repNum,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("gameId_1","repNum_1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("gameId_2","repNum_2"), convert=T, sep="_") %>% 
+  filter(gameId_1!=gameId_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup()
+
+```
+
+```{r}
+ggplot(game_divergence, aes(x=repNum+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(playerCond, channelCond,tangram), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+
+  geom_smooth(formula=y~poly(x,2))+
+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="Cond")+
+  theme(text=element_text(size=14), legend.position="bottom")+
+    scale_color_viridis(discrete=T, direction=-1)
+  #coord_cartesian(ylim=c(0.1,.6))
+
+```
+
+## Within game divergence
+
+```{r }
+
+tangram_distinctive <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(gameId,repNum, channelCond,playerCond) %>% 
+  mutate(combinedId=tangram) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  rename(tangram1=dim1,tangram2=dim2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(tangram1!=tangram2) %>% 
+  ungroup()
+```
+
+
+```{r, }
+ggplot(tangram_distinctive, aes(x=repNum+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(gameId), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+
+  geom_smooth(formula=y~poly(x,2))+
+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity of descriptions \n of different tangrams within a game", x="Block", color="Players")+
+  theme(text=element_text(size=14))+
+    scale_color_viridis(discrete=T, direction=-1)
+  #coord_cartesian(ylim=c(0.1,.6))
+
+```
+
+## Within game similarity
+
+```{r}
+
+tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(tangram, gameId, playerCond,channelCond) %>% 
+  mutate(combinedId=str_c(repNum,playerId,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","p1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","p2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1),
+         samespeaker=ifelse(p1==p2,"same_speaker","diff_speaker")) 
+
+adjacent <- tangram_change %>% 
+  filter(earlier+1==later) %>% 
+  ungroup()
+
+to_first <- tangram_change |> filter(earlier==0) |> ungroup()
+
+to_last <- tangram_change |> filter(later==5) |> ungroup()
+```
+
+
+```{r}
+
+ ggplot(to_first, aes(x=later+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(gameId), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity to ...", x="Block",title="first block")+
+    scale_color_viridis(discrete=T, direction=-1)
+
+ ggplot(adjacent, aes(x=earlier+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(gameId), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="", x="Block")+
+  ggtitle("next block")+
+    scale_color_viridis(discrete=T, direction=-1)
+
+ ggplot(to_last, aes(x=earlier+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(gameId), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="Players", title="Similarity to description in final block")+
+    scale_color_viridis(discrete=T, direction=-1)
+
+```
+
+# Models
+From pre-reg
+
+We will do graphical visualizations for accuracy, time taken and utterance reduction. 
+ 
+Our primary analysis will be a Bayesian mixed model for utterance reduction in the words written by the speaker on each trial: 
+words ~ block*channel*group_size + (block*channel*group_size|tangram)+ (1|tangram*group)+(block|group)
+
+We will also run a logistic Bayesian mixed model on listener accuracy:
+listener_accurate ~ block*channel*group_size + (block*channel*group_size|tangram)+ (1|tangram*group)+(block|group)
+Additionally, we will analyse the effect of the language. Using SBERT embeddings we will embed the concatenation of everything the speaker said in a trial. We will then take pairwise cosine distances of these to look at the following effects. :
+(divergence across games) For the same condition & block & tangram, distance between utterances from different games. 
+(divergence within games) For the same condition & block & game, distance between utterances for different tangrams.
+ (convergence within games) For the same condition & game & tangram, distance between utterances from different blocks. We plan to look at the similarities for block 1 with all later blocks; block 6 with all earlier blocks; and block N with block N+1. 
+(Note: these SBERT analyses were done as exploratory analyses on the earlier collected conditions.)
+Additionally, exclusive to the thin channel parts of this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length. 
+
+## Reduction of words
+
+rerun for longer with fuller mixed effects
+
+```{r, eval=F, include=F}
+chat_mod <- d.chat |> filter(role=="speaker") |>
+  group_by(gameId, repNum, tangram, playerId, name) |> 
+  summarize(words=sum(total_num_words)) |> 
+  separate(name, into= c("gameSize","channel"))
+
+red_prior <- c(set_prior("normal(12,20)", class="Intercept"),
+               set_prior("normal(0,10)", class="b"),
+               set_prior("normal(0,5)", class="sd"),
+              set_prior("lkj(1)", class="cor")
+               )
+
+red_model <- brm(words ~ repNum*channel*gameSize + 
+                (repNum*channel*gameSize|tangram)+
+                          (1|tangram:gameId)+
+                          (repNum|gameId), 
+                 data=chat_mod,
+                 file=here(model_location,"red_model_study3_mix.rds"),
+                 control=list(adapt_delta=.99),
+                 prior=red_prior)
+
+
+```
+
+```{r} 
+read_rds(here(model_location,"red_model_study3_mix.rds")) |> summary()
+
+```
+
+## Accuracy model
+
+```{r, eval=F, include=F}
+acc_data <- d.round_results %>% select(playerId,repNum, gameId, name, tangram, response, correct) |> 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) |> 
+    separate(name, into= c("gameSize","channel"))
+  
+
+
+acc_priors <- c(set_prior("normal(0,1.5)", class="Intercept"),
+               set_prior("normal(0,.5)", class="b"),
+               set_prior("normal(0,.1)", class="sd"),
+               set_prior("lkj(1)", class="cor"))
+               
+acc_model <- brm(correct.num ~ repNum*channel*gameSize+
+                          (repNum*channel*gameSize|tangram)+
+                          (1|tangram:gameId)+
+                          (repNum|gameId), 
+                        family=bernoulli(link="logit"),
+                        data=acc_data,
+                        control=list(adapt_delta=.99),
+                        file=here(model_location,"acc_model_study3_mix.rds"),
+                        prior=acc_priors)
+
+```
+
+```{r} 
+read_rds(here(model_location,"acc_model_study3_mix.rds")) |> summary()
+
+```
+
+## Sbert models
+
+```{r, eval=F, include=F}
+game_divergence <- M_mat %>% 
+  filter(role=="speaker") %>% 
+  group_by(tangram,repNum, channelCond,playerCond) %>% 
+  mutate(combinedId=str_c(gameId)) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  rename(gameId_1=dim1, gameId_2=dim2) |> 
+  filter(gameId_1!=gameId_2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  ungroup() |> 
+  mutate(gameSize=as.factor(playerCond)) |> 
+  rename(channel=channelCond)
+
+sbert_priors <- c(set_prior("normal(.5, .2)", class="Intercept"),
+               set_prior("normal(0,.1)", class="b"),
+               set_prior("normal(0,.05)", class="sd"))#,
+              # set_prior("lkj(1)", class="cor")
+               
+game_div_model <- brm(sim ~ repNum*channel*gameSize+
+                          #(repNum*channel*gameSize|tangram)+
+                         (1|tangram),
+                         # (repNum|gameId), 
+                        data=game_divergence,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"div_model_study3_mix.rds"),
+                        prior=sbert_priors)
+
+
+tangram_distinctive <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(gameId,repNum, channelCond,playerCond) %>% 
+  mutate(combinedId=tangram) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  rename(tangram1=dim1,tangram2=dim2) %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(tangram1!=tangram2) %>% 
+  ungroup() |> 
+  mutate(gameSize=as.factor(playerCond)) |> 
+  rename(channel=channelCond)
+
+tangram_div_model <- brm(sim ~ repNum*channel*gameSize+
+                         (1|gameId),
+                         # (repNum|gameId), 
+                        data=tangram_distinctive,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"tangram_model_study3_mix.rds"),
+                        prior=sbert_priors)
+
+tangram_change <- M_mat %>% 
+    filter(role=="speaker") %>% 
+  group_by(tangram, gameId, playerCond,channelCond) %>% 
+  mutate(combinedId=str_c(repNum,playerId,sep="_")) %>% 
+  make_across_df(F_mat, 'cosine') %>% 
+  separate(dim1, into=c("repNum_1","p1"), convert=T, sep="_") %>% 
+  separate(dim2, into=c("repNum_2","p2"), convert=T, sep="_") %>% 
+  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
+  filter(!is.na(repNum_1)) %>% 
+    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
+         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1),
+         samespeaker=ifelse(p1==p2,"same_speaker","diff_speaker")) 
+
+adjacent <- tangram_change %>% 
+  filter(earlier+1==later) %>% 
+  ungroup()
+
+to_first <- tangram_change |> filter(earlier==0) |> ungroup()
+
+to_last <- tangram_change |> filter(later==5) |> ungroup() |> 
+  mutate(gameSize=as.factor(playerCond)) |> 
+  rename(channel=channelCond)
+
+to_last_model <- brm(sim ~ earlier*channel*gameSize*samespeaker,
+                          #(repNum*channel*gameSize|tangram)+
+                         # (1|tangram:gameId)+
+                         # (repNum|gameId), 
+                        data=to_last,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"to_last_model_study3.rds"),
+                        prior=sbert_priors)
+```
+
+```{r} 
+read_rds(here(model_location,"div_model_study3_mix.rds")) |> summary()
+
+read_rds(here(model_location,"tangram_model_study3_mix.rds")) |> summary()
+
+read_rds(here(model_location,"to_last_model_study3.rds")) |> summary()
+
+
+
+```
