@@ -566,6 +566,80 @@ to_last <- tangram_change |> filter(later==5) |> ungroup()
 
 ```
 
+# CAMP graphs
+
+```{r}
+#good
+library(cowplot)
+reduction <-  d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram, name) %>% 
+  summarize(words=sum(total_num_words)) |> 
+  #group_by(repNum, name, gameId) |> 
+  #summarize(words=sum(words)) |> 
+ggplot(aes(x=repNum+1, y=words, color=name))+
+   scale_color_brewer(palette="Paired", direction=-1)+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  coord_cartesian(ylim=c(0,60))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs(title="Words from speaker per tangram \n", y="Number of words", x="Block", color="")+
+  theme(legend.position="none",plot.title=element_text(hjust=.95,vjust=-20))
+
+for_legend <-d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram, name) %>% 
+  summarize(words=sum(total_num_words)) |> 
+ggplot(aes(x=repNum+1, y=words, color=name))+
+   scale_color_brewer(palette="Paired", direction=-1)+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+  labs(title="Words from speaker per tangram", y="Number of words", x="Block", color="")+
+  theme(legend.position="bottom", legend.text = element_text(size=14))+
+  guides(color=guide_legend(override.aes=list(linetype=0, alpha=1, size=5)))
+
+# good
+ accuracy <- d.round_results %>% group_by(playerId,repNum, gameId, name) %>% 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=name))+
+     scale_x_continuous(breaks=seq(1,6))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  labs(x="Block", y="Fraction correctly selected", title= "Accuracy increases,\n condition differences remain", color="")+
+    theme(legend.position="none", plot.title=element_text(hjust=.95,vjust=-80))+
+        scale_color_brewer(palette="Paired", direction=-1)
+
+ diverge <- ggplot(game_divergence, aes(x=repNum+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(playerCond, channelCond,tangram), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="", title="Similarity of descriptions\n across games")+
+  theme(plot.title=element_text(hjust=.95,vjust=-15), legend.position="none" )+
+     scale_color_brewer(palette="Paired", direction=-1)
+
+
+ converge <- ggplot(to_last, aes(x=earlier+1,y=sim,color=str_c(playerCond, channelCond)))+
+      stat_summary(aes(group=str_c(gameId), color=str_c(playerCond, channelCond)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="", title="Similarity to description\n in final block")+
+theme(plot.title=element_text(hjust=.95,vjust=-80), legend.position="none" )+
+     scale_color_brewer(palette="Paired", direction=-1)
+
+```
+```{r, fig.width=10, fig.height=10}
+
+row1 <- plot_grid(reduction,accuracy, labels=c("A","B"))
+row2 <- plot_grid(get_legend(for_legend))
+row3 <- plot_grid(diverge, converge, labels=c("C","D"))
+
+p <- plot_grid(row1,row2,row3, nrow=3, rel_heights = c(1,.1,1))
+
+save_plot(here(image_location,"CAMP1.pdf"),p, base_width=10, base_height=10)
+```
+
+
+
 # Models
 From pre-reg
 
