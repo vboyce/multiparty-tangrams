@@ -40,31 +40,30 @@
 
 % Insert title, authors, affiliations, and e-mail address in the next three lines:
 
-\title{TODO}
-\authors{Veronica Boyce, Robert Hawkins, Noah Goodman, Michael C. Frank} 
-\email{vboyce@stanford.edu}
+\title{Thick feedback facilitates referential coordination as audiences grow larger}
+\authors{Veronica Boyce\textsuperscript{1}, Robert D.  Hawkins\textsuperscript{2}, Noah D. Goodman\textsuperscript{1}, Michael C. Frank\textsuperscript{1}} 
+\email{vboyce@stanford.edu;  \textsuperscript{1}Stanford, \textsuperscript{2}Princeton}
 \newline
 %
 
 % Intro
 %TODO citations
-Shared referring expressions are a necessity for efficient communication; when there are not widely shared conventional names for objects, people must create spontaneous ad-hoc expressions. The formation and adoption of these new reference expressions is well-studied in dyadic contexts where one speaker refers to a set of images repeatedly to one listener. Over repetition, a few key phenomena emerge: listener's have high and increasing target accuracy while speaker's descriptions shorten as nicknames develop; crucially, these reduced referring expressions are partner-specific; dyads converge to nicknames, but dyads diverge from other dyads. This leaves a question of how well it generalizes to larger groups and what properties of the communication channel are necessary for the pattern to emerge.  TODO citations
+Shared referring expressions are necessary for efficient communication; when there are not convention names for objects, interlocutors create spontaneous ad-hoc expressions. The formation and adoption of these new reference expressions is well-studied in dyadic contexts where one speaker refers to a set of images repeatedly to one listener. Over repetition, a few key phenomena emerge: listeners have high and increasing selection accuracy while speaker's referring expressions shorten as shared conceptualizations result in partner-specific nicknames. These patterns are also found in small groups where a speaker addresses up to 5 listeners at once (Yoon \& Brown Schmidt 2019, Boyce et al. 2022). Here we begin to address what properties of the communication channel are necessary for these phenomena to occur.
 
-\textbf{Methods:} We explore this with a 2x2 design crossing group size (2 or 6 players) with communication channel width. In \textbf{thick} games (maximizing effective communication channel), the same player will be the speaker the entire time, all listeners will be able to use the chat to ask questions, and all players will see who selected what and whether it was right. In the \textbf{thin} condition, the speaker role will rotate by block, the speaker will use the chat while listeners will be limited to sending 4 emojis as backchannel options, and each listener will only see feedback on their own selection. 
+\textbf{Methods:} We conducted an experiment with a 2x2 design crossing group size (2 or 6 players) with communication channel width. In \textbf{thick} games (maximizing communication and shared knowledge), the same player was the speaker the entire time, the speaker and listeners could send chat messages to the whole group, and all players saw who selected what image and whether it was right. In contrast, in the \textbf{thin} condition, the speaker role rotated each block, only the speaker could send chat messages while listeners were limited to sending 4 emojis to indicate their level of understanding, and each listener only saw feedback on their own selection.
+% should we try to justify this
 
-We recruited participants from Prolific to do this experiment as a real-time interactive game written in Empirica (Almaatouq et al. 2021). As shown in Figure 1,  participants see 12 tangram figures, one of which is indicated to the speaker, who describes the target to the listeners, who click on their selection.  At the end of the trial feedback is given.  After all 12 tangrams have been described, the process repeats, for a total of 6 blocks (72 referential trials). We had roughly 40 games in each of the 4 conditions, for a total of 623 participants and 160K words. 
+We recruited participants from Prolific to play a real-time communication game where they interacted via a chat box with other participants. This experiment was written in Empirica (Almaatouq et al. 2021) using a similar procedure to Boyce et al. 2022. Participants saw 12 tangram figures, with the target highlighted for the speaker, who described the target to the listeners, who clicked on their selection (Fig 1). Speakers and listeners received feedback at the end of each trial. After all 12 tangrams were described, the process repeated, for a total of 6 blocks (72 referential trials). We ran roughly 40 games in each of the 4 conditions, for a total of 623 participants who produced 160K words total. 
 
 % Results
 
-\textbf{Results:} In line with prior work, we find increasing listener accuracy and decreasing utterance lengths over the course of the game (Figs 2A and B). There are also condition differences. While speakers tend to say less later in all games, speakers use fewer words in 2 player games compared to 6 player games throughout blocks.  All conditions show high and increasing accuracy, but both group size and channel width affect accuracy: 2 person groups and thick channels have high accuracy. 
+\textbf{Results:} In line with prior work, we found increasing listener accuracy and decreasing utterance lengths over the course of the game (Figs 2A and B). Speakers used fewer words in 2 player games compared to 6 player games independent of block. Both group size and channel width affected listener accuracy: 2 person groups and thick channels had higher accuracies. 
 
+We embedded the speaker's utterances using S-BERT (Reimers \& Gurevych 2020) which mapped the speaker's language on each trial to a vector in a high-dimensional semantic space. We then used cosine similarity between pairs of vectors as a proxy for similarity between pairs of utterances. We took cosine similarities between descriptions of the same tangram in the same block in different games to look for the emergence of group-specific descriptions. If groups developed partner-specific nicknames, similarity would decrease over time. We found this expected decrease in 2 player games and 6 player thick games (Fig 2C). The 6 player thin condition showed a much flatter pattern, suggesting less differentiation between games. 
 
+To measure within-group convergence to a shared convention, we treated final block utterances as the ``convention'' and measured the cosine similarity between earlier utterances in the same game for the same tangram to this final convention. Convergence to a convention would mean increasing cosine similarity across blocks. Similarity increased across all conditions; however, thick games increased faster and more strongly, indicating faster convergence to nicknames, while 6-player thin games increased only a little (Fig 2D). 
 
-To analyze linguistic content, we embed the speaker's utterances with S-BERT (Reimers \& Gurevych 2020) to map the speaker's language on each trial to a vector in high-dimensional semantic space. We then use cosine similarity between pairs of vectors as a proxy for similarity between pairs of utterances. To look for group differentiation, we take cosine similarities between descriptions of the same tangram in the same block in different games. If each group develops partner-specific nicknames, we expect decreasing similarity over blocks. We find this pattern 2 player games and 6 player thick games (Fig 2C). The 6 player thin condition shows a much flatter pattern, suggesting less specialization. 
-
-To measure within group convergence to a shared convention, we treat final block utterances as the ``convention'' and measure the cosine similarity between earlier utterances in the same game for the same tangram to this final ``convention''. If there is convergence to a convention, we expect similarity to the convention to increase over blocks. We find increasing similarity across conditions, and games in the thick condition 2 player games increase faster and more strongly, indicating faster convergence to a nickname (Fig 2D). 
-
-\textbf{Conclusion:} We show that participants can still achieve high levels of accuracy even with multiple partners and limited communication channel; however, this condition does not show convergence to a shared, partner-specific conventional nickname. These condition manipulations being to suggest what aspects of communication are necessary for the dyadic repeated reference phenomena.
+\textbf{Conclusion:} While participants in 6-player thin games became better and more efficient at the task, this condition did not show convergence to shared, partner-specific conventions. This suggests that some aspects of a thick channel are needed to rescue communication and hold larger groups together, while dyads can make due and form conventions even with constrained communication. 
 
 \newpage
 
@@ -78,6 +77,9 @@ To measure within group convergence to a shared convention, we treat final block
 	\caption{Results by condition}
 \end{figure}
 
-\begin{figure} \textbf{References:} Reimers \& Gurevych EMNLP 2020. $\bullet$ Almaatouq et al. Behav. Res. Methods 2021. \end{figure}
+\begin{figure}\textbf{References:}  Almaatouq, Becker, Houghton, Paton, Watts \& Whiting. Behavioral Research Methods 2021. 
+$\bullet$ Boyce, Hawkins, Goodman \& Frank. 44th CogSci 2022. $\bullet$ Reimers \& Gurevych. EMNLP 2020. 
+$\bullet$ Yoon \& Brown-Schmidt. Cognitive Science 2019.
+  \end{figure}
 
 \end{document}
