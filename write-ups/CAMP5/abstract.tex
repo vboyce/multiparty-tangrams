@@ -28,7 +28,7 @@
 % \toggletrue{anonymous} with \togglefalse{anonymous} to de-anonymize.
 \usepackage{etoolbox}
 \newtoggle{anonymous}
-\togglefalse{anonymous}
+\toggletrue{anonymous}
 
 \renewcommand{\title}[1]{\textbf{#1}\\}
 \newcommand{\authors}[1]{\iftoggle{anonymous}{\phantom{#1}}{#1}\\}
@@ -53,7 +53,7 @@ Shared referring expressions are necessary for efficient communication. When the
 \textbf{Methods:} We conducted a 2x2 experiment crossing group size (2 or 6 players) with communication channel width. In \textbf{thick} games (maximizing communication and shared knowledge), the same player was the speaker the entire time, the speaker and listeners could send chat messages to the whole group, and all players saw who selected what image and whether it was right. In the \textbf{thin} condition, the speaker role rotated each block, only the speaker could send chat messages while listeners were limited to sending 4 emojis to indicate their level of understanding, and each listener only saw feedback on their own selection.
 % should we try to justify this
 
-We recruited participants from Prolific to play a real-time communication game implemented in Empirica (Almaatouq et al. 2021). Participants saw 12 tangram figures, with the target highlighted for the speaker. The speaker described the target to the listeners using the chat box, and listeners clicked on their selection (Fig 1). Speakers and listeners received feedback at the end of each trial. After all 12 tangrams were described, the process repeated for a total of 6 blocks (72 referential trials). We ran roughly 40 games in each of the 4 conditions for a total of 623 participants (160K words). 
+We recruited English-speaking participants from Prolific to play a real-time communication game implemented in Empirica (Almaatouq et al. 2021). Participants saw 12 tangram figures, with the target highlighted for the speaker. The speaker described the target to the listeners using the chat box, and listeners clicked on their selection (Fig 1). Speakers and listeners received feedback at the end of each trial. After all 12 tangrams were described, the process repeated for a total of 6 blocks (72 referential trials). We ran roughly 40 games in each of the 4 conditions for a total of 623 participants (160K words). 
 
 % Results
 
@@ -63,7 +63,7 @@ We embedded the speaker's utterances using S-BERT (Reimers \& Gurevych 2020) whi
 
 To measure within-group convergence to a shared convention, we treated final block utterances as the ``convention'' and measured the cosine similarity of earlier utterances in the same game for the same tangram to this final convention. Convergence to a convention would mean increasing cosine similarity across blocks. Similarity increased across all conditions; however, thick games increased faster and more strongly, indicating faster convergence to nicknames, while 6-player thin games increased only a little (Fig 2D). 
 
-\textbf{Conclusion:} We examined how group size and communication channel width jointly influenced participants performance in an interated reference game. Participants in all conditions showed reduced utterances and increased accuracy over blocks. However, the 6-player thin games did not show convergence to the shared, partner-specific conventions seen in other conditions. This suggests that thick channels are needed to rescue communication and hold larger groups together, while dyads form conventions even with constrained communication. 
+\textbf{Conclusion:} We examined how group size and communication channel width jointly influenced participants performance in an iterated reference game. Participants in all conditions showed reduced utterances and increased accuracy over blocks. However, the 6-player thin games did not show convergence to the shared, partner-specific conventions seen in other conditions. This suggests that thick channels can rescue communication and hold larger groups together, while dyads form conventions even with constrained communication. 
 
 \newpage
 
