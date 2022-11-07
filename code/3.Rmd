@@ -163,6 +163,7 @@ d.round_results %>% left_join(d.correct) %>%
   left_join(d.games |> select(gameId, name)) |> write_rds(here(data_location,"round_results.rds"))
 
 d.exit_survey <- (read_csv(here(data_location,'exit.csv'))) %>% 
+  inner_join(rounds_include |> select(gameId) |> unique()) |> 
   write_csv(here(data_location,"exit_survey.csv"))
   
 ```
@@ -192,10 +193,39 @@ d.round_results%>% group_by(gameId,name, numPlayers) %>%
 ```
 
 ```{r}
+treatments <- read_csv(here(data_location,"treatments.csv"))
+d.games <- read_csv(here(data_location, 'games.csv')) %>% 
+  rename(gameId = `_id`) %>% 
+    filter(createdAt >= date_start) |> 
+  left_join(treatments |> select(treatmentId=`_id`,name))
+
+(read_csv(here(data_location,'raw_results.csv')))|>   left_join(d.games |> select(gameId,name)) |> 
+select(gameId, name, numPlayers, trialNum, activePlayerCount) |> 
+  unique() |> 
+  ggplot(aes(x=trialNum, fill=as.factor(activePlayerCount)))+geom_bar()+facet_grid(.~name)+
+  labs(title="Of all games even rounds excluded")
+
 d.round_results |> select(gameId, name, numPlayers, trialNum, activePlayerCount) |> 
   filter(name %in% c("6_thick", "6_thin")) |> 
   unique() |> 
-  ggplot(aes(x=trialNum, fill=as.factor(activePlayerCount)))+geom_bar()+facet_grid(.~name)
+  ggplot(aes(x=trialNum, fill=as.factor(activePlayerCount)))+geom_bar()+facet_grid(.~name)+
+  labs("Of complete rounds only")
+
+# weird <- d.round_results |> select(gameId, name, numPlayers, repNum, trialNum, activePlayerCount) |> 
+#   filter(name %in% c("6_thick", "6_thin")) |> 
+#   unique() |> 
+#   group_by(gameId) |> 
+#   tally() |> 
+#   filter(n!=72)
+# 
+# d.round_results |> select(gameId, name, numPlayers, repNum, trialNum, activePlayerCount) |> 
+#   filter(name %in% c("6_thick", "6_thin")) |> 
+#   unique() |> 
+#   inner_join(weird) |> 
+#   group_by(gameId) |> 
+#   summarize(min=min(trialNum),
+#             max=max(trialNum))
+
 
 ```
 
@@ -279,7 +309,124 @@ d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, play
 
 ```
 
-# Many graphs
+# Exit survey
+
+```{r}
+exit <- read_csv(here(data_location,"exit_survey.csv")) |> 
+  select(playerId,gameId,correctness, human, workedWell, time, fair, chatUseful,feedback.x, name)
+
+message("Most people think they understood directions")
+
+exit |> group_by(name,correctness) |> tally() # most people think they understood directions
+
+message("Did you think you were playing with humans? Mostly yes.")
+
+exit |> group_by(name,human) |> tally() |> pivot_wider(names_from=human, values_from=n) |> 
+  mutate(sum=no+yes+`NA`,
+         no=no/sum ,
+         yes=yes/sum ,
+         no_answer=`NA`/sum) |> select(-`NA`,-sum)
+
+message("people mostly thoughts they worked well together")
+
+exit |> group_by(name, workedWell) |> tally() |> pivot_wider(names_from=workedWell, values_from=n, values_fill=0) |> 
+  mutate(sum=stronglyAgree+agree+neutral+disagree+stronglyDisagree+`NA`) |> 
+  mutate(across(agree:`NA`, ~ .x/sum)) |> 
+  select(name, stronglyAgree, agree, neutral, disagree, stronglyDisagree, `NA`)
+
+
+```
+
+we also have text answers about whether the chat was useful, time was sufficient, pay was fair, and general feedback which I guess I should read sometime. 
+
+# testing chat stuff
+
+To do deal with rounds include issues
+```{r}
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+
+#a <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000)
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+# chat_labelled <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000) |> 
+#   filter(createdAt >= date_start) %>%
+#   mutate(data.chat = ifelse(is.na(data.chat), '{}', data.chat)) %>%
+#   rename(row_id = `_id`) %>% 
+#   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>% 
+#   unnest(data.chat) |> 
+#   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>% 
+#   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) |> 
+#   group_by(gameId,repNum,trialNum) |> 
+#   mutate(selector=ifelse(type=="selectionAlert", str_c(playerId,"_"), ""),
+#          selected=accumulate(selector, paste),
+#          num_selected=str_count(selected, "_"),
+#          self_selected=str_detect(selected, playerId)) |> 
+#   filter(type=="message")
+# 
+# chat_labelled |> select(-selector, -selected) |> write_csv(here(data_location,"time_course_round.csv"))
+
+speaker_said_so_far <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000) |> 
+  filter(createdAt >= date_start) %>%
+  mutate(data.chat = ifelse(is.na(data.chat), '{}', data.chat)) %>%
+  rename(row_id = `_id`) %>% 
+  mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>% 
+  unnest(data.chat) |> 
+  select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>% 
+  rename_with(~ gsub("data.", "", .x, fixed = TRUE)) |> 
+  group_by(gameId,repNum,trialNum) |> 
+  mutate(speaker_said=ifelse(role=="speaker",str_c(text," "), ""),
+         said_so_far=accumulate(speaker_said, paste)) |> 
+  filter(type=="selectionAlert") |> 
+  inner_join(rounds_include)
+```
+Amount of speaker language (total, not cleaned) before selection
+
+Not sure what the right way to visualize this is
+
+```{r}
+speaker_said_so_far |> mutate(num_words=str_squish(said_so_far) |> str_count("\\W+") + 1) |> 
+  ggplot(aes(x=trialNum, y=num_words, color=name))+geom_point(alpha=.01)+ stat_summary(fun.data = "mean_cl_boot", size=.2)+facet_wrap(~name)+
+  coord_cartesian(ylim=c(0,75))+
+  scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
+
+
+
+```
+
+```{r}
+list_order <- speaker_said_so_far |> mutate(num_words=str_squish(said_so_far) |> str_count("\\W+") + 1) |> 
+  group_by(gameId,repNum, trialNum) |> 
+  mutate(add_words = num_words-lag(num_words, default=0),
+         select_num= row_number()) 
+
+list_order |> 
+  filter(select_num==1) |> 
+  filter(add_words!=0) |> 
+  ggplot(aes(x=trialNum, y=add_words, color=name))+facet_wrap(~select_num)+geom_point(alpha=.01)+stat_summary(fun.data = "mean_cl_boot", size=.2)+
+  coord_cartesian(ylim=c(0,50))+  scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
+
+list_order |> 
+  filter(select_num!=1) |> 
+  filter(select_num!=6) |> 
+  mutate(said_more=ifelse(add_words==0,0,1)) |> 
+  ggplot(aes(x=trialNum, y=said_more, color=name))+facet_wrap(~select_num)+geom_smooth()+
+  scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
+
+list_order |> 
+  filter(select_num!=1) |> 
+  filter(add_words!=0) |> 
+  ggplot(aes(x=trialNum, y=add_words, color=name))+facet_wrap(~select_num)+geom_point(alpha=.01)+stat_summary(fun.data = "mean_cl_boot", size=.2)+
+  coord_cartesian(ylim=c(0,50))+scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
+```
+
+
+
+
+# Many graphs 
 
  
 Everything here has bootstrapped 95% CIs. 
