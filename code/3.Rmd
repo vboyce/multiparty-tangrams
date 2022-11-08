@@ -732,7 +732,7 @@ ggplot(aes(x=repNum+1, y=words, color=name))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
   annotate("text", x=6, y=60,label="Words from speaker per tangram", color="black", size=6, hjust=1)+
-    annotate("text", x=6, y=50,label="Speakers say more in 6p games \n and less in later blocks", color="black", size=6, hjust=1)+
+    annotate("text", x=6, y=50,label="Speakers said more in 6p games \n and less in later blocks", color="black", size=6, hjust=1)+
   theme(legend.position="none",
         text=element_text(size=16))
 
@@ -757,7 +757,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
        annotate("text", x=2, y=.98,label="Listener Accuracy", color="black", size=6, hjust=0)+
-    annotate("text", x=6, y=.75,label="Accuracy increases,\n condition differences remain", color="black", size=6, hjust=1)+
+    annotate("text", x=6, y=.75,label="Accuracy increased,\n condition differences remained", color="black", size=6, hjust=1)+
   theme(legend.position="none",
         text=element_text(size=16))+
         scale_color_brewer(palette="Paired", direction=-1)
@@ -768,7 +768,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
  annotate("text", x=6, y=.58,label="Similarity of descriptions\n across games", color="black", size=6, hjust=1)+
-    annotate("text", x=1, y=.23,label="6_thin develops\nless group-specific names", color="black", size=6, hjust=0)+
+    annotate("text", x=1, y=.23,label="6_thin developed\nless group-specific names", color="black", size=6, hjust=0)+
   theme(legend.position="none",
         text=element_text(size=16))+
    scale_color_brewer(palette="Paired", direction=-1)
@@ -780,7 +780,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
  annotate("text", x=5, y=.33,label="Similarity to description\n in final block", color="black", size=6, hjust=1)+
-    annotate("text", x=5, y=.15,label="Thick games and 2p games\n converge faster", color="black", size=6, hjust=1)+
+    annotate("text", x=5, y=.15,label="Thick games and 2p games\n converged faster", color="black", size=6, hjust=1)+
   theme(legend.position="none",
         text=element_text(size=16))+     scale_color_brewer(palette="Paired", direction=-1)
 
@@ -975,3 +975,204 @@ read_rds(here(model_location,"to_last_model_study3.rds")) |> summary()
 
 
 ```
+
+# tSNE 
+
+```{r}
+library(Rtsne)
+
+for_Rtsne <- read_csv(here(data_location,"pre_sbert.csv")) |>   bind_cols(readRDS(here(data_location,'post_sbert.RData'))  %>% as_tibble()) |> mutate(feature_ind=row_number()) |> 
+  filter(role=="speaker") |> 
+  select(starts_with("V"), gameId,tangram, channelCond, playerCond, repNum, feature_ind)
+```
+
+```{r test}
+test <- for_Rtsne |> filter(tangram=="C") #|> 
+  #filter(channelCond=="thick") |> 
+  #filter(playerCond==2)
+set.seed(42)
+
+a <- test |> select(starts_with("V")) |> Rtsne(check_duplicates=F)
+
+b <- test |> select(-starts_with("V")) |> bind_cols(a$Y |> as.tibble()) |> 
+  rename(x=V1, y=V2)
+
+```
+
+```{r}
+library(useful)
+
+do_rtsne_thing <- function(letter){
+  test <- for_Rtsne |> filter(tangram==letter) 
+set.seed(42)
+a <- test |> select(starts_with("V")) |> Rtsne(check_duplicates=F)
+b <- test |> select(-starts_with("V")) |> bind_cols(a$Y |> as.tibble()) |> 
+  rename(x=V1, y=V2)
+
+tsne_for_plot <- b |> select(gameId, tangram, channelCond, playerCond,repNum, x, y) |> 
+  mutate(theta = useful::cart2pol(x, y) |> pull(theta)) %>%
+  group_by(gameId,tangram, channelCond, playerCond) |> 
+  arrange(repNum) |> 
+  filter(repNum %in% c(0,5)) |> 
+  mutate(finalTheta=last(theta),
+         last_x=last(x),
+         last_y=last(y),
+         first_x=first(x),
+         first_y=first(y),
+         next_x=lead(x),
+         next_y=lead(y))
+
+plotted <-  ggplot(tsne_for_plot, aes(x = x, y = y, color = finalTheta)) +
+  facet_grid(playerCond~channelCond)+
+    geom_point(data = tsne_for_plot |> filter(repNum==0),
+               size = 1) +
+  #geom_segment(aes(xend=next_x, yend=next_y))+
+    geom_segment(aes(x=first_x, y=first_y,xend = next_x, yend = next_y),
+                 #alpha=.5,
+                 arrow.fill = NULL,
+                 arrow = arrow(length = unit(0.20,"cm"),
+                               angle = 15,
+                               type = "closed")) +
+   # theme_few(20) +
+    scale_shape_manual(values = c(21)) +
+    scale_alpha_continuous(range = c(0.5, 1))+
+    scale_color_gradientn(colours = viridis(5))+
+      theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()) +
+    labs(x = "", y = "") +
+    guides(color = F, shape = F, alpha = F) +
+    theme(aspect.ratio = 1)
+
+  return(plotted)
+}
+```
+
+```{r}
+letters=c("A","B","C","D","E","F","G","H","I","J","K","L")
+collect_plots=list()
+i=0
+for (letter in letters){
+  i = i + 1
+  
+ collect_plots[[i]]=do_rtsne_thing(letter)
+}
+
+```
+```{r}
+
+for (i in 1:12){
+  print(collect_plots[[i]])
+}
+```
+
+```{r chaos, fig.width=10}
+test <- for_Rtsne 
+  #filter(channelCond=="thick") |> 
+  #filter(playerCond==2)
+set.seed(42)
+
+a <- test |> select(starts_with("V")) |> Rtsne(check_duplicates=F)
+
+b <- test |> select(-starts_with("V")) |> bind_cols(a$Y |> as.tibble()) |> 
+  rename(x=V1, y=V2)
+
+
+ggplot(b |> filter(repNum==0), aes(x=x, y=y, color=tangram))+geom_point(alpha=.2)+facet_grid(playerCond~channelCond)
+```
+
+```{r fig.width=5, fig.height=10}
+ggplot(b |> filter(repNum==5), aes(x=x, y=y, color=tangram))+geom_point(alpha=.2)+facet_grid(tangram~str_c(playerCond, channelCond))+theme(legend.position = "none")
+```
+
+# PoS
+
+```{r}
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+
+pos_raw <- read_csv(here(data_location,"PoSTagged.csv")) |> inner_join(rounds_include)
+```
+Sloppy first attempt -- we group by trial & speaker, summarize & pct-ize
+
+
+ToDo the naive word count and the PoS sum are not always equal (off in both direction sometimes) -- some punctuation normalization may help?
+
+
+Following Robert's analysis. First graph is raw-averages, second is grand-average (first do pcts for each speaker-trial, then do grand avg)
+
+Diff between them shows that where there is more reduction, there is more noun-yness. 
+
+
+```{r}
+
+pos_raw |> 
+  mutate(numWords= str_count(text, "\\W+") + 1) |> 
+  filter(role=="speaker") |> 
+  filter(!is.chitchat) |> 
+  group_by(repNum,name) %>%
+  summarize(numWords = sum(numWords),
+            nouns = sum(NOUNcount)/sum(numWords),
+            verbs = sum(VERBcount)/sum(numWords),
+            dets= sum(DETcount)/sum(numWords),
+            preps = sum(ADPcount)/sum(numWords),
+            conjunctions_pronouns = (sum(CCONJcount) + sum(SCONJcount) +
+                                       sum(PRONcount))/sum(numWords),
+            adjectives = sum(ADJcount)/sum(numWords)) %>%
+  mutate(OTHER = (1 - nouns - verbs - dets -conjunctions_pronouns -
+                      preps - adjectives)) %>%
+  gather(POS, prop, nouns:OTHER) %>%
+  mutate(POS = factor(POS, levels = c('nouns',  'verbs', 'preps', 'adjectives',
+                               'conjunctions_pronouns', 'dets', 'OTHER'))) %>%
+  select(repNum, POS, prop, name,) %>%
+  ggplot(aes(x = repNum, y = prop, fill = POS)) +
+  facet_wrap(~name)+
+    geom_area(alpha=0.6 , size=1, colour="black") +
+    scale_fill_brewer(palette = "Set1")
+   
+
+
+pos_raw |> 
+  mutate(numWords= str_count(text, "\\W+") + 1) |> 
+  filter(role=="speaker") |> 
+  filter(!is.chitchat) |> 
+  group_by(repNum,name, playerId, trialNum) %>%
+  summarize(numWords = sum(numWords),
+            nouns = sum(NOUNcount)/sum(numWords),
+            verbs = sum(VERBcount)/sum(numWords),
+            dets= sum(DETcount)/sum(numWords),
+            preps = sum(ADPcount)/sum(numWords),
+            conjunctions_pronouns = (sum(CCONJcount) + sum(SCONJcount) +
+                                       sum(PRONcount))/sum(numWords),
+            adjectives = sum(ADJcount)/sum(numWords)) %>%
+  mutate(OTHER = (1 - nouns - verbs - dets -conjunctions_pronouns -
+                      preps - adjectives)) %>%
+  group_by(name, repNum) |> 
+  summarize(across(nouns:OTHER, mean)) |> 
+  gather(POS, prop, nouns:OTHER) %>%
+  mutate(POS = factor(POS, levels = c('nouns',  'verbs', 'preps', 'adjectives',
+                               'conjunctions_pronouns', 'dets', 'OTHER'))) %>%
+  select(repNum, POS, prop, name) %>%
+  ggplot(aes(x = repNum, y = prop, fill = POS)) +
+  facet_wrap(~name)+
+    geom_area(alpha=0.6 , size=1, colour="black") +
+    scale_fill_brewer(palette = "Set1")
+    
+
+pos_raw |> 
+  mutate(numWords= str_count(text, "\\W+") + 1) |> 
+  filter(role=="speaker") |> 
+  filter(!is.chitchat) |> 
+  group_by(repNum,name, playerId, trialNum) %>%
+  summarize(numWords = sum(numWords),
+            nouns = sum(NOUNcount)/sum(numWords),
+            verbs = sum(VERBcount)/sum(numWords),
+            dets= sum(DETcount)/sum(numWords),
+            preps = sum(ADPcount)/sum(numWords),
+            conjunctions_pronouns = (sum(CCONJcount) + sum(SCONJcount) +
+                                       sum(PRONcount))/sum(numWords),
+            adjectives = sum(ADJcount)/sum(numWords)) %>%
+  mutate(OTHER = (1 - nouns - verbs - dets -conjunctions_pronouns -
+                      preps - adjectives)) |> 
+  ggplot(aes(x=numWords, y=nouns))+geom_jitter(alpha=.05)+facet_wrap(~name)+coord_cartesian(xlim=c(0,30))
+```
+
