@@ -5,7 +5,16 @@ output:
     toc: true
 ---
 
+<!--
 # Random todos for Veronica
+
+- consider log models for sbert things
+- try non-parametric brm-monotonic Dirichlet / simplex models 
+- try GAM (on ???)
+- better params for tSNE ??
+- image embedding multi-modal model thingys??
+
+
 
 wth happened with game tGuW7nukBHY72yfXn in round 1? we don't have text from them then??
 
@@ -17,6 +26,7 @@ Might be an issue in a couple games - we are getting more correct answers that p
 Confirm all sbert analyses on filtered data!
 
 # Much prep(rocessing)
+-->
 ```{r set-up, include=F}
 knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
 knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
@@ -192,6 +202,8 @@ d.round_results%>% group_by(gameId,name, numPlayers) %>%
   pivot_wider(names_from="game_length",values_from="n")
 ```
 
+Of rounds included
+
 ```{r}
 treatments <- read_csv(here(data_location,"treatments.csv"))
 d.games <- read_csv(here(data_location, 'games.csv')) %>% 
@@ -261,6 +273,49 @@ summary %>% filter(num_rounds==5) %>%
 
 
 
+
+
+# Exit survey
+
+```{r}
+exit <- read_csv(here(data_location,"exit_survey.csv")) |> 
+  select(playerId,gameId,correctness, human, workedWell, time, fair, chatUseful,feedback.x, name)
+```
+
+
+Most people think they understood directions
+
+```{r}
+exit |> group_by(name,correctness) |> tally() # most people think they understood directions
+
+```
+
+Did you think you were playing with humans? Mostly yes.
+
+```{r}
+exit |> group_by(name,human) |> tally() |> pivot_wider(names_from=human, values_from=n) |> 
+  mutate(sum=no+yes+`NA`,
+         no=no/sum ,
+         yes=yes/sum ,
+         no_answer=`NA`/sum) |> select(-`NA`,-sum)
+
+```
+
+people mostly thought they worked well together
+
+```{r}
+exit |> group_by(name, workedWell) |> tally() |> pivot_wider(names_from=workedWell, values_from=n, values_fill=0) |> 
+  mutate(sum=stronglyAgree+agree+neutral+disagree+stronglyDisagree+`NA`) |> 
+  mutate(across(agree:`NA`, ~ .x/sum)) |> 
+  select(name, stronglyAgree, agree, neutral, disagree, stronglyDisagree, `NA`)
+
+
+```
+
+we also have text answers about whether the chat was useful, time was sufficient, pay was fair, and general feedback which I guess I should read sometime. 
+
+# Trial internal structure
+
 ```{r chat}
 
 rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
@@ -291,7 +346,8 @@ d.chat <- d.chat.filter %>%
   mutate(text = text %|% "",
          total_num_words= total_num_words %|% 0,
          total_num_chars= total_num_chars %|% 0,
-         role = role %|% "listener")
+         role = role %|% "listener") |> 
+  write_rds(here(data_location, "chat.csv"))
 
 d.listener <- read_csv(here(data_location,"raw_chat.csv")) %>% filter(role=="listener") %>% inner_join(rounds_include)
 
@@ -309,40 +365,8 @@ d.chat.pre <- d.chat.filter %>% group_by(gameId, trialNum, repNum, tangram, play
 
 ```
 
-# Exit survey
-
 ```{r}
-exit <- read_csv(here(data_location,"exit_survey.csv")) |> 
-  select(playerId,gameId,correctness, human, workedWell, time, fair, chatUseful,feedback.x, name)
-
-message("Most people think they understood directions")
-
-exit |> group_by(name,correctness) |> tally() # most people think they understood directions
-
-message("Did you think you were playing with humans? Mostly yes.")
-
-exit |> group_by(name,human) |> tally() |> pivot_wider(names_from=human, values_from=n) |> 
-  mutate(sum=no+yes+`NA`,
-         no=no/sum ,
-         yes=yes/sum ,
-         no_answer=`NA`/sum) |> select(-`NA`,-sum)
-
-message("people mostly thoughts they worked well together")
-
-exit |> group_by(name, workedWell) |> tally() |> pivot_wider(names_from=workedWell, values_from=n, values_fill=0) |> 
-  mutate(sum=stronglyAgree+agree+neutral+disagree+stronglyDisagree+`NA`) |> 
-  mutate(across(agree:`NA`, ~ .x/sum)) |> 
-  select(name, stronglyAgree, agree, neutral, disagree, stronglyDisagree, `NA`)
-
-
-```
-
-we also have text answers about whether the chat was useful, time was sufficient, pay was fair, and general feedback which I guess I should read sometime. 
-
-# testing chat stuff
-
-To do deal with rounds include issues
-```{r}
+#To do deal with rounds include issues
 rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
 
 #a <- read_csv(here(data_location, 'rounds.csv'), guess_max=10000)
@@ -358,7 +382,7 @@ ParseJSONColumn <- function(x) {
 #   rename(row_id = `_id`) %>% 
 #   mutate(data.chat = map(data.chat, .f = ParseJSONColumn)) %>% 
 #   unnest(data.chat) |> 
-#   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>% 
+#   select(-data.target, -ends_with('response'), -ends_with('_correct'), -ends_with('time')) %>%
 #   rename_with(~ gsub("data.", "", .x, fixed = TRUE)) |> 
 #   group_by(gameId,repNum,trialNum) |> 
 #   mutate(selector=ifelse(type=="selectionAlert", str_c(playerId,"_"), ""),
@@ -382,10 +406,18 @@ speaker_said_so_far <- read_csv(here(data_location, 'rounds.csv'), guess_max=100
          said_so_far=accumulate(speaker_said, paste)) |> 
   filter(type=="selectionAlert") |> 
   inner_join(rounds_include)
+
+
 ```
+
+
+## speaker language
+
 Amount of speaker language (total, not cleaned) before selection
 
-Not sure what the right way to visualize this is
+you can kind of see the block structure where there's discontinuities at 12, etc. 
+
+how much said before listener selected
 
 ```{r}
 speaker_said_so_far |> mutate(num_words=str_squish(said_so_far) |> str_count("\\W+") + 1) |> 
@@ -396,6 +428,8 @@ speaker_said_so_far |> mutate(num_words=str_squish(said_so_far) |> str_count("\\
 
 
 ```
+
+How much did the speaker say before the first listener selected?
 
 ```{r}
 list_order <- speaker_said_so_far |> mutate(num_words=str_squish(said_so_far) |> str_count("\\W+") + 1) |> 
@@ -409,24 +443,93 @@ list_order |>
   ggplot(aes(x=trialNum, y=add_words, color=name))+facet_wrap(~select_num)+geom_point(alpha=.01)+stat_summary(fun.data = "mean_cl_boot", size=.2)+
   coord_cartesian(ylim=c(0,50))+  scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
 
+```
+
+this is relatively similar across games/sizes, although there's some order statistics stuff going on. 
+
+how much of the time did the speaker say more things between the n-1 and nth selection?
+
+```{r}
 list_order |> 
   filter(select_num!=1) |> 
   filter(select_num!=6) |> 
   mutate(said_more=ifelse(add_words==0,0,1)) |> 
   ggplot(aes(x=trialNum, y=said_more, color=name))+facet_wrap(~select_num)+geom_smooth()+
   scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
-
-list_order |> 
-  filter(select_num!=1) |> 
-  filter(add_words!=0) |> 
-  ggplot(aes(x=trialNum, y=add_words, color=name))+facet_wrap(~select_num)+geom_point(alpha=.01)+stat_summary(fun.data = "mean_cl_boot", size=.2)+
-  coord_cartesian(ylim=c(0,50))+scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
 ```
 
+```{r}
+# list_order |> 
+#   filter(select_num!=1) |> 
+#   filter(add_words!=0) |> 
+#   ggplot(aes(x=trialNum, y=add_words, color=name))+facet_wrap(~select_num)+geom_point(alpha=.01)+stat_summary(fun.data = "mean_cl_boot", size=.2)+
+#   coord_cartesian(ylim=c(0,50))+scale_x_continuous(breaks=c(0,12,24,36,48,60,72))
+```
 
+## How much feedback do listeners give (per trial)?
 
+Note, most listeners say nothing most of the time, but we're not showing all the zeros. 
 
-# Many graphs 
+```{r}
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
+chat <- read_csv(here(data_location, "filtered_chat.csv"))
+ time_course <- read_csv(here(data_location, "time_course_round.csv")) |> 
+   filter(type=="message") |> 
+   full_join(chat) |> 
+   full_join(d.round_results) |> 
+   inner_join(rounds_include) |> 
+  mutate(text = text %|% "",
+         role = role %|% "listener") |> 
+  filter(role=="listener") |> 
+  select(gameId, trialNum, text, playerId,name, self_selected, is.chitchat, num_selected) |> 
+    mutate(text = gsub("[/?/.]", ' ', text),
+         text = str_squish(text),
+         utt_length_chars = str_length(text), 
+         utt_length_words = str_count(text, "\\W+") + 1) %>%
+    group_by(gameId, trialNum, playerId, name, self_selected, is.chitchat, num_selected) |> 
+  summarize(text = paste0(text, collapse = ', '),
+            total_num_words = sum(utt_length_words, na.rm=T) %>% as.numeric(),
+            total_num_chars = sum(utt_length_chars, na.rm=T) %>% as.numeric())
+```
+
+Said before that listener selecting (no chit-chat)
+
+These are faceted by game size and how many listeners had selected so far. 
+
+note decline in dot density over trials. 
+
+```{r}
+time_course |> filter(name %in% c("6_thick", "2_thick")) |> 
+  filter(!self_selected) |> 
+  filter(!is.chitchat) |> 
+  group_by(gameId, playerId,name, trialNum, num_selected) |> 
+  summarize(words=sum(total_num_chars)) |> 
+  ggplot(aes(x=trialNum, y=words, color=as.factor(num_selected)))+geom_point(alpha=.4)+facet_wrap(~str_c(num_selected," ",name))+
+  geom_smooth()+
+  theme(legend.position = "none")
+
+```
+
+Said after selecting (no chit-chat)
+
+```{r}
+time_course |> filter(name %in% c("6_thick", "2_thick")) |> 
+  filter(self_selected) |> 
+  filter(!is.chitchat) |> 
+  group_by(gameId, playerId,name, trialNum, num_selected) |> 
+  summarize(words=sum(total_num_chars)) |> 
+  ggplot(aes(x=trialNum, y=words, color=as.factor(num_selected)))+geom_point(alpha=.4)+facet_wrap(~str_c(num_selected," ",name))+
+  #geom_smooth()+
+  theme(legend.position = "none")
+
+```
+
+Note that we expect more opportunity for pre-selection talk when there are fewer selections, and more post-selection when there are more selections (b/c of number of listeners eligible).
+
+Amount of listener talking declines, mostly because things turn into more zeros. As expected, in 2p games, there's little talk post selection (because they've clicked it, so it should be ~impossible). In 6p games there is some. This is probably mostly listener-listener as some help explain to laggards. 
+
+<!--# Many graphs 
 
  
 Everything here has bootstrapped 95% CIs. 
@@ -518,7 +621,8 @@ geom_smooth(method = "glm", formula = y~x,
 
 
 ```
-
+-->
+<!--
 # Prep Sbert
 Should we do this on filtered (chit-chat free) and/or spell checked sample?
 ```{r, include=F, eval=F}
@@ -597,11 +701,12 @@ make_across_df <- function(M_mat, F_mat, method) {
 }
 ```
 
+-->
 # Sbert results
 
 ## Across game divergence
 
-```{r}
+```{r, cache=T}
 
 game_divergence <- M_mat %>% 
   filter(role=="speaker") %>% 
@@ -632,7 +737,7 @@ ggplot(game_divergence, aes(x=repNum+1,y=sim,color=str_c(playerCond, channelCond
 
 ## Within game divergence
 
-```{r }
+```{r, cache=T }
 
 tangram_distinctive <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -662,7 +767,7 @@ ggplot(tangram_distinctive, aes(x=repNum+1,y=sim,color=str_c(playerCond, channel
 
 ## Within game similarity
 
-```{r}
+```{r, cache=T}
 
 tangram_change <- M_mat %>% 
     filter(role=="speaker") %>% 
@@ -785,6 +890,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
         text=element_text(size=16))+     scale_color_brewer(palette="Paired", direction=-1)
 
 ```
+
 ```{r, fig.width=10, fig.height=10}
 
 row1 <- plot_grid(reduction,accuracy, labels=c("A","B"), label_size=18, label_x=.15, label_y=.95)
@@ -795,6 +901,8 @@ p <- plot_grid(row1,row2,row3, nrow=3, rel_heights = c(1,.1,1))
 
 save_plot(here(image_location,"CAMP1.pdf"),p, base_width=10, base_height=10)
 #save_plot(here(image_location,"CAMP1.png"),p, base_width=10, base_height=10)
+
+p
 
 ```
 
@@ -1176,3 +1284,210 @@ pos_raw |>
   ggplot(aes(x=numWords, y=nouns))+geom_jitter(alpha=.05)+facet_wrap(~name)+coord_cartesian(xlim=c(0,30))
 ```
 
+# Emoji analysis
+
+
+```{r}
+rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
+
+d.listener <- read_csv(here(data_location,"raw_chat.csv")) %>% filter(role=="listener") |> inner_join(rounds_include) |> 
+  filter(name %in% c("6_thin","2_thin"))
+
+listeners <- d.round_results %>% select(gameId, trialNum, repNum, target, playerId, name) |> 
+  filter(name %in% c("6_thin","2_thin"))
+emoji <- d.listener %>% 
+  select(gameId,repNum, target, playerId, text, trialNum, name) %>%
+  mutate(emoji=case_when(
+    text=="✅"~  "check",
+    text=="🤔" ~ "think",
+    text=="❌" ~ "x",
+    text=="😂" ~ "lol",
+  )) |> 
+  full_join(listeners) |> group_by(gameId, trialNum, repNum, target, playerId, name, emoji) %>% 
+  count() %>% 
+  group_by(gameId, repNum, trialNum, target, playerId, name) %>% 
+  pivot_wider(names_from=emoji, values_from=n, values_fill = 0) |> 
+  rename(none="NA")
+```
+What fraction of listener-trials produce any emoji? (Grouped by game, but measured per listener)
+
+```{r}
+# rate of any emoji
+
+emoji %>% mutate(total=lol+check+x+think, any=ifelse(total>0,1,0)) %>% 
+  group_by(gameId,repNum, name) %>% summarize(any=mean(any)) %>% 
+  ggplot(aes(x=repNum, y=any))+geom_jitter(width=.1, alpha=.5)+geom_smooth()+facet_grid(.~name)
+```
+Of emoji that are used, what's the distribution?
+
+```{r}
+group_emoji <- emoji %>% group_by(gameId, repNum, name) %>% 
+  select(-target, -playerId, -none) %>% summarize(across(everything(), sum)) |> 
+  mutate(total=lol+think+check+x,
+         lol=lol/total,
+         think=think/total,
+         check=check/total,
+         x=x/total) %>% 
+  pivot_longer(c("lol","think", "check", "x"), names_to="emoji", values_to="pct")
+
+ggplot(group_emoji, aes(x=repNum, y=pct, color=emoji, group=emoji))+geom_jitter(width=.1)+geom_smooth()+facet_grid(.~name)
+```
+
+
+```{r}
+count_emoji <- emoji %>% group_by(gameId, playerId, repNum, name) %>% 
+  select(-target,) %>% summarize(across(everything(), sum)) |> 
+  pivot_longer(c("lol","think", "check", "x", "none"), names_to="emoji", values_to="count")
+
+ggplot(count_emoji, aes(x=repNum, y=count, color=emoji, group=emoji))+geom_line(aes(group=playerId))+facet_grid(name~emoji)
+```
+
+
+
+A few people sent many copies of the same emoji over the course of a single trial which could sway things (see above graph), so we check by binarizing by did that listener produce that emoji on that trial and then summarizing. 
+
+```{r}
+count_emoji <- emoji %>% group_by(gameId, playerId, repNum, trialNum, name) %>% 
+  select(-target, none) %>% 
+    mutate(across(everything(), ~ifelse(.x>1,1,.x))) %>% 
+  group_by(gameId, playerId, repNum, name) |> 
+  summarize(across(everything(), sum)) |> 
+  pivot_longer(c("lol","think", "check", "x", "none"), names_to="emoji", values_to="count")
+
+ggplot(count_emoji, aes(x=repNum, y=count, color=emoji, group=emoji))+geom_line(aes(group=playerId), alpha=.5)+stat_summary(fun=mean, color="black", size=.1)+facet_grid(name~emoji)+scale_y_continuous(breaks=c(0,3,6,9,12))
+```
+
+```{r}
+#outlier robustness
+binary_emoji <- emoji %>% group_by(gameId, repNum, name) %>% 
+  select(-target, -playerId, -none) %>% 
+  mutate(across(everything(), ~ifelse(.x>1,1,.x))) %>% 
+summarize(across(everything(), sum)) %>% 
+  mutate(total=lol+think+check+x,
+         lol=lol/total,
+         think=think/total,
+         check=check/total,
+         x=x/total) %>% 
+  pivot_longer(c("lol","think", "check", "x"), names_to="emoji", values_to="pct")
+
+ggplot(binary_emoji, aes(x=repNum, y=pct, color=emoji))+geom_jitter(width=.1)+geom_smooth()+facet_grid(.~name)
+```
+
+# Throw all the models at this
+
+Note, we're being quick and dirty here with lmer.
+
+
+
+
+## log words
+
+
+```{r}
+d.chat <- read_rds(here(data_location, "chat.csv"))
+
+
+for_graph <- d.chat %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram, name) %>% 
+  summarize(words=sum(total_num_words))
+
+ggplot(for_graph, aes(x=repNum, y=log(words), color=name))+
+  facet_wrap(.~name, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.05,method=glm, se=F)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=lm, alpha=.3)+
+  theme(legend.position="null")
+
+```
+```{r}
+
+chat_mod <- d.chat |> filter(role=="speaker") |>
+  group_by(gameId, repNum, tangram, playerId, name) |> 
+  summarize(words=sum(total_num_words)) |> 
+  separate(name, into= c("gameSize","channel")) |> 
+  mutate(log_words=log(words),
+         log_block=log(repNum+1))
+
+log_words <- lm(log_words ~ repNum*channel*gameSize,
+                 data=chat_mod)
+
+summary(log_words)
+```
+
+## log block
+
+Reduction
+
+```{r}
+ggplot(for_graph, aes(x=log(repNum+1), y=words, color=name))+
+  facet_wrap(.~name, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.05,method=glm, se=F)+
+    #geom_smooth(method = "glm", formula = y~x,method.args = list(family = gaussian(link = 'log')))+
+    geom_smooth(method=lm, alpha=.3)+
+  coord_cartesian(ylim=c(0,60))+
+  theme(legend.position="null")
+
+log_block_reduction <- lm(words ~log_block*channel*gameSize,
+                          data=chat_mod)
+
+summary(log_block_reduction)
+```
+
+Why not try log-log ? 
+
+
+```{r}
+
+ggplot(for_graph, aes(x=log(repNum+1), y=log(words), color=name))+
+  facet_wrap(.~name, nrow=1)+
+  scale_color_brewer(palette="Dark2")+
+    geom_line(aes(group=groupxtangram), alpha=.05,method=glm, se=F)+
+    geom_smooth(method=lm, alpha=.3)+
+  theme(legend.position="null")
+log_log_reduction <- lm(log_words ~log_block*channel*gameSize,
+                          data=chat_mod)
+
+summary(log_log_reduction)
+```
+
+Accuracy
+
+
+```{r}
+d.round_results <- read_rds(here(data_location,"round_results.rds"))
+
+d.round_results %>% group_by(playerId,repNum, gameId, name) %>% 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=log(1+repNum), y=correct.num, color=name))+
+geom_smooth(method = "lm") + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  #geom_point()+
+  scale_color_brewer(palette="Dark2")+
+  #scale_y_continuous(limits = c(0,1))+
+  labs(x="Log Round Number", y="Fraction correctly selected", title= "Overall accuracy increases over repetitions", color="Player count")+
+    theme(legend.position="bottom")
+
+  
+```
+
+Note that this accuracy is of players who clicked something!
+
+```{r}
+acc_data <- d.round_results %>% select(playerId,repNum, gameId, name, tangram, response, correct) |> 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) |> 
+    separate(name, into= c("gameSize","channel")) |> 
+  mutate(log_block=log(repNum+1))
+  
+
+
+log_block_accuracy <- glm(correct.num ~log_block*channel*gameSize,
+                          data=acc_data, family="binomial")
+
+summary(log_block_accuracy)
+```
