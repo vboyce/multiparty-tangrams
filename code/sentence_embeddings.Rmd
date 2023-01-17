@@ -412,6 +412,22 @@ ggsave(here(image_location, "sbert_tolast.png"))
 
 ```
 
+```{r eval=F, include=F}
+ square_converge <- to_last |> filter(numPlayers %in% c("2","3","4","5","6")) |> ggplot( aes(x=earlier+1,y=sim,color=as.factor(numPlayers)))+
+      stat_summary(aes(group=str_c(numPlayers,gameId), color=as.factor(numPlayers)),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="Players")+
+  theme(text=element_text(size=14), legend.position="none")+
+    scale_color_viridis(discrete=T, direction=-1)+
+  coord_cartesian(ylim=c(0.2,1))
+
+library(cowplot)
+save_plot(here(image_location,"square_converge.pdf"),square_converge, base_width=5, base_height=5)
+
+
+```
+
 ```{r fig.width=5, fig.height=2.5, eval=F, include=F}
 legend <- get_legend(right)
 yaxis <- get_y_axis(left)
