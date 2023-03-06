@@ -1,0 +1,27 @@
+Hi,Today I'll be presenting our work "Thick feedback facilitates referential coordination in larger groups"
+
+We're working in the framework of repeated reference games. In a trial, a speaker describes an image to a listener so the listener can pick it out. They might say something like "It looks like a person sitting down. They're kinda hunched over and sad-looking. And the listener might clarify with "Facing left? I think I see it" before they make a selection. Then, as shown on the right, they'll receive some feedback. These trials will repeat across the 12 images, and then the same set of images will repeat across blocks. 
+
+Over these repetitions with the same images and the same partners a phenomena occurs where people tend to develop shorthand nicknames for the images. For instance, a group may start with a long description about how it looks like someone wrapped in a blanket and converge to calling it bundle. These nicknames are partner specific, different groups end up with different descriptions: for instance, another group may end up calling it a "boot". 
+
+This phenomena has been robustly studied in two-player games. In recent work, we show that the key phenomena generalize to games of up to 6 players. Listeners have high and increasing accuracy, the speakers descriptions get shorter over time, and there is semantic convergence within games to a shorthand nickname. 
+
+In our current work, we look at how manipulating the communication channel affects these patterns. 
+
+In the "thick condition", we maximize the richnness of the feedback and coherence of the group. We have one player take the speaker role throughout the game, we show everyone feedback on both their own selections and those of their teammates, and listeners can ask questions through the chat. 
+
+In constrast, in the "thin condition", we minimize the available information. We rotate the speaker every block. Listeners only see feedback on whether they were right or wrong. To limit the listener backchannel, we don't let the listeners use the chat normally, and instead give them 4 emoji buttons to click to send those symbols to the chat to indicate if they're confused. 
+
+This experiment was a 2x2 design where we crossed the thick and thin channel condiitons with 2 or 6 players and recruited roughly 40 games per cell.
+
+For results, the dark colors are thick games and light colors are thin games. 2 player games are green and 6 player games are blue. 
+
+In terms of accuracy, we see high and increasing accuracy across all conditions, indicating that people can still establish reference even with the thin channel. However, we do see consistent group differences in the accuracy levels. 
+
+For reduction, we see a decrease in the amount of words said by the speaker across the game. We also see that 6 player games say more than 2 player games. 
+
+To look at semantics, we embed the speaker utterances into a sentence-level vector space using SBERT. Then we can look at semantic convergence by comparing the distance between earlier utterances to the speakers description in the last round. We see increasing similarity, especially in the thick and 2 player games. 
+
+The flip side of convergence within games is divergence between games. Here we compare how similar utterances for the same image in two different games are. In general, utterances get less similar as each game comes up with its own descriptions. However, we see this much less in 6 player thin games that don't diverge until late. 
+
+Overall, we find the expected patterns of referential reduction, but we also show that it's possible to push them around depending on the communication channel, and that fewer words may dissociate from group-specificity of nicknames. Feel free to reach out to me with any questions. 
