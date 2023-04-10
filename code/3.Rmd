@@ -318,6 +318,7 @@ we also have text answers about whether the chat was useful, time was sufficient
 
 ```{r chat}
 
+data_location <- "data/study3"
 rounds_include <- read_rds(here(data_location,"rounds_include.rds"))
 d.round_results <- read_rds(here(data_location,"round_results.rds"))
 
@@ -347,7 +348,7 @@ d.chat <- d.chat.filter %>%
          total_num_words= total_num_words %|% 0,
          total_num_chars= total_num_chars %|% 0,
          role = role %|% "listener") |> 
-  write_rds(here(data_location, "chat.csv"))
+  write_csv(here(data_location, "chat.csv"))
 
 d.listener <- read_csv(here(data_location,"raw_chat.csv")) %>% filter(role=="listener") %>% inner_join(rounds_include)
 
