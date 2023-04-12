@@ -367,20 +367,61 @@ We used the 12 tangram images used by Hawkins et al. (\protect\hyperlink{ref-haw
 \hypertarget{procedure}{%
 \subsubsection{Procedure}\label{procedure}}
 
-\begin{table}[h]
+\begin{table}
+
+\caption{\label{tab:overview}Summary of differences in experiments. Game size refers to the number of players per game. Speaker refers to whether there was one speaker the whole game or whether the speaker role rotated every block. Feedback is whether listeners saw only whether they were right or wrong or whether the additionally saw what other listeners had selected and what the correct answer was. Listener chat refers to whethers listeners could type freely in the chat or only communicate by pressing buttons to send four emojis to the chat. Continue games refers to whether games could continue (or start) with fewer than the requisite number of players; this was not intended to be a consequential manipulation, but was done to prevent games from ending if one player dropped out (an issue that was causing data loss in 6 player games). }
 \centering
-\begin{tabular}{ccc}
-  \hline
-Players & Partial & Complete \\ 
-  \hline
-  2 &   4 &  15 \\ 
-    3 &   2 &  18 \\ 
-    4 &   2 &  19 \\ 
-    5 &   3 &  17 \\ 
-    6 &   6 &  12 \\ 
-   \hline
+\begin{tabular}[t]{l|l|l|l|l|l}
+\hline
+Experiment & Game size & Speaker & Feedback & Listener chat & Continue games\\
+\hline
+1 & 2,3,4,5,6 & rotating & self only & text & no\\
+\hline
+2a & 6 & one speaker & self only & text & no\\
+\hline
+2b & 6 & rotating & self, others, \& correct & text & no\\
+\hline
+2c & 6 & rotating & self only & four emojis & no\\
+\hline
+3 thin & 2,6 & rotating & self only & four emojis & yes\\
+\hline
+3 thick & 2,6 & one speaker & self, others, \& correct & text & yes\\
+\hline
 \end{tabular}
-\caption{Number of games run for each player count.\label{parts}} 
+\end{table}
+\begin{table}
+
+\caption{\label{tab:participants}TODO caption. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.}
+\centering
+\begin{tabular}[t]{l|l|r|r}
+\hline
+Experiment & Players & Complete & Partial\\
+\hline
+1 & 2 & 15 & 4\\
+\hline
+1 & 3 & 18 & 2\\
+\hline
+1 & 4 & 19 & 2\\
+\hline
+1 & 5 & 17 & 3\\
+\hline
+1 & 6 & 12 & 6\\
+\hline
+2a & 6 & 15 & 3\\
+\hline
+2b & 6 & 13 & 4\\
+\hline
+2c & 6 & 10 & 6\\
+\hline
+3: thin & 2 & 35 & 3\\
+\hline
+3: thin & 6* & 44 & 0\\
+\hline
+3: thick & 2 & 39 & 3\\
+\hline
+3: thick & 6* & 38 & 2\\
+\hline
+\end{tabular}
 \end{table}
 
 We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}). From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a ``waiting room'' screen until their partners were ready.
@@ -405,55 +446,40 @@ Our intended sample size was 20 complete games in each group size, but we ended 
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-\hypertarget{accuracy-and-speed}{%
-\subsubsection{Accuracy and Speed}\label{accuracy-and-speed}}
+\hypertarget{reduction}{%
+\subsubsection{Reduction}\label{reduction}}
+
+Our second question was whether speakers reduce their referring expressions in larger groups.
+
+\hypertarget{accuracy}{%
+\subsubsection{Accuracy}\label{accuracy}}
 
 Our first question was whether accuracy and speed increased across groups of different sizes.
 
 \hypertarget{accuracy-is-high-and-increasing.}{%
 \paragraph{Accuracy is high and increasing.}\label{accuracy-is-high-and-increasing.}}
 
-\begin{figure}[t]
-
-{\centering \includegraphics[width=1\linewidth]{figs/accuracy-1} 
-
-}
-
-\caption{Players' accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \label{accuracy}}\label{fig:accuracy}
-\end{figure}
-
 Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}). In a logistic model of accuracy\footnote{correct.num\(\sim\) block \(\times\) numPlayers This and all subsequent regression models were run in brms with weakly regularizing priors.}, participants are more accurate in later blocks (block: Est=0.38, CrI={[}0.25, 0.5{]}), and there was no strong effect of group size on accuracy (numPlayers: Est=-0.02, CrI={[}-0.08, 0.03{]}) or interaction between block and group size (block:numPlayers: Est=-0.01, CrI={[}-0.04, 0.01{]}).
 
 \hypertarget{participants-speed-up-in-later-blocks.}{%
 \paragraph{Participants speed up in later blocks.}\label{participants-speed-up-in-later-blocks.}}
 
-\begin{figure}[t]
+Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time\footnote{time\(\sim\) block \(\times\) numPlayers}, participants got faster across blocks (block: Est=-10.03, CrI={[}-11.03, -9.03{]}) and were slightly slower in larger games (numPlayers: Est=1.03, CrI={[}0.4, 1.66{]}). This speed up is consistent with prior work by (\protect\hyperlink{ref-weberCulturalConflictMerger2003}{\textbf{weberCulturalConflictMerger2003?}}) which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment.
 
-{\centering \includegraphics[width=1\linewidth]{figs/time-1} 
+\begin{figure*}[t!]
+
+{\centering \includegraphics[width=1\linewidth]{figs/triptych-acc-1} 
 
 }
 
-\caption{How long listeners took to select a figure in seconds by block and group size. Listeners selected images faster in later blocks. Only times for correct responses are shown.\label{time}}\label{fig:time}
-\end{figure}
+\caption{TODO}\label{fig:triptych-acc}
+\end{figure*}
 
-Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time\footnote{time\(\sim\) block \(\times\) numPlayers}, participants got faster across blocks (block: Est=-10.03, CrI={[}-11.03, -9.03{]}) and were slightly slower in larger games (numPlayers: Est=1.03, CrI={[}0.4, 1.66{]}). This speed up is consistent with prior work by (\protect\hyperlink{ref-weberCulturalConflictMerger2003}{\textbf{weberCulturalConflictMerger2003?}}) which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment.
-
-\hypertarget{reduction}{%
-\subsubsection{Reduction}\label{reduction}}
-
-Our second question was whether speakers reduce their referring expressions in larger groups.
+\hypertarget{reduction-1}{%
+\subsubsection{Reduction}\label{reduction-1}}
 
 \hypertarget{speakers-utterances-reduce-in-length.}{%
 \paragraph{Speakers' utterances reduce in length.}\label{speakers-utterances-reduce-in-length.}}
-
-\begin{figure}[h]
-
-{\centering \includegraphics[width=1\linewidth]{figs/variability-1} 
-
-}
-
-\caption{Number of words from speaker (total, across all 12 figures) in a block. Each colored line is one group, the overall trend is shown in black. Across group size, the number of words decreases as conventions emerge, but convention formation is not a smooth process, and there is variability between speakers.\label{variability}}\label{fig:variability}
-\end{figure}
 
 As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model\footnote{words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}, the effect of being one block later is -3.35 (CrI={[}-4.58, -2.13{]}) words.
 
@@ -477,31 +503,37 @@ The overall effect of having more players in a group is 1.67 (CrI={[}0.68, 2.71{
 
 One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block\footnote{words\(\sim\) block \(\times\) numPlayers~+ block \(\times\) speaker.repeat~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}. Repeat speakers do use fewer words (speaker.repeat: Est=-8.55, CrI={[}-10.41, -6.79{]}), but there are still effects of group size (numPlayers: Est=1.63, CrI={[}0.58, 2.66{]}) and block (block: Est=-5.26, CrI={[}-6.84, -3.69{]}). The effects of block and repeat speaker are subadditive (block:speaker.repeat: Est=3.2, CrI={[}2.65, 3.78{]}), and there is minimal interaction between block and group size (block:numPlayers: Est=0.08, CrI={[}-0.22, 0.41{]}).
 
-\hypertarget{development-of-conventions}{%
-\subsubsection{Development of conventions}\label{development-of-conventions}}
+\hypertarget{reduction-2}{%
+\section{reduction}\label{reduction-2}}
 
-Our final question was how conventions emerge in larger groups.
+\begin{figure*}[t!]
+
+{\centering \includegraphics[width=1\linewidth]{figs/triptych-red-1} 
+
+}
+
+\caption{TODO}\label{fig:triptych-red}
+\end{figure*}
 
 \hypertarget{speakers-who-dont-know-the-convention-reduce-less.}{%
 \paragraph{Speakers who don't know the convention reduce less.}\label{speakers-who-dont-know-the-convention-reduce-less.}}
 
 In our games (which had limited feedback), listeners who got a tangram wrong didn't have a way of knowing what the right answer was unless they asked for clarification in the chat. If a speaker got a tangram wrong as a listener in the previous block, they may not have known the conventional description that went with it, and thus were unlikely to follow the convention. If we assume that reduction is a sign of convention development, then speakers should say more words when they got the tangram wrong the previous block. We added prior errors as an additional predictor to our regression predicting number of words and found that speakers said more words for tangrams after they were incorrect (numPlayers: Est=2.18, CrI={[}0.93, 3.44{]}).
 
-\hypertarget{smaller-groups-reduce-and-stabilize-conventions-sooner.}{%
-\paragraph{Smaller groups reduce and stabilize conventions sooner.}\label{smaller-groups-reduce-and-stabilize-conventions-sooner.}}
+\hypertarget{divergence}{%
+\subsubsection{Divergence}\label{divergence}}
 
-\begin{figure*}[h]
+\begin{figure*}[t!]
 
-{\centering \includegraphics[width=0.8\linewidth]{figs/similarity-1} 
+{\centering \includegraphics[width=1\linewidth]{figs/triptych-div-1} 
 
 }
 
-\caption{Comparison of the content words is the final (6th) block to words in previous blocks. (A) The proportion 6th block content words found in each prior block. (B) The proportion 6th block content words that were first used by the speaker in each block. Smaller games have higher overlap and a greater proportion of words originating earlier. \label{similarity}}\label{fig:similarity}
+\caption{TODO}\label{fig:triptych-div}
 \end{figure*}
 
-Another angle to look at conventions is to take the speaker's utterances in the last block as the ``convention'', and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds.\footnote{Contentful words were defined as all words in a referential message with a part of speech identified by the Spacy (\url{http://spacy.io}) tagger as being a noun, verb, or adjective; that were not on the Spacy stop word list; and that did not have a lemma in the set {[}`look',`like',`body',`person',`man',`guy'{]}, a list generated as being extremely common vocabulary across tangrams.} Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block\footnote{overlap\(\sim\) block \(\times\) numPlayers~+ same\_speaker~+ (1\textbar gameId)~+ (1\textbar target)}, later blocks have more overlap (block: Est=0.1, CrI={[}0.08, 0.12{]}). Blocks with the same speaker as the last round have more overlap (same\_speaker: Est=0.08, CrI={[}0.05, 0.1{]}); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have less overlap between blocks (numPlayers: Est=-0.07, CrI={[}-0.09, -0.04{]}), but there is no interaction between blocks and game size (block:numPlayers: Est=0, CrI={[}-0.01, 0{]}). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.
-
-Another way to measure conventions is to look at when these words were first introduced by the speaker (Figure \ref{similarity}B). A greater fraction of 6th block words were new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originated in the 1st or 2nd blocks. Overall, conventions reduced and stabilized sooner in smaller groups, perhaps because fewer people need to implicitly agree on them.
+\hypertarget{convergence}{%
+\subsubsection{Convergence}\label{convergence}}
 
 \hypertarget{groups-varied-in-their-strategies-and-reduction.}{%
 \paragraph{Groups varied in their strategies and reduction.}\label{groups-varied-in-their-strategies-and-reduction.}}
@@ -532,36 +564,14 @@ Block & Person & Text\\
 
 A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave ``codenames'' to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: ``zigzag'' and ``beggar''. This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games.
 
-\begin{table}
+\begin{figure*}[t!]
 
-\caption{\label{tab:zigzag}Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Tangram under discussion is row 1, column 4 in Figure \ref{game}A. \label{zigzag}}
-\centering
-\begin{tabular}[t]{ll>{\raggedright\arraybackslash}p{16em}}
-\toprule
-Block & Person & Text\\
-\midrule
-1 & A(S) & {}[...] yes, the legs are like a zig zag\\
- & C & CODE name ZIGZAG\\
- & A(S) & There are no legs upwards\\
-2 & B(S) & okay so similar to begger guy but no foot pointing up\\
- & B(S) & its like a zigzag\\
- & B(S) & i forgot the code name\\
- & D & zigzag yea\\
- & A & The one standing with knees bent\\
- & B(S) & yeah\\
- & B(S) & standing\\
- & C & Yeah zigzag\\
-3 & C(S) & The begger with no foot coming out from the left\\
- & B & zigzag\\
- & C(S) & zigzag it is\\
- & C(S) & sorry i forgot\\
-4 & D(S) & zigzag\\
-5 & A(S) & zigzag\\
-6 & B(S) & beggar guy\\
- & B(S) & zigzag\\
-\bottomrule
-\end{tabular}
-\end{table}
+{\centering \includegraphics[width=1\linewidth]{figs/triptych-conv-1} 
+
+}
+
+\caption{TODO}\label{fig:triptych-conv}
+\end{figure*}
 
 \hypertarget{interim-discussion}{%
 \subsection{Interim Discussion}\label{interim-discussion}}
@@ -581,8 +591,78 @@ The experimental paradigm presented here could be a valuable tool to disentangle
 \hypertarget{experiment-2}{%
 \section{Experiment 2}\label{experiment-2}}
 
+Motivation
+
+\hypertarget{section}{%
+\section{}\label{section}}
+
+\hypertarget{methods-1}{%
+\subsection{Methods}\label{methods-1}}
+
+\hypertarget{participants-1}{%
+\subsubsection{Participants}\label{participants-1}}
+
+All participants were self-reported fluent native English speakers who had not participated in experiment 1.
+All experiment 2 games were 6-player games.
+Experiment 2a was run in MONTH; participants were paid MONEY for 6-player games, with the speaker getting a bonus MONEY, in addition to up to \$2.88 in performance bonuses for each player.
+Experiment 2b was run in MONTH; participants were paid MONEY for 6-player games.
+
+In all games, participants could additionally make up to
+We recruited participants between May and July 2021 using the Prolific platform; participants had all self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses. A total of 390 people each participated in one game.
+
+\hypertarget{materials-1}{%
+\subsubsection{Materials}\label{materials-1}}
+
+We used the 12 tangram images used by Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) and Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{1986}) (see Figure \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as ``top left'' were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block.
+
+\hypertarget{procedure-1}{%
+\subsubsection{Procedure}\label{procedure-1}}
+
+Experiment 2 consisted of three different variations on Experiment 1, so we describe the differences from the Experiment 1 procedure.
+
+We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}). From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a ``waiting room'' screen until their partners were ready.
+
+Once the game started, participants saw screens like Figure \ref{game}A. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection.
+
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{game}B). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. This feedback regime is different from Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) where listeners were shown what the right answer was during feedback. We made this change to prevent listeners from learning conventions purely as a memorized mapping between utterance and correct answer.
+
+Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment.
+
+In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen to keep participants more equally engaged (the speaker role is more work), and to give a more robust test for reduction and convention.
+
+After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game.
+
+\hypertarget{results-1}{%
+\subsection{Results}\label{results-1}}
+
+\hypertarget{accuracy-1}{%
+\subsubsection{Accuracy}\label{accuracy-1}}
+
+\hypertarget{reduction-3}{%
+\subsubsection{Reduction}\label{reduction-3}}
+
+\hypertarget{divergence-1}{%
+\subsubsection{Divergence}\label{divergence-1}}
+
+\hypertarget{convergence-1}{%
+\subsubsection{Convergence}\label{convergence-1}}
+
+\hypertarget{emoji-usage}{%
+\subsubsection{Emoji usage ?}\label{emoji-usage}}
+
+\hypertarget{interim-discussion-1}{%
+\subsection{Interim discussion}\label{interim-discussion-1}}
+
 \hypertarget{experiment-3}{%
 \section{Experiment 3}\label{experiment-3}}
+
+Motivation
+
+\hypertarget{methods-2}{%
+\subsection{Methods}\label{methods-2}}
+
+\hypertarget{results-2}{%
+\subsection{Results}\label{results-2}}
 
 \hypertarget{general-discussion}{%
 \section{General Discussion}\label{general-discussion}}

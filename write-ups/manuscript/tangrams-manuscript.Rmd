@@ -55,16 +55,6 @@ tables: TRUE # Needed to be able to include tables
 
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE) # By default, hide code; set to TRUE to see code
-#knitr::opts_chunk$set(fig.pos = 'th') # Places figures at top or here
-knitr::opts_chunk$set(out.width = '100%', dpi=300,
-                      fig.width=8, fig.width=8) # Figure resolution and size
-knitr::opts_chunk$set(fig.env="figure") # Latex figure environment
-
-options(knitr.table.format="latex") # For kable tables to work without setting format option
-```
-
 <!---------------------- Abstract --------------------->
 
 ::: {.abstract data-latex="" lang=en}
@@ -106,8 +96,8 @@ options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 
-knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, 
-                      fig.pos = "tb", fig.path='figs/',
+knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
+                      fig.pos = "tb", fig.path='figs/', fig.env="figure",
                       echo=F, warning=F, cache=TRUE, 
                       message=F, sanitize = T)
 ```
@@ -232,25 +222,38 @@ We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020
 
 ### Procedure
 
+```{r overview}
 
+overview <- tribble(
+  ~"Experiment", ~"Game size", ~"Speaker",~"Feedback", ~"Listener chat", ~"Continue games",
+  "1", "2,3,4,5,6", "rotating", "self only", "text", "no",
+  "2a", "6", "one speaker", "self only", "text", "no",
+  "2b", "6", "rotating", "self, others, & correct", "text", "no",
+  "2c", "6", "rotating", "self only", "four emojis", "no",
+  "3 thin", "2,6", "rotating", "self only", "four emojis", "yes",
+  "3 thick", "2,6", "one speaker", "self, others, & correct", "text", "yes"
+)
+knitr::kable(overview, caption="Summary of differences in experiments. Game size refers to the number of players per game. Speaker refers to whether there was one speaker the whole game or whether the speaker role rotated every block. Feedback is whether listeners saw only whether they were right or wrong or whether the additionally saw what other listeners had selected and what the correct answer was. Listener chat refers to whethers listeners could type freely in the chat or only communicate by pressing buttons to send four emojis to the chat. Continue games refers to whether games could continue (or start) with fewer than the requisite number of players; this was not intended to be a consequential manipulation, but was done to prevent games from ending if one player dropped out (an issue that was causing data loss in 6 player games). ")
+```
 ```{r participants}
 # TODO fix this table
 summary <- combined_results %>% group_by(condition, trialNum, repNum, gameId, numPlayers) %>% 
-           mutate(time= time %|% 180) %>% 
-  summarize(max_time=max(time)) %>% 
+  mutate(numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> 
   group_by(gameId, numPlayers, condition) %>% 
-  summarize(total_time=sum(max_time)/60,
-            num_trials=max(trialNum)) %>% 
+  summarize(num_trials=max(trialNum)) %>% 
   arrange(numPlayers) %>% 
   mutate(complete=ifelse(num_trials==71,T,F)) %>% 
   group_by(numPlayers,complete, condition) %>% 
   tally() %>% 
   pivot_wider(names_from=complete, values_from=n) %>% 
   rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) %>% 
-    mutate(Players=int(Players)) %>% 
-  arrange(condition, Players,Complete,Partial)
+  mutate(Partial=ifelse(is.na(Partial), 0, Partial)) |> 
+  mutate(Experiment=factor(condition, levels=c("rotate","no_rotate","full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
+                          labels=c("1", "2a", "2b", "2c", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
+  select(Experiment, Players, Complete, Partial) |> 
+  arrange(Experiment, Players,Complete,Partial)
 
-summary
+knitr::kable(summary, caption="TODO caption. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.")
 ```
 
 We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020].  From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
@@ -273,7 +276,12 @@ Our intended sample size was 20 complete games in each group size, but we ended 
 
 ## Results
 
-### Accuracy and Speed
+### Reduction
+
+Our second question was whether speakers reduce their referring expressions in larger groups. 
+
+
+### Accuracy 
 
 Our first question was whether accuracy and speed increased across groups of different sizes.
 
@@ -285,18 +293,6 @@ acc <- read_rds(here(model_location,"acc_summ.rds"))
 acc_spec <- read_rds(here(model_location,"acc_spec.rds"))
 ```
 
-```{r accuracy, fig.env="figure", fig.pos = "t", fig.align = "center", out.width="100%", fig.width=5, fig.height=2.5, fig.cap = "Players' accuracy at correctly selecting the target figure by block and group size. Accuracy increases across blocks. \\label{accuracy}" }
-combined_results %>% filter(condition=="rotate") |> group_by(playerId,repNum, gameId, numPlayers) %>% 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum+1, y=correct.num, color=as.factor(numPlayers)))+
-geom_smooth(method = "glm", method.args = list(family = "binomial"), size=1.3) + 
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), size=.5)+
-  scale_color_viridis(discrete=T, direction=-1)+
-    scale_x_continuous(breaks=seq(1,6))+
-  labs(x="Block", y="Selection Accuracy", color="Players")+
-  theme(legend.position="right")
-
-```
 
 Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy^[`r form(acc_spec)` This and all subsequent regression models were run in brms with weakly regularizing priors.], participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
 
@@ -312,22 +308,68 @@ time_spec <- read_rds(here(model_location,"time_spec.rds"))
 
 Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time^[`r form(time_spec)`], participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
 
-### Reduction
 
-Our second question was whether speakers reduce their referring expressions in larger groups. 
+
+```{r triptych-acc, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
+# accuracy
+
+# 1
+one <- combined_results |> filter(condition=="rotate") %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=as.character(numPlayers)))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(.65,1))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  labs(x="Block", y="Fraction correctly selected", color="")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+
+        scale_color_viridis(discrete=T, direction=-1)
+
+#2
+
+palette = c("no_rotate"="orange", "full_feedback"="pink", "emoji"="red","rotate"="purple")
+two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", "emoji", "rotate")) %>%
+  filter(numPlayers==6) |> 
+  group_by(playerId,repNum, gameId, numPlayers) %>% 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(.65,1))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  labs(x="Block", y="Fraction correctly selected", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+        scale_color_manual(values=palette)
+
+#3
+ three <- combined_results |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% group_by(playerId,repNum, gameId, condition) %>% 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
+     scale_x_continuous(breaks=seq(1,6))+
+   coord_cartesian(ylim=c(.65,1))+
+geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
+  labs(x="Block", y="Fraction correctly selected", color="")+
+  theme(legend.position="bottom",
+        
+        text=element_text(size=16))+
+        scale_color_brewer(palette="Paired", direction=-1)+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )
+ 
+ plot_grid(one, two, three, nrow=1)
+```
+
+### Reduction
 
 #### Speakers' utterances reduce in length. 
 
-```{r variability, fig.env="figure", fig.pos = "h", fig.align = "center",out.width="100%", fig.width=6, fig.height=3, fig.cap = "Number of words from speaker (total, across all 12 figures) in a block. Each colored line is one group, the overall trend is shown in black. Across group size, the number of words decreases as conventions emerge, but convention formation is not a smooth process, and there is variability between speakers.\\label{variability}" }
-combined_chat %>%filter(condition=="rotate") |>  filter(role=="speaker") %>% group_by(gameId,numPlayers,repNum) %>% 
-  summarize(words=sum(total_num_words)) %>% ggplot(aes(x=repNum+1, color=as.factor(numPlayers), y=words, ))+geom_line(aes(group=gameId))+facet_wrap(~numPlayers, nrow=1)+
-  geom_smooth(method=glm, formula=y~poly(x,2), se=F, color="black")+
-  scale_color_viridis(discrete=T, direction=-1)+
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Total words from speaker", x="Block", color="Players")+
-  theme(legend.position="none")
-
-```
 
 
 ```{r}
@@ -372,9 +414,69 @@ One potential concern is that group size correlates with whether the speaker has
 
 [^3]: `r form(repeat_speaker_spec)`
 
-### Development of conventions 
 
-Our final question was how conventions emerge in larger groups.
+# reduction
+```{r triptych-red, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
+
+#1
+
+one <- combined_chat |> filter(condition=="rotate") |>  filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) %>% 
+  summarize(words=sum(total_num_words)) |> 
+  #group_by(repNum, name, gameId) |> 
+  #summarize(words=sum(words)) |> 
+ggplot(aes(x=repNum+1, y=words, color=as.character(numPlayers)))+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  coord_cartesian(ylim=c(0,60))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+
+  scale_color_viridis(discrete=T, direction=-1)
+
+#2
+
+palette = c("no_rotate"="orange", "full_feedback"="pink", "emoji"="red","rotate"="purple")
+two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emoji", "rotate")) %>%
+  filter(numPlayers==6) |> 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram,condition) %>% 
+  summarize(words=sum(total_num_words)) |> 
+ggplot(aes(x=repNum+1, y=words, color=condition))+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+  scale_color_manual(values=palette)+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  coord_cartesian(ylim=c(0,60))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))
+
+#3
+
+
+three <- combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% filter(role=="speaker") %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
+  group_by(repNum, gameId,tangram, groupxtangram, condition) %>% 
+  summarize(words=sum(total_num_words)) |> 
+  #group_by(repNum, name, gameId) |> 
+  #summarize(words=sum(words)) |> 
+ggplot(aes(x=repNum+1, y=words, color=condition))+
+   scale_color_brewer(palette="Paired", direction=-1)+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  coord_cartesian(ylim=c(0,60))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))
+plot_grid(one,two, three, nrow=1)
+```
 
 #### Speakers who don't know the convention reduce less. 
 
@@ -389,23 +491,55 @@ speaker_acc_spec <- read_rds(here(model_location,"speaker_acc_spec.rds"))
 
 In our games (which had limited feedback), listeners who got a tangram wrong didn't  have a way of knowing what the right answer was unless they asked for clarification in the chat. If a speaker got a tangram wrong as a listener in the previous block, they may not have known the conventional description that went with it, and thus were unlikely to follow the convention. If we assume that reduction is a sign of convention development, then speakers should say more words when they got the tangram wrong the previous block. We added prior errors as an additional predictor to our regression predicting number of words and found that speakers said more words for tangrams after they were incorrect (`r stats(speaker_acc,6)`). 
 
-<!-- [^4]: `r form(speaker_acc_spec)` -->
+### Divergence 
+```{r triptych-div, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
 
-#### Smaller groups reduce and stabilize conventions sooner.
+one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds"))
+three_diverge <- read_rds(here("code/models/three_diverge.rds"))
+# divergence
 
+#1
+one <-  one_two_diverge |> filter(condition %in% c("2", "3","4","5","6")) |> 
+                             ggplot(aes(x=repNum+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  scale_x_continuous(breaks=seq(1,6))+
+        coord_cartesian(ylim=c(.1,.7))+
+  labs(y="Cosine Similarity", x="Block", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+scale_color_viridis(discrete=T, direction=-1)
+#2
+palette = c("6noro"="orange", "6highfeed"="pink", "6emoji"="red","6"="purple")
 
-```{r}
-conventions <- read_rds(here(model_location,"conventions_summ.rds"))
-convention_spec <- read_rds(here(model_location,"convention_spec.rds"))
+two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6noro","6")) |> 
+                              ggplot( aes(x=repNum+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+      coord_cartesian(ylim=c(.1,.7))+
+  labs(y="Cosine Similarity", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+
+   scale_color_manual(values=palette)
 
+#3
+three <-  three_diverge |> ggplot(aes(x=repNum+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+   coord_cartesian(ylim=c(.1,.7))+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  labs(y="Cosine Similarity", x="Block", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+
+   scale_color_brewer(palette="Paired", direction=-1)
+
+plot_grid(one,two,three, nrow=1)
 ```
 
-
-Another angle to look at conventions is to take the speaker's utterances in the last block as the "convention", and look at how far back they started. We took the contentful words said by the speaker in the last block and looked at how many of them were used to describe that tangram in prior rounds.^[Contentful words were defined as all words in a referential message with a part of speech identified by the Spacy (\url{http://spacy.io}) tagger as being a noun, verb, or adjective; that were not on the Spacy stop word list; and that did not have a lemma in the set ['look','like','body','person','man','guy'], a list generated as being extremely common vocabulary across tangrams.] Then we calculated the proportion overlap between the last block utterance and earlier blocks, shown in Figure \ref{similarity}A. In a linear model of the overlap between an earlier block and the last block[^5], later blocks have more overlap (`r stats(conventions,1)`).  Blocks with the same speaker as the last round have more overlap (`r stats(conventions,5)`); this pattern is visible in the peaks for blocks 2 and 4 in the 2 player games. Larger groups have less overlap between blocks (`r stats(conventions,4)`), but there is no interaction between blocks and game size (`r stats(conventions,2)`). One potential confound is that in smaller games, players spend more time in the speaker role; however, there is still more overlap in smaller games even to blocks with a different speaker.  
-
-[^5]: `r form(convention_spec)`
-
-Another way to measure conventions is to look at when these words were first introduced by the speaker (Figure \ref{similarity}B). A greater fraction of 6th block words were new in 5 or 6 player games compared with smaller games, whereas most words used in 2-player games originated in the 1st or 2nd blocks.  Overall, conventions reduced and stabilized sooner in smaller groups, perhaps because fewer people need to implicitly agree on them. 
+### Convergence 
 
 #### Groups varied in their strategies and reduction. 
 
@@ -435,37 +569,58 @@ column_spec(3, width = "16em") %>% kable_styling(latex_options="H")
 
 A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
 
+```{r triptych-conv, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
+#convergence
+
+one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
+three_converge <- read_rds(here("code/models/three_converge.rds"))
+#1
+one <- one_two_converge |> filter(condition %in% c("2", "3","4","5","6")) |> ggplot( aes(x=earlier+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  coord_cartesian(ylim=c(.2,1))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+     scale_color_viridis(discrete=T, direction=-1)
 
 
 
-```{r zigzag}
 
-zigzag <- tribble(~Block, ~Person, ~`Text`,
- "1", "A(S)" , "[...] yes, the legs are like a zig zag",
-		"",	"C", "CODE name ZIGZAG",
-			"","A(S)",	"There are no legs upwards",
-			"2", "B(S)", "okay so similar to begger guy but no foot pointing up",
-			"","B(S)", "its like a zigzag",
-			"","B(S)", "i forgot the code name",
-			"","D", "zigzag yea",
-			"","A", "The one standing with knees bent",
-			"","B(S)", "yeah",
-			"","B(S)" ,"standing",
-			"", "C", "Yeah zigzag",
-			"3", "C(S)",	"The begger with no foot coming out from the left",
-			"","B", "zigzag",
-			"","C(S)",	"zigzag it is",
-			"","C(S)",	"sorry i forgot",
-			"4", "D(S)",	"zigzag",
-		"5", "A(S)",	"zigzag",	
-			"6", "B(S)",	"beggar guy",
-			"", "B(S)" ,"zigzag")
+#2
+palette = c("6noro"="orange", "6highfeed"="pink", "6emoji"="red","6"="purple")
 
-knitr::kable(zigzag, caption = "Excerpt from a group that explicitly gave nicknames to the figures.  The speaker for each round is marked with (S). Tangram under discussion is row 1, column 4 in Figure \\ref{game}A. \\label{zigzag}", format="latex",booktabs = TRUE, linesep="") %>%
-column_spec(3, width = "16em") 
+two <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6noro","6")) |> ggplot( aes(x=earlier+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
+  scale_x_continuous(breaks=seq(1,6))+
+  coord_cartesian(ylim=c(.2,1))+
+  guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+  labs(y="Cosine Similarity", x="Block", color="")+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+    scale_color_manual(values=palette)
 
 
+
+#3
+
+
+
+three <- three_converge |>  ggplot( aes(x=earlier+1,y=sim,color=condition))+
+      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
+  geom_smooth(formula=y~poly(x,2))+
+  scale_x_continuous(breaks=seq(1,6))+
+  coord_cartesian(ylim=c(.2,1))+
+  labs(y="Cosine Similarity", x="Block", color="")+
+    guides(color = guide_legend(nrow=2, by_row=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+
+  theme(legend.position="bottom",
+        text=element_text(size=16))+     scale_color_brewer(palette="Paired", direction=-1)
+
+plot_grid(one, two, three, nrow=1)
 ```
+
 
 ## Interim Discussion
 
@@ -486,365 +641,64 @@ We provided less feedback than previous studies such as @hawkinsCharacterizingDy
 The experimental paradigm presented here could be a valuable tool to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is feasible, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. While much is left to be explored, this initial data set provides a rich corpus of how humans adapt language dynamically to communicate. 
 
 # Experiment 2
-```{r}
-library(cowplot)
-palette = c("2p rotate"="gray70","6p rotate"="gray40", "6p no rotate"="orange", "6p full feedback"="pink", "6p emoji"="red")
-for_camp <- combined_chat  |> filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, condition) %>% 
-  summarize(words=sum(total_num_words))
+
+Motivation
+
+#
+## Methods
 
 
-ro <- for_camp |> filter(condition %in% c("2p rotate", "6p rotate", "6p no rotate")) |> ggplot(aes(x=repNum+1, y=words, color=rotate))+
-   scale_color_manual(values=palette, breaks=c("2p rotate", "6p rotate", "6p no rotate"))+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="none",
-        text=element_text(size=16))
+### Participants
+All participants were self-reported fluent native English speakers who had not participated in experiment 1. 
+All experiment 2 games were 6-player games. 
+Experiment 2a was run in MONTH; participants were paid MONEY for 6-player games, with the speaker getting a bonus MONEY, in addition to up to \$2.88 in performance bonuses for each player. 
+Experiment 2b was run in MONTH; participants were paid MONEY for 6-player games. 
+
+In all games, participants could additionally make up to 
+We recruited participants between May and July 2021 using the Prolific platform; participants had all self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games (with the intention of a \$10 hourly rate), in addition to up to \$2.88 in performance bonuses. A total of 390 people each participated in one game. 
+
+### Materials
+
+We used the 12 tangram images used by @hawkinsCharacterizingDynamicsLearning2020 and @clarkReferringCollaborativeProcess1986 (see Figure \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as "top left" were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block. 
+
+### Procedure
+Experiment 2 consisted of three different variations on Experiment 1, so we describe the differences from the Experiment 1 procedure. 
+
+We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online [@almaatouqEmpiricaVirtualLab2020].  From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partners were ready.
+
+Once the game started, participants saw screens like Figure \ref{game}A. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection. 
+
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{game}B). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. This feedback regime is different from @hawkinsCharacterizingDynamicsLearning2020 where listeners were shown what the right answer was during feedback. We made this change to prevent listeners from learning conventions purely as a memorized mapping between utterance and correct answer. 
+
+Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment. 
+
+In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen to keep participants more equally engaged (the speaker role is more work), and to give a more robust test for reduction and convention. 
+
+After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
 
 
-feedback <- for_camp |> filter(rotate %in% c("2p rotate", "6p rotate", "6p full feedback")) |> ggplot(aes(x=repNum+1, y=words, color=rotate))+
-   scale_color_manual(values=palette)+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="none",
-        text=element_text(size=16))
+## Results
 
 
-emoji <- for_camp |> filter(rotate %in% c("2p rotate", "6p rotate", "6p emoji")) |> ggplot(aes(x=repNum+1, y=words, color=rotate))+
-   scale_color_manual(values=palette)+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="none",
-        text=element_text(size=16))
+### Accuracy
 
+### Reduction
 
-orig <- rod.chat |>  filter(role=="speaker") %>% mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) %>% 
-  summarize(words=sum(total_num_words))
+### Divergence
 
-rotate <- orig  |> ggplot(aes(x=repNum+1, y=words, color=as.factor(numPlayers)))+
-    scale_color_viridis(discrete=T, direction=-1)+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="none",
-        text=element_text(size=16))
+### Convergence
 
+### Emoji usage ? 
 
-rotate
-```
+## Interim discussion
+
 # Experiment 3
-# CAMP graphs
 
-```{r}
-# accuracy
+Motivation
 
-# 1
-combined_results |> filter(condition=="rotate") %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
-  filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum+1, y=correct.num, color=as.character(numPlayers)))+
-     scale_x_continuous(breaks=seq(1,6))+
-     coord_cartesian(ylim=c(.65,1))+
-geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  labs(x="Block", y="Fraction correctly selected", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+
-        scale_color_viridis(discrete=T, direction=-1)
+## Methods
 
-#2
-
-palette = c("no_rotate"="orange", "full_feedback"="pink", "emoji"="red","rotate"="purple")
-combined_results |> filter(condition %in% c("no_rotate","full_feedback", "emoji", "rotate")) %>%
-  filter(numPlayers==6) |> 
-  group_by(playerId,repNum, gameId, numPlayers) %>% 
-  filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
-     scale_x_continuous(breaks=seq(1,6))+
-     coord_cartesian(ylim=c(.65,1))+
-geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  labs(x="Block", y="Fraction correctly selected", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+
-        scale_color_manual(values=palette)
-
-#3
- combined_results |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% group_by(playerId,repNum, gameId, condition) %>% 
-  filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
-  ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
-     scale_x_continuous(breaks=seq(1,6))+
-   coord_cartesian(ylim=c(.65,1))+
-geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
-  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  labs(x="Block", y="Fraction correctly selected", color="")+
-  theme(legend.position="none",
-        text=element_text(size=16))+
-        scale_color_brewer(palette="Paired", direction=-1)
-```
-
-```{r}
-# reduction
-
-#1
-
-combined_chat |> filter(condition=="rotate") |>  filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) %>% 
-  summarize(words=sum(total_num_words)) |> 
-  #group_by(repNum, name, gameId) |> 
-  #summarize(words=sum(words)) |> 
-ggplot(aes(x=repNum+1, y=words, color=as.character(numPlayers)))+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+
-  scale_color_viridis(discrete=T, direction=-1)
-
-#2
-
-palette = c("no_rotate"="orange", "full_feedback"="pink", "emoji"="red","rotate"="purple")
-combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emoji", "rotate")) %>%
-  filter(numPlayers==6) |> 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram,condition) %>% 
-  summarize(words=sum(total_num_words)) |> 
-ggplot(aes(x=repNum+1, y=words, color=condition))+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  scale_color_manual(values=palette)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))
-
-#3
-
-
-combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, condition) %>% 
-  summarize(words=sum(total_num_words)) |> 
-  #group_by(repNum, name, gameId) |> 
-  #summarize(words=sum(words)) |> 
-ggplot(aes(x=repNum+1, y=words, color=condition))+
-   scale_color_brewer(palette="Paired", direction=-1)+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))
-
-```
-
-```{r}
-# TODO figure out where the converge & diverge for tgrams is!!!
-# and relocate those troubled ones from code to somewhere reasonable like data!
-
-#1 & 2
-one_two_data_loc <- "data/study2c"
-one_two_sbert_concat <- read_csv(here(one_two_data_loc,"pre_sbert_concat.csv")) |>   bind_cols(readRDS(here(one_two_data_loc,'post_sbert_concat.RData'))  %>% as_tibble()) |> mutate(tangram=str_sub(target,-5,-5)) |> rename(condition=numPlayers)
-
-#3
-three_data_loc <- "data/study3"
-three_sbert_concat <- read_csv(here(three_data_loc,"pre_sbert.csv")) |> 
-  bind_cols(readRDS(here(three_data_loc,"post_sbert.RData")) |> as_tibble()) |> 
-  mutate(condition=str_c(playerCond,channelCond))
-
-get_sim_matrix = function(df, F_mat, method = 'cosine') {
-  feats = F_mat[df$feature_ind,]
-  if(method == 'cor') {
-    return(cor(t(feats), method = 'pearson'))
-  } else if (method == 'euclidean') {
-    return(as.matrix(dist(feats, method = 'euclidean')))
-  } else if (method == 'cosine') {
-    return(as.matrix(lsa::cosine(t(feats))))
-  } else {
-    stop(paste0('unknown method', method))
-  }
-}
-
-# note this does de-duplicated version
-flatten_sim_matrix <- function(cormat, ids) {
-  ut <- upper.tri(cormat)
-  data.frame(
-    dim1 = ids[row(cormat)[ut]],
-    dim2 = ids[col(cormat)[ut]],
-    sim  = as.numeric(cormat[ut])
-  ) %>%
-    mutate(dim1 = as.character(dim1),
-           dim2 = as.character(dim2))
-}
-
-make_within_df <- function(M_mat, F_mat, method) {
-  M_mat %>%
-    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
-                          .$repNum)) %>%
-    mutate(rep1 = as.numeric(dim1), 
-           rep2 = as.numeric(dim2)) 
-}
-
-make_across_df <- function(M_mat, F_mat, method) {
-  M_mat %>%
-    do(flatten_sim_matrix(get_sim_matrix(., F_mat, method = method),
-                          as.character(.$combinedId)))
-}
-
-
-do_diverge <- function(concat){
-F_mat <- concat %>% select(starts_with("V")) %>% as.matrix() #Features
-M_mat <- concat %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
-
-game_divergence <- M_mat %>% 
-  filter(role=="speaker") %>% 
-  group_by(tangram,repNum, condition) %>% 
-  mutate(combinedId=str_c(gameId,repNum,sep="_")) %>% 
-  make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("gameId_1","repNum_1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("gameId_2","repNum_2"), convert=T, sep="_") %>% 
-  filter(gameId_1!=gameId_2) %>% 
-  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
-  ungroup()
-
-return(game_divergence)
-}
-
-do_converge <- function(concat){
-   F_mat <- concat %>% select(starts_with("V")) %>% as.matrix() #Features
-M_mat <- concat %>% select(-starts_with("V")) %>% mutate(feature_ind=row_number())
-
-tangram_change <- M_mat %>% 
-    filter(role=="speaker") %>% 
-  group_by(tangram, gameId, condition) %>% 
-  mutate(combinedId=str_c(repNum,playerId,sep="_")) %>% 
-  make_across_df(F_mat, 'cosine') %>% 
-  separate(dim1, into=c("repNum_1","p1"), convert=T, sep="_") %>% 
-  separate(dim2, into=c("repNum_2","p2"), convert=T, sep="_") %>% 
-  mutate(sim = ifelse(is.nan(sim), NA, sim)) %>%
-  filter(!is.na(repNum_1)) %>% 
-    mutate(later=ifelse(repNum_1>repNum_2,repNum_1, repNum_2),
-         earlier=ifelse(repNum_1>repNum_2,repNum_2, repNum_1),
-         samespeaker=ifelse(p1==p2,"same_speaker","diff_speaker")) 
-
-adjacent <- tangram_change %>% 
-  filter(earlier+1==later) %>% 
-  ungroup()
-
-to_first <- tangram_change |> filter(earlier==0) |> ungroup()
-
-to_last <- tangram_change |> filter(later==5) |> ungroup()
-return(to_last)
-}
-
-one_two_diverge <- do_diverge(one_two_sbert_concat)
-one_two_converge <- do_converge(one_two_sbert_concat)
-three_diverge <- do_diverge(three_sbert_concat)
-three_converge <- do_converge(three_sbert_concat)
-
-
-```
-```{r}
-# divergence
-
-#1
- one_two_diverge |> filter(condition %in% c("2", "3","4","5","6")) |> 
-                             ggplot(aes(x=repNum+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(1,6))+
-        coord_cartesian(ylim=c(0,1))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+scale_color_viridis(discrete=T, direction=-1)
-#2
-palette = c("6noro"="orange", "6highfeed"="pink", "6emoji"="red","6"="purple")
-
- one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6noro","6")) |> 
-                              ggplot( aes(x=repNum+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(1,6))+
-      coord_cartesian(ylim=c(0,1))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+
-   scale_color_manual(values=palette)
-
-#3
- three_diverge |> ggplot(aes(x=repNum+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(1,6))+
-   coord_cartesian(ylim=c(0,1))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+
-   scale_color_brewer(palette="Paired", direction=-1)
-```
-
-```{r}
-#convergence
-
-#1
-one_two_converge |> filter(condition %in% c("2", "3","4","5","6")) |> ggplot( aes(x=earlier+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+     scale_color_viridis(discrete=T, direction=-1)
-
-
-
-
-#2
-palette = c("6noro"="orange", "6highfeed"="pink", "6emoji"="red","6"="purple")
-
-one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6noro","6")) |> ggplot( aes(x=earlier+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  #geom_smooth(formula=y~poly(x,2))+ # the smooth isn't working b/c singularities
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+    scale_color_manual(values=palette)
-
-
-
-#3
-
-
-
-three_converge |>  ggplot( aes(x=earlier+1,y=sim,color=condition))+
-      stat_summary(aes(group=str_c(gameId), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  theme(legend.position="bottom",
-        text=element_text(size=16))+     scale_color_brewer(palette="Paired", direction=-1)
-
-```
-
+## Results
 
 
 # General Discussion
