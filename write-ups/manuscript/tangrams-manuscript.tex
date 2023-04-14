@@ -357,15 +357,15 @@ Disagreements about how to conceptualize referents can also slow groups down. In
 
 In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, listeners were not surprised to hear different descriptions of a familiar object if it came from a new speaker who had just entered the room (\protect\hyperlink{ref-metzingWhenConceptualPacts2003}{Metzing \& Brennan 2003}). It's unclear what this finding predicts about new speakers who are present as fellow listeners during prior blocks -- will listeners expect them to maintain conventions?
 
-Work on multi-party communication has focused on the addition of a new person into a pair or group that had built up some shared representations. Our present work complements this prior work by examining the effect of group size during the process of convention formation. We extend the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) to games for 2--6 players who rotate between speaker and listener roles. This paradigm allows us to confirm that these findings in dyads extend to larger groups: that accuracy and speed will increase across blocks (question 1) and that speakers will reduce their utterances (produce fewer words) in later blocks (question 2). Additionally, we will be able to test for trends across group size, allowing us to ask whether smaller groups use shorter utterances and reduce faster than larger groups (question 3) and how conventions emerge in larger groups (question 4). In sum, these analyses will fill a gap in the literature by providing a basic characterization of how convention-formation and communication occurs in larger groups.
-
 \hypertarget{experiment-1}{%
 \section{Experiment 1}\label{experiment-1}}
+
+For a first experiment, we extend the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) to games for 2--6 players who rotate between speaker and listener roles. This paradigm allowed us to test how the findings from dyadic interated reference games extend to larger groups and were influenced by group size. Additionally, to more closely examine how conventionalized names develop within groups and differ between groups, we used sentence embeddings to quantify the similarities of descriptions within and between groups over time.
 
 \hypertarget{methods}{%
 \subsection{Methods}\label{methods}}
 
-Building on the methods of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}), we used Empirica (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}) to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker. We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.\footnote{Code to run the experiment, as well as data and analysis code are available at \url{https://osf.io/qdvbr/?view_only=47aebfde243f405e9c42a45cacb697d2}.} We report how we determined our sample size, all data exclusions, all manipulations, and all measures in the study.\footnote{Our preregistrations are at \url{https://osf.io/cn9f4/?view_only=7fdacd698b24465cb1a8699050af5bfc} and \url{https://osf.io/rpz67?view_only=5284203e2b644fc5ac39cf3e723b9a7e}.}
+Building on the methods of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}), we used Empirica (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}) to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the speaker role rotated to another player and the process repeated with the same images. In total, there were 6 blocks, giving each player at least one chance to be the speaker. We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.
 
 \hypertarget{participants}{%
 \subsubsection{Participants}\label{participants}}
@@ -404,7 +404,7 @@ Experiment & Game size & Speaker & Feedback & Listener chat & Continue games\\
 \end{table}
 \begin{table}
 
-\caption{\label{tab:participants}TODO caption. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.}
+\caption{\label{tab:participants}The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.}
 \centering
 \begin{tabular}[t]{l|l|r|r}
 \hline
@@ -456,23 +456,22 @@ Participants could use the chat box freely, which meant that the chat transcript
 
 Our intended sample size was 20 complete games in each group size, but we ended up with fewer due to games not filling or participants disconnecting early (Table \ref{parts}). We excluded incomplete blocks from analyses, but included complete blocks from partial games.
 
+\hypertarget{modelling-strategy}{%
+\subsubsection{Modelling strategy}\label{modelling-strategy}}
+
+All models were run in brms CITE with weakly regularizing priors DESCRIBE
+
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-\hypertarget{accuracy}{%
-\subsubsection{Accuracy}\label{accuracy}}
+\hypertarget{accuracy-and-speed}{%
+\subsubsection{Accuracy and speed}\label{accuracy-and-speed}}
 
 Our first question was whether accuracy and speed increased across groups of different sizes.
 
-\hypertarget{accuracy-is-high-and-increasing.}{%
-\paragraph{Accuracy is high and increasing.}\label{accuracy-is-high-and-increasing.}}
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}). In a logistic model of accuracy (correct.num\(\sim\) block \(\times\) numPlayers), participants are more accurate in later blocks (block: Est=0.38, CrI={[}0.25, 0.5{]}), and there was no strong effect of group size on accuracy (numPlayers: Est=-0.02, CrI={[}-0.08, 0.03{]}) or interaction between block and group size (block:numPlayers: Est=-0.01, CrI={[}-0.04, 0.01{]}).
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}). In a logistic model of accuracy\footnote{correct.num\(\sim\) block \(\times\) numPlayers This and all subsequent regression models were run in brms with weakly regularizing priors.}, participants are more accurate in later blocks (block: Est=0.38, CrI={[}0.25, 0.5{]}), and there was no strong effect of group size on accuracy (numPlayers: Est=-0.02, CrI={[}-0.08, 0.03{]}) or interaction between block and group size (block:numPlayers: Est=-0.01, CrI={[}-0.04, 0.01{]}).
-
-\hypertarget{participants-speed-up-in-later-blocks.}{%
-\paragraph{Participants speed up in later blocks.}\label{participants-speed-up-in-later-blocks.}}
-
-Participants selected images faster in later blocks (Figure \ref{time}), although there was wide variability. In a linear model of selection time\footnote{time\(\sim\) block \(\times\) numPlayers}, participants got faster across blocks (block: Est=-10.03, CrI={[}-11.03, -9.03{]}) and were slightly slower in larger games (numPlayers: Est=1.03, CrI={[}0.4, 1.66{]}). This speed up is consistent with prior work by (\protect\hyperlink{ref-weberCulturalConflictMerger2003}{\textbf{weberCulturalConflictMerger2003?}}) which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment.
+Participants selected images faster in later blocks although there was wide variability. In a linear model of selection time (time\(\sim\) block \(\times\) numPlayers), participants got faster across blocks (block: Est=-10.03, CrI={[}-11.03, -9.03{]}) and were slightly slower in larger games (numPlayers: Est=1.03, CrI={[}0.4, 1.66{]}). This speed up is consistent with prior work by (\protect\hyperlink{ref-weberCulturalConflictMerger2003}{\textbf{weberCulturalConflictMerger2003?}}) which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment.
 
 \begin{figure*}[t!]
 
@@ -486,34 +485,6 @@ Participants selected images faster in later blocks (Figure \ref{time}), althoug
 \hypertarget{reduction}{%
 \subsubsection{Reduction}\label{reduction}}
 
-\hypertarget{speakers-utterances-reduce-in-length.}{%
-\paragraph{Speakers' utterances reduce in length.}\label{speakers-utterances-reduce-in-length.}}
-
-As shown in Figure \ref{variability}, the number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups. Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model\footnote{words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}, the effect of being one block later is -3.35 (CrI={[}-4.58, -2.13{]}) words.
-
-\hypertarget{listeners-rarely-talk.}{%
-\paragraph{Listeners rarely talk.}\label{listeners-rarely-talk.}}
-
-Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said \footnote{words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}, there was an effect of block (block: Est=-0.48, CrI={[}-0.79, -0.18{]}), but no clear effect of game size (numPlayers: Est=0.2, CrI={[}-0.13, 0.51{]}).
-
-\hypertarget{effects-of-group-size-on-conventions}{%
-\subsubsection{Effects of group size on conventions}\label{effects-of-group-size-on-conventions}}
-
-Our third question was whether smaller groups would use fewer words or reduce faster than larger groups.
-
-\hypertarget{larger-groups-say-more.}{%
-\paragraph{Larger groups say more.}\label{larger-groups-say-more.}}
-
-The overall effect of having more players in a group is 1.67 (CrI={[}0.68, 2.71{]}) words from the speaker per trial per additional player. There is no clear interaction between block and group size (block:numPlayers: Est=-0.1, CrI={[}-0.39, 0.18{]}). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications.
-
-\hypertarget{speaker-experience-does-not-fully-explain-group-size-effects.}{%
-\paragraph{Speaker experience does not fully explain group size effects.}\label{speaker-experience-does-not-fully-explain-group-size-effects.}}
-
-One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block\footnote{words\(\sim\) block \(\times\) numPlayers~+ block \(\times\) speaker.repeat~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}. Repeat speakers do use fewer words (speaker.repeat: Est=-8.55, CrI={[}-10.41, -6.79{]}), but there are still effects of group size (numPlayers: Est=1.63, CrI={[}0.58, 2.66{]}) and block (block: Est=-5.26, CrI={[}-6.84, -3.69{]}). The effects of block and repeat speaker are subadditive (block:speaker.repeat: Est=3.2, CrI={[}2.65, 3.78{]}), and there is minimal interaction between block and group size (block:numPlayers: Est=0.08, CrI={[}-0.22, 0.41{]}).
-
-\hypertarget{reduction-1}{%
-\section{reduction}\label{reduction-1}}
-
 \begin{figure*}[t!]
 
 {\centering \includegraphics[width=1\linewidth]{figs/triptych-red-1} 
@@ -523,10 +494,20 @@ One potential concern is that group size correlates with whether the speaker has
 \caption{TODO}\label{fig:triptych-red}
 \end{figure*}
 
-\hypertarget{speakers-who-dont-know-the-convention-reduce-less.}{%
-\paragraph{Speakers who don't know the convention reduce less.}\label{speakers-who-dont-know-the-convention-reduce-less.}}
+The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern holds for the small groups in this experiment as well. The number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups (Figure \ref(fig:triptych-red)). Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model (words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)), the effect of being one block later is -3.35 (CrI={[}-4.58, -2.13{]}) words.
+
+The overall effect of having more players in a group is 1.67 (CrI={[}0.68, 2.71{]}) words from the speaker per trial per additional player. There is no clear interaction between block and group size (block:numPlayers: Est=-0.1, CrI={[}-0.39, 0.18{]}). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications.
+
+One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block\footnote{words\(\sim\) block \(\times\) numPlayers~+ block \(\times\) speaker.repeat~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}. Repeat speakers do use fewer words (speaker.repeat: Est=-8.55, CrI={[}-10.41, -6.79{]}), but there are still effects of group size (numPlayers: Est=1.63, CrI={[}0.58, 2.66{]}) and block (block: Est=-5.26, CrI={[}-6.84, -3.69{]}). The effects of block and repeat speaker are subadditive (block:speaker.repeat: Est=3.2, CrI={[}2.65, 3.78{]}), and there is minimal interaction between block and group size (block:numPlayers: Est=0.08, CrI={[}-0.22, 0.41{]}).
 
 In our games (which had limited feedback), listeners who got a tangram wrong didn't have a way of knowing what the right answer was unless they asked for clarification in the chat. If a speaker got a tangram wrong as a listener in the previous block, they may not have known the conventional description that went with it, and thus were unlikely to follow the convention. If we assume that reduction is a sign of convention development, then speakers should say more words when they got the tangram wrong the previous block. We added prior errors as an additional predictor to our regression predicting number of words and found that speakers said more words for tangrams after they were incorrect (numPlayers: Est=2.18, CrI={[}0.93, 3.44{]}).
+
+\hypertarget{role-of-listeners}{%
+\subsubsection{Role of listeners}\label{role-of-listeners}}
+
+Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said ( words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)), there was an effect of block (block: Est=-0.48, CrI={[}-0.79, -0.18{]}), but no clear effect of game size (numPlayers: Est=0.2, CrI={[}-0.13, 0.51{]}).
+
+TODO say more about what sorts of utterances listeners make and stuff!!!!
 
 \hypertarget{divergence}{%
 \subsubsection{Divergence}\label{divergence}}
@@ -540,11 +521,8 @@ In our games (which had limited feedback), listeners who got a tangram wrong did
 \caption{TODO}\label{fig:triptych-div}
 \end{figure*}
 
-\hypertarget{convergence}{%
-\subsubsection{Convergence}\label{convergence}}
-
-\hypertarget{groups-varied-in-their-strategies-and-reduction.}{%
-\paragraph{Groups varied in their strategies and reduction.}\label{groups-varied-in-their-strategies-and-reduction.}}
+\hypertarget{examples-of-names}{%
+\subsubsection{Examples of names}\label{examples-of-names}}
 
 While most groups did form conventions for most tangrams, it's illustrative to look at a case where a group did not. Table \ref{diamond} shows the transcript of a 4-person group for a specific figure where they described it geometrically every round, leading to long and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful.
 
@@ -572,6 +550,9 @@ Block & Person & Text\\
 
 A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave ``codenames'' to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: ``zigzag'' and ``beggar''. This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games.
 
+\hypertarget{convergence}{%
+\subsubsection{Convergence}\label{convergence}}
+
 \begin{figure*}[t!]
 
 {\centering \includegraphics[width=1\linewidth]{figs/triptych-conv-1} 
@@ -584,23 +565,22 @@ A different 4-person group had a member who during the first block shared the id
 \hypertarget{interim-discussion}{%
 \subsection{Interim Discussion}\label{interim-discussion}}
 
-The emergence of conventions has been a key case study for communication more broadly. Yet this issue has -- for the most part -- been studied only in dyadic communication. While some studies have examined aspects of convention formation in larger groups (e.g., \protect\hyperlink{ref-yoonAdjustingConceptualPacts2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoonAudienceDesignMultiparty2019}{Yoon \& Brown‐Schmidt 2019}), basic descriptive work has not yet investigated how group size changes the dynamics of interaction in a standard referential communication task, in part because such tasks can be difficult to administer to larger groups. Taking advantage of a new online multi-player experiment platform, we ran repeated reference games with groups of 2--6 players and characterized the nature of group performance.
+Experiment 1 sought to extend iterated reference games to groups of up to 6 players and look at how group size variation influenced different aspects of the reduction phenomena. Across group sizes, accuracy was high and increasing and descriptions reduced over the course of the game.
 
-Consistent with dyadic games, listeners' selection accuracy increased over blocks at the same time as listeners sped up their selections (question 1).
-Crucially, speakers reduced the length of their descriptive utterances as they conventionalized on concepts for each image (question 2). Because speakers rotated, this reduction finding is robust: not only did speakers say less in later repetitions than they themselves said earlier, speakers later in the order said less than speakers earlier in the rotation. This reduction varied with group size; smaller groups used shorter utterances, but group size did not significantly interact with block (question 3). The trajectory of reduction also depended on whether the current speaker correctly identified the tangram in the prior block and whether the current speaker was new to being speaker. This pattern is consistent with both the `aim low' and `aim middle' hypotheses from previous work (\protect\hyperlink{ref-yoonAdjustingConceptualPacts2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoonAudienceDesignMultiparty2019}{Yoon \& Brown‐Schmidt 2019}).
+TODO comment on role of listeners and qualia
 
-What was specifically different across group sizes? Smaller groups showed more agreement in how each tangram was identified across blocks (question 4), coming to consensus earlier: Their overlap between descriptions in the first 5 blocks to the final block was higher, and words in the final block tended to originate earlier. The greater diversity in how tangrams were described in larger groups could be explained by slower convergence to a convention or parallel competing conceptualizations favored by different speakers. Larger groups have more people for the speaker to communicate to, but also more people who might interrupt with questions, and more people who have opinions about what each image looks like. Bigger groups differ from smaller groups in a number of ways, however, and disentangling these differences is an area for future work.
+By using NLP tools, we took a quantified look at how partner-specific convergence of referring expressions happens.
 
-Group interactions are rich, and this experiment is necessarily a schematic simplification with a number of limitations. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment (\protect\hyperlink{ref-carletta1998}{Carletta et al. 1998}, \protect\hyperlink{ref-fay2000}{Fay et al. 2000}). Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community. Reference is only one goal out of many possible communicative goals, and the tangram images are artificial.
-We provided less feedback than previous studies such as Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}); this regime imitates situations where interlocutors can't show each other examples, but it's not representative of all communicative environments. Further, our text-based online paradigm meant that participants' individual identities were not especially salient. In sum, communication takes place in a plethora of situations; our experiment provides some insights, but also misses many complexities that should be a focus of further experiments.
+TODO FIX ME
 
-The experimental paradigm presented here could be a valuable tool to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is feasible, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. While much is left to be explored, this initial data set provides a rich corpus of how humans adapt language dynamically to communicate.
+However, one limitation we observed was that the rotation of the speaker role causes speaker experience later in the game to confound with game size.
 
 \hypertarget{experiment-2}{%
 \section{Experiment 2}\label{experiment-2}}
 
 After experiment 1, there were concerns about whether the results were dependent on any of the methods details. We were also interested in whether there were changes in knowledge or group communication that could support (or diminish) success, especially in the larger groups. To explore this, we ran 3 variants of the paradigm in experiment 1, varying different parameters. These were all run on small sets of 6 player groups.
 
+TODO examples of prior literature that rotated or didn't rotate !!!
 Previous literature varied on whether one person had the speaker role the entire game, or whether the two participants alternated speaker and listener roles in some way. For experiment 1, we went with rotating the speaker every block: we thought this would be percieved as more fair by participants, and we thought it would be a more stringent test of convergence to convention. However, in smaller groups, the speaker role would rotate back around, meaning that the speaker in later blocks would be more experienced in small games than in large games where speakers were usually first time speakers. We cannot disentangle the effects of group size from the effects of speaker experience. To address whether continuity in speakers might contribute to better performance, in experiment 2a we ran 6 player games with one person assigned to be the speaker the entire game.
 
 Another point of variation in the literature is what sort of feedback is given. In particular, there is variation in whether participants were told what the right answer was when they were wrong (like in Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020})). In experiment 1, we opted for the minimum feedback, to make sure that participants had to negotiate and understand conventions, and could not just pick them up from the end of trial feedback. To see whether this mattered, in experiment 2b, we increased the amount of feedback, showing each participant what everyone had selected and what the right answer was.
@@ -614,10 +594,9 @@ Listener feedback to the speaker in the form of some backchannel, is implicated 
 \subsubsection{Participants}\label{participants-1}}
 
 All participants were self-reported fluent native English speakers who had not participated in experiment 1.
-All experiment 2 games were 6-player games.
-Experiment 2a was run in MONTH; participants were paid MONEY for 6-player games, with the speaker getting a bonus MONEY, in addition to up to \$2.88 in performance bonuses for each player.
-Experiment 2b was run in MONTH; participants were paid MONEY for 6-player games.
-Experiment 2c wa run in MONTH; partiicpants were paid MONEY for 6-player games.
+All experiment 2 games were 6-player games. All games had a base pay of \$11, in addition to up to \$2.88 in performance bonuses for each player.
+Experiment 2a was run in March and April 2022, and the speaker got an additional \$2 bonus to compensate for the increased effort of being the only speaker.
+Experiment 2b was run in July 2022 and Experiment 2c was run in August 2022.
 
 A total of N people participated in experiment 2.
 
@@ -640,11 +619,11 @@ For experiment 2c, we altered the chatbox interface for listeners. Instead of a 
 \hypertarget{results-1}{%
 \subsection{Results}\label{results-1}}
 
-\hypertarget{accuracy-1}{%
-\subsubsection{Accuracy}\label{accuracy-1}}
+\hypertarget{accuracy}{%
+\subsubsection{Accuracy}\label{accuracy}}
 
-\hypertarget{reduction-2}{%
-\subsubsection{Reduction}\label{reduction-2}}
+\hypertarget{reduction-1}{%
+\subsubsection{Reduction}\label{reduction-1}}
 
 \hypertarget{divergence-1}{%
 \subsubsection{Divergence}\label{divergence-1}}
@@ -673,7 +652,7 @@ We aimed for 40 games in each of these 4 cells. We had previously experienced pr
 
 All participants were self-reported fluent native English speakers who had not participated in experiment 1 or experiment 2.
 
-Experiment 3 was run in MONTH. Participants were paid MONEY for GAME etc. A total of M people participated.
+Experiment 3 was run in October 2022. Participants in 2-player games were paid \$7 base pay, and participants in 6-player games were paid \$11 base pay. Speakers in the 6-player thick condition were given a \$2 bonus, and all participants could early up to \$2.88 in performance bonus. A total of M people participated.
 
 \hypertarget{materials-2}{%
 \subsubsection{Materials}\label{materials-2}}
@@ -696,12 +675,106 @@ TODO figure out how this interacts with the full blocks thing!!! Maybe we should
 TODO the actual distribution of game sizes!!
 
 TODO add pre-registrations everywhere
-\#\# Results
+
+Note: when skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses.
+
+\hypertarget{results-2}{%
+\subsection{Results}\label{results-2}}
+
+TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
+
+\hypertarget{accuracy-model}{%
+\subsection{Accuracy model}\label{accuracy-model}}
+
+\begin{verbatim}
+## # A tibble: 8 x 4
+##   Term                         Estimate `Credible Interval` `P-value equivalent`
+##   <chr>                           <dbl> <chr>                              <dbl>
+## 1 channelthin                     -0.34 [-0.66, -0.01]                     0.044
+## 2 channelthin:gameSize6            0.22 [-0.16, 0.6]                       0.25 
+## 3 gameSize6                       -0.44 [-0.73, -0.16]                     0.002
+## 4 Intercept                        1.79 [1.45, 2.13]                       0    
+## 5 repNum                           0.55 [0.42, 0.67]                       0    
+## 6 repNum:channelthin              -0.09 [-0.26, 0.07]                      0.28 
+## 7 repNum:channelthin:gameSize6    -0.02 [-0.23, 0.18]                      0.82 
+## 8 repNum:gameSize6                -0.17 [-0.33, -0.02]                     0.022
+\end{verbatim}
+
+TODO
+
+\hypertarget{reduction-of-words}{%
+\subsubsection{Reduction of words}\label{reduction-of-words}}
+
+This model was run with 2 player thick as the default. The effect of being one block later for 2 player thick games is -2.33 (CrI={[}-3.03, -1.64{]}). TODO
+
+\hypertarget{sbert-models}{%
+\subsection{Sbert models}\label{sbert-models}}
+
+\hypertarget{divergence-2}{%
+\paragraph{Divergence}\label{divergence-2}}
+
+\begin{verbatim}
+## # A tibble: 8 x 4
+##   Term                         Estimate `Credible Interval` `P-value equivalent`
+##   <chr>                           <dbl> <chr>                              <dbl>
+## 1 channelthin                      0.01 [0.01, 0.02]                           0
+## 2 channelthin:gameSize6           -0.03 [-0.04, -0.02]                         0
+## 3 gameSize6                        0.05 [0.05, 0.05]                           0
+## 4 Intercept                        0.41 [0.37, 0.45]                           0
+## 5 repNum                          -0.02 [-0.02, -0.02]                         0
+## 6 repNum:channelthin               0    [0, 0]                                 0
+## 7 repNum:channelthin:gameSize6     0.02 [0.02, 0.02]                           0
+## 8 repNum:gameSize6                -0.01 [-0.01, -0.01]                         0
+\end{verbatim}
+
+TODO
+
+\hypertarget{convergence-2}{%
+\section{Convergence}\label{convergence-2}}
+
+\begin{verbatim}
+## # A tibble: 16 x 4
+##    Term                                                  Estim~1 Credi~2 P-val~3
+##    <chr>                                                   <dbl> <chr>     <dbl>
+##  1 channelthin                                             -0.01 [-0.19~    0.93
+##  2 channelthin:gameSize6                                    0.04 [-0.14~    0.66
+##  3 channelthin:gameSize6:samespeakersame_speaker            0.02 [-0.17~    0.86
+##  4 channelthin:samespeakersame_speaker                      0.01 [-0.19~    0.93
+##  5 earlier                                                  0.06 [-0.11~    0.51
+##  6 earlier:channelthin                                     -0.01 [-0.19~    0.92
+##  7 earlier:channelthin:gameSize6                           -0.02 [-0.19~    0.87
+##  8 earlier:channelthin:gameSize6:samespeakersame_speaker    0    [-0.19~    0.96
+##  9 earlier:channelthin:samespeakersame_speaker             -0.01 [-0.19~    0.91
+## 10 earlier:gameSize6                                       -0.01 [-0.19~    0.96
+## 11 earlier:gameSize6:samespeakersame_speaker                0.01 [-0.16~    0.88
+## 12 earlier:samespeakersame_speaker                          0.02 [-0.17~    0.87
+## 13 gameSize6                                               -0.06 [-0.24~    0.53
+## 14 gameSize6:samespeakersame_speaker                       -0.01 [-0.2,~    0.88
+## 15 Intercept                                                0.53 [0.34,~    0   
+## 16 samespeakersame_speaker                                  0.06 [-0.13~    0.54
+## # ... with abbreviated variable names 1: Estimate, 2: `Credible Interval`,
+## #   3: `P-value equivalent`
+\end{verbatim}
+
+\hypertarget{emoji-usage-1}{%
+\subsubsection{Emoji usage}\label{emoji-usage-1}}
 
 \hypertarget{general-discussion}{%
 \section{General Discussion}\label{general-discussion}}
 
 this isn't the only group dynamic; could imagine situations where listeners can see each others work collaborate (point to each other what htey think, perhaps see feedback from speaker to one listener) which might make things reduce much faster
+
+The emergence of conventions has been a key case study for communication more broadly. Yet this issue has -- for the most part -- been studied only in dyadic communication. While some studies have examined aspects of convention formation in larger groups (e.g., \protect\hyperlink{ref-yoonAdjustingConceptualPacts2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoonAudienceDesignMultiparty2019}{Yoon \& Brown‐Schmidt 2019}), basic descriptive work has not yet investigated how group size changes the dynamics of interaction in a standard referential communication task, in part because such tasks can be difficult to administer to larger groups. Taking advantage of a new online multi-player experiment platform, we ran repeated reference games with groups of 2--6 players and characterized the nature of group performance.
+
+Consistent with dyadic games, listeners' selection accuracy increased over blocks at the same time as listeners sped up their selections (question 1).
+Crucially, speakers reduced the length of their descriptive utterances as they conventionalized on concepts for each image (question 2). Because speakers rotated, this reduction finding is robust: not only did speakers say less in later repetitions than they themselves said earlier, speakers later in the order said less than speakers earlier in the rotation. This reduction varied with group size; smaller groups used shorter utterances, but group size did not significantly interact with block (question 3). The trajectory of reduction also depended on whether the current speaker correctly identified the tangram in the prior block and whether the current speaker was new to being speaker. This pattern is consistent with both the `aim low' and `aim middle' hypotheses from previous work (\protect\hyperlink{ref-yoonAdjustingConceptualPacts2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoonAudienceDesignMultiparty2019}{Yoon \& Brown‐Schmidt 2019}).
+
+What was specifically different across group sizes? Smaller groups showed more agreement in how each tangram was identified across blocks (question 4), coming to consensus earlier: Their overlap between descriptions in the first 5 blocks to the final block was higher, and words in the final block tended to originate earlier. The greater diversity in how tangrams were described in larger groups could be explained by slower convergence to a convention or parallel competing conceptualizations favored by different speakers. Larger groups have more people for the speaker to communicate to, but also more people who might interrupt with questions, and more people who have opinions about what each image looks like. Bigger groups differ from smaller groups in a number of ways, however, and disentangling these differences is an area for future work.
+
+Group interactions are rich, and this experiment is necessarily a schematic simplification with a number of limitations. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment (\protect\hyperlink{ref-carletta1998}{Carletta et al. 1998}, \protect\hyperlink{ref-fay2000}{Fay et al. 2000}). Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community. Reference is only one goal out of many possible communicative goals, and the tangram images are artificial.
+We provided less feedback than previous studies such as Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}); this regime imitates situations where interlocutors can't show each other examples, but it's not representative of all communicative environments. Further, our text-based online paradigm meant that participants' individual identities were not especially salient. In sum, communication takes place in a plethora of situations; our experiment provides some insights, but also misses many complexities that should be a focus of further experiments.
+
+The experimental paradigm presented here could be a valuable tool to disentangle the mechanisms of group size and determine which design parameters are relevant to reduction. Luckily, with an online implementation, recruiting for and running experiments is feasible, and thus it will be possible to iterate on this experiment to determine how far the patterns generalize. While much is left to be explored, this initial data set provides a rich corpus of how humans adapt language dynamically to communicate.
 
 \hypertarget{limitations}{%
 \subsection{Limitations}\label{limitations}}
