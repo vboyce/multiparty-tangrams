@@ -287,6 +287,14 @@ Our intended sample size was 20 complete games in each group size, but we ended 
 
 All models were run in brms CITE with weakly regularizing priors DESCRIBE
 
+Pre-regs:
+1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later
+2a: https://osf.io/f9xyd
+2b: https://osf.io/j5zbm
+2c: https://osf.io/k5f4t
+3: https://osf.io/untzy
+
+
 ## Results
 
 
@@ -719,6 +727,10 @@ TODO the actual distribution of game sizes!!
 TODO add pre-registrations everywhere
 
 Note: when skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses. 
+
+
+### Models
+note that accuracy model deviates from pre-reg b/c I went overboard with the mixed effects model structure
 
 ## Results
 
