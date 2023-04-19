@@ -117,25 +117,112 @@ model_3_red <-  brm(words ~ block*channel*gameSize +   (block*channel*gameSize|t
 # pre-reg for 3 : words ~ block*channel*group_size + (block*channel*group_size|tangram)+ (1|tangram*group)+(block|group)
 
 
-### weird thing we prereged in 1
-# Model of whether speaker’s correct/incorrect answer in previous block  has an effect - 
-#   
-#   words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
-# + (1|tangram*group)+(block|group)
 
 ### SBERT models
 
 # Additionally, we will analyse the effect of the language. Using SBERT embeddings we will embed the concatenation of everything the speaker said in a trial.
 #We will then take pairwise cosine distances of these to look at the following effects. :
 
-#   (divergence across games) For the same condition & block & tangram, distance between utterances from different games. 
 
-# (divergence within games) For the same condition & block & game, distance between utterances for different tangrams.
+one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds")) |> mutate(block=repNum)
+
+three_diverge <- read_rds(here("code/models/three_diverge.rds")) |> mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+
+###  (divergence across games) For the same condition & block & tangram, distance between utterances from different games. 
+
+div_priors <- c(set_prior("normal(.5, .2)", class="Intercept"),
+               set_prior("normal(0,.1)", class="b"),
+               set_prior("normal(0,.05)", class="sd"))
+
+model_1_div <- brm(sim ~ block*condition+
+                         (1|tangram),
+                        data=one_two_diverge |> filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"div_1"),
+                        prior=div_priors)
+
+model_2a_div <- brm(sim ~ block+
+                     (1|tangram),
+                   data=one_two_diverge |> filter(condition == "6noro"),
+                   control=list(adapt_delta=.95),
+                   file=here(model_location,"div_2a"),
+                   prior=div_priors)
+
+model_2b_div <- brm(sim ~ block+
+                      (1|tangram),
+                    data=one_two_diverge |> filter(condition == "6highfeed"),
+                    control=list(adapt_delta=.95),
+                    file=here(model_location,"div_2b"),
+                    prior=div_priors)
+
+model_2c_div <- brm(sim ~ block+
+                      (1|tangram),
+                    data=one_two_diverge |> filter(condition == "6emoji"),
+                    control=list(adapt_delta=.95),
+                    file=here(model_location,"div_2c"),
+                    prior=div_priors)
+
+
+model_3_div <- brm(sim ~ block*channel*gameSize+
+                         (1|tangram),
+                        data=three_diverge,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"div_3"),
+                        prior=div_priors)
+
 
 # (convergence within games) For the same condition & game & tangram, distance between utterances from different blocks. 
-#We plan to look at the similarities for block 1 with all later blocks; 
 #block 6 with all earlier blocks; 
+one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
+three_converge <- read_rds(here("code/models/three_converge.rds"))|> mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+
+# note that same speaker ness is too complicated to deal with, so we're not going to ! 
+model_1_to_last <- brm(sim ~ earlier * condition + (1|tangram) + (1|gameId), 
+                       data=one_two_converge |>  filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
+                       control=list(adapt_delta=.95),
+                       file=here(model_location, "tolast_1"),
+                       prior=div_priors)
+
+model_2a_to_last <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                       data=one_two_converge |>  filter(condition=="6noro"),
+                       control=list(adapt_delta=.95),
+                       file=here(model_location, "tolast_2a"),
+                       prior=div_priors)
+
+model_2b_to_last <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                        data=one_two_converge |>  filter(condition=="6highfeed"),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tolast_2b"),
+                        prior=div_priors)
+
+model_2c_to_last <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                        data=one_two_converge |>  filter(condition=="6emoji"),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tolast_2c"),
+                        prior=div_priors)
+
+
+
+model_3_to_last<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
+                        data=three_converge,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"tolast_3"),
+                        prior=div_priors)
+
+
+#We plan to look at the similarities for block 1 with all later blocks; 
+
 #and block N with block N+1. 
 
 
+# (divergence within games) For the same condition & block & game, distance between utterances for different tangrams.
+
 # Additionally, exclusive to the thin channel parts of this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length. 
+
+
+### weird thing we prereged in 1
+# Model of whether speaker’s correct/incorrect answer in previous block  has an effect - 
+#   
+#   words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
+# + (1|tangram*group)+(block|group)
+

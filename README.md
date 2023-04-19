@@ -20,3 +20,9 @@ To develop locally,
  	- content has some files output by Py processing
 - experiments: code and stuff to run experiments
 - write-ups: paper-like things
+
+## Detailed workflow
+- raw data (from empirica/experiment runs) is in data/ 1ab,2abc, 3
+- raw data is turned into less raw data, including exporting/tagging for non-relevant lines and reimporting, and excluding incomplete parts of games  by prep_processed_data.R
+- sbert data is created with run_sbert.R and sbert_play.ipynb (note that sbert data is in 2c for 1-2 and 3 for 3)
+- sbert data is used to create similarities in use_sbert_embeddings.R 
