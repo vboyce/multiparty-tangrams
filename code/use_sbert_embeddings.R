@@ -1,5 +1,7 @@
 ## for running similarity stuff
 
+library(tidyverse)
+library(here)
 # 1-2
 one_two_data_loc <- "data/study2c"
 one_two_sbert_concat <- read_csv(here(one_two_data_loc,"pre_sbert_concat.csv")) |>  

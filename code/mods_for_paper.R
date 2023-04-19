@@ -203,19 +203,126 @@ model_2c_to_last <- brm(sim ~ earlier  + (1|tangram) + (1|gameId),
 
 
 
-model_3_to_last<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
-                        data=three_converge,
-                        control=list(adapt_delta=.95),
-                        file=here(model_location,"tolast_3"),
-                        prior=div_priors)
-
-
-#We plan to look at the similarities for block 1 with all later blocks; 
-
-#and block N with block N+1. 
+# model_3_to_last<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
+#                         data=three_converge,
+#                         control=list(adapt_delta=.95),
+#                         file=here(model_location,"tolast_3"),
+#                         prior=div_priors)
+# 
+# 
 
 
 # (divergence within games) For the same condition & block & game, distance between utterances for different tangrams.
+one_two_tangrams <- read_rds(here("code/models/one_two_tangrams_div.rds")) |> mutate(block=repNum)
+three_tangrams <- read_rds(here("code/models/three_tangrams_div.rds")) |>  mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+
+model_1_tangram_div <- brm(sim ~ block *condition + (1|gameId),
+                           data=one_two_tangrams|>  filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
+                           control=list(adapt_delta=.95),
+                           file=here(model_location, "tandiv_1"),
+                           prior=div_priors)
+
+model_2a_tangram_div <- brm(sim ~ block + (1|gameId),
+                           data=one_two_tangrams|>  filter(condition=="6noro"),
+                           control=list(adapt_delta=.95),
+                           file=here(model_location, "tandiv_2a"),
+                           prior=div_priors)
+                           
+model_2b_tangram_div <- brm(sim ~ block + (1|gameId),
+                            data=one_two_tangrams|>  filter(condition=="6highfeed"),
+                            control=list(adapt_delta=.95),
+                            file=here(model_location, "tandiv_2b"),
+                            prior=div_priors)
+
+model_2c_tangram_div <- brm(sim ~ block + (1|gameId),
+                            data=one_two_tangrams|>  filter(condition=="6emoji"),
+                            control=list(adapt_delta=.95),
+                            file=here(model_location, "tandiv_2c"),
+                            prior=div_priors)
+
+# 
+# model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
+#                          (1|gameId),
+#                         data=three_tangrams,
+#                         control=list(adapt_delta=.95),
+#                         file=here(model_location,"tandiv3.rds"),
+#                         prior=div_priors)
+
+#We plan to look at the similarities for block 1 with all later blocks; 
+one_two_tofirst <- read_rds(here("code/models/one_two_tofirst.rds"))
+
+three_tofirst <-read_rds(here("code/models/three_tofirst.rds"))
+# note that same speaker ness is too complicated to deal with, so we're not going to ! 
+model_1_to_first <- brm(sim ~ later * condition + (1|tangram) + (1|gameId), 
+                       data=one_two_tofirst |>  filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
+                       control=list(adapt_delta=.95),
+                       file=here(model_location, "tofirst_1"),
+                       prior=div_priors)
+
+model_2a_to_first <- brm(sim ~ later  + (1|tangram) + (1|gameId), 
+                        data=one_two_tofirst |>  filter(condition=="6noro"),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tofirst_2a"),
+                        prior=div_priors)
+
+model_2b_to_first <- brm(sim ~ later  + (1|tangram) + (1|gameId), 
+                        data=one_two_tofirst |>  filter(condition=="6highfeed"),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tofirst_2b"),
+                        prior=div_priors)
+
+model_2c_to_first <- brm(sim ~ later  + (1|tangram) + (1|gameId), 
+                        data=one_two_tofirst |>  filter(condition=="6emoji"),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tofirst_2c"),
+                        prior=div_priors)
+
+
+
+# model_3_to_first<- brm(sim ~ later*channel*gameSize + (1|tangram) + (1|gameId),
+#                       data=three_tofirst,
+#                       control=list(adapt_delta=.95),
+#                       file=here(model_location,"tofirst_3"),
+#                       prior=div_priors)
+# 
+
+
+#and block N with block N+1. 
+one_two_tonext <- read_rds(here("code/models/one_two_tonext.rds"))
+three_tonext <- read_rds(here("code/models/three_tonext.rds"))
+
+# note that same speaker ness is too complicated to deal with, so we're not going to ! 
+model_1_to_next <- brm(sim ~ earlier * condition + (1|tangram) + (1|gameId), 
+                        data=one_two_tonext |>  filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
+                        control=list(adapt_delta=.95),
+                        file=here(model_location, "tonext_1"),
+                        prior=div_priors)
+
+model_2a_to_next <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                         data=one_two_tonext |>  filter(condition=="6noro"),
+                         control=list(adapt_delta=.95),
+                         file=here(model_location, "tonext_2a"),
+                         prior=div_priors)
+
+model_2b_to_next <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                         data=one_two_tonext |>  filter(condition=="6highfeed"),
+                         control=list(adapt_delta=.95),
+                         file=here(model_location, "tonext_2b"),
+                         prior=div_priors)
+
+model_2c_to_next <- brm(sim ~ earlier  + (1|tangram) + (1|gameId), 
+                         data=one_two_tonext |>  filter(condition=="6emoji"),
+                         control=list(adapt_delta=.95),
+                         file=here(model_location, "tonext_2c"),
+                         prior=div_priors)
+
+
+
+# model_3_to_next<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
+#                       data=three_tonext,
+#                       control=list(adapt_delta=.95),
+#                       file=here(model_location,"tonext_3"),
+#                       prior=div_priors)
 
 # Additionally, exclusive to the thin channel parts of this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length. 
 
