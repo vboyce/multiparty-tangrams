@@ -174,7 +174,7 @@ model_3_div <- brm(sim ~ block*channel*gameSize+
 # (convergence within games) For the same condition & game & tangram, distance between utterances from different blocks. 
 #block 6 with all earlier blocks; 
 one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
-three_converge <- read_rds(here("code/models/three_converge.rds"))|> mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+three_converge <- read_rds(here("code/models/three_converge.rds"))|> mutate(gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
 
 # note that same speaker ness is too complicated to deal with, so we're not going to ! 
 model_1_to_last <- brm(sim ~ earlier * condition + (1|tangram) + (1|gameId), 
@@ -203,13 +203,13 @@ model_2c_to_last <- brm(sim ~ earlier  + (1|tangram) + (1|gameId),
 
 
 
-# model_3_to_last<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
-#                         data=three_converge,
-#                         control=list(adapt_delta=.95),
-#                         file=here(model_location,"tolast_3"),
-#                         prior=div_priors)
-# 
-# 
+model_3_to_last<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
+                        data=three_converge,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"tolast_3"),
+                        prior=div_priors)
+
+
 
 
 # (divergence within games) For the same condition & block & game, distance between utterances for different tangrams.
@@ -240,18 +240,19 @@ model_2c_tangram_div <- brm(sim ~ block + (1|gameId),
                             file=here(model_location, "tandiv_2c"),
                             prior=div_priors)
 
-# 
-# model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
-#                          (1|gameId),
-#                         data=three_tangrams,
-#                         control=list(adapt_delta=.95),
-#                         file=here(model_location,"tandiv3.rds"),
-#                         prior=div_priors)
+
+model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
+                         (1|gameId),
+                        data=three_tangrams,
+                        control=list(adapt_delta=.95),
+                        file=here(model_location,"tandiv3.rds"),
+                        prior=div_priors)#
 
 #We plan to look at the similarities for block 1 with all later blocks; 
 one_two_tofirst <- read_rds(here("code/models/one_two_tofirst.rds"))
 
-three_tofirst <-read_rds(here("code/models/three_tofirst.rds"))
+three_tofirst <-read_rds(here("code/models/three_tofirst.rds")) |> mutate(gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+
 # note that same speaker ness is too complicated to deal with, so we're not going to ! 
 model_1_to_first <- brm(sim ~ later * condition + (1|tangram) + (1|gameId), 
                        data=one_two_tofirst |>  filter(condition %in% c("2", "3", "4", "5", "6")) |> mutate(condition=as.numeric(condition)),
@@ -279,17 +280,18 @@ model_2c_to_first <- brm(sim ~ later  + (1|tangram) + (1|gameId),
 
 
 
-# model_3_to_first<- brm(sim ~ later*channel*gameSize + (1|tangram) + (1|gameId),
-#                       data=three_tofirst,
-#                       control=list(adapt_delta=.95),
-#                       file=here(model_location,"tofirst_3"),
-#                       prior=div_priors)
-# 
+model_3_to_first<- brm(sim ~ later*channel*gameSize + (1|tangram) + (1|gameId),
+                      data=three_tofirst,
+                      control=list(adapt_delta=.95),
+                      file=here(model_location,"tofirst_3"),
+                      prior=div_priors)
+
 
 
 #and block N with block N+1. 
 one_two_tonext <- read_rds(here("code/models/one_two_tonext.rds"))
-three_tonext <- read_rds(here("code/models/three_tonext.rds"))
+three_tonext <- read_rds(here("code/models/three_tonext.rds")) |>  mutate(gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+
 
 # note that same speaker ness is too complicated to deal with, so we're not going to ! 
 model_1_to_next <- brm(sim ~ earlier * condition + (1|tangram) + (1|gameId), 
@@ -318,11 +320,11 @@ model_2c_to_next <- brm(sim ~ earlier  + (1|tangram) + (1|gameId),
 
 
 
-# model_3_to_next<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
-#                       data=three_tonext,
-#                       control=list(adapt_delta=.95),
-#                       file=here(model_location,"tonext_3"),
-#                       prior=div_priors)
+model_3_to_next<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
+                      data=three_tonext,
+                      control=list(adapt_delta=.95),
+                      file=here(model_location,"tonext_3"),
+                      prior=div_priors)
 
 # Additionally, exclusive to the thin channel parts of this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length. 
 
@@ -333,3 +335,67 @@ model_2c_to_next <- brm(sim ~ earlier  + (1|tangram) + (1|gameId),
 #   words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
 # + (1|tangram*group)+(block|group)
 
+#### save reduced forms of models 
+
+library(tidybayes)
+
+show_summary <- function(model){
+  intervals <- gather_draws(model, `b_.*`, regex=T) %>% mean_qi()
+  
+  stats <- gather_draws(model, `b_.*`, regex=T) %>% 
+    mutate(above_0=ifelse(.value>0, 1,0)) %>% 
+    group_by(.variable) %>% 
+    summarize(pct_above_0=mean(above_0)) %>% 
+    mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=2)) %>% 
+    left_join(intervals, by=".variable") %>% 
+    mutate(lower=round(.lower, digits=2),
+           upper=round(.upper, digits=2),
+           `Credible Interval`=str_c("[",lower,", ", upper,"]"),
+           Term=str_sub(.variable, 3, -1),
+           Estimate=round(.value, digits=2)) %>% 
+    select(Term, Estimate, `Credible Interval`, `P-value equivalent`)
+  
+  stats
+}
+
+
+form <- function(model){
+  dep <- as.character(model$formula[2])
+  ind <- as.character(model$formula[3])
+  
+  str_c(dep," ~ ",ind) %>% str_replace_all(" ","") %>% 
+    str_replace_all("\\*"," $\\\\times$ ") %>% 
+    str_replace_all("\\+", "&nbsp;+ ") %>% 
+    str_replace_all("~", "$\\\\sim$ ")
+}
+
+do_model <- function(path){
+  model <- read_rds(here(model_location,path))
+  show_summary(model) |> write_rds(here(model_location,"summary", path))
+  model$formula |> write_rds(here(model_location, "formulae", path))
+  print(summary(model))
+}
+
+
+mods <- list.files(path=here(model_location), pattern=".*rds") |> walk(~do_model(.))
+
+
+# stats <- function(model, row){
+#   str_c(model[row,1],": Est=", model[row,2], ", CrI=", model[row,3])
+# }
+# 
+# stats_text  <- function(model, row){
+#   str_c( model[row,2], " (CrI=", model[row,3],")")
+# }
+# 
+# form <- function(model){
+#  dep <- as.character(model$formula[2])
+#  ind <- as.character(model$formula[3])
+#  
+#  str_c(dep," ~ ",ind) %>% str_replace_all(" ","") %>% 
+#   str_replace_all("\\*"," $\\\\times$ ") %>% 
+#   str_replace_all("\\+", "&nbsp;+ ") %>% 
+#    str_replace_all("~", "$\\\\sim$ ")
+# }
+# 
+# 
