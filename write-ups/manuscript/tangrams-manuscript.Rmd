@@ -117,7 +117,8 @@ data_location="data/study1"
 
 image_location="write-ups/images"
 
-model_location="code/models"
+msum_loc="code/paper_mods/summary"
+mform_loc="code/paper_mods/formulae"
 
 source(here("code/prep_ms.R"))
 
@@ -300,30 +301,22 @@ Pre-regs:
 
 
 
-### Accuracy and speed 
+### Accuracy
 
 Our first question was whether accuracy and speed increased across groups of different sizes.
 
 
 ```{r}
-acc <- read_rds(here(model_location,"acc_summ.rds"))
-acc_spec <- read_rds(here(model_location,"acc_spec.rds"))
+acc_1 <- read_rds(here(msum_loc,"acc_1.rds"))
+acc_spec_1 <- read_rds(here(mform_loc,"acc_1.rds"))
 ```
 
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy (`r form(acc_spec)`), participants are more accurate in later blocks (`r stats(acc,1)`), and there was no strong effect of group size on accuracy (`r stats(acc,4)`) or interaction between block and group size (`r stats(acc,2)`). 
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}).  In a logistic model of accuracy (`r form(acc_spec_1)`), participants are more accurate in later blocks (`r stats(acc_1,1)`), and there was no strong effect of group size on accuracy (`r stats(acc_1,4)`) or interaction between block and group size (`r stats(acc_1,2)`). 
 
 
 
-```{r}
-time <- read_rds(here(model_location,"time_summ.rds"))
-time_spec <- read_rds(here(model_location,"time_spec.rds"))
-```
-
-
-
-Participants selected images faster in later blocks although there was wide variability. In a linear model of selection time (`r form(time_spec)`), participants got faster across blocks (`r stats(time,1)`) and were slightly slower in larger games (`r stats(time,4)`). This speed up is consistent with prior work by @weberCulturalConflictMerger2003 which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment. 
-
+TODO consider adding comments about speed
 
 
 ```{r triptych-acc, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
@@ -449,6 +442,7 @@ plot_grid(one,two, three, nrow=1)
 
 
 ```{r}
+model_location <- "code/models"
 speaker <- read_rds(here(model_location,"speaker_summ.rds"))
 speaker_spec <- read_rds(here(model_location,"speaker_spec.rds"))
 
@@ -684,6 +678,18 @@ For experiment 2c, we altered the chatbox interface for listeners. Instead of a 
 
 ### Accuracy
 
+```{r}
+acc_2a <- read_rds(here(msum_loc,"acc_2a.rds"))
+acc_spec_2a <- read_rds(here(mform_loc,"acc_2a.rds"))
+
+acc_2b <- read_rds(here(msum_loc,"acc_2b.rds"))
+
+acc_2c <- read_rds(here(msum_loc,"acc_2c.rds"))
+```
+
+Accuracy was high in 2a (no-rotate) and 2b (full feedback), similar to as in Experiment 1, while accuracy was substantially lower, but still well above change in 2c (limited backchannel) (Figure \ref{accuracy}).  In logistic models of accuracy (`r form(acc_spec_2a)`), participants are more accurate in later blocks (2a: `r stats(acc_2a,1)`, 2b: `r stats(acc_2b,1)`, 2c `r stats(acc_2c,1)`).
+
+
 ### Reduction
 
 ### Divergence
@@ -739,33 +745,36 @@ TODO there's a note saying to rerun these models for longer with more extensive 
 
 ## Accuracy model
 
-
-```{r} 
-read_rds(here(model_location,"acc_model_study3_mix.rds")) |> show_summary()
+```{r}
+acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
+acc_spec_3 <- read_rds(here(mform_loc,"acc_3.rds"))
 
 ```
 
-TODO
+ In a logistic model of accuracy (`r form(acc_spec_3)`), participants are more accurate in later blocks (`r stats(acc_3,1)`). Participants are less accurate overall in the six player games (`r stats(acc_3, 6)`) and more slow to improve in the six player games (`r stats(acc_3, 3)`). Type of channel did not have a clear effect on accuracy either overall (`r stats(acc_3,2)`) or interacting with time (`r stats(acc_3, 2)`). 
+ w 
+
+
 
 ### Reduction of words
 
 
 ```{r} 
-red_3 <- read_rds(here(model_location,"red_model_study3_mix.rds")) |> show_summary()
+red_3 <- read_rds(here(msum_loc, "red_3.rds"))
+red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 
 ```
 
-This model was run with 2 player thick as the default. The effect of being one block later for 2 player thick games is `r stats_text(red_3, 5)`. TODO
+In a linear model of the number of words said by the speaker each trial (` r form(red_spec_3)`), reduction in the number of words did occur over blocks (` r stats(red_3,1`)). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`). There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
-## Sbert models
 
-#### Divergence
+### Divergence between games
 ```{r} 
-read_rds(here(model_location,"div_model_study3_mix.rds")) |> show_summary()
-
+div_3 <- read_rds(here(msum_loc, "div_3.rds"))
+div_spec_3 <- read_rds(here(mform_loc, "div_3.rds"))
 ```
 
-TODO
+In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (`r form(div_spec_3)`), TODO everything is tiny and also very significant, probably print more sigfigs!
 
 # Convergence
 

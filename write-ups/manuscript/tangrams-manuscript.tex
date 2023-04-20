@@ -461,17 +461,24 @@ Our intended sample size was 20 complete games in each group size, but we ended 
 
 All models were run in brms CITE with weakly regularizing priors DESCRIBE
 
+Pre-regs:
+1: \url{https://osf.io/cn9f4} for the 2-4 player groups, and \url{https://osf.io/rpz67} for the 5-6 player data run later
+2a: \url{https://osf.io/f9xyd}
+2b: \url{https://osf.io/j5zbm}
+2c: \url{https://osf.io/k5f4t}
+3: \url{https://osf.io/untzy}
+
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-\hypertarget{accuracy-and-speed}{%
-\subsubsection{Accuracy and speed}\label{accuracy-and-speed}}
+\hypertarget{accuracy}{%
+\subsubsection{Accuracy}\label{accuracy}}
 
 Our first question was whether accuracy and speed increased across groups of different sizes.
 
-Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}). In a logistic model of accuracy (correct.num\(\sim\) block \(\times\) numPlayers), participants are more accurate in later blocks (block: Est=0.38, CrI={[}0.25, 0.5{]}), and there was no strong effect of group size on accuracy (numPlayers: Est=-0.02, CrI={[}-0.08, 0.03{]}) or interaction between block and group size (block:numPlayers: Est=-0.01, CrI={[}-0.04, 0.01{]}).
+Most individuals were accurate in their selections, with accuracy rising across blocks (Figure \ref{accuracy}). In a logistic model of accuracy (correct.num\(\sim\) block \(\times\) numPlayers~+ (1\textbar gameId)), participants are more accurate in later blocks (block: Est=0.44, CrI={[}0.31, 0.58{]}), and there was no strong effect of group size on accuracy (numPlayers: Est=-0.07, CrI={[}-0.2, 0.05{]}) or interaction between block and group size (block:numPlayers: Est=-0.02, CrI={[}-0.05, 0.01{]}).
 
-Participants selected images faster in later blocks although there was wide variability. In a linear model of selection time (time\(\sim\) block \(\times\) numPlayers), participants got faster across blocks (block: Est=-10.03, CrI={[}-11.03, -9.03{]}) and were slightly slower in larger games (numPlayers: Est=1.03, CrI={[}0.4, 1.66{]}). This speed up is consistent with prior work by (\protect\hyperlink{ref-weberCulturalConflictMerger2003}{\textbf{weberCulturalConflictMerger2003?}}) which used speed as the dependent measure. Wide variability in selection time meant that especially for larger groups, there was a wide spread in how long it took groups to complete the experiment.
+TODO consider adding comments about speed
 
 \begin{figure*}[t!]
 
@@ -619,8 +626,10 @@ For experiment 2c, we altered the chatbox interface for listeners. Instead of a 
 \hypertarget{results-1}{%
 \subsection{Results}\label{results-1}}
 
-\hypertarget{accuracy}{%
-\subsubsection{Accuracy}\label{accuracy}}
+\hypertarget{accuracy-1}{%
+\subsubsection{Accuracy}\label{accuracy-1}}
+
+Accuracy was high in 2a (no-rotate) and 2b (full feedback), similar to as in Experiment 1, while accuracy was substantially lower, but still well above change in 2c (limited backchannel) (Figure \ref{accuracy}). In logistic models of accuracy (correct.num\(\sim\) block~+ (1\textbar gameId)), participants are more accurate in later blocks (2a: block: Est=0.45, CrI={[}0.39, 0.52{]}, 2b: block: Est=0.47, CrI={[}0.39, 0.54{]}, 2c block: Est=0.23, CrI={[}0.19, 0.28{]}).
 
 \hypertarget{reduction-1}{%
 \subsubsection{Reduction}\label{reduction-1}}
@@ -678,6 +687,11 @@ TODO add pre-registrations everywhere
 
 Note: when skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses.
 
+\hypertarget{models}{%
+\subsubsection{Models}\label{models}}
+
+note that accuracy model deviates from pre-reg b/c I went overboard with the mixed effects model structure
+
 \hypertarget{results-2}{%
 \subsection{Results}\label{results-2}}
 
@@ -686,48 +700,18 @@ TODO there's a note saying to rerun these models for longer with more extensive 
 \hypertarget{accuracy-model}{%
 \subsection{Accuracy model}\label{accuracy-model}}
 
-\begin{verbatim}
-## # A tibble: 8 x 4
-##   Term                         Estimate `Credible Interval` `P-value equivalent`
-##   <chr>                           <dbl> <chr>                              <dbl>
-## 1 channelthin                     -0.34 [-0.66, -0.01]                     0.044
-## 2 channelthin:gameSize6            0.22 [-0.16, 0.6]                       0.25 
-## 3 gameSize6                       -0.44 [-0.73, -0.16]                     0.002
-## 4 Intercept                        1.79 [1.45, 2.13]                       0    
-## 5 repNum                           0.55 [0.42, 0.67]                       0    
-## 6 repNum:channelthin              -0.09 [-0.26, 0.07]                      0.28 
-## 7 repNum:channelthin:gameSize6    -0.02 [-0.23, 0.18]                      0.82 
-## 8 repNum:gameSize6                -0.17 [-0.33, -0.02]                     0.022
-\end{verbatim}
-
-TODO
+In a logistic model of accuracy (correct.num\(\sim\) block \(\times\) gameSize \(\times\) channel~+ (1\textbar gameId)), participants are more accurate in later blocks (block: Est=0.41, CrI={[}0.32, 0.5{]}). Participants are less accurate overall in the six player games (gameSize6: Est=-0.64, CrI={[}-1.05, -0.25{]}) and more slow to improve in the six player games (block:gameSize6: Est=-0.34, CrI={[}-0.43, -0.25{]}). Type of channel did not have a clear effect on accuracy either overall (block:channelthin: Est=-0.07, CrI={[}-0.18, 0.04{]}) or interacting with time (block:channelthin: Est=-0.07, CrI={[}-0.18, 0.04{]}).
+w
 
 \hypertarget{reduction-of-words}{%
 \subsubsection{Reduction of words}\label{reduction-of-words}}
 
-This model was run with 2 player thick as the default. The effect of being one block later for 2 player thick games is -2.33 (CrI={[}-3.03, -1.64{]}). TODO
+In a linear model of the number of words said by the speaker each trial (\texttt{r\ form(red\_spec\_3)}), reduction in the number of words did occur over blocks (\texttt{r\ stats(red\_3,1})). The six player games said more to start with (gameSize6: Est=7.41, CrI={[}3.57, 11.18{]}) and reduced less (block:gameSize6: Est=-1.21, CrI={[}-2.06, -0.3{]}). There were not differences due to channel type (channelthin: Est=0.63, CrI={[}-3.18, 4.73{]}) or channel type over time (block:channelthin: Est=0.32, CrI={[}-0.65, 1.24{]}).
 
-\hypertarget{sbert-models}{%
-\subsection{Sbert models}\label{sbert-models}}
+\hypertarget{divergence-between-games}{%
+\subsubsection{Divergence between games}\label{divergence-between-games}}
 
-\hypertarget{divergence-2}{%
-\paragraph{Divergence}\label{divergence-2}}
-
-\begin{verbatim}
-## # A tibble: 8 x 4
-##   Term                         Estimate `Credible Interval` `P-value equivalent`
-##   <chr>                           <dbl> <chr>                              <dbl>
-## 1 channelthin                      0.01 [0.01, 0.02]                           0
-## 2 channelthin:gameSize6           -0.03 [-0.04, -0.02]                         0
-## 3 gameSize6                        0.05 [0.05, 0.05]                           0
-## 4 Intercept                        0.41 [0.37, 0.45]                           0
-## 5 repNum                          -0.02 [-0.02, -0.02]                         0
-## 6 repNum:channelthin               0    [0, 0]                                 0
-## 7 repNum:channelthin:gameSize6     0.02 [0.02, 0.02]                           0
-## 8 repNum:gameSize6                -0.01 [-0.01, -0.01]                         0
-\end{verbatim}
-
-TODO
+In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (sim\(\sim\) block \(\times\) channel \(\times\) gameSize~+ (1\textbar tangram)), TODO everything is tiny and also very significant, probably print more sigfigs!
 
 \hypertarget{convergence-2}{%
 \section{Convergence}\label{convergence-2}}
