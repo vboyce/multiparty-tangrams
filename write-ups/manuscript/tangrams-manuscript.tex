@@ -501,20 +501,11 @@ TODO consider adding comments about speed
 \caption{TODO}\label{fig:triptych-red}
 \end{figure*}
 
-The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern holds for the small groups in this experiment as well. The number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups (Figure \ref(fig:triptych-red)). Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model (words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)), the effect of being one block later is -3.35 (CrI={[}-4.58, -2.13{]}) words.
+The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern holds for the small groups in this experiment as well. The number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups (Figure \ref(fig:triptych-red)). Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model (words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram:gameId)~+ (block\textbar gameId)), the effect of being one block later is -3.37 (CrI={[}-4.54, -2.24{]}) words.
 
-The overall effect of having more players in a group is 1.67 (CrI={[}0.68, 2.71{]}) words from the speaker per trial per additional player. There is no clear interaction between block and group size (block:numPlayers: Est=-0.1, CrI={[}-0.39, 0.18{]}). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications.
+The overall effect of having more players in a group is 1.66 (CrI={[}0.66, 2.61{]}) words from the speaker per trial per additional player. There is no clear interaction between block and group size (block:numPlayers: Est=-0.1, CrI={[}-0.36, 0.17{]}). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications.
 
-One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block\footnote{words\(\sim\) block \(\times\) numPlayers~+ block \(\times\) speaker.repeat~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)}. Repeat speakers do use fewer words (speaker.repeat: Est=-8.55, CrI={[}-10.41, -6.79{]}), but there are still effects of group size (numPlayers: Est=1.63, CrI={[}0.58, 2.66{]}) and block (block: Est=-5.26, CrI={[}-6.84, -3.69{]}). The effects of block and repeat speaker are subadditive (block:speaker.repeat: Est=3.2, CrI={[}2.65, 3.78{]}), and there is minimal interaction between block and group size (block:numPlayers: Est=0.08, CrI={[}-0.22, 0.41{]}).
-
-In our games (which had limited feedback), listeners who got a tangram wrong didn't have a way of knowing what the right answer was unless they asked for clarification in the chat. If a speaker got a tangram wrong as a listener in the previous block, they may not have known the conventional description that went with it, and thus were unlikely to follow the convention. If we assume that reduction is a sign of convention development, then speakers should say more words when they got the tangram wrong the previous block. We added prior errors as an additional predictor to our regression predicting number of words and found that speakers said more words for tangrams after they were incorrect (numPlayers: Est=2.18, CrI={[}0.93, 3.44{]}).
-
-\hypertarget{role-of-listeners}{%
-\subsubsection{Role of listeners}\label{role-of-listeners}}
-
-Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said ( words\(\sim\) block \(\times\) numPlayers~+ (block\textbar tangram)~+ (1\textbar playerId)~+ (1\textbar tangram\_group)~+ (block\textbar gameId)), there was an effect of block (block: Est=-0.48, CrI={[}-0.79, -0.18{]}), but no clear effect of game size (numPlayers: Est=0.2, CrI={[}-0.13, 0.51{]}).
-
-TODO say more about what sorts of utterances listeners make and stuff!!!!
+One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block
 
 \hypertarget{divergence}{%
 \subsubsection{Divergence}\label{divergence}}
@@ -527,6 +518,8 @@ TODO say more about what sorts of utterances listeners make and stuff!!!!
 
 \caption{TODO}\label{fig:triptych-div}
 \end{figure*}
+
+Over the course of the game, different groups develop their own ways of identifying the different figures. As groups diverge, their descriptions become less similar to those used to describe the same figure in other games (-0.04 (CrI={[}-0.04, -0.03{]})). Group size does not affect the cross-groups similarities in the first block (0 (CrI={[}0, 0{]})), but smaller groups diverge from each other faster than larger groups (0 (CrI={[}0, 0{]})).
 
 \hypertarget{examples-of-names}{%
 \subsubsection{Examples of names}\label{examples-of-names}}
@@ -568,6 +561,19 @@ A different 4-person group had a member who during the first block shared the id
 
 \caption{TODO}\label{fig:triptych-conv}
 \end{figure*}
+
+If we treat the last round utterance as the convention, then we can see how earlier utterances tend toward that convention. Later utterances are closer to the last utterance (0.09 (CrI={[}0.08, 0.1{]})). The distance from the first to last utterances is invariant across group size (-0.01 (CrI={[}-0.02, 0{]})), but smaller groups converge faster (-0.01 (CrI={[}-0.01, -0.01{]})).
+
+This same pattern can be seen comparing utterances from adjacent rounds as later on adjacent rounds have utterances that are more similar to each other (0.06 (CrI={[}0.05, 0.07{]})).
+
+I think we don't mention distance to first since that's not interesting?
+
+\hypertarget{distinctiveness-of-tangrams}{%
+\subsubsection{Distinctiveness of tangrams}\label{distinctiveness-of-tangrams}}
+
+Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position.
+
+Over the course of the game, descriptions for each tangram become more distinctive (-0.04 (CrI={[}-0.05, -0.04{]})).
 
 \hypertarget{interim-discussion}{%
 \subsection{Interim Discussion}\label{interim-discussion}}
@@ -634,11 +640,24 @@ Accuracy was high in 2a (no-rotate) and 2b (full feedback), similar to as in Exp
 \hypertarget{reduction-1}{%
 \subsubsection{Reduction}\label{reduction-1}}
 
+Reduction occurred in each of the games, with later blocks having fewer words from the speaker than earlier blocks. The slope of reduction was lower in the emoji condition than in the other conditions.
+
 \hypertarget{divergence-1}{%
 \subsubsection{Divergence}\label{divergence-1}}
 
+All three sub-experiments show the pattern of divergence where descriptions are less similar across groups in later blocks than in earlier blocks. This reduction is stronger in 2a (-0.04 (CrI={[}-0.04, -0.04{]})) and 2b (-0.04 (CrI={[}-0.04, -0.04{]})) than in 2c (0 (CrI={[}-0.01, 0{]})).
+
 \hypertarget{convergence-1}{%
 \subsubsection{Convergence}\label{convergence-1}}
+
+Over the course of the game, utterances become more similar to the last utterance, especially in the non-rotating 2a (0.09 (CrI={[}0.08, 0.09{]})), but also in 2b (0.06 (CrI={[}0.05, 0.07{]})) and to a smaller extent, 2c (0.02 (CrI={[}0.01, 0.03{]})).
+
+This pattern can also be seen in the block to next block similarities getting higher.
+
+\hypertarget{tangram-distinctiveness}{%
+\subsubsection{Tangram distinctiveness}\label{tangram-distinctiveness}}
+
+In all three subexperiments, the descriptions of tangrams become more distinctive within games across time. (2a -0.05 (CrI={[}-0.05, -0.04{]}), 2b -0.03 (CrI={[}-0.03, -0.02{]}), 2c -0.03 (CrI={[}-0.03, -0.02{]})).
 
 \hypertarget{emoji-usage}{%
 \subsubsection{Emoji usage ?}\label{emoji-usage}}
@@ -697,48 +716,34 @@ note that accuracy model deviates from pre-reg b/c I went overboard with the mix
 
 TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
 
-\hypertarget{accuracy-model}{%
-\subsection{Accuracy model}\label{accuracy-model}}
+\hypertarget{accuracy-2}{%
+\subsubsection{Accuracy}\label{accuracy-2}}
 
 In a logistic model of accuracy (correct.num\(\sim\) block \(\times\) gameSize \(\times\) channel~+ (1\textbar gameId)), participants are more accurate in later blocks (block: Est=0.41, CrI={[}0.32, 0.5{]}). Participants are less accurate overall in the six player games (gameSize6: Est=-0.64, CrI={[}-1.05, -0.25{]}) and more slow to improve in the six player games (block:gameSize6: Est=-0.34, CrI={[}-0.43, -0.25{]}). Type of channel did not have a clear effect on accuracy either overall (block:channelthin: Est=-0.07, CrI={[}-0.18, 0.04{]}) or interacting with time (block:channelthin: Est=-0.07, CrI={[}-0.18, 0.04{]}).
-w
 
-\hypertarget{reduction-of-words}{%
-\subsubsection{Reduction of words}\label{reduction-of-words}}
+\hypertarget{reduction-2}{%
+\subsubsection{Reduction}\label{reduction-2}}
 
 In a linear model of the number of words said by the speaker each trial (\texttt{r\ form(red\_spec\_3)}), reduction in the number of words did occur over blocks (\texttt{r\ stats(red\_3,1})). The six player games said more to start with (gameSize6: Est=7.41, CrI={[}3.57, 11.18{]}) and reduced less (block:gameSize6: Est=-1.21, CrI={[}-2.06, -0.3{]}). There were not differences due to channel type (channelthin: Est=0.63, CrI={[}-3.18, 4.73{]}) or channel type over time (block:channelthin: Est=0.32, CrI={[}-0.65, 1.24{]}).
 
-\hypertarget{divergence-between-games}{%
-\subsubsection{Divergence between games}\label{divergence-between-games}}
+\hypertarget{divergence-2}{%
+\subsubsection{Divergence}\label{divergence-2}}
 
-In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (sim\(\sim\) block \(\times\) channel \(\times\) gameSize~+ (1\textbar tangram)), TODO everything is tiny and also very significant, probably print more sigfigs!
+In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (sim\(\sim\) block \(\times\) channel \(\times\) gameSize~+ (1\textbar tangram)), games get less similar over time (-0.02 (CrI={[}-0.02, -0.02{]})). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (\texttt{r\ stats\_text(div\_3,\ 3)}).
 
 \hypertarget{convergence-2}{%
-\section{Convergence}\label{convergence-2}}
+\subsubsection{Convergence}\label{convergence-2}}
 
-\begin{verbatim}
-## # A tibble: 16 x 4
-##    Term                                                  Estim~1 Credi~2 P-val~3
-##    <chr>                                                   <dbl> <chr>     <dbl>
-##  1 channelthin                                             -0.01 [-0.19~    0.93
-##  2 channelthin:gameSize6                                    0.04 [-0.14~    0.66
-##  3 channelthin:gameSize6:samespeakersame_speaker            0.02 [-0.17~    0.86
-##  4 channelthin:samespeakersame_speaker                      0.01 [-0.19~    0.93
-##  5 earlier                                                  0.06 [-0.11~    0.51
-##  6 earlier:channelthin                                     -0.01 [-0.19~    0.92
-##  7 earlier:channelthin:gameSize6                           -0.02 [-0.19~    0.87
-##  8 earlier:channelthin:gameSize6:samespeakersame_speaker    0    [-0.19~    0.96
-##  9 earlier:channelthin:samespeakersame_speaker             -0.01 [-0.19~    0.91
-## 10 earlier:gameSize6                                       -0.01 [-0.19~    0.96
-## 11 earlier:gameSize6:samespeakersame_speaker                0.01 [-0.16~    0.88
-## 12 earlier:samespeakersame_speaker                          0.02 [-0.17~    0.87
-## 13 gameSize6                                               -0.06 [-0.24~    0.53
-## 14 gameSize6:samespeakersame_speaker                       -0.01 [-0.2,~    0.88
-## 15 Intercept                                                0.53 [0.34,~    0   
-## 16 samespeakersame_speaker                                  0.06 [-0.13~    0.54
-## # ... with abbreviated variable names 1: Estimate, 2: `Credible Interval`,
-## #   3: `P-value equivalent`
-\end{verbatim}
+In terms of convergence towards the last round utterance, this is seen overall (0.08 (CrI={[}0.07, 0.09{]})). The convergence is slower in thin games (-0.02 (CrI={[}-0.03, -0.02{]})) and especially thin 6 player games (-0.04 (CrI={[}-0.05, -0.02{]})).
+
+Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (-0.12 (CrI={[}-0.16, -0.09{]})) as do larger games (-0.03 (CrI={[}-0.07, 0{]})). Later in the game adjacent blocks are more similar than earlier adjacent blocks (0.05 (CrI={[}0.04, 0.05{]})), painting an overall nonlinear convergent pattern (as seen in figure TODO).
+
+The last measure of how utterances change within games is how they compare to the first utterance; this is less good because the first utterance has more fluffy language so is less diagnostic, but later utterances are further from the first round utterance than earlier utterances (-0.03 (CrI={[}-0.04, -0.03{]})). (TODO it's in the pre-reg, but we could dump it in a supplement? )
+
+\hypertarget{distinctiveness}{%
+\subsubsection{Distinctiveness}\label{distinctiveness}}
+
+Tangram distinctiveness within games increased over time (-0.03 (CrI={[}-0.03, -0.03{]})). There might be more to say about other effects, but it's mostly a starting places being different in larger games and then the slopes also differ a bit?
 
 \hypertarget{emoji-usage-1}{%
 \subsubsection{Emoji usage}\label{emoji-usage-1}}

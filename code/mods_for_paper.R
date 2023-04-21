@@ -88,7 +88,7 @@ model_2a_red <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|ga
 
 model_2b_red <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
                     data=red_data |> filter(condition=="full_feedback"),
-                    file=here(model_location, "red_2a"),
+                    file=here(model_location, "red_2b"),
                     prior=red_priors,
                     control=list(adapt_delta=.95))
 

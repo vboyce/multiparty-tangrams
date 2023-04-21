@@ -442,47 +442,22 @@ plot_grid(one,two, three, nrow=1)
 
 
 ```{r}
-model_location <- "code/models"
-speaker <- read_rds(here(model_location,"speaker_summ.rds"))
-speaker_spec <- read_rds(here(model_location,"speaker_spec.rds"))
+red_1 <- read_rds(here(msum_loc, "red_1.rds"))
+red_spec_1 <- read_rds(here(mform_loc,"red_1.rds"))
 
 ```
 
-The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern holds for the small groups in this experiment as well. The number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups (Figure \ref(fig:triptych-red)). Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model (`r form(speaker_spec)`), the effect of being one block later is `r stats_text(speaker,1)` words. 
+The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern holds for the small groups in this experiment as well. The number of words produced by speakers decreases over the course of rounds, both in aggregate and for many individual groups (Figure \ref(fig:triptych-red)). Nonetheless, in some groups, a later speaker may be more verbose than an earlier speaker. Speakers make longer utterances in early blocks that reduce to shorter utterances in later blocks. From a linear model (`r form(red_spec_1)`), the effect of being one block later is `r stats_text(red_1,1)` words. 
 
-The overall effect of having more players in a group is `r stats_text(speaker,4)` words from the speaker per trial per additional player. There is no clear interaction between block and group size (`r stats(speaker,2)`). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications. 
-
-```{r}
-repeat_speaker <- read_rds(here(model_location,"speaker_repeat_summ.rds"))
-repeat_speaker_spec <- read_rds(here(model_location,"speaker_repeat_spec.rds"))
-```
+The overall effect of having more players in a group is `r stats_text(red_1,4)` words from the speaker per trial per additional player. There is no clear interaction between block and group size (`r stats(red_1,2)`). Larger groups saying more is consistent with predictions from audience design that with more listeners to accommodate, the speaker may use multiple conceptualizations, either initially as a hedge or in response to listener clarifications. 
 
 
-One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block[^3]. Repeat speakers do use fewer words (`r stats(repeat_speaker,6)`), but there are still effects of group size (`r stats(repeat_speaker,5)`) and block (`r stats(repeat_speaker,1)`). The effects of block and repeat speaker are subadditive (`r stats(repeat_speaker,3)`), and there is minimal interaction between block and group size (`r stats(repeat_speaker,2)`). 
-
-[^3]: `r form(repeat_speaker_spec)`
 
 
-```{r}
-speaker_acc <- read_rds(here(model_location,"speaker_acc_summ.rds"))
-speaker_acc_spec <- read_rds(here(model_location,"speaker_acc_spec.rds"))
-
-```
+One potential concern is that group size correlates with whether the speaker has had the speaker role before (smaller groups repeat speakers more). To address this confound, we coded for whether the speaker has been speaker in an earlier block
 
 
-In our games (which had limited feedback), listeners who got a tangram wrong didn't  have a way of knowing what the right answer was unless they asked for clarification in the chat. If a speaker got a tangram wrong as a listener in the previous block, they may not have known the conventional description that went with it, and thus were unlikely to follow the convention. If we assume that reduction is a sign of convention development, then speakers should say more words when they got the tangram wrong the previous block. We added prior errors as an additional predictor to our regression predicting number of words and found that speakers said more words for tangrams after they were incorrect (`r stats(speaker_acc,6)`). 
 
-### Role of listeners
-
-
-```{r}
-listener <- read_rds(here(model_location,"listener_summ.rds"))
-listener_spec <- read_rds(here(model_location,"listener_spec.rds"))
-```
-
-Listeners often don't talk much, but are more likely to ask questions or make clarification in early blocks. In a linear regression for the number of words each listener said ( `r form(listener_spec)`), there was an effect of block (`r stats(listener, 1)`), but no clear effect of game size (`r stats(listener,4)`). 
-
-TODO say more about what sorts of utterances listeners make and stuff!!!!
 
 
 
@@ -542,6 +517,13 @@ three <-  three_diverge |> ggplot(aes(x=repNum+1,y=sim,color=condition))+
 plot_grid(one,two,three, nrow=1)
 ```
 
+```{r}
+div_1 <- read_rds(here(msum_loc, "div_1.rds"))
+div_spec_1 <- read_rds(here(mform_loc, "div_1.rds"))
+
+```
+
+Over the course of the game, different groups develop their own ways of identifying the different figures. As groups diverge, their descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2)`). 
 
 ### Examples of names
 
@@ -625,6 +607,36 @@ three <- three_converge |>  ggplot( aes(x=earlier+1,y=sim,color=condition))+
 plot_grid(one, two, three, nrow=1)
 ```
 
+```{r}
+tolast_1 <- read_rds(here(msum_loc, "tolast_1.rds"))
+tolast_spec_1 <- read_rds(here(mform_loc, "tolast_1.rds"))
+
+tonext_1 <- read_rds(here(msum_loc, "tonext_1.rds"))
+tonext_spec_1 <- read_rds(here(mform_loc, "tonext_1.rds"))
+
+tofirst_1 <- read_rds(here(msum_loc, "tofirst_1.rds"))
+tofirst_spec_1 <- read_rds(here(mform_loc, "tofirst_1.rds"))
+
+```
+
+If we treat the last round utterance as the convention, then we can see how earlier utterances tend toward that convention. Later utterances are closer to the last utterance (`r stats_text(tolast_1, 2)`). The distance from the first to last utterances is invariant across group size (`r stats_text(tolast_1, 1)`), but smaller groups converge faster (`r stats_text(tolast_1, 3)`). 
+
+This same pattern can be seen comparing utterances from adjacent rounds as later on adjacent rounds have utterances that are more similar to each other (`r stats_text(tonext_1, 2)`). 
+
+I think we don't mention distance to first since that's not interesting? 
+
+### Distinctiveness of tangrams
+
+```{r}
+
+tandiv_1 <- read_rds(here(msum_loc, "tandiv_1.rds"))
+tandiv_spec_1 <- read_rds(here(mform_loc, "tandiv_1.rds"))
+
+```
+
+Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position. 
+
+Over the course of the game, descriptions for each tangram become more distinctive (`r stats_text(tandiv_1, 1)`). 
 
 ## Interim Discussion
 
@@ -692,9 +704,76 @@ Accuracy was high in 2a (no-rotate) and 2b (full feedback), similar to as in Exp
 
 ### Reduction
 
+```{r}
+red_2a <- read_rds(here(msum_loc,"red_2a.rds"))
+red_spec_2a <- read_rds(here(mform_loc,"red_2a.rds"))
+
+#red_2b <- read_rds(here(msum_loc,"red_2b.rds"))
+
+red_2c <- read_rds(here(msum_loc,"red_2c.rds"))
+```
+
+Reduction occurred in each of the games, with later blocks having fewer words from the speaker than earlier blocks. The slope of reduction was lower in the emoji condition than in the other conditions. 
+
 ### Divergence
 
+```{r}
+div_2a <- read_rds(here(msum_loc, "div_2a.rds"))
+div_spec_2a <- read_rds(here(mform_loc, "div_2a.rds"))
+
+div_2b <- read_rds(here(msum_loc, "div_2b.rds"))
+
+div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
+```
+
+All three sub-experiments show the pattern of divergence where descriptions are less similar across groups in later blocks than in earlier blocks. This reduction is stronger in 2a (`r stats_text(div_2a, 1)`) and 2b (`r stats_text(div_2b, 1)`) than in 2c (`r stats_text(div_2c, 1)`). 
+
 ### Convergence
+
+```{r}
+tolast_2a <- read_rds(here(msum_loc, "tolast_2a.rds"))
+tolast_spec_2a <- read_rds(here(mform_loc, "tolast_2a.rds"))
+
+tonext_2a <- read_rds(here(msum_loc, "tonext_2a.rds"))
+tonext_spec_2a <- read_rds(here(mform_loc, "tonext_2a.rds"))
+
+tofirst_2a <- read_rds(here(msum_loc, "tofirst_2a.rds"))
+tofirst_spec_2a <- read_rds(here(mform_loc, "tofirst_2a.rds"))
+
+
+tolast_2b <- read_rds(here(msum_loc, "tolast_2b.rds"))
+
+tonext_2b <- read_rds(here(msum_loc, "tonext_2b.rds"))
+
+tofirst_2b <- read_rds(here(msum_loc, "tofirst_2b.rds"))
+
+
+tolast_2c <- read_rds(here(msum_loc, "tolast_2c.rds"))
+
+tonext_2c <- read_rds(here(msum_loc, "tonext_2c.rds"))
+
+tofirst_2c <- read_rds(here(msum_loc, "tofirst_2c.rds"))
+
+```
+
+Over the course of the game, utterances become more similar to the last utterance, especially in the non-rotating 2a (`r stats_text(tolast_2a, 1)`), but also in 2b (`r stats_text(tolast_2b, 1)`) and to a smaller extent, 2c (`r stats_text(tolast_2c, 1)`). 
+
+This pattern can also be seen in the block to next block similarities getting higher. 
+
+### Tangram distinctiveness
+
+```{r}
+
+tandiv_2a <- read_rds(here(msum_loc, "tandiv_2a.rds"))
+tandiv_spec_2a<- read_rds(here(mform_loc, "tandiv_2a.rds"))
+
+tandiv_2b <- read_rds(here(msum_loc, "tandiv_2c.rds"))
+
+tandiv_2c <- read_rds(here(msum_loc, "tandiv_2c.rds"))
+
+```
+
+In all three subexperiments, the descriptions of tangrams become more distinctive within games across time. (2a `r stats_text(tandiv_2a,1)`, 2b `r stats_text(tandiv_2b, 1)`, 2c `r stats_text(tandiv_2c,1)`). 
 
 ### Emoji usage ? 
 
@@ -743,7 +822,7 @@ note that accuracy model deviates from pre-reg b/c I went overboard with the mix
  
 TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
 
-## Accuracy model
+### Accuracy
 
 ```{r}
 acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
@@ -752,11 +831,9 @@ acc_spec_3 <- read_rds(here(mform_loc,"acc_3.rds"))
 ```
 
  In a logistic model of accuracy (`r form(acc_spec_3)`), participants are more accurate in later blocks (`r stats(acc_3,1)`). Participants are less accurate overall in the six player games (`r stats(acc_3, 6)`) and more slow to improve in the six player games (`r stats(acc_3, 3)`). Type of channel did not have a clear effect on accuracy either overall (`r stats(acc_3,2)`) or interacting with time (`r stats(acc_3, 2)`). 
- w 
 
 
-
-### Reduction of words
+### Reduction
 
 
 ```{r} 
@@ -768,25 +845,45 @@ red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 In a linear model of the number of words said by the speaker each trial (` r form(red_spec_3)`), reduction in the number of words did occur over blocks (` r stats(red_3,1`)). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`). There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
 
-### Divergence between games
+### Divergence
+
 ```{r} 
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 div_spec_3 <- read_rds(here(mform_loc, "div_3.rds"))
 ```
 
-In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (`r form(div_spec_3)`), TODO everything is tiny and also very significant, probably print more sigfigs!
+In a model of similarities between utterances produced at the same point in the game for the same tangram across different games (`r form(div_spec_3)`), games get less similar over time (`r stats_text(div_3, 1)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (` r stats_text(div_3, 3)`). 
 
-# Convergence
+### Convergence
 
 ```{r}
-# read_rds(here(model_location,"tangram_model_study3_mix.rds")) |> summary() # do tangrams get more distinctive I think 
+tolast_3 <- read_rds(here(msum_loc, "tolast_3.rds"))
+tolast_spec_3 <- read_rds(here(mform_loc, "tolast_3.rds"))
 
-read_rds(here(model_location,"to_last_model_study3.rds")) |> show_summary() #TODO has over-parameter issues with same speaker!!!
+tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
+tonext_spec_3 <- read_rds(here(mform_loc, "tonext_3.rds"))
 
-
+tofirst_3 <- read_rds(here(msum_loc, "tofirst_3.rds"))
+tofirst_spec_3 <- read_rds(here(mform_loc, "tofirst_3.rds"))
 
 ```
 
+In terms of convergence towards the last round utterance, this is seen overall (`r stats_text(tolast_3, 3)`). The convergence is slower in thin games (`r stats_text(tolast_3, 4)`) and especially thin 6 player games (`r stats_text(tolast_3, 5)`). 
+
+Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1)`) as do larger games (`r stats_text(tonext_3,7)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3)`), painting an overall nonlinear convergent pattern (as seen in figure TODO). 
+
+The last measure of how utterances change within games is how they compare to the first utterance; this is less good because the first utterance has more fluffy language so is less diagnostic, but later utterances are further from the first round utterance than earlier utterances (`r stats_text(tofirst_3, 5)`). (TODO it's in the pre-reg, but we could dump it in a supplement? )
+
+### Distinctiveness
+
+```{r}
+# file naming screwup TODO fix me and the file that writes me etc
+tandiv_3 <- read_rds(here(msum_loc,"tandiv3.rds"))
+tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv3.rds"))
+
+```
+
+Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3, 1)`). There might be more to say about other effects, but it's mostly a starting places being different in larger games and then the slopes also differ a bit? 
 
 ### Emoji usage
 
