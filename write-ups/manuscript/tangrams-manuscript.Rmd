@@ -438,9 +438,9 @@ All models were run in brms CITE with weakly regularizing priors DESCRIBE
 
 ## Behavioral results
 
-The two key behavioral result outcomes were the accuracies of the listeners at selecting the target tangrams and the number of words produced by the speaker over the course of each trial. 
+The two key behavioral outcomes were how accurately listeners selected the target images and how many words the speaker produced each trial.
 
-```{r triptych-acc, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
+```{r triptych-acc, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Listner accuracy at selecting the target image. ", cache=FALSE}
 # accuracy
 
 # 1
@@ -455,9 +455,11 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+  annotate("text", x=3.5,y=1,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
-              legend.text=element_text(size=12),
-        axis.title=element_text(size=10))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
 scale_color_manual(values=color_scheme_1)
 #2
 
@@ -476,8 +478,11 @@ two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", 
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
-  theme(legend.position="bottom")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    annotate("text", x=3.5,y=1,label="Experiment 2", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
         scale_color_manual(values=color_scheme_2)
 
 #3
@@ -491,9 +496,12 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
+     annotate("text", x=3.5,y=1,label="Experiment 3", size=6)+
+
   theme(legend.position="bottom",
-        legend.text=element_text(size=12),
-        axis.title=element_text(size=10))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
    scale_color_manual(values=color_scheme_3)
  
@@ -520,7 +528,9 @@ acc_spec_3 <- read_rds(here(mform_loc,"acc_3.rds"))
 ```
 
 
-Across all experiments, most individuals were accurate in their selections, with accuracy rising across blocks, but accuracy was noticeably lower, but still far above chance,  in the 6-player games with an emoji backchannel (Figure \ref{accuracy}).  In experiment 1, participants were more accurate in later blocks (`r stats(acc_1,1)`), and there was no strong effect of group size on accuracy (`r stats(acc_1,4)`) or interaction between block and group size (`r stats(acc_1,2)`). In experiment 2, participants were again more accurate in later blocks (2a: `r stats(acc_2a,1)`, 2b: `r stats(acc_2b,1)`, 2c `r stats(acc_2c,1)`). In experiment 3, participants are more accurate in later blocks (`r stats(acc_3,1)`). Participants are less accurate overall in the six player games (`r stats(acc_3, 6)`) and more slow to improve in the six player games (`r stats(acc_3, 3)`). Type of channel did not have a clear effect on accuracy either overall (`r stats(acc_3,2)`) or interacting with time (`r stats(acc_3, 2)`). 
+Across all experiments, most individuals were accurate in their selections, with accuracy rising across blocks. Accuracy was noticeably lower, but still far above chance,  in the 6 thin games (Figure \ref{accuracy}).  In experiment 1, participants were more accurate in later blocks (`r stats(acc_1,1)`), and there was no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 2, participants were again more accurate in later blocks (6 single speaker: `r stats(acc_2a,1)`, 6 full feedback: `r stats(acc_2b,1)`, 6 thin: `r stats(acc_2c,1)`). In experiment 3, participants were more accurate in later blocks (`r stats(acc_3,1)`). Participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`). Thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,2)`) or improvement rate (`r stats(acc_3, 2)`). 
+
+The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
 
 
 ```{r triptych-red, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO", cache=FALSE}
@@ -539,8 +549,11 @@ ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
 
@@ -562,8 +575,11 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
+annotate("text", x=3.5,y=60,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
     scale_color_manual(values=color_scheme_2)
 
 #3
@@ -581,8 +597,11 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
+annotate("text", x=3.5,y=60,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3)
 
 plot_grid(one,two, three, nrow=1)
@@ -609,9 +628,11 @@ red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 
 ```
 
-The key phenomonenon of iterated reference games is that the descriptions to the target images shorten over the course of repetition. This pattern held across all experiments and conditions, as the number of words produced by speaked decreased over the course of the game  The number of words produced by speakers decreases over the course of rounds (Figure \ref(fig:triptych-red)). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,2)` in experiment 2a; `r stats(red_2b,2)` in 2b, and `r stats(red_2c,2)` in 2c. The rate of reduction was lower in the emoji condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
+The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \ref(fig:triptych-red)). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker; `r stats(red_2b,1)` for 6 full feedback, and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
-TODO commentary
+These reduction results confirm and extend what was previously known for 2 player games. Behaviorally, larger games are mostly similar to smaller games, but their speakers tend to say more overall, perhaps related to the increased number of listeners to respond to. 
+
+### TODO something about how much listeners talk & game anecdotes 
 
 ## Comparisons of language between and within games
 
@@ -633,8 +654,11 @@ one <- one_two_converge |> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+annotate("text", x=3,y=1,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
 
@@ -652,8 +676,11 @@ two <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   coord_cartesian(ylim=c(.2,1))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
+annotate("text", x=3,y=1,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+    scale_color_manual(values=color_scheme_2)
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+    scale_color_manual(values=color_scheme_2)
 
 
 
@@ -668,9 +695,11 @@ three <- three_converge |> mutate(condition=str_c(str_sub(condition,1,1)," ", st
   coord_cartesian(ylim=c(.2,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-
+annotate("text", x=3,y=1,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=14))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3)
 
 plot_grid(one, two, three, nrow=1)
@@ -756,8 +785,12 @@ one <-  one_two_diverge |> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
+annotate("text", x=3.5,y=.7,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=16))+scale_color_manual(values=color_scheme_1)
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_1)
 
 #2
 
@@ -773,8 +806,11 @@ two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
       coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+annotate("text", x=3.5,y=.7,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=16))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
    scale_color_manual(values=color_scheme_2)
 
 #3
@@ -785,8 +821,11 @@ three <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", st
    coord_cartesian(ylim=c(.1,.7))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
+annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
-        text=element_text(size=16))+
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
 scale_color_manual(values=color_scheme_3)
 
 plot_grid(one,two,three, nrow=1)
