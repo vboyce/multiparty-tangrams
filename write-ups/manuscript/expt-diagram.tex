@@ -10,23 +10,43 @@
 	\usetikzlibrary{arrows.meta, positioning, quotes, shapes, shapes.geometric}
 \begin{document}
 	
-	\definecolor{baseline6}{HTML}{440154}
-		\definecolor{baseline5}{HTML}{3B528B}
-			\definecolor{baseline4}{HTML}{21908C}
-	\definecolor{baseline3}{HTML}{5DC863}
-		\definecolor{baseline2}{HTML}{FDE725}
+%	\definecolor{baseline6}{HTML}{440154}
+%		\definecolor{baseline5}{HTML}{3B528B}
+%			\definecolor{baseline4}{HTML}{21908C}
+%	\definecolor{baseline3}{HTML}{5DC863}
+%		\definecolor{baseline2}{HTML}{FDE725}
+%		
+%		\definecolor{thick6}{HTML}{1F78B4}
+%		\definecolor{thick2}{HTML}{33A02C}
+%						\definecolor{thin6}{HTML}{A6CEE3}
+%								\definecolor{thin2}{HTML}{B2DF8A}
+
+	\definecolor{baseline6}{HTML}{9000FF}
+		\definecolor{baseline5}{HTML}{A12EFF}
+			\definecolor{baseline4}{HTML}{D24AFF}
+	\definecolor{baseline3}{HTML}{FF7DF0}
+		\definecolor{baseline2}{HTML}{FFBDD4}
 		
-		\definecolor{thick6}{HTML}{1F78B4}
-		\definecolor{thick2}{HTML}{33A02C}
-						\definecolor{thin6}{HTML}{A6CEE3}
-								\definecolor{thin2}{HTML}{B2DF8A}
+		\definecolor{thick6}{HTML}{0BDB00}
+		\definecolor{thick2}{HTML}{A1DB2C}
+		
+	\definecolor{thin6}{HTML}{FF4D00}
+	\definecolor{thin2}{HTML}{FFC20D}
+	
+	\definecolor{full}{HTML}{6940FF}
+	\definecolor{single}{HTML}{00A2FF}
+	
+	\definecolor{expt1col}{HTML}{FF0099}
+		\definecolor{expt3col}{HTML}{527319}
+				\definecolor{expt2col}{HTML}{0000FF}
+
 \tikzset{
 	expt1/.style={
-		draw, circle,  align=center, scale=1},
+		draw, circle, color=expt1col, line width=4, align=center, scale=2},
 	expt2/.style={
-		draw, rectangle,  align=center, scale=1},
+		draw, circle, color=expt2col, line width=4,  align=center, scale=2},
 	expt3/.style={
-		draw, isosceles triangle, isosceles triangle apex angle=60,  rotate=90, scale=.7}
+		draw, circle, color=expt3col, line width=4, align=center, scale=2}
 }
 
 
@@ -42,22 +62,22 @@
 	
 	
 	
-	\node (n2) at (0,0) [expt1, fill=baseline2, label=above right:2 baseline] {};
-	\node (n3) at (1,0) [expt1, fill=baseline3, label=below:3] {};
-	\node (n4) at (2,0) [expt1, fill=baseline4, label=below:4] {};
-	\node (n5) at (3,0) [expt1, fill=baseline5, label=below:5] {};
-	\node (n6) at (4,0) [expt1, fill=baseline6, label=below right:6 baseline] {};
+	\node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col] above right:2 baseline}] {};
+	\node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
+	\node (n4) at (2,0) [expt1, fill=baseline4, label={[expt1col]below:4}] {};
+	\node (n5) at (3,0) [expt1, fill=baseline5, label={[expt1col]below:5}] {};
+	\node (n6) at (4,0) [expt1, fill=baseline6, label={[expt1col]below right:6 baseline}] {};
 	
-	\node (n2thick) at (0,4) [expt3, fill=thick2, label=below right:2 thick] {};
-	\node (n6thick) at (4,4) [expt3, fill=thick6, label=below right:6 thick] {};
+	\node (n2thick) at (0,4) [expt3, fill=thick2, label= {[expt3col]above right:2 thick}] {};
+	\node (n6thick) at (4,4) [expt3, fill=thick6, label={[expt3col]right:6 thick}] {};
 	
-	\node (nsingle) at (4,1.5) [expt2, fill=orange, label=right:6 single speaker] {};
-	\node (nfull) at (4,3) [expt2, fill=pink, label=right:6 full feedback] {};
+	\node (nsingle) at (4,1.5) [expt2, fill=full, label={[expt2col]right:6 full feedback}] {};
+	\node (nfull) at (4,3) [expt2, fill=single, label={[expt2col]right:6 single speaker}] {};
 	
-	\node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label=below left: 2 thin] {};
+	\node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label={[expt3col]below right: 2 thin}] {};
 	
-	\node (n6thin2) at (2.4,-2.3) [expt2, fill=red] {};
-	\node (n6thin) at (2.5,-5/2) [expt3, fill=thin6, label=below left: 6 thin] {};
+	\node (n6thin2) at (2.3,-2.2) [expt2, fill=thin6, label={[expt2col]above left: 6 thin}] {};
+	\node (n6thin) at (2.6,-2.6) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
 	
 	
 	\node[align=center,anchor=north] (lab1) at (-2,2) {Rotating speaker;\\limited feedback};
