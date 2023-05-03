@@ -27,11 +27,11 @@
 	\definecolor{baseline3}{HTML}{FF7DF0}
 		\definecolor{baseline2}{HTML}{FFBDD4}
 		
-		\definecolor{thick6}{HTML}{0BDB00}
-		\definecolor{thick2}{HTML}{A1DB2C}
+		\definecolor{thick6}{HTML}{00BDA8}
+		\definecolor{thick2}{HTML}{77F3DB}
 		
-	\definecolor{thin6}{HTML}{FF4D00}
-	\definecolor{thin2}{HTML}{FFC20D}
+	\definecolor{thin6}{HTML}{D47E04}
+	\definecolor{thin2}{HTML}{FFDA09}
 	
 	\definecolor{full}{HTML}{6940FF}
 	\definecolor{single}{HTML}{00A2FF}
@@ -48,6 +48,7 @@
 	expt3/.style={
 		draw, circle, color=expt3col, line width=4, align=center, scale=2}
 }
+\tikzset{nodes={font=\sffamily\bfseries}} 
 
 
 	\begin{tikzpicture}
@@ -62,11 +63,12 @@
 	
 	
 	
-	\node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col] above right:2 baseline}] {};
+	\node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col]below:2}] {};
 	\node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
 	\node (n4) at (2,0) [expt1, fill=baseline4, label={[expt1col]below:4}] {};
 	\node (n5) at (3,0) [expt1, fill=baseline5, label={[expt1col]below:5}] {};
-	\node (n6) at (4,0) [expt1, fill=baseline6, label={[expt1col]below right:6 baseline}] {};
+	\node (n6) at (4,0) [expt1, fill=baseline6] {};
+		\node[align=center,anchor=north,text=expt1col] at (4.6,-.45) {6 baseline};
 	
 	\node (n2thick) at (0,4) [expt3, fill=thick2, label= {[expt3col]above right:2 thick}] {};
 	\node (n6thick) at (4,4) [expt3, fill=thick6, label={[expt3col]right:6 thick}] {};
@@ -76,74 +78,18 @@
 	
 	\node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label={[expt3col]below right: 2 thin}] {};
 	
-	\node (n6thin2) at (2.3,-2.2) [expt2, fill=thin6, label={[expt2col]above left: 6 thin}] {};
-	\node (n6thin) at (2.6,-2.6) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
+	\node (n6thin2) at (2.7,-2.3) [expt2, fill=thin6, label={[expt2col] right: 6 thin}] {};
+	\node (n6thin) at (2.5,-2.5) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
 	
 	
-	\node[align=center,anchor=north] (lab1) at (-2,2) {Rotating speaker;\\limited feedback};
-	\node[align=center,anchor=north] (lab2) at (-2,6) {Single speaker;\\full feedback};
-	\node[align=center,anchor=north] (lab3) at (-2,0) {Listeners \\use chat};
-	\node[align=center,anchor=north] (lab4) at (-4,-2) {Listeners \\use emoji};
+	\node[align=center,anchor=north] (lab1) at (-2.5,2) {Rotating speaker;\\limited feedback};
+	\node[align=center,anchor=north] (lab2) at (-2.5,4) {Single speaker;\\full feedback};
+	\node[align=center,anchor=north] (lab3) at (-2,.5) {Listeners \\use chat};
+	\node[align=center,anchor=north] (lab4) at (-3.5,-2) {Listeners \\use emoji};
 	
-	
-	\draw[dashed] (n6) edge [] (n6thin);
-	\draw[dashed] (n2thin) edge [] (n6thin);
-	\draw[dashed] (n2thick) edge [] (n6thick);
-	\draw[dashed] (n6) edge [] (n6thick);
-	
-	\begin{scope}[line width=1 pt, >=Stealth]
-		\draw[->] (lab1) -> (n2);
-		\draw[->] (lab2) -> (n2thick);
-		\draw[->] (lab3) -> (n2);
-		\draw[->] (lab4) -> (n2thin);
-		
-	\end{scope}
-	
-\end{tikzpicture}
-
-\tikzset{
-		expt1/.style={
-		draw, circle, fill=blue, align=center, scale=1},
-	expt2/.style={
-		draw, circle, fill=red, align=center, scale=1},
-	expt3/.style={
-		draw, circle, fill=green, rotate=90, scale=1}
-}
-	\begin{tikzpicture}
-	
-	% Define radius
-	\def\r{6}
-	% Axes
-	\draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.3] (-2*\r/5,  -2*\r/3) ;
-	\draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=.9] (\r, 0) ;
-	\draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.3] (0, \r);
-	
-	
-	
-	
-	\node (n2) at (0,0) [expt1, label=above right:2 baseline] {};
-	\node (n3) at (1,0) [expt1, label=below:3] {};
-	\node (n4) at (2,0) [expt1, label=below:4] {};
-	\node (n5) at (3,0) [expt1,  label=below:5] {};
-	\node (n6) at (4,0) [expt1,  label=below right:6 baseline] {};
-	
-	\node (n2thick) at (0,4) [expt3,  label=below right:2 thick] {};
-	\node (n6thick) at (4,4) [expt3,  label=below right:6 thick] {};
-	
-	\node (nsingle) at (4,1.5) [expt2,  label=right:6 single speaker] {};
-	\node (nfull) at (4,3) [expt2,  label=right:6 full feedback] {};
-	
-	\node (n2thin) at (-3/2,-5/2) [expt3,  label=below left: 2 thin] {};
-	
-	\node (n6thin2) at (2.4,-2.3) [expt2, ] {};
-	\node (n6thin) at (2.5,-5/2) [expt3,  label=below left: 6 thin] {};
-	
-	
-	\node[align=center,anchor=north] (lab1) at (-2,2) {Rotating speaker;\\limited feedback};
-	\node[align=center,anchor=north] (lab2) at (-2,6) {Single speaker;\\full feedback};
-	\node[align=center,anchor=north] (lab3) at (-2,0) {Listeners \\use chat};
-	\node[align=center,anchor=north] (lab4) at (-4,-2) {Listeners \\use emoji};
-	
+	\node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
+	\node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
+	\node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
 	
 	\draw[dashed] (n6) edge [] (n6thin);
 	\draw[dashed] (n2thin) edge [] (n6thin);
@@ -159,15 +105,5 @@
 	\end{scope}
 	
 \end{tikzpicture}
-
-Thinking we can color coordinate dots to match what we do in graphs (unclear on what the color scheme should be...)
-
-Currently using shape for the 3 expts
-
-Not sure how to label the expt 1's or the game size axis
-
-Shape is expt number for now
-
-2c and 6thin being the same but probably shown on different graphs is awkward
 
 \end{document}
