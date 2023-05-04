@@ -62,9 +62,8 @@ tables: TRUE # Needed to be able to include tables
 <!---------------------- Abstract --------------------->
 
 ::: {.abstract data-latex="" lang=en}
-*This is an abstract in italics.*
+This is an abstract in italics.
 
-This is the second paragraph not in italics.
 :::
 
 <!-- Use class keywords to format keywords section -->
@@ -174,6 +173,7 @@ form <- function(model){
 }
 ```
 
+<!-- 
 # Introduction 
 
 - communication is important and takes place in non-dyadic situations
@@ -191,12 +191,12 @@ Verbal communication is an integral part of our daily lives. We coordinate sched
 The formation of these new reference expressions is well-studied in dyadic contexts and has been a case study for efficient communication more broadly. But these dynamics may be different in larger groups, which are less studied. Our current work builds on the dyadic reference game tradition by extending it to larger groups.
 
 <!-- ## Dyadic reference games -->
-
+<!--
 @clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @kraussChangesReferencePhrases1964;@kraussConcurrentFeedbackConfirmation1966]. Two participants see the same set of tangram figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. 
 
 Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In @hawkinsCharacterizingDynamicsLearning2020, 83 pairs completed a similar iterated reference experiment where they communicated via a chat box. Speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks, in line with results from face-to-face, oral paradigms.^[We use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
 <!-- ## Multi-party communication -->
-
+<!--
 How does this process proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. Prior work has focused on manipulating knowledge states by adding new listeners to established groups.
 
 
@@ -214,7 +214,7 @@ Disagreements about how to conceptualize referents can also slow groups down. In
 
 In general, listeners expect speakers to maintain conventions and stick to descriptions that were similar to successful descriptions. However, listeners were not surprised to hear different descriptions of a familiar object if it came from a new speaker who had just entered the room [@metzingWhenConceptualPacts2003]. It's unclear what this finding predicts about new speakers who are present as fellow listeners during prior blocks -- will listeners expect them to maintain conventions? 
 
-
+-->
 
 ```{r count, include=F}
 # TODO counts for all games
@@ -618,7 +618,7 @@ red_spec_1 <- read_rds(here(mform_loc,"red_1.rds"))
 red_2a <- read_rds(here(msum_loc,"red_2a.rds"))
 red_spec_2a <- read_rds(here(mform_loc,"red_2a.rds"))
 
-red_2b <- read_rds(here(msum_loc,"red_2b.rds"))
+#red_2b <- read_rds(here(msum_loc,"red_2b.rds"))
 
 red_2c <- read_rds(here(msum_loc,"red_2c.rds"))
 ```
@@ -628,7 +628,7 @@ red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 
 ```
 
-The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \ref(fig:triptych-red)). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker; `r stats(red_2b,1)` for 6 full feedback, and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
+The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \ref(fig:triptych-red)). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker;<!-- `r stats(red_2b,1)` for 6 full feedback,--> and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
 These reduction results confirm and extend what was previously known for 2 player games. Behaviorally, larger games are mostly similar to smaller games, but their speakers tend to say more overall, perhaps related to the increased number of listeners to respond to. 
 
