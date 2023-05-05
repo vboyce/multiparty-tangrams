@@ -37,9 +37,6 @@ output:
     #md_extensions: "-autolink_bare_uris"
     number_sections: TRUE
     citation_package: default # Can also be "natbib"
-  bookdown::word_document2: 
-    # Produces largely readable output, though some cross-referencing may fail. Useful for collaboration.
-    toc: TRUE
 lang: en # Main document language in BCP47 format
 geometry: "margin=25mm"
 papersize: a4
@@ -155,11 +152,11 @@ show_summary <- function(model){
 }
 
 stats <- function(model, row){
-  str_c(model[row,1],": Est=", model[row,2], ", CrI=", model[row,3])
+  str_c(model[row,1],": ", model[row,2], " ", model[row,3])
 }
 
 stats_text  <- function(model, row){
-  str_c( model[row,2], " (CrI=", model[row,3],")")
+  str_c( model[row,2],"  ",model[row,3])
 }
 
 form <- function(model){
@@ -313,14 +310,15 @@ This feedback regime is different from @hawkinsCharacterizingDynamicsLearning202
 	
 \end{tikzpicture}
 
-\caption{TODO label}
+\caption{ TODO }
+\label{diagram}
 \end{figure}
 
 
 
 ```
 
-We extended the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 along a few dimensions. As diagrammed in Figure \@ref(fig:diagram), three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we considered games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions. 
+We extended the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 along a few dimensions. As diagrammed in Figure \ref{diagram}, three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we considered games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions. 
 
 For all experiments, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
 
@@ -394,16 +392,17 @@ When skimming transcripts to tag non-referential utterances, we noticed that one
 TODO
 In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player. 
 
-
-All models were run in brms CITE with weakly regularizing priors DESCRIBE ALSO DESCRIBE PREREG DEVIATIONS
+We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. 
 
 # Results
+
+Across the three experiments and multiple conditions, games all had the same structure of 12 images repeated over six blocks, which leads to a high degree of comparability across conditions and experiments. We first compare the results on two behavioral measures of listener accuracy and speaker reduction of words that have been the common markers of reduction phenomena in the literature [CITE]. We then explore semantic patterns of reduction by comparing similarities of utterances to look at how the speaker's language changes within and between games over time. 
 
 ## Behavioral results
 
 The two key behavioral outcomes were how accurately listeners selected the target images and how many words the speaker produced each trial.
 
-```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments.  A. Listener accuracy at selecting the target image. B. Number of words said by the speaker each trial. ", cache=FALSE}
+```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. A. Listener accuracy at selecting the target image. Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. B. Number of words said by the speaker each trial. Faint dots represent individual trials from individual games. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible. "}
 # accuracy
 
 # 1
@@ -565,7 +564,7 @@ acc_spec_3 <- read_rds(here(mform_loc,"acc_3.rds"))
 ```
 
 
-Across all experiments, most individuals were accurate in their selections, with accuracy rising across blocks. Accuracy was noticeably lower, but still far above chance,  in the 6 thin games (Figure \ref{accuracy}).  In experiment 1, participants were more accurate in later blocks (`r stats(acc_1,1)`), and there was no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 2, participants were again more accurate in later blocks (6 single speaker: `r stats(acc_2a,1)`, 6 full feedback: `r stats(acc_2b,1)`, 6 thin: `r stats(acc_2c,1)`). In experiment 3, participants were more accurate in later blocks (`r stats(acc_3,1)`). Participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`). Thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,2)`) or improvement rate (`r stats(acc_3, 2)`). 
+Across all experiments, most individuals were accurate in their selections, with accuracy rising across blocks. Accuracy was noticeably lower, but still far above chance,  in the 6 thin games (Figure \@ref(fig:behavioral)A).  In experiment 1, participants were more accurate in later blocks (`r stats(acc_1,1)`), and there was no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 2, participants were again more accurate in later blocks (6 single speaker: `r stats(acc_2a,1)`, 6 full feedback: `r stats(acc_2b,1)`, 6 thin: `r stats(acc_2c,1)`). In experiment 3, participants were more accurate in later blocks (`r stats(acc_3,1)`). Participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`). Thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,2)`) or improvement rate (`r stats(acc_3, 2)`). 
 
 The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
 
@@ -592,7 +591,7 @@ red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 
 ```
 
-The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \ref(fig:triptych-red)). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker; `r stats(red_2b,1)` for 6 full feedback, and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
+The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \@ref(fig:behavioral)B). In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker; `r stats(red_2b,1)` for 6 full feedback, and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
 These reduction results confirm and extend what was previously known for 2 player games. Behaviorally, larger games are mostly similar to smaller games, but their speakers tend to say more overall, perhaps related to the increased number of listeners to respond to. 
 
@@ -610,7 +609,7 @@ TODO examples of this in a figure would be great!!!!
 
 As a measure of convention formation, we look at the similarity of descriptions within a game for a particular tangram in different blocks. We take the last round descriptions as the established convention and measure the similarity between earlier speaker utterances and this convention. 
 
-```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results A. Convergence of utterances towards the utterance produced in the final block. B. Divergence of utterances from other utterances produced for the same image by different groups in the same block. ", cache=FALSE}
+```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A. Convergence of utterances within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. B. Divergence of utterances across games as measured by the similarity between an utterances and utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic."}
 #convergence
 
 one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
@@ -809,7 +808,7 @@ div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 div_spec_3 <- read_rds(here(mform_loc, "div_3.rds"))
 ```
 
-The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2)`). In experiment 2, divergence is stronger is the single speaker (`r stats_text(div_2a, 1)`) and full feedback conditions (`r stats_text(div_2b, 1)`) than in the 6 thin condition (`r stats_text(div_2c, 1)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (` r stats_text(div_3, 3)`). 
+The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2)`). In experiment 2, divergence is stronger is the single speaker (`r stats_text(div_2a, 1)`) and full feedback conditions (`r stats_text(div_2b, 1)`) than in the 6 thin condition (`r stats_text(div_2c, 1)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3)`). 
 
 
 
@@ -850,13 +849,11 @@ Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3
 
 ### Emoji usage ? 
 
-
-
-
  
 TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
+
 ### play with more diagrams
-Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1)`) as do larger games (`r stats_text(tonext_3,7)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3)`), painting an overall nonlinear convergent pattern (as seen in figure TODO). 
+Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1)`) as do larger games (`r stats_text(tonext_3,7)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3)`), painting an overall nonlinear convergent pattern (as seen in Figure \@ref(fig:other)). 
 
 The last measure of how utterances change within games is how they compare to the first utterance; this is less good because the first utterance has more fluffy language so is less diagnostic, but later utterances are further from the first round utterance than earlier utterances (`r stats_text(tofirst_3, 5)`). (TODO it's in the pre-reg, but we could dump it in a supplement? )
 
@@ -1042,33 +1039,6 @@ tandiv <- plot_grid(one,two,three, nrow=1)
 plot_grid(tofirst, tonext, tandiv, nrow=3, labels="AUTO", rel_heights = c(.8,.8,1), label_size=20)
 ```
 
-### Examples of names
-
-While most groups did form conventions for most tangrams, it's illustrative to look at a case where a group did not. Table \ref{diamond} shows the transcript of a 4-person group for a specific figure where they described it geometrically every round, leading to long and not very informative descriptions. Nearly all the figures have diamond heads, so this isn't a distinguishing feature, yet it is described. This illustrates the variability between groups, but also why conventions might be useful. 
-
-
-```{r diamond}
-diamond <- tribble(~`Block`, ~`Person`, ~Text,
-                 "1","A(S)","Diamond on top. Body with no real arms or legs. The body is shaped like a boot with the diamond on top.",
-		"","C", "Is the boot pointed left or right?",
-		"2", "B(S)", "diamond on top, large body beneath it. Left is a straight line all the way down, small variations on the right to the main body",
-		"3", "C(S)", "Diamond in center on top. Left side straight, right side carved out like a vase.",
-		"4", "D(S)", "Diamond head, flat topped body, straight on the left side with two triangles pointing out on the left",
-		"","D(S)" ,"*on the right",
-	"5" ,"A(S)", "Diamond on top. Left side is straight, right side is obstructed, looks like a boot",
-	"", 	"B", "what do you mean by obstructed?",
-		"", "A(S)", "The left side of the body is right, right side has bents in it",
-		"6", "B(S)", "Diamond on top of a long large body/rectangle. Left side is complete, right side has bits missing")
-
-knitr::kable(diamond, caption = "Excerpt from a group that did not reduce very much. The speaker for each round is marked with (S). Figure under discussion is row 3, column 3 in Figure \\ref{game}A.\\label{diamond}",  format="latex", booktabs=TRUE, linesep="") %>%
-kable_styling(full_width = F) %>%
-column_spec(3, width = "16em") %>% kable_styling(latex_options="H")
-
-```
-
-
-
-A different 4-person group had a member who during the first block shared the idea that the task would be easier if they explicitly gave "codenames" to the figures. The transcript for this group and one of the tangrams is shown in Table \ref{zigzag}. Of note, multiple speakers forget the assigned codename, demonstrating that meta-knowledge doesn't always help. This group also describes the figure in relation to another already-named figured. Nonetheless, the group successfully conventionalizes on a couple reduced names for this figure: "zigzag" and "beggar". This dual-naming of figures from multiple conceptual angles contributed by different speakers also occurs in other games. 
 
 
 # General Discussion
@@ -1094,7 +1064,6 @@ The experimental paradigm presented here could be a valuable tool to disentangle
 
 ## Limitations
 
-
 # References 
 
 ```{r}
@@ -1105,4 +1074,5 @@ The experimental paradigm presented here could be a valuable tool to disentangle
 \setlength{\parindent}{-0.1in} 
 \setlength{\leftskip}{0.125in}
 \noindent
+
 
