@@ -115,7 +115,7 @@ color_scheme_3 <- c("6 thin"="#D47E04", "6 thick"="#00BDA8",
 ```{r set-up, include=F}
 
 ParseJSONColumn <- function(x) {
-  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  |> 
     fromJSON(flatten = T)
 }
 
@@ -133,19 +133,19 @@ mform_loc="code/paper_mods/formulae"
 source(here("code/prep_ms.R"))
 
 show_summary <- function(model){
-  intervals <- gather_draws(model, `b_.*`, regex=T) %>% mean_qi()
+  intervals <- gather_draws(model, `b_.*`, regex=T) |> mean_qi()
   
-  stats <- gather_draws(model, `b_.*`, regex=T) %>% 
-    mutate(above_0=ifelse(.value>0, 1,0)) %>% 
-    group_by(.variable) %>% 
-    summarize(pct_above_0=mean(above_0)) %>% 
-   mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=2)) %>% 
-    left_join(intervals, by=".variable") %>% 
+  stats <- gather_draws(model, `b_.*`, regex=T) |> 
+    mutate(above_0=ifelse(.value>0, 1,0)) |> 
+    group_by(.variable) |> 
+    summarize(pct_above_0=mean(above_0)) |> 
+   mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=2)) |> 
+    left_join(intervals, by=".variable") |> 
     mutate(lower=round(.lower, digits=2),
            upper=round(.upper, digits=2),
            `Credible Interval`=str_c("[",lower,", ", upper,"]"),
            Term=str_sub(.variable, 3, -1),
-           Estimate=round(.value, digits=2)) %>% 
+           Estimate=round(.value, digits=2)) |> 
     select(Term, Estimate, `Credible Interval`, `P-value equivalent`)
   
   stats
@@ -163,9 +163,9 @@ form <- function(model){
  dep <- as.character(model$formula[2])
  ind <- as.character(model$formula[3])
  
- str_c(dep," ~ ",ind) %>% str_replace_all(" ","") %>% 
-  str_replace_all("\\*"," $\\\\times$ ") %>% 
-  str_replace_all("\\+", "&nbsp;+ ") %>% 
+ str_c(dep," ~ ",ind) |> str_replace_all(" ","") |> 
+  str_replace_all("\\*"," $\\\\times$ ") |> 
+  str_replace_all("\\+", "&nbsp;+ ") |> 
    str_replace_all("~", "$\\\\sim$ ")
 }
 ```
@@ -188,11 +188,11 @@ How does this process proceed in multi-party communication? In a dyad, speakers 
 # TODO counts for all games
 # For abstract (and elsewhere) count things!
 
-games <- combined_results %>% select(gameId) %>% unique() %>% nrow() # 98
+games <- combined_results |> select(gameId) |> unique() |> nrow() # 98
 
-players <- combined_results %>% select(gameId, numPlayers) %>% unique() %>% summarize(players=sum(numPlayers)) # 390
+players <- combined_results |> select(gameId, numPlayers) |> unique() |> summarize(players=sum(numPlayers)) # 390
 
-words <- combined_chat %>% ungroup() %>% select(total_num_words) %>% summarize(words=sum(total_num_words)) #116000
+words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) #116000
 
 ```
 In our current work, we test how the phenomena extend to larger games and games that vary in how coherent the group is and what communication channels are available to the listener. Using online recruitment and testing, we ran 3 experiments comprising `r players` participants across `r games` groups of 2--6 participants each, who collectively produced `r words` words of utterances. We analyse the results using traditional metrics of accuracy and number of words, and use new NLP tools to get at how the semantic content of utterances shifts over the course of games. 
@@ -327,20 +327,20 @@ These experiments were designed sequentially and pre-registered individually.^[E
 ## Participants
 ```{r participants}
 
-players <- combined_results %>% mutate(realPlayer=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
+players <- combined_results |> mutate(realPlayer=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
                                        numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> group_by(condition, numPlayers, gameId) |> summarize(count=max(realPlayer)) |> group_by(condition, numPlayers) |> summarize(`Total Participants`=sum(count))
 
-summary <- combined_results %>% group_by(condition, trialNum, repNum, gameId, numPlayers) %>% 
+summary <- combined_results |> group_by(condition, trialNum, repNum, gameId, numPlayers) |> 
   mutate(numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> 
-  group_by(gameId, numPlayers, condition) %>% 
-  summarize(num_trials=max(trialNum)) %>% 
-  arrange(numPlayers) %>% 
-  mutate(complete=ifelse(num_trials==71,T,F)) %>% 
-  group_by(numPlayers,complete, condition) %>% 
-  tally() %>% 
-  pivot_wider(names_from=complete, values_from=n) %>% 
+  group_by(gameId, numPlayers, condition) |> 
+  summarize(num_trials=max(trialNum)) |> 
+  arrange(numPlayers) |> 
+  mutate(complete=ifelse(num_trials==71,T,F)) |> 
+  group_by(numPlayers,complete, condition) |> 
+  tally() |> 
+  pivot_wider(names_from=complete, values_from=n) |> 
     left_join(players) |> 
-  rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) %>% 
+  rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) |> 
   mutate(Partial=ifelse(is.na(Partial), 0, Partial)) |> 
   mutate(Experiment=factor(condition, levels=c("rotate","no_rotate","full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
                           labels=c("1: baseline", "2: single speaker", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
@@ -406,9 +406,9 @@ The two key behavioral outcomes were how accurately listeners selected the targe
 # accuracy
 
 # 1
-one <- combined_results |> filter(condition=="rotate") %>% group_by(playerId,repNum, gameId, numPlayers) %>% 
+one <- combined_results |> filter(condition=="rotate") |> group_by(playerId,repNum, gameId, numPlayers) |> 
   filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) |> 
   mutate(numPlayers=as.character(numPlayers)) |> 
   ggplot(aes(x=repNum+1, y=correct.num, color=numPlayers))+
      scale_x_continuous(breaks=seq(1,6))+
@@ -425,11 +425,11 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
 scale_color_manual(values=color_scheme_1)
 #2
 
-two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", "emoji")) %>%
+two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
   filter(numPlayers==6) |> 
-  group_by(playerId,repNum, gameId, numPlayers) %>% 
+  group_by(playerId,repNum, gameId, numPlayers) |> 
   filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) |> 
   mutate(condition=case_when(
     condition=="no_rotate" ~ "6 single speaker",
     condition=="full_feedback" ~ "6 full feedback",
@@ -444,13 +444,13 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+        axis.title=element_text(size=14))+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
         scale_color_manual(values=color_scheme_2)
 
 #3
- three <- combined_results |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% group_by(playerId,repNum, gameId, condition) %>% 
+ three <- combined_results |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> group_by(playerId,repNum, gameId, condition) |> 
   filter(response!="false") |> 
-  mutate(correct.num=ifelse(correct,1,0)) %>%
+  mutate(correct.num=ifelse(correct,1,0)) |>
    mutate(condition=str_replace(condition, "_", " ")) |> 
   ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
      scale_x_continuous(breaks=seq(1,6))+
@@ -471,9 +471,9 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
 
 #1
 
-one <- combined_chat |> filter(condition=="rotate") |>  filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) %>% 
+one <- combined_chat |> filter(condition=="rotate") |>  filter(role=="speaker") |> 
+    mutate(groupxtangram=str_c(gameId,tangram)) |> 
+  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) |> 
   summarize(words=sum(total_num_words)) |>
     mutate(numPlayers=as.character(numPlayers)) |> 
 ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
@@ -493,11 +493,11 @@ annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
 
 #2
 
-two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) %>%
+two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
   filter(numPlayers==6) |> 
   filter(role=="speaker") |> 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram,condition) %>% 
+    mutate(groupxtangram=str_c(gameId,tangram)) |> 
+  group_by(repNum, gameId,tangram, groupxtangram,condition) |> 
   summarize(words=sum(total_num_words)) |> 
     mutate(condition=case_when(
     condition=="no_rotate" ~ "6 single speaker",
@@ -505,7 +505,7 @@ two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emo
     condition=="emoji" ~ "6 thin")) |>
 ggplot(aes(x=repNum+1, y=words, color=condition))+
       geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
@@ -520,9 +520,9 @@ annotate("text", x=3.5,y=60,label="Experiment 2", size=6)+
 #3
 
 
-three <- combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% filter(role=="speaker") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, condition) %>% 
+three <- combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> filter(role=="speaker") |> 
+    mutate(groupxtangram=str_c(gameId,tangram)) |> 
+  group_by(repNum, gameId,tangram, groupxtangram, condition) |> 
   summarize(words=sum(total_num_words)) |> 
   mutate(condition=str_replace(condition, "_", " ")) |> 
 ggplot(aes(x=repNum+1, y=words, color=condition))+
@@ -598,14 +598,39 @@ These reduction results confirm and extend what was previously known for 2 playe
 
 ### TODO something about how much listeners talk & game anecdotes 
 
-```{r}
-combined_chat |> filter(role=="listener") |> group_by(condition, numPlayers, trialNum, repNum, gameId) |> summarize(words=sum(total_num_words)) |> 
-  ggplot(aes(x=trialNum, y=words))+geom_point()+facet_wrap(~condition)
 
-one <- combined_chat |> filter(condition=="rotate") |>  filter(role=="listener") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) %>% 
-  summarize(words=sum(total_num_words)) |>
+Conclusions:
+should do total lang/game (including zeros) on chat conditions --> listeners don't use that much contentful language ever and it declines quickly 
+
+not sure what to say about non-contentful language use? such as yup / got it and chitchat maybe helpful to speaker (or not) and overlaps other channels. 
+
+Not sure how to talk about emoji since they do get used -- maybe say the do get used, generally used on each trial, but not a direct comparison to contentful language? 
+
+
+```{r}
+
+listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
+
+listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listeners) |> group_by(condition,  numPlayers, trialNum, repNum, gameId) |> mutate(total_num_words=ifelse(is.na(total_num_words),0, total_num_words)) |> 
+  summarize(words=sum(total_num_words)) |> filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback"))
+
+  emojis <- combined_emoji |> mutate(emoji=case_when(
+    text=="✅"~  "check",
+    text=="🤔" ~ "think",
+    text=="❌" ~ "x",
+    text=="😂" ~ "lol",
+  )) |> full_join(listeners) |> filter(condition %in% c("2_thin", "6_thin", "emoji"))|>
+    mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
+    group_by(gameId, trialNum, repNum, condition, numPlayers) 
+  
+  count_emoji <- emojis |> summarize(words=sum(is.emoji))
+  
+  all_list <- listener_chat |> union(count_emoji) |> mutate(condition2=ifelse(condition=="rotate", str_c(numPlayers,condition), condition))
+```
+
+```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
+
+one <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
     mutate(numPlayers=as.character(numPlayers)) |> 
 ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
       geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
@@ -614,7 +639,7 @@ ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
+annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -624,24 +649,20 @@ annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
 
 #2
 
-two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) %>%
+two <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
   filter(numPlayers==6) |> 
-  filter(role=="listener") |> 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram,condition) %>% 
-  summarize(words=sum(total_num_words)) |> 
     mutate(condition=case_when(
     condition=="no_rotate" ~ "6 single speaker",
     condition=="full_feedback" ~ "6 full feedback",
     condition=="emoji" ~ "6 thin")) |>
 ggplot(aes(x=repNum+1, y=words, color=condition))+
       geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,60))+
+  coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=60,label="Experiment 2", size=6)+
+annotate("text", x=3.5,y=23,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -651,43 +672,100 @@ annotate("text", x=3.5,y=60,label="Experiment 2", size=6)+
 #3
 
 
-three <- combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) %>% filter(role=="listener") %>% 
-    mutate(groupxtangram=str_c(gameId,tangram)) %>% 
-  group_by(repNum, gameId,tangram, groupxtangram, condition) %>% 
-  summarize(words=sum(total_num_words)) |> 
+three <- all_list|>   filter(words!=0) |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>  
   mutate(condition=str_replace(condition, "_", " ")) |> 
 ggplot(aes(x=repNum+1, y=words, color=condition))+
   geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  coord_cartesian(ylim=c(0,60))+
+  coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=60,label="Experiment 3", size=6)+
+annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3)
 
+  plot_grid(one, two, three, nrow=1)
+
 ```
 
-```{r emoji}
+```{r listeners2, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
 
-listeners <- combined_results |> filter(condition %in% c("2_thin", "6_thin", "emoji")) |> select(condition, playerId, gameId, repNum, trialNum, targetNum)
-  emojis <- combined_emoji |> mutate(emoji=case_when(
-    text=="✅"~  "check",
-    text=="🤔" ~ "think",
-    text=="❌" ~ "x",
-    text=="😂" ~ "lol",
-  )) |> full_join(listeners) |> group_by(gameId, trialNum, repNum, target, playerId, condition, emoji) %>% 
-  count() %>% 
-  group_by(gameId, repNum, trialNum, target, playerId, condition) %>% 
-  pivot_wider(names_from=emoji, values_from=n, values_fill = 0) |> 
-  rename(none="NA")
+# do any talk per trial
 
-emojis |> 
+anytalk <- all_list |> group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |> summarize(words=sum(words)) |> mutate(is.words=ifelse(words>0, 1,0)) 
+
+# maybe try per game trials/block where any listener talked?
+
+
+one <- anytalk |> filter(condition=="rotate") |>  
+    mutate(numPlayers=as.character(numPlayers)) |> 
+ggplot(aes(x=repNum+1, y=is.words, color=numPlayers))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
+  coord_cartesian(ylim=c(0,1))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Fraction trials with any words", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+#annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_1)
+
+
+#2
+
+two <- anytalk|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
+    mutate(condition=case_when(
+    condition=="no_rotate" ~ "6 single speaker",
+    condition=="full_feedback" ~ "6 full feedback",
+    condition=="emoji" ~ "6 thin")) |> 
+ggplot(aes(x=repNum+1, y=is.words, color=condition))+
+   geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
+  coord_cartesian(ylim=c(0,1))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Fraction trials with any words", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+#annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+    scale_color_manual(values=color_scheme_2)
+
+#3
+
+
+three <- anytalk|> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>  
+  mutate(condition=str_replace(condition, "_", " ")) |> 
+ggplot(aes(x=repNum+1, y=is.words, color=condition))+
+geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
+  coord_cartesian(ylim=c(0,1))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Fraction trials with any words", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1) ) )+
+#annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_3)
+
+  plot_grid(one, two, three, nrow=1)
 ```
+notes: this is a slightly unfair comparison, since it's the filtered chat for the chat ones, but raw emojis for the others which might actually map to the "got it" chitchat. Resolve later.
+
+While listener backchannel is implicated as an important way for listeners to get clarification and reach agreement, listeners don't talk that much. The average number of words of reference language per trial per listener (counting those who say nothing) is less than 5 words TODO real numbers for the first block and declines in later blocks. 
+Listeners don't talk very much
+
+Key points about listener talking: They don't do it very much, but they do it a bit. Especially early in the game. Over the course of the game the amount of time any listener talks at all declines, as does the amount that is said. 
 ## Comparisons of language between and within games
 
 In addition to behavioral measures, we can also look at how the descriptions change over time within and between games. We focus on the speaker's description, concatentating it all together into one utterance (this includes any add ons or answers to questions). Then we use SBERT to embed the utterance in a high-dimensional vector space. This turns each speaker description into a long vector, where the vectors represent some of the semantic content of the utterance. Vectors that are close together represent utterances that are more similar to one another, so by looking at cosine similarity (a metric of how close pairs of vectors are) we can see how similar pairs of utterances are. 
@@ -734,7 +812,7 @@ two <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
 annotate("text", x=3,y=1,label="Experiment 2", size=6)+
   theme(legend.position="none",
@@ -797,7 +875,7 @@ two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   scale_x_continuous(breaks=seq(1,6))+
       coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 annotate("text", x=3.5,y=.7,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
@@ -984,7 +1062,7 @@ two <- one_two_first |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")
   geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
   scale_x_continuous(breaks=seq(2,6))+
   coord_cartesian(ylim=c(.2,1))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
 annotate("text", x=4,y=1,label="Experiment 2", size=6)+
   theme(legend.position="none",
@@ -1042,7 +1120,7 @@ two <-  one_two_next |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")
   scale_x_continuous(breaks=seq(1,5))+
       coord_cartesian(ylim=c(.1,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 annotate("text", x=3.5,y=1,label="Experiment 2", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
@@ -1100,7 +1178,7 @@ two <-  one_two_tandiv |>  filter(condition %in% c("6emoji", "6highfeed", "6noro
   scale_x_continuous(breaks=seq(1,6))+
       coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 annotate("text", x=3.5,y=.7,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
