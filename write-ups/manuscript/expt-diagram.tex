@@ -71,9 +71,9 @@
 		\node (n6thin2) at (2.7,-2.3) [expt2, fill=thin6, label={[expt2col] right: 6 thin}] {};
 		\node (n6thin) at (2.5,-2.5) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
 		
-		\node[align=center,anchor=north] (lab1) at (-2,2) {Rotating speaker;\\limited feedback};
+		\node[align=center,anchor=north] (lab1) at (-2,3) {Rotating speaker;\\limited feedback};
 		\node[align=center,anchor=north] (lab2) at (-1.5,6) {Single speaker;\\full feedback};
-		\node[align=center,anchor=north] (lab3) at (-2,0) {Listeners \\use chat};
+		\node[align=center,anchor=north] (lab3) at (-3,0.2) {Listeners \\use chat};
 		\node[align=center,anchor=north] (lab4) at (-3.5,-2.5) {Listeners \\use emoji};
 		
 		\node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
@@ -81,18 +81,20 @@
 		\node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
 		
 		
-		\node[illus, anchor=north] () at (-4,-3.5) {	\includegraphics[scale=.15]{images/nochat.png}};
-		\node[illus, anchor=north] () at (-4,-1) {\includegraphics[scale=.15]{images/chat.png}};
+		\node[illus, anchor=north] () at (-3.5,-3.5) {	\includegraphics[scale=.13]{images/nochat.png}};
+		\node[illus, anchor=north] () at (-3.3,-.7) {\includegraphics[scale=.13]{images/chat.png}};
 			
-		\node[illus, anchor=north] () at (-4,4) {\includegraphics[scale=.09]{images/rotate.png}};
-		\node[illus, anchor=north] () at (-1,8) {\includegraphics[scale=.09]{images/norotate.png}};
+		\node[illus, anchor=north] () at (-3.35,2) {\includegraphics[scale=.08]{images/rotate.png}};
+		\node[illus, anchor=north] () at (7.5,4.8) {\includegraphics[scale=.08]{images/norotate.png}};
 		
 		
-		%\node[illus, anchor=north] () at (-2,-.4) {\includegraphics[scale=.07]{images/two.png}};
-		\node[ anchor=north] () at (7,1) {\includegraphics[scale=.07]{images/six.png}};
+		\node[anchor=north] () at (-1,.7) {\includegraphics[scale=.05]{images/two.png}};
+		\node[ anchor=north] () at (6.8,.8) {\includegraphics[scale=.05]{images/six.png}};
 		
-		\node[illus, anchor=north] () at (-5,2) {	\includegraphics[scale=.1]{images/limited-wrong.png}	\includegraphics[scale=.1]{images/limited-correct.png}};
-		\node[illus, anchor=north] () at (-4.5,6.5) {	\includegraphics[scale=.1]{images/full-wrong.png}	\includegraphics[scale=.1]{images/full-correct.png}};
+		\node[illus, anchor=north] () at (-4.3,4) {	\includegraphics[scale=.1]{images/limited-wrong.png}	%\includegraphics[scale=.1]{images/limited-correct.png}
+		};
+		\node[illus, anchor=north] () at (8,2.5) {	\includegraphics[scale=.1]{images/full-wrong.png}	%\includegraphics[scale=.1]{images/full-correct.png}
+		};
 		
 		\draw[dashed] (n6) edge [] (n6thin);
 		\draw[dashed] (n2thin) edge [] (n6thin);
