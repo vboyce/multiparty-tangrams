@@ -1,0 +1,67 @@
+\documentclass[margin=0mm, 10pt]{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, quotes, shapes}
+
+\begin{document}
+
+\definecolor{bad}{HTML}{FFCCCB}
+\definecolor{meh}{HTML}{aaddaa}
+\definecolor{good}{HTML}{abcdff}
+\tikzset{
+mynode/.style={
+draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=.5ex},
+}
+
+\begin{tikzpicture}
+\node[mynode] (a0) at (2.5, 9.5) {\textbf{Round 1:} stomping feet, head is not the highest point of the picture - maybe a shoulder is at the same height, both feet point left};
+\node[mynode] (a1) at (2.5, 7)  {\textbf{Round 2:} diamond head is almost on back and on right side of body; both feet are pointing left
+};
+\node[mynode] (a2) at (2.5, 5.4)  {\textbf{Round 3: }sad guy with square backpack, feet to the left
+};
+\node[mynode] (a3) at (2.5, 3.8) { \textbf{Round 4:} stomping feet pointing left; square backpack on right; nose pointing down on left
+};
+\node[mynode] (a4) at (2.5, 2.4) { \textbf{Round 5:} sad guy with backpack, legs to the left
+};
+\node[mynode] (a5)  at (2.5,1) {\textbf{Round 6:} sad guy with backpack, legs to the left
+};
+
+\node[mynode] (b0) at (-3.5,9.5) {\textbf{Round 1:} like someone dancing, with one foot on the ground and one up a little, facing left, like a head yes, like they are kind of leaning back, foot sticking out a little to the left};
+\node[mynode] (b1) at (-3.5,7)  {\textbf{Round 2:} Like a man facing left marching with a flag over his shoulder, Face is pointy looking down
+};
+\node[mynode] (b2) at (-3.5,5.4) {\textbf{Round 3:} looking to the left one leg up pointy face
+};
+\node[mynode] (b3) at (-3.5,3.8) {\textbf{Round 4:} man marching with flag over shoulder
+};
+\node[mynode] (b4) at (-3.5,2.4)  { \textbf{Round 5:} marching man with flag over shoulder
+};
+\node[mynode] (b5)   at (-5,1) { \textbf{Round 6:} flag bearer};
+
+
+\node at (-6,8) {Convergence to last round \newline convention};
+\node at (0,11) {Divergence between games}; 
+	\begin{scope}[line width=1 pt, >=Stealth]
+	%\draw [<->]   (a0.west) edge [out=230, in=150] node {.23}  (a5.west);
+	%\draw [<->]   (a1.west) edge [out=210, in=150] node [left]{.13} (a5.west);
+	%\draw [<->]   (a2.west) edge [bend right] node [left] {.92}(a5.west);
+	%\draw [<->]   (a3.west) edge [out=210, in=90] node [left] {.47} (a5.west);
+	%\draw [<->]   (a4.south) edge  node [left] {.91} (a5);
+	
+	\draw [<->]   (b0) edge [out=180, in=180] node [right]{.13}  (b5.west);
+	\draw [<->]   (b1) edge [out=180, in=150] node [right]{.53}  (b5.west);
+	\draw [<->]   (b2) edge [out=180, in=120] node  [right]{.13}  (b5.west);
+	\draw [<->]   (b3) edge [out=180, in=90] node [right] {.62} (b5.west);
+	\draw [<->]   (b4) edge [out=180, in=90]node [right]{.63} (b5.west);
+	
+	\draw [<->]   (a0) edge [pos=.5, ".59"] (b0);
+	\draw [<->]   (a1) edge [pos=.5, ".29"] (b1);
+	\draw [<->]   (a2) edge [pos=.5, ".48"] (b2);
+	\draw [<->]   (a3) edge [pos=.5, ".28"] (b3);
+	\draw [<->]   (a4) edge [pos=.5, ".32"] (b4);
+	\draw [<->]   (a5) edge [pos=.5, ".06"] (b5);
+	
+
+	
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
