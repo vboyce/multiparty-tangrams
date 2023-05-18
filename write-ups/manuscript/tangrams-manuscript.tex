@@ -129,6 +129,7 @@
 
 \usepackage{tikz}
 \usetikzlibrary{angles,positioning,arrows.meta, quotes, shapes, shapes.geometric}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -333,12 +334,6 @@ Recently, online participant recruitment and web-based experiments have made it 
 \hypertarget{current-work}{%
 \subsection{Current work}\label{current-work}}
 
-How does this process proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}). These effects likely vary by both the knowledge state of and communication channels available to the listeners (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}).
-
-In our current work, we test how the phenomena extend to larger games and games that vary in how coherent the group is and what communication channels are available to the listener. Using online recruitment and testing, we ran 3 experiments comprising 1319 participants across 313 groups of 2--6 participants each, who collectively produced 325579 words of utterances. We analyse the results using traditional metrics of accuracy and number of words, and use new NLP tools to get at how the semantic content of utterances shifts over the course of games.
-
-TODO TOPLINE RESULTS??
-
 \begin{figure*}[t!]
 
 {\centering \includegraphics[width=1\linewidth]{figs/interface-1} 
@@ -348,27 +343,37 @@ TODO TOPLINE RESULTS??
 \caption{All participants saw all 12 tangram images. (A) Speaker's view during selection phase. (B) During the feedback stage, speakers saw what figure each person chose, but listeners only learned if their selection was correct or incorrect. Listeners were not shown what other listeners chose. \label{game}}\label{fig:interface}
 \end{figure*}
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+How does this process proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}). These effects likely vary by both the knowledge state of and communication channels available to the listeners (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}).
 
-    \definecolor{baseline6}{HTML}{6940FF}
-        \definecolor{baseline5}{HTML}{A12EFF}
-            \definecolor{baseline4}{HTML}{D24AFF}
-    \definecolor{baseline3}{HTML}{FF7DF0}
-        \definecolor{baseline2}{HTML}{FFBDD4}
-        
-        \definecolor{thick6}{HTML}{00BDA8}
-        \definecolor{thick2}{HTML}{77F3DB}
-        
-    \definecolor{thin6}{HTML}{D47E04}
-    \definecolor{thin2}{HTML}{FFDA09}
-    
-    \definecolor{single}{HTML}{00A2FF}
-    \definecolor{full}{HTML}{425df5}
-    
-    \definecolor{expt1col}{HTML}{FF0099}
-        \definecolor{expt3col}{HTML}{527319}
-                \definecolor{expt2col}{HTML}{0000FF}
+In our current work, we test how the phenomena extend to larger games and games that vary in how coherent the group is and what communication channels are available to the listener. Using online recruitment and testing, we ran 3 experiments comprising 1319 participants across 313 groups of 2--6 participants each, who collectively produced 325579 words of utterances. We analyse the results using traditional metrics of accuracy and number of words, and use new NLP tools to get at how the semantic content of utterances shifts over the course of games.
+
+TODO TOPLINE RESULTS??
+
+Across three experiments, we extend the repeated dyadic reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) along a few dimensions. All the experiments can be compared as they share the same core methods, with variations. All of the reference games use 12 target images {[}CITE CLARK HAWKINS{]} arranged in a grid, with positions randomized per player. The speaker saw one image picked out as the target and described it to their groupmates (listeners) over a chat interface so each listener could make a selection. After all listeners had selected, players recieved feedback on the selections. This repeated for all the images with the same speaker to comprise a 12 trial block. Then the whole process repeated for a total of 6 blocks. {[}TODO possibly can reduce this depending on what's in intro{]}.
+
+We parameterized the experiments along a few dimensions {[}see figure whatever{]}. One dimension was game size which varied between 2 and 6 player groups. Another dimension was group coherence, which was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. In low group coherence games, each listener only recieved feedback on if they were indiviually right or wrong in their selection, while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been. The last dimension of variation was listener backchannel: in high backchannel games, the listeners could freely send (text) messages to the shared chat, while in the low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat.
+TODO work in motivation/why for these variations?
+
+As shown in Figure whatever, Experiment 1 had constant low group coherence and high listener backchannel while varying group size. Experiment 2 held group size constant at 6 and each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin had a low backchannel. Experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players.
+
+\definecolor{baseline6}{HTML}{6940FF}
+\definecolor{baseline5}{HTML}{A12EFF}
+\definecolor{baseline4}{HTML}{D24AFF}
+\definecolor{baseline3}{HTML}{FF7DF0}
+\definecolor{baseline2}{HTML}{FFBDD4}
+
+\definecolor{thick6}{HTML}{00BDA8}
+\definecolor{thick2}{HTML}{77F3DB}
+
+\definecolor{thin6}{HTML}{D47E04}
+\definecolor{thin2}{HTML}{FFDA09}
+
+\definecolor{single}{HTML}{00A2FF}
+\definecolor{full}{HTML}{425df5}
+
+\definecolor{expt1col}{HTML}{FF0099}
+\definecolor{expt3col}{HTML}{527319}
+\definecolor{expt2col}{HTML}{0000FF}
 
 \tikzset{
     expt1/.style={
@@ -376,157 +381,82 @@ TODO TOPLINE RESULTS??
     expt2/.style={
         draw, circle, color=expt2col, line width=4,  align=center, scale=2},
     expt3/.style={
-        draw, circle, color=expt3col, line width=4, align=center, scale=2}
+        draw, circle, color=expt3col, line width=4, align=center, scale=2},
+        illus/.style={draw, rectangle}
 }
+
 \tikzset{nodes={font=\sffamily\bfseries}} 
 
 \begin{figure}
+
+
+    
     \begin{tikzpicture}
-    
-    \def\r{6}
-    \draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.3] (-2*\r/5,  -2*\r/3) ;
-    \draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=.9] (\r, 0) ;
-    \draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.3] (0, \r);
-    
-    \node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col]below:2}] {};
-    \node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
-    \node (n4) at (2,0) [expt1, fill=baseline4, label={[expt1col]below:4}] {};
-    \node (n5) at (3,0) [expt1, fill=baseline5, label={[expt1col]below:5}] {};
-    \node (n6) at (4,0) [expt1, fill=baseline6] {};
+        
+        \def\r{6}
+        \draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.3] (-2*\r/5,  -2*\r/3) ;
+        \draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=.9] (\r, 0) ;
+        \draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.35] (0, \r);
+        
+        \node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col]below:2}] {};
+        \node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
+        \node (n4) at (2,0) [expt1, fill=baseline4, label={[expt1col]below:4}] {};
+        \node (n5) at (3,0) [expt1, fill=baseline5, label={[expt1col]below:5}] {};
+        \node (n6) at (4,0) [expt1, fill=baseline6] {};
         \node[align=center,anchor=north,text=expt1col] at (4.6,-.45) {6 baseline};
+        
+        \node (n2thick) at (0,4) [expt3, fill=thick2, label= {[expt3col]above right:2 thick}] {};
+        \node (n6thick) at (4,4) [expt3, fill=thick6, label={[expt3col]right:6 thick}] {};
+        
+        \node (nfull) at (4,1.5) [expt2, fill=full, label={[expt2col]right:6 full feedback}] {};
+        \node (nsingle) at (4,3) [expt2, fill=single, label={[expt2col]right:6 single speaker}] {};
+        
+        \node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label={[expt3col]below right: 2 thin}] {};
+        \node (n6thin2) at (2.7,-2.3) [expt2, fill=thin6, label={[expt2col] right: 6 thin}] {};
+        \node (n6thin) at (2.5,-2.5) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
+        
+        \node[align=center,anchor=north] (lab1) at (-2,3) {Rotating speaker;\\limited feedback};
+        \node[align=center,anchor=north] (lab2) at (-1.5,6) {Single speaker;\\full feedback};
+        \node[align=center,anchor=north] (lab3) at (-3,0.2) {Listeners \\use chat};
+        \node[align=center,anchor=north] (lab4) at (-3.5,-2.5) {Listeners \\use emoji};
+        
+        \node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
+        \node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
+        \node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
+        
+        
+ \node[illus, anchor=north] () at (-3.5,-3.5) {  \includegraphics[height=2.5em]{images/nochat.png}};
+        \node[illus, anchor=north] () at (-3.3,-.7) {\includegraphics[height=2.5em]{images/chat.png}};
+            
+        \node[illus, anchor=north] () at (-3.35,2) {\includegraphics[height=3em]{images/rotate.png}};
+        \node[illus, anchor=north] () at (7.5,4.8) {\includegraphics[height=3em]{images/norotate.png}};
+        
+        
+        \node[anchor=north] () at (-1,.7) {\includegraphics[height=1.5em]{images/two.png}};
+        \node[ anchor=north] () at (6.8,.8) {\includegraphics[height=2em]{images/six.png}};
+        
+        \node[illus, anchor=north] () at (-4.3,4) { \includegraphics[height=4em]{images/limited-wrong.png}    %\includegraphics[scale=.1]{images/limited-correct.png}
+        };
+        \node[illus, anchor=north] () at (8,2.5) {  \includegraphics[height=4em]{images/full-wrong.png}   %\includegraphics[scale=.1]{images/full-correct.png}
+        };  
+        
+        \draw[dashed] (n6) edge [] (n6thin);
+        \draw[dashed] (n2thin) edge [] (n6thin);
+        \draw[dashed] (n2thick) edge [] (n6thick);
+        \draw[dashed] (n6) edge [] (n6thick);
+        
+        \begin{scope}[line width=1 pt, >=Stealth]
+            \draw[->] (lab1) -> (n2);
+            \draw[->] (lab2) -> (n2thick);
+            \draw[->] (lab3) -> (n2);
+            \draw[->] (lab4) -> (n2thin);
+        \end{scope}
+        
+    \end{tikzpicture}
     
-    \node (n2thick) at (0,4) [expt3, fill=thick2, label= {[expt3col]above right:2 thick}] {};
-    \node (n6thick) at (4,4) [expt3, fill=thick6, label={[expt3col]right:6 thick}] {};
-    
-    \node (nfull) at (4,1.5) [expt2, fill=full, label={[expt2col]right:6 full feedback}] {};
-    \node (nsingle) at (4,3) [expt2, fill=single, label={[expt2col]right:6 single speaker}] {};
-    
-    \node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label={[expt3col]below right: 2 thin}] {};
-    \node (n6thin2) at (2.7,-2.3) [expt2, fill=thin6, label={[expt2col] right: 6 thin}] {};
-    \node (n6thin) at (2.5,-2.5) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
-    
-    \node[align=center,anchor=north] (lab1) at (-2.5,2) {Rotating speaker;\\limited feedback};
-    \node[align=center,anchor=north] (lab2) at (-2.5,4) {Single speaker;\\full feedback};
-    \node[align=center,anchor=north] (lab3) at (-2,.5) {Listeners \\use chat};
-    \node[align=center,anchor=north] (lab4) at (-3.5,-2) {Listeners \\use emoji};
-    
-    \node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
-    \node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
-    \node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
-    
-    \draw[dashed] (n6) edge [] (n6thin);
-    \draw[dashed] (n2thin) edge [] (n6thin);
-    \draw[dashed] (n2thick) edge [] (n6thick);
-    \draw[dashed] (n6) edge [] (n6thick);
-    
-    \begin{scope}[line width=1 pt, >=Stealth]
-        \draw[->] (lab1) -> (n2);
-        \draw[->] (lab2) -> (n2thick);
-        \draw[->] (lab3) -> (n2);
-        \draw[->] (lab4) -> (n2thin);
-    \end{scope}
-    
-\end{tikzpicture}
-
-\caption{ TODO }
-\label{diagram}
+    \caption{ Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) games test 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel. TODO FIX ME AND MY ILLUSTRATION!!! }
+    \label{diagram}
 \end{figure}
-
-We extended the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) along a few dimensions. As diagrammed in Figure \ref{diagram}, three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we considered games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions.
-
-For all experiments, we used Empirica (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}) to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.
-
-These experiments were designed sequentially and pre-registered individually.\footnote{Experiment 1: \url{https://osf.io/cn9f4} for the 2-4 player groups, and \url{https://osf.io/rpz67} for the 5-6 player data run later. Experiment 2: single speaker at \url{https://osf.io/f9xyd}, full feedback at \url{https://osf.io/j5zbm}, and thin at \url{https://osf.io/k5f4t}. Experiment 3: \url{https://osf.io/untzy}} TODO more comments on pre-reg
-
-\hypertarget{participants}{%
-\subsection{Participants}\label{participants}}
-
-\begin{table}
-
-\caption{\label{tab:participants}The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.}
-\centering
-\begin{tabular}[t]{l|l|r|r|r}
-\hline
-Experiment & Players & Complete & Partial & Total Participants\\
-\hline
-1: baseline & 2 & 15 & 4 & 38\\
-\hline
-1: baseline & 3 & 18 & 2 & 60\\
-\hline
-1: baseline & 4 & 19 & 2 & 84\\
-\hline
-1: baseline & 5 & 17 & 3 & 100\\
-\hline
-1: baseline & 6 & 12 & 6 & 108\\
-\hline
-2: single speaker & 6 & 15 & 3 & 108\\
-\hline
-2: full feedback & 6 & 13 & 4 & 102\\
-\hline
-2: thin & 6 & 10 & 6 & 96\\
-\hline
-3: thin & 2 & 35 & 3 & 76\\
-\hline
-3: thin & 6* & 44 & 0 & 235\\
-\hline
-3: thick & 2 & 39 & 3 & 84\\
-\hline
-3: thick & 6* & 38 & 2 & 222\\
-\hline
-\end{tabular}
-\end{table}
-
-Participants were recruited using the Prolific platform, and all participants self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants each took part in only one experiment. Experiment 1 took place between May and July 2021, experiment 2 between March and August 2022, and experiment 3 in October 2022. As games varied in length depending on the number of participants, we paid participants based on group size, with the goal of a \$10 hourly rate. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player had the speaker role for the entirety of a 6-player game, they gained an addition \$2 bonus. Across all games, each participant could early up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments. A breakdown of number of games and participants in each condition is shown in Table \ref{tab:participants}.
-
-\hypertarget{materials}{%
-\subsection{Materials}\label{materials}}
-
-We used the 12 tangram images used by Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) and Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{1986}) (see Figure \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as ``top left'' were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block.
-
-\hypertarget{procedure}{%
-\subsection{Procedure}\label{procedure}}
-
-The experimental procedure was very similar across the three experiments. We first describe the procedure used in experiment 1 and then describe the differences in later experiments.
-
-\hypertarget{experiment-1}{%
-\subsubsection{Experiment 1}\label{experiment-1}}
-
-We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}). From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a ``waiting room'' screen until their partners were ready.
-
-Once the game started, participants saw screens like Figure \ref{game}A. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection.
-
-Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{game}B). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment.
-
-In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen to keep participants more equally engaged (the speaker role is more work), and to give a more robust test for reduction and convention.
-
-After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game.
-
-\hypertarget{differences-in-experiment-2}{%
-\subsubsection{Differences in experiment 2}\label{differences-in-experiment-2}}
-
-Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6 player games. Each of these conditions differed from the experiment 1 baseline in one way. The single speaker condition differed only in that one person was designated the speaker for the entire game, rather than having the speaker role rotate. The full feedback condition differed from experiment 1 in that all participants were shown what each person had selected and what the right answer was; listeners still saw text saying whether they individually were right or wrong. This was similar to some dyadic work, such as Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) where listeners were shown what the right answer was during feedback. For the thin condition, we altered the chatbox interface for listeners. Instead of a textbox, listeners had 4 buttons, each of which sent a different emoji to the chat. Listeners were given suggested meanings for the 4 emojis during instructions. They could send the emojis as often as desired, for instance, initially indicating confusion, and later indicating understanding. In addition, we added notifications that appeared in the chat box saying when a player had made a selection.
-
-\hypertarget{differences-in-experiment-3}{%
-\subsubsection{Differences in experiment 3}\label{differences-in-experiment-3}}
-
-The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one perspon was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. TODO confirm. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection.
-
-\hypertarget{data-pre-processing-and-exclusions}{%
-\subsection{Data pre-processing and exclusions}\label{data-pre-processing-and-exclusions}}
-
-Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries (``Hello''), meta-commentary about how well or fast the task was going, and confirmations or denials (``ok'', ``got it'', ``yes'', ``no''). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams (``ok, so it looks like a zombie'', ``yes, the one with legs''); these lines were retained intact.
-
-In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game would drop below 2 players. The distribution of playes in these 6* player games is at TODO! The realities of online recruitment and disconnection meant that the number of games varied, although we aimed for 20 games in each condition in experiments 1 and 2, and 40 per condition in experiment 3. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Table \ref{tab:participants} for counts).
-
-When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses.
-
-\hypertarget{modelling-strategy}{%
-\subsection{Modelling strategy}\label{modelling-strategy}}
-
-TODO
-In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player.
-
-We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -557,6 +487,13 @@ These reduction results confirm and extend what was previously known for 2 playe
 
 \hypertarget{todo-something-about-how-much-listeners-talk-game-anecdotes}{%
 \subsubsection{TODO something about how much listeners talk \& game anecdotes}\label{todo-something-about-how-much-listeners-talk-game-anecdotes}}
+
+Conclusions:
+should do total lang/game (including zeros) on chat conditions --\textgreater{} listeners don't use that much contentful language ever and it declines quickly
+
+not sure what to say about non-contentful language use? such as yup / got it and chitchat maybe helpful to speaker (or not) and overlaps other channels.
+
+Not sure how to talk about emoji since they do get used -- maybe say the do get used, generally used on each trial, but not a direct comparison to contentful language?
 
 \begin{figure*}[t!]
 
@@ -657,6 +594,105 @@ The experimental paradigm presented here could be a valuable tool to disentangle
 
 \hypertarget{limitations}{%
 \subsection{Limitations}\label{limitations}}
+
+\hypertarget{methods-gore}{%
+\section{Methods gore}\label{methods-gore}}
+
+We extended the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) along a few dimensions. As diagrammed in Figure \ref{diagram}, three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we expanded from dyadic reference games to group games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions.
+
+For all experiments, we used Empirica (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}) to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.
+
+These experiments were designed sequentially and pre-registered individually.\footnote{Experiment 1: \url{https://osf.io/cn9f4} for the 2-4 player groups, and \url{https://osf.io/rpz67} for the 5-6 player data run later. Experiment 2: single speaker at \url{https://osf.io/f9xyd}, full feedback at \url{https://osf.io/j5zbm}, and thin at \url{https://osf.io/k5f4t}. Experiment 3: \url{https://osf.io/untzy}} TODO more comments on pre-reg
+
+\hypertarget{participants}{%
+\subsection{Participants}\label{participants}}
+
+\begin{table}
+
+\caption{\label{tab:participants}The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.}
+\centering
+\begin{tabular}[t]{l|l|r|r|r}
+\hline
+Experiment & Players & Complete & Partial & Total Participants\\
+\hline
+1: baseline & 2 & 15 & 4 & 38\\
+\hline
+1: baseline & 3 & 18 & 2 & 60\\
+\hline
+1: baseline & 4 & 19 & 2 & 84\\
+\hline
+1: baseline & 5 & 17 & 3 & 100\\
+\hline
+1: baseline & 6 & 12 & 6 & 108\\
+\hline
+2: single speaker & 6 & 15 & 3 & 108\\
+\hline
+2: full feedback & 6 & 13 & 4 & 102\\
+\hline
+2: thin & 6 & 10 & 6 & 96\\
+\hline
+3: thin & 2 & 35 & 3 & 76\\
+\hline
+3: thin & 6* & 44 & 0 & 235\\
+\hline
+3: thick & 2 & 39 & 3 & 84\\
+\hline
+3: thick & 6* & 38 & 2 & 222\\
+\hline
+\end{tabular}
+\end{table}
+
+Participants were recruited using the Prolific platform, and all participants self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants each took part in only one experiment. Experiment 1 took place between May and July 2021, experiment 2 between March and August 2022, and experiment 3 in October 2022. As games varied in length depending on the number of participants, we paid participants based on group size, with the goal of a \$10 hourly rate. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player had the speaker role for the entirety of a 6-player game, they gained an addition \$2 bonus. Across all games, each participant could early up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments. A breakdown of number of games and participants in each condition is shown in Table \ref{tab:participants}.
+
+\hypertarget{materials}{%
+\subsection{Materials}\label{materials}}
+
+We used the 12 tangram images used by Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) and Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{1986}) (see Figure \ref{game}). These images were displayed in a grid with order randomized for each participant (thus descriptions such as ``top left'' were ineffective as the image might be in a different place on the speaker's and listeners' screens). The same images were used every block.
+
+\hypertarget{procedure}{%
+\subsection{Procedure}\label{procedure}}
+
+The experimental procedure was very similar across the three experiments. We first describe the procedure used in experiment 1 and then describe the differences in later experiments.
+
+\hypertarget{experiment-1}{%
+\subsubsection{Experiment 1}\label{experiment-1}}
+
+We implemented the experiment using Empirica, a Javascript-based platform for running real-time interactive experiments online (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}). From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a ``waiting room'' screen until their partners were ready.
+
+Once the game started, participants saw screens like Figure \ref{game}A. Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection.
+
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback (Figure \ref{game}B). Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment.
+
+In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen to keep participants more equally engaged (the speaker role is more work), and to give a more robust test for reduction and convention.
+
+After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game.
+
+\hypertarget{differences-in-experiment-2}{%
+\subsubsection{Differences in experiment 2}\label{differences-in-experiment-2}}
+
+Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6 player games. Each of these conditions differed from the experiment 1 baseline in one way. The single speaker condition differed only in that one person was designated the speaker for the entire game, rather than having the speaker role rotate. The full feedback condition differed from experiment 1 in that all participants were shown what each person had selected and what the right answer was; listeners still saw text saying whether they individually were right or wrong. This was similar to some dyadic work, such as Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) where listeners were shown what the right answer was during feedback. For the thin condition, we altered the chatbox interface for listeners. Instead of a textbox, listeners had 4 buttons, each of which sent a different emoji to the chat. Listeners were given suggested meanings for the 4 emojis during instructions. They could send the emojis as often as desired, for instance, initially indicating confusion, and later indicating understanding. In addition, we added notifications that appeared in the chat box saying when a player had made a selection.
+
+\hypertarget{differences-in-experiment-3}{%
+\subsubsection{Differences in experiment 3}\label{differences-in-experiment-3}}
+
+The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one perspon was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. TODO confirm. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection.
+
+\hypertarget{data-pre-processing-and-exclusions}{%
+\subsection{Data pre-processing and exclusions}\label{data-pre-processing-and-exclusions}}
+
+Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries (``Hello''), meta-commentary about how well or fast the task was going, and confirmations or denials (``ok'', ``got it'', ``yes'', ``no''). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams (``ok, so it looks like a zombie'', ``yes, the one with legs''); these lines were retained intact.
+
+In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game would drop below 2 players. The distribution of playes in these 6* player games is at TODO! The realities of online recruitment and disconnection meant that the number of games varied, although we aimed for 20 games in each condition in experiments 1 and 2, and 40 per condition in experiment 3. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Table \ref{tab:participants} for counts).
+
+When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses.
+
+\hypertarget{modelling-strategy}{%
+\subsection{Modelling strategy}\label{modelling-strategy}}
+
+TODO
+In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player.
+
+We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models.
 
 \hypertarget{references}{%
 \section{References}\label{references}}
