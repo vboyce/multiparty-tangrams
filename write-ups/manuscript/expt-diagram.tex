@@ -44,15 +44,15 @@
 \tikzset{nodes={font=\sffamily\bfseries}} 
 
 \begin{figure}
-
-
+	
+	
 	
 	\begin{tikzpicture}
 		
-		\def\r{6}
-		\draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.3] (-2*\r/5,  -2*\r/3) ;
-		\draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=.9] (\r, 0) ;
-		\draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.35] (0, \r);
+		\def\r{5}
+		\draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.4] (-2*\r/5,  -2*\r/3) ;
+		\draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=1.05] (\r, 0) ;
+		\draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.4] (0, \r);
 		
 		\node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col]below:2}] {};
 		\node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
@@ -74,26 +74,25 @@
 		\node[align=center,anchor=north] (lab1) at (-2,3) {Rotating speaker;\\limited feedback};
 		\node[align=center,anchor=north] (lab2) at (-1.5,6) {Single speaker;\\full feedback};
 		\node[align=center,anchor=north] (lab3) at (-3,0.2) {Listeners \\use chat};
-		\node[align=center,anchor=north] (lab4) at (-3.5,-2.5) {Listeners \\use emoji};
+		\node[align=center,anchor=north] (lab4) at (-3.5,-2) {Listeners \\use emoji};
 		
 		\node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
 		\node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
 		\node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
 		
-		
-		\node[illus, anchor=north] () at (-3.5,-3.5) {	\includegraphics[scale=.13]{images/nochat.png}};
-		\node[illus, anchor=north] () at (-3.3,-.7) {\includegraphics[scale=.13]{images/chat.png}};
-			
-		\node[illus, anchor=north] () at (-3.35,2) {\includegraphics[scale=.08]{images/rotate.png}};
-		\node[illus, anchor=north] () at (7.5,4.8) {\includegraphics[scale=.08]{images/norotate.png}};
-		
-		
-		\node[anchor=north] () at (-1,.7) {\includegraphics[scale=.05]{images/two.png}};
-		\node[ anchor=north] () at (6.8,.8) {\includegraphics[scale=.05]{images/six.png}};
-		
-		\node[illus, anchor=north] () at (-4.3,4) {	\includegraphics[scale=.1]{images/limited-wrong.png}	%\includegraphics[scale=.1]{images/limited-correct.png}
-		};
-		\node[illus, anchor=north] () at (8,2.5) {	\includegraphics[scale=.1]{images/full-wrong.png}	%\includegraphics[scale=.1]{images/full-correct.png}
+	 \node[illus, anchor=north] () at (-3.5,-3.5) {  \includegraphics[height=2.5em]{images/nochat.png}};
+	\node[illus, anchor=north] () at (-3.3,-.7) {\includegraphics[height=2.5em]{images/chat.png}};
+	
+	\node[illus, anchor=north] () at (-3.35,2) {\includegraphics[height=3em]{images/rotate.png}};
+	\node[illus, anchor=north] () at (7.5,4.8) {\includegraphics[height=3em]{images/norotate.png}};
+	
+	
+	\node[anchor=north] () at (-1,.7) {\includegraphics[height=1.5em]{images/two.png}};
+	\node[ anchor=north] () at (6.8,.8) {\includegraphics[height=2em]{images/six.png}};
+	
+	\node[illus, anchor=north] () at (-4.3,4) { \includegraphics[height=4em]{images/limited-wrong.png}    %\includegraphics[scale=.1]{images/limited-correct.png}
+	};
+	\node[illus, anchor=north] () at (8,2.5) {  \includegraphics[height=4em]{images/full-wrong.png}   %\includegraphics[scale=.1]{images/full-correct.png}
 		};
 		
 		\draw[dashed] (n6) edge [] (n6thin);
@@ -101,12 +100,24 @@
 		\draw[dashed] (n2thick) edge [] (n6thick);
 		\draw[dashed] (n6) edge [] (n6thick);
 		
+		
+		\node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
+		\node[anchor=north west] () at (7, -1) {Trial};
+		
+		\node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (4.5, -1) {};
+		\node[anchor=north west] () at (7, -.5) {Block};
+		\node[anchor=north west] () at (8.5, -5.5) {x 12 images};
+		\node[anchor=north west] () at (8.5, -6.1) {x 6 iterations};
+		
 		\begin{scope}[line width=1 pt, >=Stealth]
 			\draw[->] (lab1) -> (n2);
 			\draw[->] (lab2) -> (n2thick);
 			\draw[->] (lab3) -> (n2);
 			\draw[->] (lab4) -> (n2thin);
+			
 		\end{scope}
+		
+		
 		
 	\end{tikzpicture}
 	
