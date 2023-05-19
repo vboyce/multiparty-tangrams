@@ -734,8 +734,8 @@ In experiment 3, some of the 6 player games did not have 6 players for the entir
 
 We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models.
 
-\hypertarget{probably-supplemental-figures}{%
-\section{Probably supplemental figures}\label{probably-supplemental-figures}}
+\hypertarget{supplement}{%
+\section{Supplement}\label{supplement}}
 
 \begin{figure*}[t!]
 
@@ -765,7 +765,7 @@ We ran all models in brms (CITE) with weakly regularizing priors. We were often 
 \end{figure*}
 
 \hypertarget{distinctiveness-of-tangrams}{%
-\subsubsection{Distinctiveness of tangrams}\label{distinctiveness-of-tangrams}}
+\subsection{Distinctiveness of tangrams}\label{distinctiveness-of-tangrams}}
 
 Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position.
 
@@ -779,29 +779,627 @@ Tangram distinctiveness within games increased over time (-0.03 {[}-0.03, -0.03{
 
 Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (-0.12 {[}-0.16, -0.09{]}) as do larger games (-0.03 {[}-0.07, 0{]}). Later in the game adjacent blocks are more similar than earlier adjacent blocks (0.05 {[}0.04, 0.05{]}), painting an overall nonlinear convergent pattern (as seen in Figure \ref{fig:other}).
 
-The last measure of how utterances change within games is how they compare to the first utterance; this is less good because the first utterance has more fluffy language so is less diagnostic, but later utterances are further from the first round utterance than earlier utterances (-0.03 {[}-0.04, -0.03{]}). (TODO it's in the pre-reg, but we could dump it in a supplement? )
+\hypertarget{accuracy-models}{%
+\subsection{Accuracy models}\label{accuracy-models}}
 
-\hypertarget{supplemental-all-the-models-when-they-were-pre-regd}{%
-\section{Supplemental all the models \& when they were pre-reg'd}\label{supplemental-all-the-models-when-they-were-pre-regd}}
+Accuracy models were all run as logistic models with normal(0,1) priors for both betas and sd. This model was not explicitly included in the experiment 1 and 2 pre-registrations; it was included with more ambitious mixed effects (which did not run in a timely manner) in the experiment 3 pre-reg.
 
-\begin{table}
+\begin{table}[h!]
 
-\caption{\label{tab:unnamed-chunk-17}Experiment 1 logistic model of listener accuracy:\\ correct.num $\sim$ block $\times$ numPlayers + (1|gameId)}
+\caption{\label{tab:unnamed-chunk-10}Experiment 1 logistic model of listener accuracy:\\ correct.num~$\sim$ block~$\times$ numPlayers~+ (1|gameId)}
 \centering
-\begin{tabular}[t]{l|l|l}
-\hline
+\begin{tabular}[t]{lll}
+\toprule
 Term & Est. & CrI\\
-\hline
-block & 0.44 & [0.31, 0.58]\\
-\hline
-block:numPlayers & -0.02 & [-0.05, 0.01]\\
-\hline
-Intercept & 2.10 & [1.57, 2.65]\\
-\hline
-numPlayers & -0.07 & [-0.2, 0.05]\\
-\hline
+\midrule
+block & 0.44 & {}[0.31, 0.58]\\
+block:numPlayers & -0.02 & {}[-0.05, 0.01]\\
+Intercept & 2.10 & {}[1.57, 2.65]\\
+numPlayers & -0.07 & {}[-0.2, 0.05]\\
+\bottomrule
 \end{tabular}
 \end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-10}Experiment 2: 6 single speaker logistic model of listener accuracy:\\ correct.num~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & 0.45 & {}[0.39, 0.52]\\
+Intercept & 1.78 & {}[1.4, 2.19]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-10}Experiment 2: 6 full feedback logistic model of listener accuracy:\\ correct.num~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & 0.47 & {}[0.39, 0.54]\\
+Intercept & 1.35 & {}[0.59, 2.06]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-10}Experiment 2: 6 thin logistic model of listener accuracy:\\ correct.num~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & 0.23 & {}[0.19, 0.28]\\
+Intercept & 0.88 & {}[0.64, 1.12]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-10}Experiment 3 logistic model of listener accuracy:\\ correct.num~$\sim$ block~$\times$ gameSize~$\times$ channel~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & 0.41 & {}[0.32, 0.5]\\
+block:channelthin & -0.07 & {}[-0.18, 0.04]\\
+block:gameSize6 & -0.34 & {}[-0.43, -0.25]\\
+block:gameSize6:channelthin & 0.07 & {}[-0.05, 0.19]\\
+channelthin & -0.36 & {}[-0.78, 0.05]\\
+\addlinespace
+gameSize6 & -0.64 & {}[-1.05, -0.25]\\
+gameSize6:channelthin & 0.31 & {}[-0.22, 0.87]\\
+Intercept & 1.69 & {}[1.39, 1.99]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{reduction-models}{%
+\subsection{Reduction models}\label{reduction-models}}
+
+Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). This model was pre-registered for each experiment and run with the mixed effects structure as prespecified.
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-11}Experiment 1:\\ words~$\sim$ block~$\times$ numPlayers~+ (block|tangram)~+ (1|playerId)~+ (1|tangram:gameId)~+ (block|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -3.37 & {}[-4.54, -2.24]\\
+block:numPlayers & -0.10 & {}[-0.36, 0.17]\\
+Intercept & 16.79 & {}[11.96, 21.93]\\
+numPlayers & 1.66 & {}[0.66, 2.61]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-11}Experiment 2: 6 single speaker:\\ words~$\sim$ block~+ (block|tangram)~+ (1|tangram:gameId)~+ (block|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -5.39 & {}[-6.46, -4.31]\\
+Intercept & 29.93 & {}[24.92, 34.84]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-11}Experiment 2: 6 full feedback:\\ words~$\sim$ block~+ (block|tangram)~+ (1|tangram:gameId)~+ (block|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -4.68 & {}[-5.88, -3.52]\\
+Intercept & 26.03 & {}[21.12, 30.58]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-11}Experiment 2: 6 thin:\\ words~$\sim$ block~+ (block|tangram)~+ (1|tangram:gameId)~+ (block|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -2.15 & {}[-3.44, -1.12]\\
+Intercept & 20.50 & {}[17.26, 23.76]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-11}Experiment 3:\\ words~$\sim$ block~$\times$ channel~$\times$ gameSize~+ (block~$\times$ channel~$\times$ gameSize|tangram)~+ (1|tangram:gameId)~+ (block|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -2.29 & {}[-2.95, -1.6]\\
+block:channelthin & 0.32 & {}[-0.65, 1.24]\\
+block:channelthin:gameSize6 & 0.64 & {}[-0.61, 1.89]\\
+block:gameSize6 & -1.21 & {}[-2.06, -0.3]\\
+channelthin & 0.63 & {}[-3.18, 4.73]\\
+\addlinespace
+channelthin:gameSize6 & -2.11 & {}[-7.41, 2.98]\\
+gameSize6 & 7.41 & {}[3.57, 11.18]\\
+Intercept & 14.99 & {}[11.86, 17.89]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{extra-reduction-model}{%
+\subsubsection{Extra reduction model}\label{extra-reduction-model}}
+
+For experiment 1, we also pre-specified models about whether the speaker's correctness (as a listener) on the prior block had an effect
+
+Model of whether speaker's correct/incorrect answer in previous block has an effect -
+
+words \textasciitilde{} block\emph{player\_count + block}was\_correct+ (block\textbar tangram) + (1\textbar speaker)
++ (1\textbar tangram*group)+(block\textbar group)
+
+TODO
+\pagebreak
+
+\hypertarget{sbert-models}{%
+\subsection{SBERT models}\label{sbert-models}}
+
+For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd.
+
+These models were verbally described (but not formally specified) in the pre-registrations for experiment 2 in the full feedback and thin conditions and for experiment 3, for looking at divergence between games, convergence within games (compare to first, next, and last), and divergence between tangrams within games.
+
+\hypertarget{convergence-within-games-comparison-to-last-round}{%
+\subsubsection{Convergence within games: comparison to last round}\label{convergence-within-games-comparison-to-last-round}}
+
+This is the convergence metric presented in the paper.
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-12}Experiment 1:\\ sim~$\sim$ earlier~$\times$ condition~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+condition & -0.01 & {}[-0.02, 0]\\
+earlier & 0.09 & {}[0.08, 0.1]\\
+earlier:condition & -0.01 & {}[-0.01, -0.01]\\
+Intercept & 0.52 & {}[0.46, 0.57]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-12}Experiment 2: 6 single speaker:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.09 & {}[0.08, 0.09]\\
+Intercept & 0.50 & {}[0.44, 0.56]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-12}Experiment 2: 6 full feedback:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.06 & {}[0.05, 0.07]\\
+Intercept & 0.44 & {}[0.39, 0.49]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-12}Experiment 2: 6 thin:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.02 & {}[0.01, 0.03]\\
+Intercept & 0.50 & {}[0.45, 0.54]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-12}Experiment 3:\\ sim~$\sim$ earlier~$\times$ channel~$\times$ gameSize~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+channelthin & -0.03 & {}[-0.08, 0.01]\\
+channelthin:gameSize6 & 0.04 & {}[-0.02, 0.1]\\
+earlier & 0.08 & {}[0.07, 0.09]\\
+earlier:channelthin & -0.02 & {}[-0.03, -0.02]\\
+earlier:channelthin:gameSize6 & -0.04 & {}[-0.05, -0.02]\\
+\addlinespace
+earlier:gameSize6 & 0.01 & {}[0, 0.02]\\
+gameSize6 & -0.07 & {}[-0.11, -0.02]\\
+Intercept & 0.58 & {}[0.54, 0.62]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{divergence-across-games}{%
+\subsubsection{Divergence across games}\label{divergence-across-games}}
+
+To look at how games diverged from each other \ldots{} TODO
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-13}Experiment 1:\\ sim~$\sim$ block~$\times$ condition~+ (1|tangram)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.04 & {}[-0.04, -0.03]\\
+block:condition & 0.00 & {}[0, 0]\\
+condition & 0.00 & {}[0, 0]\\
+Intercept & 0.47 & {}[0.43, 0.51]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-13}Experiment 2: 6 single speaker:\\ sim~$\sim$ block~+ (1|tangram)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.04 & {}[-0.04, -0.04]\\
+Intercept & 0.48 & {}[0.44, 0.53]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-13}Experiment 2: 6 full feedback:\\ sim~$\sim$ block~+ (1|tangram)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.04 & {}[-0.04, -0.04]\\
+Intercept & 0.50 & {}[0.46, 0.55]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-13}Experiment 2: 6 thin:\\ sim~$\sim$ block~+ (1|tangram)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & 0.00 & {}[-0.01, 0]\\
+Intercept & 0.43 & {}[0.41, 0.46]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-13}Experiment 3:\\ sim~$\sim$ block~$\times$ channel~$\times$ gameSize~+ (1|tangram)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.02 & {}[-0.02, -0.02]\\
+block:channelthin & 0.00 & {}[0, 0]\\
+block:channelthin:gameSize6 & 0.02 & {}[0.02, 0.02]\\
+block:gameSize6 & -0.01 & {}[-0.01, -0.01]\\
+channelthin & 0.01 & {}[0.01, 0.02]\\
+\addlinespace
+channelthin:gameSize6 & -0.03 & {}[-0.04, -0.02]\\
+gameSize6 & 0.05 & {}[0.05, 0.05]\\
+Intercept & 0.41 & {}[0.37, 0.45]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{divergence-across-tangrams}{%
+\subsubsection{Divergence across tangrams}\label{divergence-across-tangrams}}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-14}Experiment 1:\\ sim~$\sim$ block~$\times$ condition~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.04 & {}[-0.05, -0.04]\\
+block:condition & 0.00 & {}[0, 0]\\
+condition & 0.00 & {}[-0.01, 0.01]\\
+Intercept & 0.43 & {}[0.38, 0.47]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-14}Experiment 2: 6 single speaker:\\ sim~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.05 & {}[-0.05, -0.04]\\
+Intercept & 0.42 & {}[0.39, 0.44]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-14}Experiment 2: 6 full feedback:\\ sim~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.05 & {}[-0.05, -0.04]\\
+Intercept & 0.46 & {}[0.42, 0.5]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-14}Experiment 2: 6 thin:\\ sim~$\sim$ block~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.03 & {}[-0.03, -0.02]\\
+Intercept & 0.43 & {}[0.39, 0.47]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-14}Experiment 3:\\ sim~$\sim$ block~$\times$ channel~$\times$ gameSize~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+block & -0.03 & {}[-0.03, -0.03]\\
+block:channelthin & 0.00 & {}[0, 0]\\
+block:channelthin:gameSize6 & 0.01 & {}[0.01, 0.01]\\
+block:gameSize6 & -0.01 & {}[-0.01, -0.01]\\
+channelthin & 0.04 & {}[0, 0.08]\\
+\addlinespace
+channelthin:gameSize6 & -0.05 & {}[-0.1, -0.01]\\
+gameSize6 & 0.08 & {}[0.04, 0.12]\\
+Intercept & 0.38 & {}[0.35, 0.4]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{convergence-to-next}{%
+\subsubsection{convergence to next}\label{convergence-to-next}}
+
+We also looked at how similar an utterance was to the next round utterance: this can be thought of as the derivative of the to-last comparison. (although cosine similarities are not actually additive in the same way integrals are)
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-15}Experiment 1:\\ sim~$\sim$ earlier~$\times$ condition~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+condition & 0.00 & {}[-0.01, 0.01]\\
+earlier & 0.06 & {}[0.05, 0.07]\\
+earlier:condition & -0.01 & {}[-0.01, -0.01]\\
+Intercept & 0.59 & {}[0.54, 0.64]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-15}Experiment 2: 6 single speaker:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.04 & {}[0.04, 0.05]\\
+Intercept & 0.66 & {}[0.62, 0.7]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-15}Experiment 2: 6 full feedback:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.02 & {}[0.01, 0.02]\\
+Intercept & 0.61 & {}[0.57, 0.64]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-15}Experiment 2: 6 thin:\\ sim~$\sim$ earlier~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+earlier & 0.01 & {}[0, 0.02]\\
+Intercept & 0.53 & {}[0.49, 0.58]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-15}Experiment 3:\\ sim~$\sim$ earlier~$\times$ channel~$\times$ gameSize~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+channelthin & -0.12 & {}[-0.16, -0.09]\\
+channelthin:gameSize6 & 0.00 & {}[-0.05, 0.05]\\
+earlier & 0.05 & {}[0.04, 0.05]\\
+earlier:channelthin & -0.01 & {}[-0.02, 0]\\
+earlier:channelthin:gameSize6 & -0.02 & {}[-0.03, -0.01]\\
+\addlinespace
+earlier:gameSize6 & 0.00 & {}[-0.01, 0]\\
+gameSize6 & -0.03 & {}[-0.07, 0]\\
+Intercept & 0.71 & {}[0.68, 0.75]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{divergence-from-first}{%
+\subsubsection{divergence from first}\label{divergence-from-first}}
+
+We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty unwieldy. TODO explain more or don't include
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-16}Experiment 1:\\ sim~$\sim$ later~$\times$ condition~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+condition & -0.01 & {}[-0.02, 0]\\
+Intercept & 0.65 & {}[0.59, 0.7]\\
+later & -0.03 & {}[-0.04, -0.02]\\
+later:condition & 0.00 & {}[0, 0]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-16}Experiment 2: 6 single speaker:\\ sim~$\sim$ later~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+Intercept & 0.68 & {}[0.63, 0.73]\\
+later & -0.04 & {}[-0.05, -0.03]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-16}Experiment 2: 6 full feedback:\\ sim~$\sim$ later~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+Intercept & 0.64 & {}[0.58, 0.71]\\
+later & -0.04 & {}[-0.05, -0.04]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-16}Experiment 2: 6 thin:\\ sim~$\sim$ later~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+Intercept & 0.54 & {}[0.49, 0.58]\\
+later & -0.01 & {}[-0.02, 0]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+
+\caption{\label{tab:unnamed-chunk-16}Experiment 3:\\ sim~$\sim$ later~$\times$ channel~$\times$ gameSize~+ (1|tangram)~+ (1|gameId)}
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Term & Est. & CrI\\
+\midrule
+channelthin & -0.08 & {}[-0.12, -0.03]\\
+channelthin:gameSize6 & -0.06 & {}[-0.13, 0]\\
+gameSize6 & -0.02 & {}[-0.06, 0.03]\\
+Intercept & 0.72 & {}[0.68, 0.76]\\
+later & -0.03 & {}[-0.04, -0.03]\\
+\addlinespace
+later:channelthin & 0.01 & {}[0, 0.02]\\
+later:channelthin:gameSize6 & 0.02 & {}[0.01, 0.03]\\
+later:gameSize6 & -0.01 & {}[-0.02, 0]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{extra-emoji-analysis}{%
+\subsubsection{Extra emoji analysis}\label{extra-emoji-analysis}}
+
+Written about 6thin in experiment 2 and for 2 and 6 thin in 3
+Additionally, exclusive to this condition, we will analyse the distribution of emoji's produced as a function of block and its relation to accuracy and speaker utterance length.
 
 \hypertarget{references}{%
 \section{References}\label{references}}

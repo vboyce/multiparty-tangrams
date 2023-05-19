@@ -515,19 +515,14 @@ plot_grid(acc, red, nrow=2, rel_heights = c(.8,1), labels="AUTO", label_size=20)
 
 ```{r}
 acc_1 <- read_rds(here(msum_loc,"acc_1.rds"))
-acc_spec_1 <- read_rds(here(mform_loc,"acc_1.rds"))
-```
-```{r}
+
 acc_2a <- read_rds(here(msum_loc,"acc_2a.rds"))
-acc_spec_2a <- read_rds(here(mform_loc,"acc_2a.rds"))
 
 acc_2b <- read_rds(here(msum_loc,"acc_2b.rds"))
 
 acc_2c <- read_rds(here(msum_loc,"acc_2c.rds"))
-```
-```{r}
+
 acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
-acc_spec_3 <- read_rds(here(mform_loc,"acc_3.rds"))
 
 ```
 
@@ -539,20 +534,14 @@ Listeners selected the correct target far above chance in every condition, and i
 
 ```{r}
 red_1 <- read_rds(here(msum_loc, "red_1.rds"))
-red_spec_1 <- read_rds(here(mform_loc,"red_1.rds"))
 
-```
-```{r}
 red_2a <- read_rds(here(msum_loc,"red_2a.rds"))
-red_spec_2a <- read_rds(here(mform_loc,"red_2a.rds"))
 
 red_2b <- read_rds(here(msum_loc,"red_2b.rds"))
 
 red_2c <- read_rds(here(msum_loc,"red_2c.rds"))
-```
-```{r} 
+
 red_3 <- read_rds(here(msum_loc, "red_3.rds"))
-red_spec_3 <- read_rds(here(mform_loc, "red_3.rds"))
 
 ```
 
@@ -792,51 +781,24 @@ plot_grid(conv, div, nrow=2, labels="AUTO", rel_heights = c(.8,1), label_size=20
 
 ```{r}
 tolast_1 <- read_rds(here(msum_loc, "tolast_1.rds"))
-tolast_spec_1 <- read_rds(here(mform_loc, "tolast_1.rds"))
 
 tonext_1 <- read_rds(here(msum_loc, "tonext_1.rds"))
-tonext_spec_1 <- read_rds(here(mform_loc, "tonext_1.rds"))
 
-tofirst_1 <- read_rds(here(msum_loc, "tofirst_1.rds"))
-tofirst_spec_1 <- read_rds(here(mform_loc, "tofirst_1.rds"))
-
-```
-
-```{r}
 tolast_2a <- read_rds(here(msum_loc, "tolast_2a.rds"))
-tolast_spec_2a <- read_rds(here(mform_loc, "tolast_2a.rds"))
 
 tonext_2a <- read_rds(here(msum_loc, "tonext_2a.rds"))
-tonext_spec_2a <- read_rds(here(mform_loc, "tonext_2a.rds"))
-
-tofirst_2a <- read_rds(here(msum_loc, "tofirst_2a.rds"))
-tofirst_spec_2a <- read_rds(here(mform_loc, "tofirst_2a.rds"))
-
 
 tolast_2b <- read_rds(here(msum_loc, "tolast_2b.rds"))
 
 tonext_2b <- read_rds(here(msum_loc, "tonext_2b.rds"))
 
-tofirst_2b <- read_rds(here(msum_loc, "tofirst_2b.rds"))
-
-
 tolast_2c <- read_rds(here(msum_loc, "tolast_2c.rds"))
 
 tonext_2c <- read_rds(here(msum_loc, "tonext_2c.rds"))
 
-tofirst_2c <- read_rds(here(msum_loc, "tofirst_2c.rds"))
-
-```
-
-```{r}
 tolast_3 <- read_rds(here(msum_loc, "tolast_3.rds"))
-tolast_spec_3 <- read_rds(here(mform_loc, "tolast_3.rds"))
 
 tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
-tonext_spec_3 <- read_rds(here(mform_loc, "tonext_3.rds"))
-
-tofirst_3 <- read_rds(here(msum_loc, "tofirst_3.rds"))
-tofirst_spec_3 <- read_rds(here(mform_loc, "tofirst_3.rds"))
 
 ```
 
@@ -847,20 +809,13 @@ Not only do groups reduce the lengths of their utterances, but each group is con
 
 ```{r}
 div_1 <- read_rds(here(msum_loc, "div_1.rds"))
-div_spec_1 <- read_rds(here(mform_loc, "div_1.rds"))
 
-```
-```{r}
 div_2a <- read_rds(here(msum_loc, "div_2a.rds"))
-div_spec_2a <- read_rds(here(mform_loc, "div_2a.rds"))
 
 div_2b <- read_rds(here(msum_loc, "div_2b.rds"))
 
 div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
-```
-```{r} 
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
-div_spec_3 <- read_rds(here(mform_loc, "div_3.rds"))
 ```
 
 The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1)`) and full feedback conditions (`r stats_text(div_2b, 1)`) than in the 6 thin condition (`r stats_text(div_2c, 1)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3)`). 
@@ -983,7 +938,8 @@ In experiment 3, some of the 6 player games did not have 6 players for the entir
 We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. 
 
 
-# Probably supplemental figures
+# Supplement
+
 ```{r}
 
 listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
@@ -1318,7 +1274,7 @@ tandiv <- plot_grid(one,two,three, nrow=1)
 plot_grid(tofirst, tonext, tandiv, nrow=3, labels="AUTO", rel_heights = c(.8,.8,1), label_size=20)
 ```
 
-### Distinctiveness of tangrams
+## Distinctiveness of tangrams
 
 ```{r}
 
@@ -1339,8 +1295,8 @@ tandiv_2c <- read_rds(here(msum_loc, "tandiv_2c.rds"))
 
 ```{r}
 # file naming screwup TODO fix me and the file that writes me etc
-tandiv_3 <- read_rds(here(msum_loc,"tandiv3.rds"))
-tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv3.rds"))
+tandiv_3 <- read_rds(here(msum_loc,"tandiv_3.rds"))
+tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv_3.rds"))
 
 ```
 
@@ -1356,33 +1312,154 @@ Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3
 ### play with more diagrams
 Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1)`) as do larger games (`r stats_text(tonext_3,7)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3)`), painting an overall nonlinear convergent pattern (as seen in Figure \@ref(fig:other)). 
 
-The last measure of how utterances change within games is how they compare to the first utterance; this is less good because the first utterance has more fluffy language so is less diagnostic, but later utterances are further from the first round utterance than earlier utterances (`r stats_text(tofirst_3, 5)`). (TODO it's in the pre-reg, but we could dump it in a supplement? )
+
 
 
  
-# Supplemental all the models & when they were pre-reg'd
 ```{r}
 form <- function(model){
  dep <- as.character(model$formula[2])
  ind <- as.character(model$formula[3])
  
  str_c(dep," ~ ",ind) |> str_replace_all(" ","") |> 
-  str_replace_all("\\*"," $\\\\times$ ") |> 
-  str_replace_all("\\+", " + ") |> 
-   str_replace_all("~", " $\\\\sim$ ")
+      str_replace_all("~", "~$\\\\sim$ ") |> 
+  str_replace_all("\\*","~$\\\\times$ ") |> 
+  str_replace_all("\\+", "~+ ")
 }
-acc_1 <- read_rds(here(msum_loc,"acc_1.rds"))
-acc_spec_1 <- read_rds(here(mform_loc,"acc_1.rds"))
 
-kable(acc_1 |> select(Term, Est.=Estimate, CrI=`Credible Interval`), 
-      caption=str_c("Experiment 1 logistic model of listener accuracy:\\\\\ ",form(acc_spec_1)),
-      align='lll')
+do_table <- function(mod, cap){
+  model <- read_rds(here(msum_loc,mod))
+spec <- read_rds(here(mform_loc,mod))
 
-#TODO figure out how to do non-breaking spaces in the caption since nbsp; doesn't work and neither does ~
+kable(model |> select(Term, Est.=Estimate, CrI=`Credible Interval`), escape=F, format='latex', booktabs=T,
+      caption=str_c(cap, ":\\\\\ ",form(spec)),
+      align='lll', pos='h!')
+}
 ```
 
+## Accuracy models
+
+Accuracy models were all run as logistic models with normal(0,1) priors for both betas and sd. This model was not explicitly included in the experiment 1 and 2 pre-registrations; it was included with more ambitious mixed effects (which did not run in a timely manner) in the experiment 3 pre-reg. 
+
+```{r}
+
+do_table("acc_1.rds", "Experiment 1 logistic model of listener accuracy")
+do_table("acc_2a.rds", "Experiment 2: 6 single speaker logistic model of listener accuracy")
+do_table("acc_2b.rds", "Experiment 2: 6 full feedback logistic model of listener accuracy")
+do_table("acc_2c.rds", "Experiment 2: 6 thin logistic model of listener accuracy")
+do_table("acc_3.rds", "Experiment 3 logistic model of listener accuracy")
+
+```
+
+\pagebreak
+
+## Reduction models 
+Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). This model was pre-registered for each experiment and run with the mixed effects structure as prespecified. 
+
+```{r}
+
+do_table("red_1.rds", "Experiment 1")
+do_table("red_2a.rds", "Experiment 2: 6 single speaker")
+do_table("red_2b.rds", "Experiment 2: 6 full feedback")
+do_table("red_2c.rds", "Experiment 2: 6 thin")
+do_table("red_3.rds", "Experiment 3")
+
+```
+
+### Extra reduction model
+
+For experiment 1, we also pre-specified models about whether the speaker's correctness (as a listener) on the prior block had an effect 
+
+Model of whether speaker’s correct/incorrect answer in previous block  has an effect - 
+ 
+words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
++ (1|tangram*group)+(block|group)
+
+TODO
+\pagebreak
+
+## SBERT models
+
+For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
+
+These models were verbally described (but not formally specified) in the pre-registrations for experiment 2 in the full feedback and thin conditions and for experiment 3, for looking at divergence between games, convergence within games (compare to first, next, and last), and divergence between tangrams within games. 
+
+### Convergence within games: comparison to last round
+This is the convergence metric presented in the paper. 
+
+```{r}
+
+do_table("tolast_1.rds", "Experiment 1")
+do_table("tolast_2a.rds", "Experiment 2: 6 single speaker")
+do_table("tolast_2b.rds", "Experiment 2: 6 full feedback")
+do_table("tolast_2c.rds", "Experiment 2: 6 thin")
+do_table("tolast_3.rds", "Experiment 3")
+
+```
+
+\pagebreak
+
+### Divergence across games
+
+To look at how games diverged from each other ... TODO
+```{r}
+
+do_table("div_1.rds", "Experiment 1")
+do_table("div_2a.rds", "Experiment 2: 6 single speaker")
+do_table("div_2b.rds", "Experiment 2: 6 full feedback")
+do_table("div_2c.rds", "Experiment 2: 6 thin")
+do_table("div_3.rds", "Experiment 3")
+
+```
+
+\pagebreak
+
+### Divergence across tangrams
 
 
+```{r}
+
+do_table("tandiv_1.rds", "Experiment 1")
+do_table("tandiv_2a.rds", "Experiment 2: 6 single speaker")
+do_table("tandiv_2b.rds", "Experiment 2: 6 full feedback")
+do_table("tandiv_2c.rds", "Experiment 2: 6 thin")
+do_table("tandiv_3.rds", "Experiment 3")
+
+```
+
+\pagebreak
+
+### convergence to next
+
+We also looked at how similar an utterance was to the next round utterance: this can be thought of as the derivative of the to-last comparison. (although cosine similarities are not actually additive in the same way integrals are)
+```{r}
+
+do_table("tonext_1.rds", "Experiment 1")
+do_table("tonext_2a.rds", "Experiment 2: 6 single speaker")
+do_table("tonext_2b.rds", "Experiment 2: 6 full feedback")
+do_table("tonext_2c.rds", "Experiment 2: 6 thin")
+do_table("tonext_3.rds", "Experiment 3")
+
+```
+
+\pagebreak
+
+### divergence from first
+
+We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty unwieldy. TODO explain more or don't include
+```{r}
+
+do_table("tofirst_1.rds", "Experiment 1")
+do_table("tofirst_2a.rds", "Experiment 2: 6 single speaker")
+do_table("tofirst_2b.rds", "Experiment 2: 6 full feedback")
+do_table("tofirst_2c.rds", "Experiment 2: 6 thin")
+do_table("tofirst_3.rds", "Experiment 3")
+
+```
+
+### Extra emoji analysis
+Written about 6thin in experiment 2 and for 2 and 6 thin in 3
+Additionally, exclusive to this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length.
 
 # References 
 

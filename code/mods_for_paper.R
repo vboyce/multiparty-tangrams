@@ -245,7 +245,7 @@ model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
                          (1|gameId),
                         data=three_tangrams,
                         control=list(adapt_delta=.95),
-                        file=here(model_location,"tandiv3.rds"),
+                        file=here(model_location,"tandiv_3.rds"),
                         prior=div_priors)#
 
 #We plan to look at the similarities for block 1 with all later blocks; 
