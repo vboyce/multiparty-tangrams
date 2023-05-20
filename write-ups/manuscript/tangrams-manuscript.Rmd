@@ -283,7 +283,7 @@ In multi-player settings, we see the characteristic pattern of increasing accura
 		\draw[dashed] (n6) edge [] (n6thick);
 		
 		
-		\node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
+		%\node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
 		\node[anchor=north west] () at (7, -1) {Trial};
 		
 		\node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (4.5, -1) {};
@@ -570,7 +570,7 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 \node[align=center, color=blue, anchor=north west] at (-10.5,10) {\textbf{Convergence} \\ \textbf{within a game}};
 \node[align=center, color=div, anchor= north west] at (-5,10) {\textbf{Divergence between games}}; 
 
-\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
+%\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
 	\begin{scope}[line width=1 pt, >=Stealth]
 	%\draw [<->]   (a0.west) edge [out=230, in=150] node {.23}  (a5.west);
 	%\draw [<->]   (a1.west) edge [out=210, in=150] node [left]{.13} (a5.west);
