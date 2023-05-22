@@ -10,7 +10,7 @@ author:
       - corresp
   - name: Robert Hawkins
     affiliation: 
-      - Stanford
+      - Princeton
   - name: Noah D. Goodman
     affiliation: 
       - Stanford
@@ -20,6 +20,8 @@ author:
 address:
   - code: Stanford
     address: Stanford University 
+  - code: Princeton
+    address: Princeton University
 footnote:
   - code: corresp
     text: "Corresponding author. Email: vboyce@stanford.edu"
@@ -163,13 +165,23 @@ form <- function(model){
 
 Communicating in groups can be challenging. People may each have different background knowledge on the topic of conversation, and may not know who knows what. Everyone may have different questions or different elements to focus on which can result in everyone talking at once, and thus confusion. The group might splinter into side conversations, which creates more unshared knowledge that may eventually need to be merged if the group needs to reach agreement or consensus. Disagreements over the issues or over scope or even over what is being referred to can interfere with efficient communication. If the level of interrupting and simultaneous talking gets to be too much, there may even be meta-disagreements about how the conversation is structured. Not all of these impediments occur in every group conversation, but we've all been in situations where having a conversation with a half-dozen people at once can devolve into chaos and be an inefficient way of communicating. [TODO what are the key empathy-inducing problems of group convo and how can we list them succinctly]
 
-Despite all of these factors, we often do manage to communicate with groups. We catch people up who are missing background, we back up and define terms if there's confusion, and eventually everyone is mostly in agreement about what is being talked about. Somehow, we transfer knowledge and reach agreements. How?
+Despite all of these factors, we often do manage to communicate with groups. 
 
+<!--We catch people up who are missing background, we back up and define terms if there's confusion, and eventually everyone is mostly in agreement about what is being talked about. Somehow, we transfer knowledge and reach agreements.--> How?
+
+[work on this transition]
+
+* one key thing that convos need to be successful is BLAH
+* can be studied in more isolated forms so is used as a case study
+* Dyadic work shows ....
+* But work has been mostly dyadic -- which misses some of the complexities of multi-party communication that could influence this. --> How do groups perform this task and what can we learn about mutli-party from that? 
+
+As alluded to above, groups present some dynamics and challenges not present in dyadic contexts, but most of the work on communication has used dyadic contexts. 
 These multi-party conversational settings are a common feature of our lives as social beings, but most of the work trying to understand communication, especially referential communication, is studied in dyadic contexts. One key requirement for efficient communication requires some sort of shared labels for the topics of conversation [@branigan2006;@ginzburg2005;@traum2004]. In many cases, there are widely shared conventionalized expressions for objects or ideas, but in other cases, spontaneous ad-hoc expressions must be invented.
 
 The formation of these new reference expressions is well-studied in dyadic contexts and has been a case study for efficient communication more broadly. @clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @kraussChangesReferencePhrases1964;@kraussConcurrentFeedbackConfirmation1966]. Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. 
 
-Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In line with results from face-to-face, oral paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks.^[Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
+Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In line with results from face-to-face, oral paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks. (Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.)
 
 
 
@@ -177,19 +189,21 @@ Recently, online participant recruitment and web-based experiments have made it 
 # TODO counts for all games
 # For abstract (and elsewhere) count things!
 
-games <- combined_results |> select(gameId) |> unique() |> nrow() # 98
+games <- combined_results |> select(gameId) |> unique() |> nrow() 
 
-players <- combined_results |> select(gameId, numPlayers) |> unique() |> summarize(players=sum(numPlayers)) # 390
+players <- combined_results |> select(gameId, numPlayers) |> unique() |> summarize(players=sum(numPlayers))
 
-words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) #116000
+words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) 
 
 ```
 
 Dyads are robustly successful at forming conventionalized shorthands in iterated reference games, but talking with one person is simpler than talking with several. How does the formation of shared conventions proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. 
 
-In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited `r players` participants who were organized into `r games` groups distributed across 3 experiments and 11 conditions. Collectively, players produced `r words` during their games.  We analysed the results using traditional metrics of accuracy and number of words, and we used computation measures of semantic similarity to understand how utterances evolve during the games. 
+MENTION THAT THIS IS ONLINE
 
-In multi-player settings, we see the characteristic pattern of increasing accuracy and reductions in utterance length that is noted in the dyadic literature. We can correlate reduction with semantic shifts, as later utterances converge toward the groups conventionalized name and away from the utterances used by other groups or for other tangrams. These reduction and convention-formation phenomena emerge consistently across different conditions; people can form conventions and communicate effectively even with larger groups and limited interaction structures. However, we also see gradient effects where the larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups. 
+In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited `r players` participants who were organized into `r games` groups distributed across 3 experiments and 11 conditions. Collectively, players produced `r words |> round(-3)` during their games.  We analysed the results using traditional metrics of accuracy and number of words, and we used computation measures of semantic similarity to understand how utterances evolve during the games. 
+
+We find that the characteristic pattern of increasing accuracy and decreasing utterance length that is noted in the dyadic literature also occurs across conditions in multi-player games. Reduction is coupled with semantic shifts as utterances converge toward the eventual conventionalized name and away from descriptions used by other groups or for other tangrams. These convention-formation phenomena emerge across disparate conditions; however, there are gradient effects where larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups. 
 
 
 ```{=latex}
@@ -283,7 +297,7 @@ In multi-player settings, we see the characteristic pattern of increasing accura
 		\draw[dashed] (n6) edge [] (n6thick);
 		
 		
-		%\node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
+		\node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
 		\node[anchor=north west] () at (7, -1) {Trial};
 		
 		\node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (4.5, -1) {};
@@ -303,7 +317,7 @@ In multi-player settings, we see the characteristic pattern of increasing accura
 		
 	\end{tikzpicture}
 	
-\caption{ Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations. TODO FIX ME AND MY ILLUSTRATION!!! }
+\caption{ Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations. TODO how to make the inset look inset and what to do with the diagram bits?! }
 	\label{diagram}
 \end{figure}
 
@@ -311,13 +325,15 @@ In multi-player settings, we see the characteristic pattern of increasing accura
 
 # Results
 
-Across the three experiments and multiple conditions, all iterated reference games shared the same structure amd materials so they are inter-comparable. As shown in Figure \ref{diagram}, all of the games used 12 target images arranged in a grid differently for each player [@hawkinsCharacterizingDynamicsLearning2020; @clarkReferringCollaborativeProcess1986]. The speaker knew which image was the target, and their goal was to describe it to their groupmates (listeners) over a chat interface so each listener could select the target. After all listeners had selected, players recieved feedback on the selections. This repeated for all the images with the same speaker to comprise a 12 trial block. Then the whole process repeated for a total of 6 blocks. [TODO possibly can reduce this depending on what's in intro]. 
+[mini-methods]
 
-We extended on the dyadic paradigm of @hawkinsCharacterizingDynamicsLearning2020 by parameterizing the experiments along a few dimensions (see Figure \ref{diagram}). One dimension was game size which varied between 2 and 6 player groups; this explores the gradual effects having a larger audience. Another dimension was group coherence, which was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convergence because it compares utterances from different players, but having a single speaker gives one person the job of paying attention to what people understand, which could help hold the group together. In low group coherence games, each listener only recieved feedback on if they were indiviually right or wrong in their selection, while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. The last dimension of variation was listener backchannel: in high backchannel games, the listeners could freely send (text) messages to the shared chat, while in the low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation [TODO CIATIONS]
+We extended on the dyadic paradigm of @hawkinsCharacterizingDynamicsLearning2020 by parameterizing the experiments along a few dimensions while keeping other aspects of the experiment constant. As shown in Figure \ref{diagram} inset, all of the games used the same 12 target images [@hawkinsCharacterizingDynamicsLearning2020; @clarkReferringCollaborativeProcess1986]. The speaker knew which image was the target, and their goal was to describe it to the listeners over a chat interface so each listener could select the target. After all listeners had selected, players received feedback on the selections. The process repeated with the same speaker describing each of the 12 images to form one block. The games consisted of 6 blocks, for a total of 72 trials, where each image was described 6 times over the course of the game. 
 
-As shown in Figure whatever, Experiment 1 had constant low group coherence and high listener backchannel while varying group size. Experiment 2 held group size constant at 6 and each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin had a low backchannel. Experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players. 
+Figure \ref{diagram} schematically illustrates the dimensions of variation between games and where each condition fit in the experimental space. Game size (shown on the x-axis) which varied between 2 and 6 players groups to explore the gradual effects having a larger audience. Group coherence (y-axis) was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convention formation because it compares utterances from different players, but having a single speaker adds continuity that can help hold a group together. In low group coherence games, each listener only received feedback on if they were individually right or wrong in their selection; while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. Listener backchannel (z-axis) varied how listeners could communicate with the group.  In high backchannel games, the listeners could type text messages to the shared chat; while in low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation [TODO CIATIONS].
 
-We first compare the results on two behavioral measures of listener accuracy and speaker reduction of words that have been the common markers of reduction phenomena in the literature [CITE]. We then explore semantic patterns of reduction by comparing similarities of utterances to look at how the speaker's language changes within and between games over time. 
+Experiment 1 varied group size with games of 2,3,4,5 or 6 players all with low group coherence and high listener backchannel. Experiment 2 held group size constant at 6 while each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin switched to a low backchannel. Finally, experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players. 
+
+We first compare across all of these conditions on the two behavioral measures that are the common markers of reduction in the literature:  listener accuracy and speaker reduction [CITE]. We then explore look at how the speaker's language changes within and between games over time by looking at similarities between utterances. 
 
 ## Behavioral results
 
@@ -480,7 +496,7 @@ acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 
 ```
 
-Listeners selected the correct target far above chance in every condition, and in every condition, listener accuracy rose over the course of the game (Figure \@ref(fig:behavioral)A). Experiment 1 found no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 3, participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`) than players in 2 player games, but thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,2)`) or improvement rate (`r stats(acc_3, 2)`). The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
+In every condition, listeners selected the correct target far above chance, and listener accuracy rose over the course of the game (Figure \@ref(fig:behavioral)A). Experiment 1 found no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 3, participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`) than players in 2 player games, but thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,5)`) or improvement rate (`r stats(acc_3, 2)`). The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
 
 
 
@@ -499,7 +515,10 @@ red_3 <- read_rds(here(msum_loc, "red_3.rds"))
 
 ```
 
-The key observation in iterated reference games is that the descriptions the speaker gives of the target images start out long and become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \@ref(fig:behavioral)B), although there were substantial differences in how verbose speakers were across games. In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later on the number of words the speaker said per trial was `r stats(red_2a,1)` for 6 single speaker; `r stats(red_2b,1)` for 6 full feedback, and `r stats(red_2c,1)` for 6 thin. The rate of reduction was lower in the thin condition than in the other conditions. In experiment 3, reduction occurred overall (`r stats(red_3,1)`). The six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not significant differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
+The key observation in iterated reference games is that the descriptions the speaker gives of the target images become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \@ref(fig:behavioral)B), although there were substantial differences in how verbose speakers were across games. In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words per trial. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` more words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later was `r stats(red_2a,1)` words per trial for 6 single speaker; `r stats(red_2b,1)` words per for 6 full feedback, and `r stats(red_2c,1)` words per trial for 6 thin.  In experiment 3, the six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not significant differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
+
+TODO: dealing with non-centeredness of some of these models! Especially relevant re exp 3 where that are significant differences!
+
 
 TODO possibly say more about group to group variation 
 
@@ -570,7 +589,7 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 \node[align=center, color=blue, anchor=north west] at (-10.5,10) {\textbf{Convergence} \\ \textbf{within a game}};
 \node[align=center, color=div, anchor= north west] at (-5,10) {\textbf{Divergence between games}}; 
 
-%\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
+\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
 	\begin{scope}[line width=1 pt, >=Stealth]
 	%\draw [<->]   (a0.west) edge [out=230, in=150] node {.23}  (a5.west);
 	%\draw [<->]   (a1.west) edge [out=210, in=150] node [left]{.13} (a5.west);
@@ -601,11 +620,9 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 \end{figure}
 ```
 
-In addition to behavioral measures, we can also look at how the descriptions change over time within and between games. The reduction phenomenon is supposed to be a proxy and correlate of a conventionalization of meaning, to something specific to the pair or group. To quantify this and test the relationships of utterances bewteen and within games, we focus on the speaker's description, concatentating it all together into one utterance (this includes any add ons or answers to questions). Then we use SBERT to embed the utterance in a high-dimensional vector space TODO CITATION. This turns each speaker description into a long vector, where the vectors represent some of the semantic content of the utterance. Vectors that are close together represent utterances that are more similar to one another, so by looking at cosine similarity (a metric of how close pairs of vectors are) we can see how similar pairs of utterances are. 
+In addition to behavioral measures, we looked at how the speaker's descriptions changed over time within and between games. We concatenated speaker's messages within a trial  and used SBERT to embed the description into a high-dimensional vector space [TODO CITE]. We can compare the similarity between a pair of utterances by using the cosine similarity between their embeddings. 
 
-As a measure of convention formation, we can track how utterances describing the same tangram become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. 
-
-If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. Example utterances and their similiarities are illustrated in Figure \ref{sbert-diagram}. 
+As a measure of convention formation, we can track how utterances describing the same tangram become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \ref{sbert-diagram}. 
 
 ```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A. Convergence of utterances within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. B. Divergence of utterances across games as measured by the similarity between an utterances and utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic."}
 #convergence
@@ -756,7 +773,7 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 ```
 
-We first look at convergence, comparing utterances from the first 5 rounds of a game to the "convention" or round 6 utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, similarity the last utterances occurs across all conditions. In experiment 1, the similarity of the first utterance to last utterances is invariant across group size (`r stats_text(tolast_1, 1)`), but smaller groups converge faster (`r stats_text(tolast_1, 3)`). Experiment 2 shows similar patterns of utterances become more similar to the last utterance, particularly in the single speaker condition (`r stats_text(tolast_2a, 1)`) where all the utterances come from the same person, but also in the full feedback condition (`r stats_text(tolast_2b, 1)`) and to a smaller extent, in the thin condition (`r stats_text(tolast_2c, 1)`). In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4)`) and especially thin 6 player games (`r stats_text(tolast_3, 5)`). 
+We first look at convergence, comparing utterances from the first 5 blocks of a game to the "convention" or last block utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the similarity of the first utterance to last utterances is invariant across group size (`r stats_text(tolast_1, 1)`), but smaller groups converge faster (`r stats_text(tolast_1, 3)`). Experiment 2 shows similar patterns of utterances become more similar to the last utterance, particularly in the single speaker condition (`r stats_text(tolast_2a, 1)`) where all the utterances come from the same person, but also in the full feedback condition (`r stats_text(tolast_2b, 1)`) and to a smaller extent, in the thin condition (`r stats_text(tolast_2c, 1)`). In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4)`) and especially thin 6 player games (`r stats_text(tolast_3, 5)`). 
 
 Not only do groups reduce the lengths of their utterances, but each group is converging towards a semantic description for the figures. This is more prominent in smaller games and games with greater group coherence. 
 
