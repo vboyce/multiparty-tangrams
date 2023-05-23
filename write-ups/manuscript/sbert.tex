@@ -1,13 +1,11 @@
-\documentclass[margin=0mm, 10pt]{article}
+\documentclass{standalone}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, quotes, shapes}
 
 \begin{document}
 
 
-
-
-        \definecolor{div}{HTML}{006400}
+       \definecolor{div}{HTML}{006400}
 \tikzset{
 mynode/.style={
 draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=.5ex, anchor=north east},
@@ -40,6 +38,8 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 
 \node[align=center, color=blue, anchor=north west] at (-10.5,10) {\textbf{Convergence} \\ \textbf{within a game}};
 \node[align=center, color=div, anchor= north west] at (-5,10) {\textbf{Divergence between games}}; 
+
+\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
 	\begin{scope}[line width=1 pt, >=Stealth]
 	%\draw [<->]   (a0.west) edge [out=230, in=150] node {.23}  (a5.west);
 	%\draw [<->]   (a1.west) edge [out=210, in=150] node [left]{.13} (a5.west);
@@ -51,7 +51,7 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 	\draw [<->, color=blue]   (b1) edge [out=180, in=200] node [inner sep=3ex, left, pos=.1]{.53}  (b5.west);
 	\draw [<->, color=blue]   (b2) edge [out=180, in=150] node  [inner sep=4ex, left, pos=0]{.13}  (b5.west);
 	\draw [<->, color=blue]   (b3) edge [out=180, in=150] node [inner sep=3ex, left, pos=0] {.62} (b5.north west);
-	\draw [<->, color=blue]   (b4.west) edge [out=240, in=90]node [inner sep=1.ex, left, pos=0]{.63} (b5.north west);
+	\draw [<->, color=blue]   (b4.west) edge [out=270, in=90]node [inner sep=.5ex, left, pos=0]{.63} (b5.north west);
 	
 	\draw [<->, color=div]   (a0) edge [pos=.5, ".59"] (b0);
 	\draw [<->, color=div]   (a1) edge [pos=.8, ".29"] (b1);
@@ -65,4 +65,5 @@ draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=
 \end{scope}
 
 \end{tikzpicture}
+
 \end{document}

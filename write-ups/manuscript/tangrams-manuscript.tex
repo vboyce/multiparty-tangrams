@@ -345,118 +345,14 @@ In the current work, we address how components of interaction structure, includi
 
 We find that the characteristic pattern of increasing accuracy and decreasing utterance length that is noted in the dyadic literature also occurs across conditions in multi-player games. Reduction is coupled with semantic shifts as utterances converge toward the eventual conventionalized name and away from descriptions used by other groups or for other tangrams. These convention-formation phenomena emerge across disparate conditions; however, there are gradient effects where larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups.
 
-\definecolor{baseline6}{HTML}{6940FF}
-\definecolor{baseline5}{HTML}{A12EFF}
-\definecolor{baseline4}{HTML}{D24AFF}
-\definecolor{baseline3}{HTML}{FF7DF0}
-\definecolor{baseline2}{HTML}{FFBDD4}
+\begin{figure*}[t!]
 
-\definecolor{thick6}{HTML}{00BDA8}
-\definecolor{thick2}{HTML}{77F3DB}
+{\centering \includegraphics[width=1\linewidth]{expt-diagram} 
 
-\definecolor{thin6}{HTML}{D47E04}
-\definecolor{thin2}{HTML}{FFDA09}
-
-\definecolor{single}{HTML}{00A2FF}
-\definecolor{full}{HTML}{425df5}
-
-\definecolor{expt1col}{HTML}{FF0099}
-\definecolor{expt3col}{HTML}{527319}
-\definecolor{expt2col}{HTML}{0000FF}
-
-\tikzset{
-    expt1/.style={
-        draw, circle, color=expt1col, line width=4, align=center, scale=2},
-    expt2/.style={
-        draw, circle, color=expt2col, line width=4,  align=center, scale=2},
-    expt3/.style={
-        draw, circle, color=expt3col, line width=4, align=center, scale=2},
-        illus/.style={draw, rectangle}
 }
 
-\tikzset{nodes={font=\sffamily\bfseries}} 
-
-\begin{figure}
-    
-    
-    
-    \begin{tikzpicture}
-        
-        \def\r{5}
-        \draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.4] (-2*\r/5,  -2*\r/3) ;
-        \draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=1.05] (\r, 0) ;
-        \draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.4] (0, \r);
-        
-        \node (n2) at (0,0) [expt1, fill=baseline2, label={[expt1col]below:2}] {};
-        \node (n3) at (1,0) [expt1, fill=baseline3, label={[expt1col]below:3}]{};
-        \node (n4) at (2,0) [expt1, fill=baseline4, label={[expt1col]below:4}] {};
-        \node (n5) at (3,0) [expt1, fill=baseline5, label={[expt1col]below:5}] {};
-        \node (n6) at (4,0) [expt1, fill=baseline6] {};
-        \node[align=center,anchor=north,text=expt1col] at (4.6,-.45) {6 baseline};
-        
-        \node (n2thick) at (0,4) [expt3, fill=thick2, label= {[expt3col]above right:2 thick}] {};
-        \node (n6thick) at (4,4) [expt3, fill=thick6, label={[expt3col]right:6 thick}] {};
-        
-        \node (nfull) at (4,1.5) [expt2, fill=full, label={[expt2col]right:6 full feedback}] {};
-        \node (nsingle) at (4,3) [expt2, fill=single, label={[expt2col]right:6 single speaker}] {};
-        
-        \node (n2thin) at (-3/2,-5/2) [expt3, fill=thin2, label={[expt3col]below right: 2 thin}] {};
-        \node (n6thin2) at (2.7,-2.3) [expt2, fill=thin6, label={[expt2col] right: 6 thin}] {};
-        \node (n6thin) at (2.5,-2.5) [expt3, fill=thin6, label={[expt3col]below right: 6 thin}] {};
-        
-        \node[align=center,anchor=north] (lab1) at (-2,3) {Rotating speaker;\\limited feedback};
-        \node[align=center,anchor=north] (lab2) at (-1.5,6) {Single speaker;\\full feedback};
-        \node[align=center,anchor=north] (lab3) at (-3,0.2) {Listeners \\use chat};
-        \node[align=center,anchor=north] (lab4) at (-3.5,-2) {Listeners \\use emoji};
-        
-        \node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
-        \node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
-        \node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
-        
-     \node[illus, anchor=north] () at (-3.5,-3.5) {  \includegraphics[height=2.5em]{images/nochat.png}};
-    \node[illus, anchor=north] () at (-3.3,-.7) {\includegraphics[height=2.5em]{images/chat.png}};
-    
-    \node[illus, anchor=north] () at (-3.35,2) {\includegraphics[height=3em]{images/rotate.png}};
-    \node[illus, anchor=north] () at (7.5,4.8) {\includegraphics[height=3em]{images/norotate.png}};
-    
-    
-    \node[anchor=north] () at (-1,.7) {\includegraphics[height=1.5em]{images/two.png}};
-    \node[ anchor=north] () at (6.8,.8) {\includegraphics[height=2em]{images/six.png}};
-    
-    \node[illus, anchor=north] () at (-4.3,4) { \includegraphics[height=4em]{images/limited-wrong.png}    %\includegraphics[scale=.1]{images/limited-correct.png}
-    };
-    \node[illus, anchor=north] () at (8,2.5) {  \includegraphics[height=4em]{images/full-wrong.png}   %\includegraphics[scale=.1]{images/full-correct.png}
-        };
-        
-        \draw[dashed] (n6) edge [] (n6thin);
-        \draw[dashed] (n2thin) edge [] (n6thin);
-        \draw[dashed] (n2thick) edge [] (n6thick);
-        \draw[dashed] (n6) edge [] (n6thick);
-        
-        
-        \node[illus, anchor=north west] () at (4.75, -1.5) {\includegraphics[width=15em]{images/diagram.png}};
-        \node[anchor=north west] () at (7, -1) {Trial};
-        
-        \node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (4.5, -1) {};
-        \node[anchor=north west] () at (7, -.5) {Block};
-        \node[anchor=north west] () at (8.5, -5.5) {x 12 images};
-        \node[anchor=north west] () at (8.5, -6.1) {x 6 iterations};
-        
-        \begin{scope}[line width=1 pt, >=Stealth]
-            \draw[->] (lab1) -> (n2);
-            \draw[->] (lab2) -> (n2thick);
-            \draw[->] (lab3) -> (n2);
-            \draw[->] (lab4) -> (n2thin);
-            
-        \end{scope}
-        
-        
-        
-    \end{tikzpicture}
-    
-\caption{ Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations. TODO how to make the inset look inset and what to do with the diagram bits?! }
-    \label{diagram}
-\end{figure}
+\caption{Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations. TODO how to make the inset look inset and what to do with the diagram bits?!}\label{fig:diagram}
+\end{figure*}
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -465,7 +361,7 @@ We find that the characteristic pattern of increasing accuracy and decreasing ut
 
 We extended on the dyadic paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) by parameterizing the experiments along a few dimensions while keeping other aspects of the experiment constant. As shown in Figure \ref{diagram} inset, all of the games used the same 12 target images (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{Clark \& Wilkes-Gibbs 1986}, \protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{Hawkins et al. 2020}). The speaker knew which image was the target, and their goal was to describe it to the listeners over a chat interface so each listener could select the target. After all listeners had selected, players received feedback on the selections. The process repeated with the same speaker describing each of the 12 images to form one block. The games consisted of 6 blocks, for a total of 72 trials, where each image was described 6 times over the course of the game.
 
-Figure \ref{diagram} schematically illustrates the dimensions of variation between games and where each condition fit in the experimental space. Game size (shown on the x-axis) which varied between 2 and 6 players groups to explore the gradual effects having a larger audience. Group coherence (y-axis) was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convention formation because it compares utterances from different players, but having a single speaker adds continuity that can help hold a group together. In low group coherence games, each listener only received feedback on if they were individually right or wrong in their selection; while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. Listener backchannel (z-axis) varied how listeners could communicate with the group. In high backchannel games, the listeners could type text messages to the shared chat; while in low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation {[}TODO CIATIONS{]}.
+Figure \ref{fig:diagram} schematically illustrates the dimensions of variation between games and where each condition fit in the experimental space. Game size (shown on the x-axis) which varied between 2 and 6 players groups to explore the gradual effects having a larger audience. Group coherence (y-axis) was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convention formation because it compares utterances from different players, but having a single speaker adds continuity that can help hold a group together. In low group coherence games, each listener only received feedback on if they were individually right or wrong in their selection; while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. Listener backchannel (z-axis) varied how listeners could communicate with the group. In high backchannel games, the listeners could type text messages to the shared chat; while in low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation {[}TODO CIATIONS{]}.
 
 Experiment 1 varied group size with games of 2,3,4,5 or 6 players all with low group coherence and high listener backchannel. Experiment 2 held group size constant at 6 while each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin switched to a low backchannel. Finally, experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players.
 
@@ -500,76 +396,18 @@ What about the listeners? Compared to how much referential language speakers pro
 \hypertarget{comparisons-of-language-between-and-within-games}{%
 \subsection{Comparisons of language between and within games}\label{comparisons-of-language-between-and-within-games}}
 
-\begin{figure}
+\begin{figure*}[t!]
 
+{\centering \includegraphics[width=1\linewidth]{sbert} 
 
-        \definecolor{div}{HTML}{006400}
-\tikzset{
-mynode/.style={
-draw, rectangle, align=center,  text width=4cm, scale=1, font=\small, inner sep=.5ex, anchor=north east},
 }
 
-\begin{tikzpicture}
-\node[mynode] (a0) at (1.5, 9.6) {\textbf{Round 1:} stomping feet, head is not the highest point of the picture - maybe a shoulder is at the same height, both feet point left};
-\node[mynode] (a1) at (1.5, 7.1)  {\textbf{Round 2:} diamond head is almost on back and on right side of body; both feet are pointing left
-};
-\node[mynode] (a2) at (1.5, 5.4)  {\textbf{Round 3: }sad guy with square backpack, feet to the left
-};
-\node[mynode] (a3) at (1.5, 4.1) { \textbf{Round 4:} stomping feet pointing left; square backpack on right; nose pointing down on left
-};
-\node[mynode] (a4) at (1.5, 2.4) { \textbf{Round 5:} sad guy with backpack, legs to the left
-};
-\node[mynode] (a5)  at (1.5,1.4) {\textbf{Round 6:} sad guy with backpack, legs to the left
-};
-
-\node[mynode] (b0) at (-3.5,9.6) {\textbf{Round 1:} like someone dancing, with one foot on the ground and one up a little, facing left, like a head yes, like they are kind of leaning back, foot sticking out a little to the left};
-\node[mynode] (b1) at (-3.8,6.6)  {\textbf{Round 2:} Like a man facing left marching with a flag over his shoulder, Face is pointy looking down
-};
-\node[mynode] (b2) at (-4.1,4.7) {\textbf{Round 3:} looking to the left one leg up pointy face
-};
-\node[mynode] (b3) at (-4.4,3.6) {\textbf{Round 4:} man marching with flag over shoulder
-};
-\node[mynode] (b4) at (-4.7,2.5)  { \textbf{Round 5:} marching man with flag over shoulder
-};
-\node[mynode] (b5)   at (-5,1.2) { \textbf{Round 6:} flag bearer};
-
-
-\node[align=center, color=blue, anchor=north west] at (-10.5,10) {\textbf{Convergence} \\ \textbf{within a game}};
-\node[align=center, color=div, anchor= north west] at (-5,10) {\textbf{Divergence between games}}; 
-
-\node[] at (-10,8) {\includegraphics[width=4em]{images/tangram_A.png}};
-    \begin{scope}[line width=1 pt, >=Stealth]
-    %\draw [<->]   (a0.west) edge [out=230, in=150] node {.23}  (a5.west);
-    %\draw [<->]   (a1.west) edge [out=210, in=150] node [left]{.13} (a5.west);
-    %\draw [<->]   (a2.west) edge [bend right] node [left] {.92}(a5.west);
-    %\draw [<->]   (a3.west) edge [out=210, in=90] node [left] {.47} (a5.west);
-    %\draw [<->]   (a4.south) edge  node [left] {.91} (a5);
-    
-    \draw [<->, color=blue]   (b0) edge [out=180, in=200] node [inner sep=2ex, left, pos=.1]{.13}  (b5.south west);
-    \draw [<->, color=blue]   (b1) edge [out=180, in=200] node [inner sep=3ex, left, pos=.1]{.53}  (b5.west);
-    \draw [<->, color=blue]   (b2) edge [out=180, in=150] node  [inner sep=4ex, left, pos=0]{.13}  (b5.west);
-    \draw [<->, color=blue]   (b3) edge [out=180, in=150] node [inner sep=3ex, left, pos=0] {.62} (b5.north west);
-    \draw [<->, color=blue]   (b4.west) edge [out=270, in=90]node [inner sep=.5ex, left, pos=0]{.63} (b5.north west);
-    
-    \draw [<->, color=div]   (a0) edge [pos=.5, ".59"] (b0);
-    \draw [<->, color=div]   (a1) edge [pos=.8, ".29"] (b1);
-    \draw [<->, color=div]   (a2) edge [pos=.8, ".48"] (b2);
-    \draw [<->, color=div]   (a3) edge [pos=.5, ".28"] (b3);
-    \draw [<->, color=div]   (a4) edge [pos=.5, ".32"] (b4);
-    \draw [<->, color=div]   (a5) edge [pos=.5, ".06"] (b5);
-    
-
-    
-\end{scope}
-
-\end{tikzpicture}
-\label{sbert-diagram}
-\caption{Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between utterances from the same round across games.}
-\end{figure}
+\caption{Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between utterances from the same round across games.}\label{fig:sbert-diagram}
+\end{figure*}
 
 In addition to behavioral measures, we looked at how the speaker's descriptions changed over time within and between games. We concatenated speaker's messages within a trial and used SBERT to embed the description into a high-dimensional vector space {[}TODO CITE{]}. We can compare the similarity between a pair of utterances by using the cosine similarity between their embeddings.
 
-As a measure of convention formation, we can track how utterances describing the same tangram become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \ref{sbert-diagram}.
+As a measure of convention formation, we can track how utterances describing the same tangram become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \ref{fig:sbert-diagram}.
 
 \begin{figure*}[t!]
 
@@ -631,7 +469,7 @@ theories?:
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-We extended the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) along a few dimensions. As diagrammed in Figure \ref{diagram}, three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we expanded from dyadic reference games to group games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions.
+We extended the dyadic repeated reference game paradigm of Hawkins et al. (\protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{2020}) along a few dimensions. As diagrammed in Figure \ref{fig:diagram}, three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we expanded from dyadic reference games to group games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions.
 
 For all experiments, we used Empirica (\protect\hyperlink{ref-almaatouqEmpiricaVirtualLab2020}{Almaatouq et al. 2020}) to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections.
 
