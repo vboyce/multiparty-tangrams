@@ -163,28 +163,6 @@ form <- function(model){
 }
 ```
 
-Communicating in groups can be challenging. People may each have different background knowledge on the topic of conversation, and may not know who knows what. Everyone may have different questions or different elements to focus on which can result in everyone talking at once, and thus confusion. The group might splinter into side conversations, which creates more unshared knowledge that may eventually need to be merged if the group needs to reach agreement or consensus. Disagreements over the issues or over scope or even over what is being referred to can interfere with efficient communication. If the level of interrupting and simultaneous talking gets to be too much, there may even be meta-disagreements about how the conversation is structured. Not all of these impediments occur in every group conversation, but we've all been in situations where having a conversation with a half-dozen people at once can devolve into chaos and be an inefficient way of communicating. [TODO what are the key empathy-inducing problems of group convo and how can we list them succinctly]
-
-Despite all of these factors, we often do manage to communicate with groups. 
-
-<!--We catch people up who are missing background, we back up and define terms if there's confusion, and eventually everyone is mostly in agreement about what is being talked about. Somehow, we transfer knowledge and reach agreements.--> How?
-
-[work on this transition]
-
-* one key thing that convos need to be successful is BLAH
-* can be studied in more isolated forms so is used as a case study
-* Dyadic work shows ....
-* But work has been mostly dyadic -- which misses some of the complexities of multi-party communication that could influence this. --> How do groups perform this task and what can we learn about mutli-party from that? 
-
-As alluded to above, groups present some dynamics and challenges not present in dyadic contexts, but most of the work on communication has used dyadic contexts. 
-These multi-party conversational settings are a common feature of our lives as social beings, but most of the work trying to understand communication, especially referential communication, is studied in dyadic contexts. One key requirement for efficient communication requires some sort of shared labels for the topics of conversation [@branigan2006;@ginzburg2005;@traum2004]. In many cases, there are widely shared conventionalized expressions for objects or ideas, but in other cases, spontaneous ad-hoc expressions must be invented.
-
-The formation of these new reference expressions is well-studied in dyadic contexts and has been a case study for efficient communication more broadly. @clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @kraussChangesReferencePhrases1964;@kraussConcurrentFeedbackConfirmation1966]. Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. 
-
-Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In line with results from face-to-face, oral paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks. (Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.)
-
-
-
 ```{r count, include=F}
 # TODO counts for all games
 # For abstract (and elsewhere) count things!
@@ -197,11 +175,20 @@ words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(word
 
 ```
 
-Dyads are robustly successful at forming conventionalized shorthands in iterated reference games, but talking with one person is simpler than talking with several. How does the formation of shared conventions proceed in multi-party communication? In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. 
 
-MENTION THAT THIS IS ONLINE
+Communicating in groups can be challenging. Listeners may have different levels of background knowledge that the rest of the groups may be unaware of. Some interlocuters may interrupt with questions, and others might pipe in to explain their views, collectively leading to everyone talking at once. Multiple conversations threads may split off that need to merge back together for the group to reach agreement. Different people may understand the same speaker as meaning different things, resulting in disagreements and misunderstandings. Disagreements may even escalate to the point where meta-discussion is needed to define terms or struction the conversation differently. We've all been in situations that look like this, where a conversation with half-a-dozen people devolves into chaos and results in inefficient communication. Yet, despite all of these impediments, we often communicate successfully in groups. How?
 
-In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited `r players` participants who were organized into `r games` groups distributed across 3 experiments and 11 conditions. Collectively, players produced `r words |> round(-3)` during their games.  We analysed the results using traditional metrics of accuracy and number of words, and we used computation measures of semantic similarity to understand how utterances evolve during the games. 
+
+One key requirement for efficient communication in groups of any size is a shared vocabulary, or shared mappings between linguistic units and objects or concepts [@branigan2006;@ginzburg2005;@traum2004]. Because reference is a requirement of communcation that can be isolated and tested in experimentally manipulated contexts, it has been a case study for efficient communication more broadly. In many cases, ther are widely shared convention mappings between objects and descriptions that people can rely on, but in other cases, interlocuters must invent ad-hoc reference expressions to communicate about objects without canonical names. 
+
+The formation of these new reference expressions is well-studied in dyadic contexts. @clarkReferringCollaborativeProcess1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @kraussChangesReferencePhrases1964;@kraussConcurrentFeedbackConfirmation1966]. Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. 
+
+Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkinsCharacterizingDynamicsLearning2020;@haber2019]. In line with results from face-to-face, oral paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks. (Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.)
+
+
+Dyads are robustly successful at forming conventionalized shorthands in iterated reference games, but talking with one person omits some sources of complexity that are involved with talking to multiple. How does the formation of shared conventions proceed in multi-party communication? 
+
+In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited `r players` participants who were organized into `r games` groups distributed across 3 online  experiments and 11 conditions. Collectively, players produced `r words |> round(-3)` during their games.  We analysed the results using traditional metrics of accuracy and number of words, and we used computation measures of semantic similarity to understand how utterances evolve during the games. 
 
 We find that the characteristic pattern of increasing accuracy and decreasing utterance length that is noted in the dyadic literature also occurs across conditions in multi-player games. Reduction is coupled with semantic shifts as utterances converge toward the eventual conventionalized name and away from descriptions used by other groups or for other tangrams. These convention-formation phenomena emerge across disparate conditions; however, there are gradient effects where larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups. 
 
@@ -448,7 +435,7 @@ knitr::include_graphics("sbert.pdf")
 
 In addition to behavioral measures, we looked at how the speaker's descriptions changed over time within and between games. We concatenated speaker's messages within a trial  and used SBERT to embed the description into a high-dimensional vector space [TODO CITE]. We can compare the similarity between a pair of utterances by using the cosine similarity between their embeddings. 
 
-As a measure of convention formation, we can track how utterances describing the same tangram become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \@ref(fig:sbert-diagram). 
+As a measure of convention formation, we tracked how utterances describing the same tangram in the same game become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \@ref(fig:sbert-diagram). 
 
 ```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A. Convergence of utterances within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. B. Divergence of utterances across games as measured by the similarity between an utterances and utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic."}
 #convergence
@@ -625,8 +612,7 @@ Comparing embeddings of utterances also gives more details. As shown in Appendix
 TODO say more about this 
 
 
-
-### TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
+ TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
 
 
 
@@ -634,6 +620,8 @@ TODO say more about this
 
 
 # General Discussion
+
+
 
 big groups / groups vary -- how do people work with these constraints and reach common understanding? study in the area of iterated reference games b/c it's well explored. 
 
@@ -662,6 +650,7 @@ theories?:
 * it's not required that listeners talk
 * once you've got first contact with a shared meaning, that's the hard part done and then it gets easier (maybe & know you do? )
 
+In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. 
 
 
 # Methods
