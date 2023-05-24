@@ -244,8 +244,9 @@ model_2c_tangram_div <- brm(sim ~ block + (1|gameId),
 model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
                          (1|gameId),
                         data=three_tangrams,
-                        control=list(adapt_delta=.95),
-                        file=here(model_location,"tandiv_3.rds"),
+                        control=list(adapt_delta=.99),
+                        iter=4000,
+                        file=here(model_location,"tandiv_3_2.rds"),
                         prior=div_priors)#
 
 #We plan to look at the similarities for block 1 with all later blocks; 
@@ -335,25 +336,88 @@ model_3_to_next<- brm(sim ~ earlier*channel*gameSize + (1|tangram) + (1|gameId),
 #   words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
 # + (1|tangram*group)+(block|group)
 
+lagged <- combined_results |> filter(condition=="rotate") |> select(playerId, gameId, tangram, repNum, correct) |> mutate(repNum=repNum+1)
+
+for_weird_model <- combined_chat |> filter(role=="speaker") |> filter(condition=="rotate") |> 
+  select(playerId, gameId, tangram, repNum, total_num_words, numPlayers) |> 
+  left_join(lagged) |> 
+  mutate(block=repNum,
+         words=total_num_words,
+         was_INcorrect=ifelse(!correct,1,0)) |> 
+  filter(block>0)
+         
+
+model_speaker_acc <- brm(words ~ block * numPlayers +block*was_INcorrect+
+                           (block|tangram)+ (1|playerId)+(1|tangram:gameId)+(block|gameId),
+                         data=for_weird_model,
+                         file=here(model_location, "weird_1"),  
+                         prior=red_priors, control=list(adapt_delta=.95))
+
+         
+
+
+### listener reduction
+
+listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
+
+listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listeners) |> 
+  group_by(condition,  numPlayers, trialNum, repNum, gameId) |> 
+  mutate(total_num_words=ifelse(is.na(total_num_words),0, total_num_words)) |> 
+  summarize(words=sum(total_num_words)) |> 
+  filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback")) |> 
+  rename(block=repNum)
+
+
+listener_priors <- c(
+  set_prior("normal(12, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 5)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+#this is a model of when something is said, how much?
+model_1_list <- brm(words ~ block*numPlayers+(block|gameId),
+                   data=listener_chat |> filter(condition=="rotate") |> filter(words>0),
+                   file=here(model_location, "list_1"),
+                   prior=red_priors,
+                   control=list(adapt_delta=.95))
+
+### listener not talking at all
+
+
+anylistener_priors <- c(
+  set_prior("normal(0, 1)", class="b"),
+  set_prior("normal(0, 1)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+anytalk <- listener_chat |> mutate(is.words=ifelse(words>0, 1,0))
+
+model_1_anylist <- brm(is.words ~ block*numPlayers+(1|gameId), 
+                      family=bernoulli(link="logit"),
+                      data=listener_chat |> filter(condition=="rotate") , 
+                      file=here(model_location, "anylist_1"), 
+                       prior=anylistener_priors, 
+                       control=list(adapt_delta=.95))
+
+
+
 #### save reduced forms of models 
 
 library(tidybayes)
 
-show_summary <- function(model){
+save_summary <- function(model){
   intervals <- gather_draws(model, `b_.*`, regex=T) %>% mean_qi()
   
   stats <- gather_draws(model, `b_.*`, regex=T) %>% 
     mutate(above_0=ifelse(.value>0, 1,0)) %>% 
     group_by(.variable) %>% 
     summarize(pct_above_0=mean(above_0)) %>% 
-    mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=2)) %>% 
+    mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=4)) %>% 
     left_join(intervals, by=".variable") %>% 
-    mutate(lower=round(.lower, digits=2),
-           upper=round(.upper, digits=2),
-           `Credible Interval`=str_c("[",lower,", ", upper,"]"),
+    mutate(lower=.lower,
+           upper=.upper,
            Term=str_sub(.variable, 3, -1),
-           Estimate=round(.value, digits=2)) %>% 
-    select(Term, Estimate, `Credible Interval`, `P-value equivalent`)
+           Estimate=.value) %>% 
+    select(Term, Estimate, lower, upper, `P-value equivalent`)
   
   stats
 }
@@ -371,7 +435,7 @@ form <- function(model){
 
 do_model <- function(path){
   model <- read_rds(here(model_location,path))
-  show_summary(model) |> write_rds(here(model_location,"summary", path))
+  save_summary(model) |> write_rds(here(model_location,"summary", path))
   model$formula |> write_rds(here(model_location, "formulae", path))
   print(summary(model))
 }

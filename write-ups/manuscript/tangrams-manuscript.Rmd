@@ -96,7 +96,7 @@ theme_set(theme_bw())
 
 knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
                       fig.pos = "tb", fig.path='figs/', fig.env="figure",
-                      echo=F, warning=F, cache=TRUE, 
+                      echo=F, warning=F, cache=T, 
                       message=F, sanitize = T)
 
 color_scheme_1 <- c("2"="#FFBDD4", "3"="#FF7DF0","4"="#D24AFF", "5"="#A12EFF","6"="#6940FF")
@@ -125,30 +125,24 @@ mform_loc="code/paper_mods/formulae"
 
 source(here("code/prep_ms.R"))
 
-show_summary <- function(model){
-  intervals <- gather_draws(model, `b_.*`, regex=T) |> mean_qi()
-  
-  stats <- gather_draws(model, `b_.*`, regex=T) |> 
-    mutate(above_0=ifelse(.value>0, 1,0)) |> 
-    group_by(.variable) |> 
-    summarize(pct_above_0=mean(above_0)) |> 
-   mutate(`P-value equivalent` = signif(2*pmin(pct_above_0,1-pct_above_0), digits=2)) |> 
-    left_join(intervals, by=".variable") |> 
-    mutate(lower=round(.lower, digits=2),
-           upper=round(.upper, digits=2),
-           `Credible Interval`=str_c("[",lower,", ", upper,"]"),
-           Term=str_sub(.variable, 3, -1),
-           Estimate=round(.value, digits=2)) |> 
-    select(Term, Estimate, `Credible Interval`, `P-value equivalent`)
-  
-  stats
-}
 
-stats <- function(model, row){
+stats <- function(model, row, decimal=2){
+  model <- model |> 
+    mutate(Estimate=round(Estimate, digits=decimal),
+           Lower=round(lower, digits=decimal),
+           Upper=round(upper, digits=decimal),
+           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+    select(Term, Estimate, `Credible Interval`)
   str_c(model[row,1],": ", model[row,2], " ", model[row,3])
 }
 
-stats_text  <- function(model, row){
+stats_text  <- function(model, row, decimal=2){
+    model <- model |> 
+    mutate(Estimate=round(Estimate, digits=decimal),
+           Lower=round(lower, digits=decimal),
+           Upper=round(upper, digits=decimal),
+           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+    select(Term, Estimate, `Credible Interval`)
   str_c( model[row,2],"  ",model[row,3])
 }
 
@@ -372,9 +366,14 @@ acc_2c <- read_rds(here(msum_loc,"acc_2c.rds"))
 
 acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 
+
 ```
 
-In every condition, listeners selected the correct target far above chance, and listener accuracy rose over the course of the game (Figure \@ref(fig:behavioral)A). Experiment 1 found no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). In experiment 3, participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`) than players in 2 player games, but thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,5)`) or improvement rate (`r stats(acc_3, 2)`). The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
+In every condition, listeners selected the correct target far above chance, and listener accuracy rose over the course of the game (Figure \@ref(fig:behavioral)A). Experiment 1 found no strong effects of group size on overall accuracy (`r stats(acc_1,4)`) or improvement rate (`r stats(acc_1,2)`). 
+
+In experiment 3, participants in six player games were less accurate (`r stats(acc_3, 6)`) and slower to improve (`r stats(acc_3, 3)`) than players in 2 player games,
+
+but thin versus thick games did not have a clear effect on accuracy  (`r stats(acc_3,5)`) or improvement rate (`r stats(acc_3, 2)`). The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images. 
 
 
 
@@ -586,7 +585,7 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 ```
 
-We first look at convergence, comparing utterances from the first 5 blocks of a game to the "convention" or last block utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the similarity of the first utterance to last utterances is invariant across group size (`r stats_text(tolast_1, 1)`), but smaller groups converge faster (`r stats_text(tolast_1, 3)`). Experiment 2 shows similar patterns of utterances become more similar to the last utterance, particularly in the single speaker condition (`r stats_text(tolast_2a, 1)`) where all the utterances come from the same person, but also in the full feedback condition (`r stats_text(tolast_2b, 1)`) and to a smaller extent, in the thin condition (`r stats_text(tolast_2c, 1)`). In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4)`) and especially thin 6 player games (`r stats_text(tolast_3, 5)`). 
+We first look at convergence, comparing utterances from the first 5 blocks of a game to the "convention" or last block utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the similarity of the first utterance to last utterances is invariant across group size (`r stats_text(tolast_1, 1,3)`), but smaller groups converge faster (`r stats_text(tolast_1, 3,3)`). Experiment 2 shows similar patterns of utterances become more similar to the last utterance, particularly in the single speaker condition (`r stats_text(tolast_2a, 1,3)`) where all the utterances come from the same person, but also in the full feedback condition (`r stats_text(tolast_2b, 1,3)`) and to a smaller extent, in the thin condition (`r stats_text(tolast_2c, 1,3)`). In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4,3)`) and especially thin 6 player games (`r stats_text(tolast_3, 5,3)`). 
 
 Not only do groups reduce the lengths of their utterances, but each group is converging towards a semantic description for the figures. This is more prominent in smaller games and games with greater group coherence. 
 
@@ -602,7 +601,7 @@ div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 ```
 
-The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1)`) and full feedback conditions (`r stats_text(div_2b, 1)`) than in the 6 thin condition (`r stats_text(div_2c, 1)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3)`). 
+The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1,3)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3,3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2,3)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1,3)`) and full feedback conditions (`r stats_text(div_2b, 1,3)`) than in the 6 thin condition (`r stats_text(div_2c, 1,3)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1,3)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3,3)`). 
 
 TODO possibly say more about 6 thin and check modelling issues
 
@@ -754,6 +753,29 @@ listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listene
   
   all_list <- listener_chat |> union(count_emoji) |> mutate(condition2=ifelse(condition=="rotate", str_c(numPlayers,condition), condition))
 ```
+
+```{r }
+combined_emoji |> mutate(emoji=case_when(
+    text=="✅"~  "check",
+    text=="🤔" ~ "think",
+    text=="❌" ~ "x",
+    text=="😂" ~ "lol",
+  )) |>  filter(!is.na(emoji)) |> full_join(listeners) |> 
+  filter(condition %in% c("2_thin", "6_thin", "emoji"))|> 
+  unique() |> 
+  mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
+    pivot_wider(names_from=emoji, values_from=is.emoji, values_fill=0) |> 
+  select(-`NA`) |> 
+  mutate(total=check+think+x+lol) |> 
+  pivot_longer(`think`:`total`, names_to="emoji", values_to="count") |> 
+  group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |>  ggplot(aes(x=repNum, y=any, color=emoji))+geom_smooth(method="lm")+facet_wrap(~condition)
+
+```
+TODO figure out what to say re emoji!
+
+Emoji use declines over the course of the game, but is present at higher levels. Partially this may because some of it is equivalent to excluded language ("got it") and part may be related to lower accuracies and thus more participants who are confused for longer. 
+comparison is contentful v not contentful 
+
 
 ```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
 
@@ -1096,15 +1118,15 @@ tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv_3.rds"))
 
 Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position. 
 
-Over the course of the game, descriptions for each tangram become more distinctive (`r stats_text(tandiv_1, 1)`). 
-In all three subexperiments, the descriptions of tangrams become more distinctive within games across time. (2a `r stats_text(tandiv_2a,1)`, 2b `r stats_text(tandiv_2b, 1)`, 2c `r stats_text(tandiv_2c,1)`). 
+Over the course of the game, descriptions for each tangram become more distinctive (`r stats_text(tandiv_1, 1,3)`). 
+In all three subexperiments, the descriptions of tangrams become more distinctive within games across time. (2a `r stats_text(tandiv_2a,1,3)`, 2b `r stats_text(tandiv_2b, 1,3)`, 2c `r stats_text(tandiv_2c,1,3)`). 
 
 
-Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3, 1)`). There might be more to say about other effects, but it's mostly a starting places being different in larger games and then the slopes also differ a bit? 
+Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3, 1,3)`). There might be more to say about other effects, but it's mostly a starting places being different in larger games and then the slopes also differ a bit? 
 
 
 ### play with more diagrams
-Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1)`) as do larger games (`r stats_text(tonext_3,7)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3)`), painting an overall nonlinear convergent pattern (as seen in Figure \@ref(fig:other)). 
+Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1,3)`) as do larger games (`r stats_text(tonext_3,7,3)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3,3)`), painting an overall nonlinear convergent pattern (as seen in Figure \@ref(fig:other)). 
 
 
 
@@ -1121,8 +1143,14 @@ form <- function(model){
   str_replace_all("\\+", "~+ ")
 }
 
-do_table <- function(mod, cap){
-  model <- read_rds(here(msum_loc,mod))
+do_table <- function(mod, cap,decimal=2){
+  model <- read_rds(here(msum_loc,mod)) |> 
+    mutate(Estimate=round(Estimate, digits=decimal),
+           Lower=round(lower, digits=decimal),
+           Upper=round(upper, digits=decimal),
+           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+    select(Term, Estimate, `Credible Interval`)
+
 spec <- read_rds(here(mform_loc,mod))
 
 kable(model |> select(Term, Est.=Estimate, CrI=`Credible Interval`), escape=F, format='latex', booktabs=T,

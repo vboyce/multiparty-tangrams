@@ -31,7 +31,8 @@ data_location_2c <- "data/study2c"
 two_c_rounds_include <- read_rds(here(data_location_2c,"rounds_include.rds"))
 two_c_round_results <- read_rds(here(data_location_2c,"round_results.rds")) |> mutate(rotate="emoji")
 two_c_chat <- read_csv(here(data_location_2c, "chat.csv")) |> mutate(rotate="emoji")
-two_c_raw <- read_csv(here(data_location_2c, "raw_chat.csv")) |> inner_join(two_c_rounds_include) |> filter(role=="listener") |> mutate(condition="emoji", activePlayerCount=6)
+two_c_raw <- read_csv(here(data_location_2c, "raw_chat.csv")) |> inner_join(two_c_rounds_include) |> filter(role=="listener") |>
+  mutate(condition="emoji", activePlayerCount=6)
 
 ### study 3
 
@@ -44,19 +45,19 @@ three_raw <- read_csv(here(data_location_3, "raw_chat.csv")) |> inner_join(three
 ### Combined
 
 combined_results <- one_round_results |> 
-  union(two_a_round_results) |> 
-  union(two_b_round_results) |> 
-  union(two_c_round_results) |> 
+  rbind(two_a_round_results) |> 
+  rbind(two_b_round_results) |> 
+  rbind(two_c_round_results) |> 
   mutate(activePlayerCount=NA) |> 
   rename(condition=rotate) |> 
-  union(three_round_results)
+  rbind(three_round_results)
   
 combined_chat <- one_chat |> 
-  union(two_a_chat) |> 
-  union(two_b_chat) |> 
-  union(two_c_chat) |> 
+  rbind(two_a_chat) |> 
+  rbind(two_b_chat) |> 
+  rbind(two_c_chat) |> 
   mutate(activePlayerCount=NA) |> 
   rename(condition=rotate) |> 
-  union(three_chat)
+  rbind(three_chat)
 
-combined_emoji <- two_c_raw |> union(three_raw)
+combined_emoji <- two_c_raw |> rbind(three_raw)
