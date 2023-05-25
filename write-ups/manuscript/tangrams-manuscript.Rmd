@@ -62,8 +62,7 @@ tables: TRUE # Needed to be able to include tables
 <!---------------------- Abstract --------------------->
 
 ::: {.abstract data-latex="" lang=en}
-Group communication is ubiqutous, but it presents some challenges. however, potential challenges from larger groups aren't studied much because the literature is primarily dyadic. One key phenomenon, reduction over repeated reference, is well-attested and could explain how pairs build shared meaning. 
-We extend the same paradigm across a NUMBER of games varying in group size and interaction structure. We find across conditions that reduction and convergence to shared descriptions occurs, and there is a gradient depending both on group size and other features of group interaction. 
+Group communication is ubiquitous, but it presents some challenges not found in two-person communication, which is the primary focus of the experimental literature. One test case for communication that is is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people can build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, reduction and convergence to shared descriptions occurs, but there is a gradient where smaller groups and groups with thicker communication channels show faster and stronger convergence than larger games or groups with thinner communication channels. 
 
 :::
 
@@ -169,6 +168,8 @@ words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(word
 
 ```
 
+TODO: need to replace - sign with a non-breaking hyphen re: statistical results!!!
+TODO: add clear sub part labels of what graphs are showing
 
 Communicating in groups can be challenging. Listeners may have different levels of background knowledge that the rest of the groups may be unaware of. Some interlocuters may interrupt with questions, and others might pipe in to explain their views, collectively leading to everyone talking at once. Multiple conversations threads may split off that need to merge back together for the group to reach agreement. Different people may understand the same speaker as meaning different things, resulting in disagreements and misunderstandings. Disagreements may even escalate to the point where meta-discussion is needed to define terms or struction the conversation differently. We've all been in situations that look like this, where a conversation with half-a-dozen people devolves into chaos and results in inefficient communication. Yet, despite all of these impediments, we often communicate successfully in groups. How?
 
@@ -585,9 +586,7 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 ```
 
-We first look at convergence, comparing utterances from the first 5 blocks of a game to the "convention" or last block utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the similarity of the first utterance to last utterances is invariant across group size (`r stats_text(tolast_1, 1,3)`), but smaller groups converge faster (`r stats_text(tolast_1, 3,3)`). Experiment 2 shows similar patterns of utterances become more similar to the last utterance, particularly in the single speaker condition (`r stats_text(tolast_2a, 1,3)`) where all the utterances come from the same person, but also in the full feedback condition (`r stats_text(tolast_2b, 1,3)`) and to a smaller extent, in the thin condition (`r stats_text(tolast_2c, 1,3)`). In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4,3)`) and especially thin 6 player games (`r stats_text(tolast_3, 5,3)`). 
-
-Not only do groups reduce the lengths of their utterances, but each group is converging towards a semantic description for the figures. This is more prominent in smaller games and games with greater group coherence. 
+To measure convergence, we compared utterances from the first 5 blocks of a game to the "convention" or last block utterance for the same figure. As visible in Figure \@ref(fig:sbert)A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the starting similarity of the first utterance to the last last utterance is invariant across group size (`r stats_text(tolast_1, 1,3)`), but for smaller groups, similarity increases rapidly and they converge faster (`r stats_text(tolast_1, 3,3)`). Convergence was especially rapid in the experiment 2 single speaker condition (`r stats_text(tolast_2a, 1,3)`) where all the utterances come from the same person. In experiment 3, convergence is slower in thin games than thick games (`r stats_text(tolast_3, 4,3)`) and especially thin 6 player games (`r stats_text(tolast_3, 5,3)`). This convergence towards the last utterance is made up of a cumulative increasing similarity between pairs of adjacent utterances (i.e. blocks 5 and 6 are closer to each other than block 1 is to 2). TODO SEE SUPPLEMENT FIGURE. Not only do groups reduce the lengths of their utterances, but each group is converging towards a semantic description for the figures. This is more prominent in smaller games and games with greater group coherence. 
 
 
 ```{r}
@@ -603,58 +602,48 @@ div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 
 The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1,3)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3,3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2,3)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1,3)`) and full feedback conditions (`r stats_text(div_2b, 1,3)`) than in the 6 thin condition (`r stats_text(div_2c, 1,3)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1,3)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3,3)`). 
 
-TODO possibly say more about 6 thin and check modelling issues
+As group narrow in on descriptions for each image that differ from other groups, the names for each tangram differentiate with a group (See supp figure TODO). 
 
-Comparing embeddings of utterances also gives more details. As shown in Appendix figure, the similarity the last utterance can be seen as the cumulative similarities of consecutive utterances. Over time adjacent utterances become more similar as the utterances converge closer to a convention. As group narrow in on descriptions for each image, names for tangrams become more distinctive. While initially, many tangrams might be described in terms of shapes or body parts and directions, as the get nicknames, they differentiate more (See supp figure). All of these confirm expected patterns. 
+These semantic pattens are all consistent with the partner-specific convention development and differentiation proposed by CITE someone must have verbally described the pattern.  
 
-
-TODO say more about this 
-
-
- TODO there's a note saying to rerun these models for longer with more extensive mixed effects!! (at least of reduction model)
-
-
-
-
-
+TODO check and fix all experiment 3 references 
 
 # General Discussion
 
+We often communicate with multiple people at once, but much of the research on communication has been on dyads. One common paradigm for studying communication has been iterated reference games, where the phenomenon of reduction over repeated reference has been robustly established. 
+
+We build on this tradition by expanding the reference game paradigm to larger groups under various interaction structures. Across 3 online experiments and 11 experimental conditions, we varied game features including group size, form of listener backchannel, and degree of group coherence. All conditions shows the same patterns of increasing accuracy, reduction in speaker utterances, and semantic convergence within and divergence between groups. Thus, the classic reduction phenomena can occur even under situations with constrained interaction structure. 
+
+However, the interaction stucture of a group affects how rapidly groups converge to partner-specific conventions, whether measured via reduction or via semantic convergence. Smaller groups and games with thicker communication channels converged faster and more robustly than games that were larger or had thinner communication channels. These factors add together to form the overall group experience. We can interpret the experiment 3 pattern as saying that 2-player games can cope with limited feedback mechanisms, but 6-player games suffer without access to more feedback. 
+
+The 6 thin condition also presents intriguing evidence that reduction and partner-specific utterance formation might not be closely tethered: this condition shows reduction that is not substantially different than in the 6 thick condition, but it shows much less semantic convergence than other conditions. This is just one condition, but it suggests that descriptions can shorten without differentiating, perhaps all shortening to a common prior. CITE THAT PAPER ABOUT GROUP SIZE This highlights the importance of measuring semantics separately from just length proxies. 
+Our goal here was to further explore the space; not to directly adjudicate theories. However, given how little listeners talked, and the success of games where listeners had a limited backchannel, it seems that people are readily able to jointly agree on conventions without talking (consistent with RSA-etc CITATIONS models). 
+
+Overall, we have a number of groups, and a large corpus of language that could be probed further. TODO amke this not suck The number of groups in any one condition is limited, but overall, there's a lot of people and a lot of language. 
 
 
-big groups / groups vary -- how do people work with these constraints and reach common understanding? study in the area of iterated reference games b/c it's well explored. 
 
-we varied several factors: group size, listener backchannel, group coherence (feedback and speaker) and measured results in terms of accuracy, reduction, and the semantic distances between utterances. Across all conditions, we saw increasing accuracy, reduction, and expected semantic patterns. People are not at chance and are mananging to come to common understandings with group mates even if the unfavorable conditions. This is impressive.
-
-However, we also see performance gradients, by group size and interaction width. People are more accurate and faster to converge when they have fewer people to agree with, or more group coherence, or better ways to ask questions. In particular, we could interpret experiemnt 3 saying that 2 player games can cope with poor feedback, but 6 player games suffer without the thick channel. 
-
-Something about group to group variability. Creativity of descriptions, blah blah. 
-
-Intriguing results that suggest that reduction and the semantics might be less tethered -- some reduction is about getting better or common prior or something. 
-
-some paragraph about what this says, if anything, about the real world. this isn't the only group dynamic; could imagine situations where listeners can see each others work collaborate (point to each other what htey think, perhaps see feedback from speaker to one listener) which might make things reduce much faster
+[not sure if/where to include] My biggest take away from this is that the hard part seems to be getting first contact with a shared meaning (and knowing you have done this), and the "reducing" part is easier since you have something to work with. So, how ideas of how to describe are sampled might be worth exploring more? 
 
 
-* we do have some scale; lots of overall groups, lots of talking
 
-limitations:
-* high group variability
-* limited set of targets -- this sort of experimental set-up depends a lot on the stimuli being the right level of evocative or describable 
-* this is a high feature space -- we sampled only some pieces and grouped together b/c it's expensive and variable
-* causality is also hard since there are several things that differ between 2 adn 6 player games so mechanisms are hard
-* not a perfect match to real world (listeners can't copy each other) / could imagine different feedback structures
+## Limitations
+Communication is a highly complex beast, so this set of experiments only explored a small part of the domain. Even just the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space. In our experiment 3, we grouped some factors together in order to have more groups in each condition: a fully factorial design would have been too expensive to power adequately. One dimension we did not vary was targets, where we stuck with the same tangram figures used in prior experiments. Thus, some of the patterns of reduction may be particular to the level of unnameable yet evocative and describable that these figures are, and not present with more or less conventional stimuli. 
+
+Group to group variability is high, as individual differences in communication style and shape description ability interacted. Coupled with small numbers of groups in some conditions, measures may be somewhat noisy depending on the random assignment of participants to games and conditions. 
+
+We cannot make claims about causal mechanisms between how experimental set-ups such as group size resulted in different outcomes: for instance, there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. 
+
+
+How does this controlled experimental condition map onto the real world? Group dynamics vary widely, and different dynamics scale differently with group size. In the experiment, listeners could not see each others answers while they were selecting, while in some real world situations, listeners might be able to collaborate and see what others are reaching towards. In these settings with more shared common ground and the ability to quickly learn from others success, group size might be more advantageous than in this setting. 
+
 Group interactions are rich, and this experiment is necessarily a schematic simplification with a number of limitations. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment [@fay2000;@carletta1998]. Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community.  Reference is only one goal out of many possible communicative goals, and the tangram images are artificial. 
 
-theories?: 
-* it's not required that listeners talk
-* once you've got first contact with a shared meaning, that's the hard part done and then it gets easier (maybe & know you do? )
+## Conclusion ??
 
-In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. 
-
+TODO 
 
 # Methods
-
-We extended the dyadic repeated reference game paradigm of @hawkinsCharacterizingDynamicsLearning2020 along a few dimensions. As diagrammed in Figure \@ref(fig:diagram), three dimensions of variation we considered were group size, listener backchannel, and group coherence. In experiment 1, we expanded from dyadic reference games to group games with 2--6 players who rotated between speaker and listener roles. In experiment 2, we built on the 6 player games by exploring three variations, two which increased group coherence by increasing feedback to listeners or having a single speaker for the entire game, and one that reduced the listener backchannel. For experiment 3, we considered the extremes of group size and performance, informed by the prior experiments. The thin channel repeated the reduced-backchannel, low-group coherence condition, and we created a thick channel by combining the two sources of group coherence together. We then crossed these thick and thin condition with groups of 2 and 6 players and collected more data in each of these conditions. 
 
 For all experiments, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
 
@@ -712,23 +701,20 @@ Experiment 2 consisted of three different variations on Experiment 1, all conduc
 
 ### Differences in experiment 3
 
-The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one perspon was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. TODO confirm. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
-
-
+The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. TODO confirm. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
 
 ## Data pre-processing and exclusions
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed through the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well or fast the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We exclude these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
-In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game would drop below 2 players. The distribution of playes in these 6* player games is at TODO! The realities of online recruitment and disconnection meant that the number of games varied, although we aimed for 20 games in each condition in experiments 1 and 2, and 40 per condition in experiment 3. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Table \@ref(tab:participants) for counts).
+In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game would drop below 2 players. The distribution of playes in these 6* player games is at TODO SUPPLEMENT! The realities of online recruitment and disconnection meant that the number of games varied, although we aimed for 20 games in each condition in experiments 1 and 2, and 40 per condition in experiment 3. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Table \@ref(tab:participants) for counts).
 
 When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses. 
 
 ## Modelling strategy
-TODO
 In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player. 
 
-We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. 
+We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and priors and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. 
 
 
 # Supplement
