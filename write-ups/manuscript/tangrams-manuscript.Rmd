@@ -719,6 +719,8 @@ We ran all models in brms (CITE) with weakly regularizing priors. We were often 
 
 # Supplement
 
+This supplement will get moved to a separate file, but for now is tacked on. 
+
 ```{r}
 
 listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
@@ -761,6 +763,17 @@ TODO figure out what to say re emoji!
 
 Emoji use declines over the course of the game, but is present at higher levels. Partially this may because some of it is equivalent to excluded language ("got it") and part may be related to lower accuracies and thus more participants who are confused for longer. 
 comparison is contentful v not contentful 
+```{r}
+list_1 <- read_rds(here(msum_loc, "list_1.rds"))
+list_spec_1 <- read_rds(here(mform_loc, "list_1.rds"))
+
+anylist_1 <- read_rds(here(msum_loc, "anylist_1.rds"))
+anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
+
+
+```
+
+
 
 
 ```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
@@ -1096,7 +1109,6 @@ tandiv_2c <- read_rds(here(msum_loc, "tandiv_2c.rds"))
 ```
 
 ```{r}
-# file naming screwup TODO fix me and the file that writes me etc
 tandiv_3 <- read_rds(here(msum_loc,"tandiv_3.rds"))
 tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv_3.rds"))
 
@@ -1184,6 +1196,22 @@ words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
 + (1|tangram*group)+(block|group)
 
 TODO
+
+```{r}
+do_table("weird_1.rds")
+
+```
+
+### Listener models
+
+```{r}
+
+do_table("list_1.rds", "Experiment 1")
+
+do_table("anylist_1.rds", "Experiment 1")
+
+
+```
 \pagebreak
 
 ## SBERT models

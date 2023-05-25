@@ -246,7 +246,7 @@ model_3_tangram_div <- brm(sim ~ block*channel*gameSize+
                         data=three_tangrams,
                         control=list(adapt_delta=.99),
                         iter=4000,
-                        file=here(model_location,"tandiv_3_2.rds"),
+                        file=here(model_location,"tandiv_3.rds"),
                         prior=div_priors)#
 
 #We plan to look at the similarities for block 1 with all later blocks; 
@@ -386,14 +386,13 @@ model_1_list <- brm(words ~ block*numPlayers+(block|gameId),
 
 anylistener_priors <- c(
   set_prior("normal(0, 1)", class="b"),
-  set_prior("normal(0, 1)", class="sd"),
-  set_prior("lkj(1)",       class="cor"))
+  set_prior("normal(0, 1)", class="sd"))
 
 anytalk <- listener_chat |> mutate(is.words=ifelse(words>0, 1,0))
 
 model_1_anylist <- brm(is.words ~ block*numPlayers+(1|gameId), 
                       family=bernoulli(link="logit"),
-                      data=listener_chat |> filter(condition=="rotate") , 
+                      data=anytalk |> filter(condition=="rotate") , 
                       file=here(model_location, "anylist_1"), 
                        prior=anylistener_priors, 
                        control=list(adapt_delta=.95))
