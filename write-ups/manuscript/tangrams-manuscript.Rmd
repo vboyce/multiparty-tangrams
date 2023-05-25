@@ -157,8 +157,6 @@ form <- function(model){
 ```
 
 ```{r count, include=F}
-# TODO counts for all games
-# For abstract (and elsewhere) count things!
 
 games <- combined_results |> select(gameId) |> unique() |> nrow() 
 
@@ -168,8 +166,8 @@ words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(word
 
 ```
 
-TODO: need to replace - sign with a non-breaking hyphen re: statistical results!!!
-TODO: add clear sub part labels of what graphs are showing
+<!--TODO: need to replace - sign with a non-breaking hyphen re: statistical results!!!
+TODO: add clear sub part labels of what graphs are showing-->
 
 Communicating in groups can be challenging. Listeners may have different levels of background knowledge that the rest of the groups may be unaware of. Some interlocuters may interrupt with questions, and others might pipe in to explain their views, collectively leading to everyone talking at once. Multiple conversations threads may split off that need to merge back together for the group to reach agreement. Different people may understand the same speaker as meaning different things, resulting in disagreements and misunderstandings. Disagreements may even escalate to the point where meta-discussion is needed to define terms or struction the conversation differently. We've all been in situations that look like this, where a conversation with half-a-dozen people devolves into chaos and results in inefficient communication. Yet, despite all of these impediments, we often communicate successfully in groups. How?
 
@@ -190,7 +188,7 @@ We find that the characteristic pattern of increasing accuracy and decreasing ut
 
 
 
-```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations. TODO how to make the inset look inset and what to do with the diagram bits?!"}
+```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations."}
 knitr::include_graphics("expt-diagram.pdf")
 
 ```
@@ -202,7 +200,7 @@ knitr::include_graphics("expt-diagram.pdf")
 
 We extended on the dyadic paradigm of @hawkinsCharacterizingDynamicsLearning2020 by parameterizing the experiments along a few dimensions while keeping other aspects of the experiment constant. As shown in Figure \ref{diagram} inset, all of the games used the same 12 target images [@hawkinsCharacterizingDynamicsLearning2020; @clarkReferringCollaborativeProcess1986]. The speaker knew which image was the target, and their goal was to describe it to the listeners over a chat interface so each listener could select the target. After all listeners had selected, players received feedback on the selections. The process repeated with the same speaker describing each of the 12 images to form one block. The games consisted of 6 blocks, for a total of 72 trials, where each image was described 6 times over the course of the game. 
 
-Figure \@ref(fig:diagram) schematically illustrates the dimensions of variation between games and where each condition fit in the experimental space. Game size (shown on the x-axis) which varied between 2 and 6 players groups to explore the gradual effects having a larger audience. Group coherence (y-axis) was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convention formation because it compares utterances from different players, but having a single speaker adds continuity that can help hold a group together. In low group coherence games, each listener only received feedback on if they were individually right or wrong in their selection; while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. Listener backchannel (z-axis) varied how listeners could communicate with the group.  In high backchannel games, the listeners could type text messages to the shared chat; while in low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation [TODO CIATIONS].
+Figure \@ref(fig:diagram) schematically illustrates the dimensions of variation between games and where each condition fit in the experimental space. Game size (shown on the x-axis) which varied between 2 and 6 players groups to explore the gradual effects having a larger audience. Group coherence (y-axis) was made up of two components: speaker rotation and feedback. In low group coherence games, the speaker rotated each block, while in high group coherence games, one player was the speaker for the entire game. Rotating speakers is a more stringent test of convention formation because it compares utterances from different players, but having a single speaker adds continuity that can help hold a group together. In low group coherence games, each listener only received feedback on if they were individually right or wrong in their selection; while in high group coherence games, listeners (like the speakers in all games) saw who had selected what and what the target had been, thus ensuring people saw what referent was intended and had a sense of how everyone else was doing. Listener backchannel (z-axis) varied how listeners could communicate with the group.  In high backchannel games, the listeners could type text messages to the shared chat; while in low backchannel games, listeners could send 4 discrete messages (represented as emojis) to the chat. This dimension was inspired by the claimed importance of listener contributions to convention formation [CITE].
 
 Experiment 1 varied group size with games of 2,3,4,5 or 6 players all with low group coherence and high listener backchannel. Experiment 2 held group size constant at 6 while each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin switched to a low backchannel. Finally, experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players. 
 
@@ -395,35 +393,26 @@ red_3 <- read_rds(here(msum_loc, "red_3.rds"))
 
 The key observation in iterated reference games is that the descriptions the speaker gives of the target images become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \@ref(fig:behavioral)B), although there were substantial differences in how verbose speakers were across games. In experiment 1, the overall effect of being one block later was `r stats_text(red_1,1)` words per trial. Speakers in larger groups said more; the effect of each additional player was  `r stats_text(red_1,4)` more words per trial, with no clear interaction between block and group size (`r stats(red_1,2)`). In experiment 2, the result of being one block later was `r stats(red_2a,1)` words per trial for 6 single speaker; `r stats(red_2b,1)` words per for 6 full feedback, and `r stats(red_2c,1)` words per trial for 6 thin.  In experiment 3, the six player games said more to start with (`r stats(red_3, 7)`) and reduced less (`r stats(red_3, 4)`) than the two-player games. There were not significant differences due to channel type (`r stats(red_3, 5)`) or channel type over time (`r stats(red_3, 2)`). 
 
-TODO: dealing with non-centeredness of some of these models! Especially relevant re exp 3 where that are significant differences!
 
 
-TODO possibly say more about group to group variation 
 
 These reduction results confirm and extend what was previously known for 2 player games. Behaviorally, larger games are similar to smaller games, but their speakers tend to say more overall, perhaps related to the increased number of listeners to respond to. 
 
-What about the listeners? Compared to how much referential language speakers produce, listeners produce very little, and it is concentrated in the early rounds. TODO say more about listener language including some numbers!!!
+```{r}
+list_1 <- read_rds(here(msum_loc, "list_1.rds"))
+list_spec_1 <- read_rds(here(mform_loc, "list_1.rds"))
 
-<!-- more about listner lang
-
-
-should do total lang/game (including zeros) on chat conditions listeners don't use that much contentful language ever and it declines quickly 
-
-not sure what to say about non-contentful language use? such as yup / got it and chitchat maybe helpful to speaker (or not) and overlaps other channels. 
-
-Not sure how to talk about emoji since they do get used -- maybe say the do get used, generally used on each trial, but not a direct comparison to contentful language? 
+anylist_1 <- read_rds(here(msum_loc, "anylist_1.rds"))
+anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 
 
+```
 
-notes: this is a slightly unfair comparison, since it's the filtered chat for the chat ones, but raw emojis for the others which might actually map to the "got it" chitchat. Resolve later.
-
-While listener backchannel is implicated as an important way for listeners to get clarification and reach agreement, listeners don't talk that much. The average number of words of reference language per trial per listener (counting those who say nothing) is less than 5 words TODO real numbers for the first block and declines in later blocks. 
-Listeners don't talk very much
-
-Key points about listener talking: They don't do it very much, but they do it a bit. Especially early in the game. Over the course of the game the amount of time any listener talks at all declines, as does the amount that is said. 
-
--->
-
+Listeners do not talk as much as speakers, but they also show patterns of reduction. In experiment 1, the number of trials where any listener says anything related to the description of the image is higher in larger groups (`r stats(anylist_1, 4)`), and declines across blocks (`r stats(anylist_1, 1)`). When referential language is produced, more is produced in larger groups (`r stats(list_1, 4)`), but the difference in group size closes in later blocks (`r stats(list_1, 2)`). See TODO supplement for images. This pattern of listener language use is suggestive that listeners asking questions and offering alternative conceptualizations plays a role in  initially establishing a shared description in early blocks, but they don't need to contribute referential language in later blocks when the description is reducing. 
+ Emoji use is common in the 6 player thin games where most trials at least one listener used at least one emoji, but emoji use declines over blocks. SEE FIGURE WHATEVER IN SUPPLEMENT  The use of emoji in the thin games is not directly comparable to listener contributes, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language could be due to it's non-equivalence, a lower level of accuracy in thin games, or emojis being a lower threshold for sending than written out questions. 
+ 
+ While the volume of listener contributions is low, the substantial differences in accuracy between thick and thin games suggest that these listener contributions have a crucial role to play. 
+ 
 
 ## Comparisons of language between and within games
 
@@ -600,13 +589,12 @@ div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 ```
 
-The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1,3)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3,3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2,3)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1,3)`) and full feedback conditions (`r stats_text(div_2b, 1,3)`) than in the 6 thin condition (`r stats_text(div_2c, 1,3)`). In experiment 3, descriptions from different games get less similar over time (`r stats_text(div_3, 1,3)`). There are slight differences in the initial starting points across the different conditions, as well as slight condition differences in how fast the games diverge. In particular, 6 player thin games diverge more slowly (`r stats_text(div_3, 3,3)`). 
+The complement to convergence within groups is divergence between groups, as different groups develop their own ways of identifying the different figures. In experiment 1, descriptions become less similar to those used to describe the same figure in other games (`r stats_text(div_1, 1,3)`). Group size does not affect the cross-groups similarities in the first block (`r stats_text(div_1, 3,3)`), but smaller groups diverge from each other faster than larger groups (`r stats_text(div_1,2,3)`). In experiment 2, divergence is stronger in the single speaker (`r stats_text(div_2a, 1,3)`) and full feedback conditions (`r stats_text(div_2b, 1,3)`) than in the 6 thin condition (`r stats_text(div_2c, 1,3)`). In experiment 3, descriptions from different games get less similar over time in the 2-player thick condition (`r stats_text(div_3, 1,3)`). The 6 player thick condition has initially higher similarity (`r stats_text(div_3, 7,3)`, but diverges faster (`r stats_text(div_3, 4,3)`. The two-player thin has slightly higher similarity (`r stats_text(div_3, 5, 3)`) and slightly slower divergence (`r stats_text(div_3, 2,3)`). Most noticeably, the 6 player thin games diverge much more slowly than the other conditions (`r stats_text(div_3, 3,3)`). 
 
 As group narrow in on descriptions for each image that differ from other groups, the names for each tangram differentiate with a group (See supp figure TODO). 
 
-These semantic pattens are all consistent with the partner-specific convention development and differentiation proposed by CITE someone must have verbally described the pattern.  
+These semantic patterns are all consistent with the partner-specific convention development and differentiation proposed by CITE someone must have verbally described the pattern.  
 
-TODO check and fix all experiment 3 references 
 
 # General Discussion
 
@@ -619,9 +607,7 @@ However, the interaction stucture of a group affects how rapidly groups converge
 The 6 thin condition also presents intriguing evidence that reduction and partner-specific utterance formation might not be closely tethered: this condition shows reduction that is not substantially different than in the 6 thick condition, but it shows much less semantic convergence than other conditions. This is just one condition, but it suggests that descriptions can shorten without differentiating, perhaps all shortening to a common prior. CITE THAT PAPER ABOUT GROUP SIZE This highlights the importance of measuring semantics separately from just length proxies. 
 Our goal here was to further explore the space; not to directly adjudicate theories. However, given how little listeners talked, and the success of games where listeners had a limited backchannel, it seems that people are readily able to jointly agree on conventions without talking (consistent with RSA-etc CITATIONS models). 
 
-Overall, we have a number of groups, and a large corpus of language that could be probed further. TODO amke this not suck The number of groups in any one condition is limited, but overall, there's a lot of people and a lot of language. 
-
-
+Overall, we have a number of groups, and a large corpus of language that could be probed further. The number of groups in any one condition is limited, but overall, there's a lot of people and a lot of language. TODO needs work 
 
 [not sure if/where to include] My biggest take away from this is that the hard part seems to be getting first contact with a shared meaning (and knowing you have done this), and the "reducing" part is easier since you have something to work with. So, how ideas of how to describe are sampled might be worth exploring more? 
 
@@ -647,7 +633,7 @@ TODO
 
 For all experiments, we used Empirica [@almaatouqEmpiricaVirtualLab2020] to create real-time multi-player reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted (Figure \ref{game}A) and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
 
-These experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: single speaker at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] TODO more comments on pre-reg
+These experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: single speaker at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] We followed the analysis plan, although additional analyses were added to early experiments that were only pre-registered in later experiments. Some pre-registered models were omitted from the main text, but are shown in the supplement TODO.
 
 ## Participants
 ```{r participants}
@@ -701,7 +687,7 @@ Experiment 2 consisted of three different variations on Experiment 1, all conduc
 
 ### Differences in experiment 3
 
-The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. TODO confirm. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
+The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
 
 ## Data pre-processing and exclusions
 
@@ -718,8 +704,10 @@ We ran all models in brms (CITE) with weakly regularizing priors. We were often 
 
 
 # Supplement
-
 This supplement will get moved to a separate file, but for now is tacked on. 
+
+## Figures of listener performance
+
 
 ```{r}
 
@@ -742,7 +730,7 @@ listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listene
   all_list <- listener_chat |> union(count_emoji) |> mutate(condition2=ifelse(condition=="rotate", str_c(numPlayers,condition), condition))
 ```
 
-```{r }
+```{r emoji, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji (or any emoji." }
 combined_emoji |> mutate(emoji=case_when(
     text=="✅"~  "check",
     text=="🤔" ~ "think",
@@ -759,24 +747,10 @@ combined_emoji |> mutate(emoji=case_when(
   group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |>  ggplot(aes(x=repNum, y=any, color=emoji))+geom_smooth(method="lm")+facet_wrap(~condition)
 
 ```
-TODO figure out what to say re emoji!
-
-Emoji use declines over the course of the game, but is present at higher levels. Partially this may because some of it is equivalent to excluded language ("got it") and part may be related to lower accuracies and thus more participants who are confused for longer. 
-comparison is contentful v not contentful 
-```{r}
-list_1 <- read_rds(here(msum_loc, "list_1.rds"))
-list_spec_1 <- read_rds(here(mform_loc, "list_1.rds"))
-
-anylist_1 <- read_rds(here(msum_loc, "anylist_1.rds"))
-anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
-
-
-```
 
 
 
-
-```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
+```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of words of referential language produced by listeners over time. Excludes trials where no listeners contributed descriptive language.  "}
 
 one <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
     mutate(numPlayers=as.character(numPlayers)) |> 
@@ -797,7 +771,7 @@ annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
 
 #2
 
-two <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
+two <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback")) |>
   filter(numPlayers==6) |> 
     mutate(condition=case_when(
     condition=="no_rotate" ~ "6 single speaker",
@@ -820,7 +794,7 @@ annotate("text", x=3.5,y=23,label="Experiment 2", size=6)+
 #3
 
 
-three <- all_list|>   filter(words!=0) |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>  
+three <- all_list|>   filter(words!=0) |> filter(condition %in% c( "2_thick", "6_thick")) |>  
   mutate(condition=str_replace(condition, "_", " ")) |> 
 ggplot(aes(x=repNum+1, y=words, color=condition))+
   geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
@@ -840,7 +814,7 @@ annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
 
 ```
 
-```{r listeners2, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO this probably goes in a supplement! "}
+```{r listeners2, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials when any reference language (or emoji) was produced by any listener."}
 
 # do any talk per trial
 
@@ -909,7 +883,7 @@ geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   plot_grid(one, two, three, nrow=1)
 ```
 
-```{r other, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=11, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Stuff probably not to include. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. C is divergence in descriptions of different tangrams within a group", cache=T}
+```{r other, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=11, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. C is divergence in descriptions of different tangrams within a group", cache=T}
 
 #first
 
@@ -1138,12 +1112,14 @@ form <- function(model){
  str_c(dep," ~ ",ind) |> str_replace_all(" ","") |> 
       str_replace_all("~", "~$\\\\sim$ ") |> 
   str_replace_all("\\*","~$\\\\times$ ") |> 
-  str_replace_all("\\+", "~+ ")
+  str_replace_all("\\+", "~+ ") |> 
+   str_replace_all("_", "")
 }
 
 do_table <- function(mod, cap,decimal=2){
   model <- read_rds(here(msum_loc,mod)) |> 
     mutate(Estimate=round(Estimate, digits=decimal),
+           Term=str_replace_all(Term, "_", ""),
            Lower=round(lower, digits=decimal),
            Upper=round(upper, digits=decimal),
            `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
@@ -1198,7 +1174,9 @@ words ~ block*player_count + block*was_correct+ (block|tangram) + (1|speaker)
 TODO
 
 ```{r}
-do_table("weird_1.rds")
+
+read_rds(here(mform_loc, "weird_1.rds")) |> form()
+do_table("weird_1.rds", "Experiment 1")
 
 ```
 
