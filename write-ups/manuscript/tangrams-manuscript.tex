@@ -303,7 +303,7 @@ $\anotelblbycode{corresp}$%
 \begin{otherlanguage}{english}
 
 \begin{abstract}
-Group communication is ubiquitous, but it presents some challenges not found in two-person communication, which is the primary focus of the experimental literature. One test case for communication that is is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people can build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, reduction and convergence to shared descriptions occurs, but there is a gradient where smaller groups and groups with thicker communication channels show faster and stronger convergence than larger games or groups with thinner communication channels.
+Group communication is ubiquitous, but it presents some challenges not found in two-person communication, which is the primary focus of the experimental literature. One test case for communication that is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people can build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, reduction and convergence to shared descriptions occurs, but there is a gradient where smaller groups and groups with thicker communication channels show faster and stronger convergence than larger games or groups with thinner communication channels.
 
 \end{abstract}
 
@@ -312,19 +312,45 @@ Group communication is ubiquitous, but it presents some challenges not found in 
 \hypertarget{todos}{%
 \section{TODOs}\label{todos}}
 
-Communicating in groups can be challenging. Listeners may have different levels of background knowledge that the rest of the groups may be unaware of. Some interlocuters may interrupt with questions, and others might pipe in to explain their views, collectively leading to everyone talking at once. Multiple conversations threads may split off that need to merge back together for the group to reach agreement. Different people may understand the same speaker as meaning different things, resulting in disagreements and misunderstandings. Disagreements may even escalate to the point where meta-discussion is needed to define terms or struction the conversation differently. We've all been in situations that look like this, where a conversation with half-a-dozen people devolves into chaos and results in inefficient communication. Yet, despite all of these impediments, we often communicate successfully in groups. How?
+* Fix first sentence of abstract (somehow?)
+
+\begin{itemize}
+\tightlist
+\item
+  how to prep for interaction structure in intro
+\item
+  front load take aways in results-cosine and results-not-cosine
+\item
+  Clean up supp figs
+\item
+  Consider clean up more of real figs
+\item
+  Reoutline takeaways, propogate to set up/intro, results, GD
+\item
+  note in supp that we 0 indexed block in models
+\item
+  everything gets a topic sentence
+\end{itemize}
+
+Communicating in groups can be challenging. Listeners may have different levels of background knowledge that the rest of the groups may be unaware of. Some interlocuters may interrupt with questions, and others might pipe in to explain their views, collectively leading to everyone talking at once. Multiple conversations threads may split off that need to merge back together for the group to reach agreement. Different people may understand the same speaker as meaning different things, resulting in disagreements and misunderstandings. Disagreements may even escalate to the point where meta-discussion is needed to define terms or struction the conversation differently.
+
+TODO FIX We've all been in situations that look like this, where a conversation with half-a-dozen people devolves into chaos and results in inefficient communication. Yet, despite all of these impediments, we often communicate successfully in groups. How?
 
 One key requirement for efficient communication in groups of any size is a shared vocabulary, or shared mappings between linguistic units and objects or concepts (\protect\hyperlink{ref-traum2004}{Traum 2004}, \protect\hyperlink{ref-ginzburg2005}{Ginzburg \& Fernandez 2005}, \protect\hyperlink{ref-branigan2006}{Branigan 2006}). Because reference is a requirement of communcation that can be isolated and tested in experimentally manipulated contexts, it has been a case study for efficient communication more broadly. In many cases, ther are widely shared convention mappings between objects and descriptions that people can rely on, but in other cases, interlocuters must invent ad-hoc reference expressions to communicate about objects without canonical names.
 
-The formation of these new reference expressions is well-studied in dyadic contexts. Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{1986}) established an experimental method for studying the emergence of new referring expressions that has now become standard (building on \protect\hyperlink{ref-kraussChangesReferencePhrases1964}{Krauss \& Weinheimer 1964}, \protect\hyperlink{ref-kraussConcurrentFeedbackConfirmation1966}{1966}). Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called `reduction'.
+The formation of these new reference expressions is well-studied in dyadic contexts. Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clarkReferringCollaborativeProcess1986}{1986}) established an experimental method for studying the emergence of new referring expressions that has now become standard (building on \protect\hyperlink{ref-kraussChangesReferencePhrases1964}{Krauss \& Weinheimer 1964}, \protect\hyperlink{ref-kraussConcurrentFeedbackConfirmation1966}{1966}). Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process with the same images over a series of blocks. Early descriptions are long and make reference to multiple features in the figure, but in later iterations, shorthand conventional names for each figure emerge; this shortening of utterances is called `reduction'. Not only are later utterances shorter than earlier utterances, but later utterances are a tacitly agreed upon name, understandable within the group, but different from the conventions chosen in other groups.
 
 Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations (\protect\hyperlink{ref-haber2019}{Haber et al. 2019}, \protect\hyperlink{ref-hawkinsCharacterizingDynamicsLearning2020}{Hawkins et al. 2020}). In line with results from face-to-face, oral paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks. (Throughout this paper, we use ``speaker'' and ``listener'' to refer to the roles describing and selecting targets, regardless of communication modality.)
 
-Dyads are robustly successful at forming conventionalized shorthands in iterated reference games, but talking with one person omits some sources of complexity that are involved with talking to multiple. How does the formation of shared conventions proceed in multi-party communication?
+How generally does this reduction phenomena occur?
 
-In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited 1319 participants who were organized into 313 groups distributed across 3 online experiments and 11 conditions. Collectively, players produced 326000 during their games. We analysed the results using traditional metrics of accuracy and number of words, and we used computation measures of semantic similarity to understand how utterances evolve during the games.
+What aspects of conversational infrastructure are needed to support this convergence pattern? Can a speaker for a convention when they are interacting with several listeners at once? Do listeners need to be able to ask questions or get feedback on the correct answers for the convention to form? Can conventions still form when a different person is the speaker each block? Even if it is possible to form conventions under these circumstances, is it harder to, compared to a speaker-listener pair with consistent roles and a wide communication channel?
 
-We find that the characteristic pattern of increasing accuracy and decreasing utterance length that is noted in the dyadic literature also occurs across conditions in multi-player games. Reduction is coupled with semantic shifts as utterances converge toward the eventual conventionalized name and away from descriptions used by other groups or for other tangrams. These convention-formation phenomena emerge across disparate conditions; however, there are gradient effects where larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups.
+In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited 1319 participants who were organized into 313 groups distributed across 3 online experiments and 11 conditions. Collectively, players produced 326000 words during their games. Our key question was how do differences in communication channel structure impact the formation of conventionalized names in an iterated reference game. We analysed the results using traditional metrics of accuracy and number of words produced, and we used computation measures of semantic similarity to understand how utterances evolve during the games.
+
+We find that the characteristic pattern of increasing accuracy and decreasing utterance length that is noted in the dyadic literature also occurs across conditions in multi-player games. Reduction is coupled with semantic shifts as utterances converge toward the eventual conventionalized name and away from descriptions used by other groups or for other tangrams.
+
+These convention-formation phenomena emerge across disparate conditions; however, larger groups and groups with narrower communication channels are less effective and converge more slowly and weakly than other groups.
 
 \begin{figure*}[t!]
 
@@ -334,6 +360,35 @@ We find that the characteristic pattern of increasing accuracy and decreasing ut
 
 \caption{TODO: needs some visual help!. \ A: Diagram of the experimental space explored in these experiments. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink labels) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue labels) keep group size constant at 6 and varied the other dimensions. Relative to experiment1, 6 single speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green labels) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel). \  B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \ C: Differences between conditions. See text for explanation.}\label{fig:diagram}
 \end{figure*}
+
+\hypertarget{claims}{%
+\section{Claims}\label{claims}}
+
+How does the formation of shared conventions proceed in multi-party communication?
+
+Behaviorally,
+larger games are similar to smaller games, but their speakers tend to say more overall, perhaps related
+to the increased number of listeners to respond to.
+
+However, the interaction stucture of a group affects how rapidly groups converge to partner-specific
+conventions, whether measured via reduction or via semantic convergence.
+We can interpret the experiment 3 pattern as saying that 2-player games can cope with limited feedback
+mechanisms, but 6-player games suffer without access to more feedback.
+
+Do the phenomena observed in dyadic reference games extend to larger games and games with more constrained interaction structure?
+How does interaction structure and game size modulate the strength of effects? Are the effects weaker in groups with more constrained interaction structure?
+something something linguistic analyses -- do they track the verbal patterns of similarity? Are the effects weaker in some groups than others?
+
+Listeners accuracy rose over repetitions in all games, and approached ceiling in most conditions; however, 6 player thin games were less accurate than other games (Figure \ref{fig:behavioral}A).
+
+All conditions showed reduction, where speakers produced fewer words of description in later repetitions than in earlier repetitions. Speakers with more listeners talked more across blocks, and in some cases, showed sharper reduction from their wordier starting points. This is likely related to having more listeners to respond to.
+
+According to the traditional metrics of iterated reference games, larger games are similar to small games, except that speakers say more in larger games.
+Listeners do not talk as much as speakers, but they talk much less in later blocks than in earlier blocks. When there are more listeners, it is more likely that some listener will talk.
+
+Over repetitions, speaker descriptions became increasingly similiar to the final description for the target image. This convergence occurred faster in smaller and higher coherence groups, and was least strong for the 6-player thin condition.
+
+Over repetitions, speaker descriptions in one group became increasingly dissimilar to descriptions from other groups. This divergence was faster in smaller and thicker conditions, and barely occurred in the 6-player thin condition.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -351,7 +406,7 @@ We first compare across all of these conditions on the two behavioral measures t
 \hypertarget{accuracy-and-language-quantity}{%
 \subsection{Accuracy and language quantity}\label{accuracy-and-language-quantity}}
 
-The two key behavioral outcomes were how accurately listeners selected the target images and how many words the speaker produced each trial.
+The canonical findings from dyadic reference games are that, over repetitions, listener accuracy is high and increases towards a ceiling effect while the amount of referential language decreases dramatically. Listener accuracy is a measure of how successfully groups are completing the task, that is, whether speakers are succeeding in communicating the target referent to the listeners. Reduction of speaker descriptions is an indication that speaker and listeners have formed a shared conceptualization of the target, that can be distilled into a shorter and less descriptive form, while still retaining the same level of informativity to listeners. (possibly mention that reduction interpretation is conditional on high accuracy)
 
 \begin{figure*}[t!]
 
@@ -362,23 +417,41 @@ The two key behavioral outcomes were how accurately listeners selected the targe
 \caption{Behavioral results across all three experiments. A. Listener accuracy at selecting the target image. Dots are per condition, per block estimates with 95\% bootstrapped CIs. Smooths are binomial fit lines. B. Number of words said by the speaker each trial. Faint dots represent individual trials from individual games. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible. }\label{fig:behavioral}
 \end{figure*}
 
-In every condition, listeners selected the correct target far above chance, and listener accuracy rose over the course of the game (Figure \ref{fig:behavioral}A). Experiment 1 found no strong effects of group size on overall accuracy (numPlayers: -0.07 {[}-0.2, 0.05{]}) or improvement rate (block:numPlayers: -0.02 {[}-0.05, 0.01{]}).
+Listener accuracy rose over repetitions in all games, and approached ceiling in most conditions; however, 6 player games with limited communication and feedback were less accurate (Figure \ref{fig:behavioral}A).
+
+In every condition, listeners selected the correct target far above chance, and listener accuracy rose over the course of the game . Experiment 1 found no strong effects of group size on overall accuracy (numPlayers: -0.07 {[}-0.2, 0.05{]}) or improvement rate (block:numPlayers: -0.02 {[}-0.05, 0.01{]}).
 
 In experiment 3, participants in six player games were less accurate (gameSize6: -0.64 {[}-1.05, -0.25{]}) and slower to improve (block:gameSize6: -0.34 {[}-0.43, -0.25{]}) than players in 2 player games,
 
 but thin versus thick games did not have a clear effect on accuracy (channelthin: -0.36 {[}-0.78, 0.05{]}) or improvement rate (block:channelthin: -0.07 {[}-0.18, 0.04{]}). The high and increasing levels of accuracy indicate that across all of these conditions, participants are able to play the game and succeed in communicating about the images.
 
+There's likely a tradeoff between accuracy and reduction: for a given set of listeners, it may be possible to explain more extensively and increase accuracy (but with more words) or the explain less but risk that not everyone understands. Groups seem to have gone the explaining more path, especially when backchannel was available.
+
+All conditions showed reduction, where speakers produced fewer words of description in later repetitions than in earlier repetitions. Speakers with more listeners talked more across blocks, and in some cases, showed sharper reduction from their wordier starting points. This is likely related to having more listeners to respond to.
+
+According to the traditional metrics of iterated reference games, larger games are similar to small games, except that speakers say more in larger games.
+
 The key observation in iterated reference games is that the descriptions the speaker gives of the target images become shorter over the course of repetitions. This pattern of reduction held across all conditions, with the numbers of words from the speaker decreasing over blocks (Figure \ref{fig:behavioral}B), although there were substantial differences in how verbose speakers were across games. In experiment 1, the overall effect of being one block later was -3.37 {[}-4.54, -2.24{]} words per trial. Speakers in larger groups said more; the effect of each additional player was 1.66 {[}0.66, 2.61{]} more words per trial, with no clear interaction between block and group size (block:numPlayers: -0.1 {[}-0.36, 0.17{]}). In experiment 2, the result of being one block later was block: -5.39 {[}-6.46, -4.31{]} words per trial for 6 single speaker; block: -4.68 {[}-5.88, -3.52{]} words per for 6 full feedback, and block: -2.15 {[}-3.44, -1.12{]} words per trial for 6 thin. In experiment 3, the six player games said more to start with (gameSize6: 7.41 {[}3.57, 11.18{]}) and reduced less (block:gameSize6: -1.21 {[}-2.06, -0.3{]}) than the two-player games. There were not significant differences due to channel type (channelthin: 0.63 {[}-3.18, 4.73{]}) or channel type over time (block:channelthin: 0.32 {[}-0.65, 1.24{]}).
 
-These reduction results confirm and extend what was previously known for 2 player games. Behaviorally, larger games are similar to smaller games, but their speakers tend to say more overall, perhaps related to the increased number of listeners to respond to.
+Listeners do not talk as much as speakers, but they talk much less in later blocks than in earlier blocks. When there are more listeners, it is more likely that some listener will talk.
 
-Listeners do not talk as much as speakers, but they also show patterns of reduction. In experiment 1, the number of trials where any listener says anything related to the description of the image is higher in larger groups (numPlayers: 0.78 {[}0.58, 0.98{]}), and declines across blocks (block: -0.8 {[}-0.97, -0.63{]}). When referential language is produced, more is produced in larger groups (numPlayers: 2.12 {[}1.03, 3.12{]}), but the difference in group size closes in later blocks (block:numPlayers: -0.41 {[}-0.72, -0.09{]}). See TODO supplement for images. This pattern of listener language use is suggestive that listeners asking questions and offering alternative conceptualizations plays a role in initially establishing a shared description in early blocks, but they don't need to contribute referential language in later blocks when the description is reducing.
+Listeners do not talk as much as speakers, but they also show patterns of reduction. In experiment 1, the number of trials where any listener says anything related to the description of the image is higher in larger groups (numPlayers: 0.78 {[}0.58, 0.98{]}), and declines across blocks (block: -0.8 {[}-0.97, -0.63{]}). When referential language is produced, more is produced in larger groups (numPlayers: 2.12 {[}1.03, 3.12{]}), but the difference in group size closes in later blocks (block:numPlayers: -0.41 {[}-0.72, -0.09{]}). See TODO supplement for images.
+
+TODO fix this sentence b/c too long
+This pattern of listener language use is suggestive that listeners asking questions and offering alternative conceptualizations plays a role in initially establishing a shared description in early blocks, but they don't need to contribute referential language in later blocks when the description is reducing.
 Emoji use is common in the 6 player thin games where most trials at least one listener used at least one emoji, but emoji use declines over blocks. SEE FIGURE WHATEVER IN SUPPLEMENT The use of emoji in the thin games is not directly comparable to listener contributes, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language (``got it'' etc.) that was excluded. The higher rate of emoji use versus referential language could be due to it's non-equivalence, a lower level of accuracy in thin games, or emojis being a lower threshold for sending than written out questions.
 
-While the volume of listener contributions is low, the substantial differences in accuracy between thick and thin games suggest that these listener contributions have a crucial role to play.
+While the volume of listener contributions is low, the substantial differences in accuracy between thick and thin games suggest that these listener contributions have a crucial role to play. NOte that the differences in accuracy don't actually show up as significant in model!
+Listeners also produced less language over the duration of games, consistent with the idea that backchannels were used primarily earlier in games before conventions emerged.
 
 \hypertarget{linguistic-content-analyses}{%
 \subsection{Linguistic content analyses}\label{linguistic-content-analyses}}
+
+Reduction isn't just about speaker's saying less, its about the formation of a partner-specific conceptualization of the target that leads to an efficient way to refer to it. As a group converges to a nickname for a target, we would predict that the descriptions would become more similar to the eventual convention (and more similar to each other). The partner specificity means that it's not that everyone figures out to drop hedges and use the same description, but that different groups latch onto different features as the key concept. Thus, we expect different groups to diverge in their descriptions. Also expect that within a group, the descriptions for two different images will get more different over time.
+
+As a measure of convention formation, we tracked how utterances describing the same tangram in the same game become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions.
+
+TO quantify the level of similarity between descriptions, we concatenated the speaker's messaged within a trial together and embedded the description into a high-dimensional vector space using SBERT (CITE). Then, we compare the similarity between any pair of utterances by taking the cosine similiarty between their embeddings.
 
 \begin{figure*}[t!]
 
@@ -389,9 +462,7 @@ While the volume of listener contributions is low, the substantial differences i
 \caption{Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between utterances from the same round across games.}\label{fig:sbert-diagram}
 \end{figure*}
 
-In addition to behavioral measures, we looked at how the speaker's descriptions changed over time within and between games. We concatenated speaker's messages within a trial and used SBERT to embed the description into a high-dimensional vector space {[}TODO CITE{]}. We can compare the similarity between a pair of utterances by using the cosine similarity between their embeddings.
-
-As a measure of convention formation, we tracked how utterances describing the same tangram in the same game become increasingly similar over the course of a game. If conventions are forming we expect the similarity to the last block utterance to increase over the course of the game. If different games go in different directions with their descriptions, we'd expect this similarity between descriptions of the same image in different games to decrease over repetitions. These two metrics are illustrated with examples in Figure \ref{fig:sbert-diagram}.
+These two metrics are illustrated with examples in Figure \ref{fig:sbert-diagram}.
 
 \begin{figure*}[t!]
 
@@ -401,6 +472,10 @@ As a measure of convention formation, we tracked how utterances describing the s
 
 \caption{Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A. Convergence of utterances within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. B. Divergence of utterances across games as measured by the similarity between an utterances and utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic.}\label{fig:sbert}
 \end{figure*}
+
+Over repetitions, speaker descriptions became increasingly similiar to the final description for the target image. This convergence occurred faster in smaller and higher coherence groups, and was least strong for the 6-player thin condition.
+
+Over repetitions, speaker descriptions in one group became increasingly dissimilar to descriptions from other groups. This divergence was faster in smaller and thicker conditions, and barely occurred in the 6-player thin condition.
 
 To measure convergence, we compared utterances from the first 5 blocks of a game to the ``convention'' or last block utterance for the same figure. As visible in Figure \ref{fig:sbert}A, increasing similarity the last block utterance occurs across all conditions. In experiment 1, the starting similarity of the first utterance to the last last utterance is invariant across group size (-0.008 {[}-0.021, 0.005{]}), but for smaller groups, similarity increases rapidly and they converge faster (-0.008 {[}-0.011, -0.005{]}). Convergence was especially rapid in the experiment 2 single speaker condition (0.086 {[}0.078, 0.094{]}) where all the utterances come from the same person. In experiment 3, convergence is slower in thin games than thick games (-0.025 {[}-0.033, -0.017{]}) and especially thin 6 player games (-0.035 {[}-0.047, -0.025{]}). This convergence towards the last utterance is made up of a cumulative increasing similarity between pairs of adjacent utterances (i.e.~blocks 5 and 6 are closer to each other than block 1 is to 2). TODO SEE SUPPLEMENT FIGURE. Not only do groups reduce the lengths of their utterances, but each group is converging towards a semantic description for the figures. This is more prominent in smaller games and games with greater group coherence.
 
@@ -413,7 +488,8 @@ These semantic patterns are all consistent with the partner-specific convention 
 \hypertarget{general-discussion}{%
 \section{General Discussion}\label{general-discussion}}
 
-We often communicate with multiple people at once, but much of the research on communication has been on dyads. One common paradigm for studying communication has been iterated reference games, where the phenomenon of reduction over repeated reference has been robustly established.
+TODO fix me!
+Communication often occurs in multi-party settings, but much of the research on communication has been on dyads. One common paradigm for studying communication has been iterated reference games, where the phenomenon of reduction over repeated reference has been robustly established. How does the formation of shared conventions proceed in multi-party communication?
 
 We build on this tradition by expanding the reference game paradigm to larger groups under various interaction structures. Across 3 online experiments and 11 experimental conditions, we varied game features including group size, form of listener backchannel, and degree of group coherence. All conditions shows the same patterns of increasing accuracy, reduction in speaker utterances, and semantic convergence within and divergence between groups. Thus, the classic reduction phenomena can occur even under situations with constrained interaction structure.
 
@@ -429,18 +505,14 @@ Overall, we have a number of groups, and a large corpus of language that could b
 \hypertarget{limitations}{%
 \subsection{Limitations}\label{limitations}}
 
-Communication is a highly complex beast, so this set of experiments only explored a small part of the domain. Even just the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space. In our experiment 3, we grouped some factors together in order to have more groups in each condition: a fully factorial design would have been too expensive to power adequately. One dimension we did not vary was targets, where we stuck with the same tangram figures used in prior experiments. Thus, some of the patterns of reduction may be particular to the level of unnameable yet evocative and describable that these figures are, and not present with more or less conventional stimuli.
+Just within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. Future work could sample other points in the experimental space, perhaps exploring the effects of different target images, or groups of people with real-life prior connections. Group to group variability is high, as individual differences in communication style and shape description ability interacted. Coupled with small numbers of groups in some conditions, measures may be somewhat noisy depending on the random assignment of participants to games and conditions.
 
-Group to group variability is high, as individual differences in communication style and shape description ability interacted. Coupled with small numbers of groups in some conditions, measures may be somewhat noisy depending on the random assignment of participants to games and conditions.
-
-We cannot make claims about causal mechanisms between how experimental set-ups such as group size resulted in different outcomes: for instance, there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}). These effects likely vary by both the knowledge state of and communication channels available to the listeners (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}).
-
-How does this controlled experimental condition map onto the real world? Group dynamics vary widely, and different dynamics scale differently with group size. In the experiment, listeners could not see each others answers while they were selecting, while in some real world situations, listeners might be able to collaborate and see what others are reaching towards. In these settings with more shared common ground and the ability to quickly learn from others success, group size might be more advantageous than in this setting.
-
-Group interactions are rich, and this experiment is necessarily a schematic simplification with a number of limitations. Real-life situations vary widely in who the interlocuters are, their relationships, their goals, and their environment (\protect\hyperlink{ref-carletta1998}{Carletta et al. 1998}, \protect\hyperlink{ref-fay2000}{Fay et al. 2000}). Our participants were a convenience sample of Prolific workers who were strangers to each other; thus we miss richness that could come from prior relationships or shared community. Reference is only one goal out of many possible communicative goals, and the tangram images are artificial.
+We cannot make claims about causal mechanisms between how experimental set-ups such as group size resulted in different outcomes: for instance, there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}). These effects likely vary by both the knowledge state of and communication channels available to the listeners (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}). Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for differences in group size that could then lead to more experimental conditions.
 
 \hypertarget{conclusion}{%
 \subsection{Conclusion ??}\label{conclusion}}
+
+something something about how set-ups like this could explore related phenomena picking other points in reference game / ref game adjacent space
 
 TODO
 
@@ -774,12 +846,7 @@ Intercept & 14.99 & {}[11.86, 17.89]\\
 
 For experiment 1, we also pre-specified models about whether the speaker's correctness (as a listener) on the prior block had an effect
 
-Model of whether speaker's correct/incorrect answer in previous block has an effect -
-
-words \textasciitilde{} block\emph{player\_count + block}was\_correct+ (block\textbar tangram) + (1\textbar speaker)
-+ (1\textbar tangram*group)+(block\textbar group)
-
-TODO
+Model of whether speaker's correct/incorrect answer in previous block has an effect
 
 \begin{verbatim}
 ## [1] "words~$\\sim$ block~$\\times$ numPlayers~+ block~$\\times$ wasINcorrect~+ (block|tangram)~+ (1|playerId)~+ (1|tangram:gameId)~+ (block|gameId)"
@@ -860,10 +927,10 @@ This is the convergence metric presented in the paper.
 \toprule
 Term & Est. & CrI\\
 \midrule
-condition & -0.01 & {}[-0.02, 0]\\
-earlier & 0.09 & {}[0.08, 0.1]\\
-earlier:condition & -0.01 & {}[-0.01, -0.01]\\
-Intercept & 0.52 & {}[0.46, 0.57]\\
+condition & -0.008 & {}[-0.021, 0.005]\\
+earlier & 0.089 & {}[0.076, 0.102]\\
+earlier:condition & -0.008 & {}[-0.011, -0.005]\\
+Intercept & 0.517 & {}[0.458, 0.573]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -876,8 +943,8 @@ Intercept & 0.52 & {}[0.46, 0.57]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.09 & {}[0.08, 0.09]\\
-Intercept & 0.50 & {}[0.44, 0.56]\\
+earlier & 0.086 & {}[0.078, 0.094]\\
+Intercept & 0.499 & {}[0.444, 0.556]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -890,8 +957,8 @@ Intercept & 0.50 & {}[0.44, 0.56]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.06 & {}[0.05, 0.07]\\
-Intercept & 0.44 & {}[0.39, 0.49]\\
+earlier & 0.062 & {}[0.051, 0.072]\\
+Intercept & 0.438 & {}[0.389, 0.487]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -904,8 +971,8 @@ Intercept & 0.44 & {}[0.39, 0.49]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.02 & {}[0.01, 0.03]\\
-Intercept & 0.50 & {}[0.45, 0.54]\\
+earlier & 0.023 & {}[0.013, 0.033]\\
+Intercept & 0.498 & {}[0.453, 0.54]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -918,15 +985,15 @@ Intercept & 0.50 & {}[0.45, 0.54]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-channelthin & -0.03 & {}[-0.08, 0.01]\\
-channelthin:gameSize6 & 0.04 & {}[-0.02, 0.1]\\
-earlier & 0.08 & {}[0.07, 0.09]\\
-earlier:channelthin & -0.02 & {}[-0.03, -0.02]\\
-earlier:channelthin:gameSize6 & -0.04 & {}[-0.05, -0.02]\\
+channelthin & -0.034 & {}[-0.08, 0.011]\\
+channelthin:gameSize6 & 0.039 & {}[-0.021, 0.097]\\
+earlier & 0.080 & {}[0.074, 0.086]\\
+earlier:channelthin & -0.025 & {}[-0.033, -0.017]\\
+earlier:channelthin:gameSize6 & -0.035 & {}[-0.047, -0.025]\\
 \addlinespace
-earlier:gameSize6 & 0.01 & {}[0, 0.02]\\
-gameSize6 & -0.07 & {}[-0.11, -0.02]\\
-Intercept & 0.58 & {}[0.54, 0.62]\\
+earlier:gameSize6 & 0.009 & {}[0.001, 0.017]\\
+gameSize6 & -0.069 & {}[-0.113, -0.025]\\
+Intercept & 0.581 & {}[0.542, 0.62]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -946,10 +1013,10 @@ To look at how games diverged from each other \ldots{} TODO
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.04 & {}[-0.04, -0.03]\\
-block:condition & 0.00 & {}[0, 0]\\
-condition & 0.00 & {}[0, 0]\\
-Intercept & 0.47 & {}[0.43, 0.51]\\
+block & -0.035 & {}[-0.038, -0.032]\\
+block:condition & 0.001 & {}[0.001, 0.002]\\
+condition & 0.002 & {}[0, 0.004]\\
+Intercept & 0.468 & {}[0.429, 0.507]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -962,8 +1029,8 @@ Intercept & 0.47 & {}[0.43, 0.51]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.04 & {}[-0.04, -0.04]\\
-Intercept & 0.48 & {}[0.44, 0.53]\\
+block & -0.041 & {}[-0.043, -0.039]\\
+Intercept & 0.484 & {}[0.442, 0.526]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -976,8 +1043,8 @@ Intercept & 0.48 & {}[0.44, 0.53]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.04 & {}[-0.04, -0.04]\\
-Intercept & 0.50 & {}[0.46, 0.55]\\
+block & -0.038 & {}[-0.04, -0.035]\\
+Intercept & 0.502 & {}[0.46, 0.546]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -990,8 +1057,8 @@ Intercept & 0.50 & {}[0.46, 0.55]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & 0.00 & {}[-0.01, 0]\\
-Intercept & 0.43 & {}[0.41, 0.46]\\
+block & -0.004 & {}[-0.006, -0.001]\\
+Intercept & 0.434 & {}[0.406, 0.465]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1004,15 +1071,15 @@ Intercept & 0.43 & {}[0.41, 0.46]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.02 & {}[-0.02, -0.02]\\
-block:channelthin & 0.00 & {}[0, 0]\\
-block:channelthin:gameSize6 & 0.02 & {}[0.02, 0.02]\\
-block:gameSize6 & -0.01 & {}[-0.01, -0.01]\\
-channelthin & 0.01 & {}[0.01, 0.02]\\
+block & -0.024 & {}[-0.025, -0.023]\\
+block:channelthin & 0.004 & {}[0.002, 0.005]\\
+block:channelthin:gameSize6 & 0.017 & {}[0.015, 0.019]\\
+block:gameSize6 & -0.008 & {}[-0.01, -0.007]\\
+channelthin & 0.014 & {}[0.01, 0.018]\\
 \addlinespace
-channelthin:gameSize6 & -0.03 & {}[-0.04, -0.02]\\
-gameSize6 & 0.05 & {}[0.05, 0.05]\\
-Intercept & 0.41 & {}[0.37, 0.45]\\
+channelthin:gameSize6 & -0.030 & {}[-0.035, -0.024]\\
+gameSize6 & 0.051 & {}[0.047, 0.055]\\
+Intercept & 0.411 & {}[0.368, 0.453]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1030,10 +1097,10 @@ Intercept & 0.41 & {}[0.37, 0.45]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.04 & {}[-0.05, -0.04]\\
-block:condition & 0.00 & {}[0, 0]\\
-condition & 0.00 & {}[-0.01, 0.01]\\
-Intercept & 0.43 & {}[0.38, 0.47]\\
+block & -0.043 & {}[-0.046, -0.039]\\
+block:condition & 0.000 & {}[-0.001, 0.001]\\
+condition & 0.003 & {}[-0.008, 0.014]\\
+Intercept & 0.429 & {}[0.382, 0.473]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1046,8 +1113,8 @@ Intercept & 0.43 & {}[0.38, 0.47]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.05 & {}[-0.05, -0.04]\\
-Intercept & 0.42 & {}[0.39, 0.44]\\
+block & -0.046 & {}[-0.048, -0.044]\\
+Intercept & 0.416 & {}[0.389, 0.443]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1060,8 +1127,8 @@ Intercept & 0.42 & {}[0.39, 0.44]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.05 & {}[-0.05, -0.04]\\
-Intercept & 0.46 & {}[0.42, 0.5]\\
+block & -0.047 & {}[-0.049, -0.044]\\
+Intercept & 0.459 & {}[0.422, 0.496]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1074,8 +1141,8 @@ Intercept & 0.46 & {}[0.42, 0.5]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.03 & {}[-0.03, -0.02]\\
-Intercept & 0.43 & {}[0.39, 0.47]\\
+block & -0.025 & {}[-0.028, -0.022]\\
+Intercept & 0.432 & {}[0.393, 0.471]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1088,15 +1155,15 @@ Intercept & 0.43 & {}[0.39, 0.47]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-block & -0.03 & {}[-0.03, -0.03]\\
-block:channelthin & 0.00 & {}[0, 0]\\
-block:channelthin:gameSize6 & 0.01 & {}[0.01, 0.01]\\
-block:gameSize6 & -0.01 & {}[-0.01, -0.01]\\
-channelthin & 0.04 & {}[0, 0.08]\\
+block & -0.027 & {}[-0.029, -0.025]\\
+block:channelthin & -0.001 & {}[-0.003, 0.002]\\
+block:channelthin:gameSize6 & 0.011 & {}[0.008, 0.015]\\
+block:gameSize6 & -0.010 & {}[-0.013, -0.008]\\
+channelthin & 0.038 & {}[-0.001, 0.082]\\
 \addlinespace
-channelthin:gameSize6 & -0.05 & {}[-0.11, 0]\\
-gameSize6 & 0.07 & {}[0.04, 0.11]\\
-Intercept & 0.38 & {}[0.35, 0.4]\\
+channelthin:gameSize6 & -0.053 & {}[-0.115, 0]\\
+gameSize6 & 0.073 & {}[0.035, 0.113]\\
+Intercept & 0.378 & {}[0.352, 0.404]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1116,10 +1183,10 @@ We also looked at how similar an utterance was to the next round utterance: this
 \toprule
 Term & Est. & CrI\\
 \midrule
-condition & 0.00 & {}[-0.01, 0.01]\\
-earlier & 0.06 & {}[0.05, 0.07]\\
-earlier:condition & -0.01 & {}[-0.01, -0.01]\\
-Intercept & 0.59 & {}[0.54, 0.64]\\
+condition & -0.004 & {}[-0.014, 0.006]\\
+earlier & 0.063 & {}[0.051, 0.075]\\
+earlier:condition & -0.008 & {}[-0.011, -0.006]\\
+Intercept & 0.591 & {}[0.541, 0.641]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1132,8 +1199,8 @@ Intercept & 0.59 & {}[0.54, 0.64]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.04 & {}[0.04, 0.05]\\
-Intercept & 0.66 & {}[0.62, 0.7]\\
+earlier & 0.043 & {}[0.037, 0.05]\\
+Intercept & 0.660 & {}[0.619, 0.702]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1146,8 +1213,8 @@ Intercept & 0.66 & {}[0.62, 0.7]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.02 & {}[0.01, 0.02]\\
-Intercept & 0.61 & {}[0.57, 0.64]\\
+earlier & 0.015 & {}[0.006, 0.024]\\
+Intercept & 0.605 & {}[0.569, 0.643]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1160,8 +1227,8 @@ Intercept & 0.61 & {}[0.57, 0.64]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-earlier & 0.01 & {}[0, 0.02]\\
-Intercept & 0.53 & {}[0.49, 0.58]\\
+earlier & 0.010 & {}[0, 0.019]\\
+Intercept & 0.533 & {}[0.49, 0.578]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1174,15 +1241,15 @@ Intercept & 0.53 & {}[0.49, 0.58]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-channelthin & -0.12 & {}[-0.16, -0.09]\\
-channelthin:gameSize6 & 0.00 & {}[-0.05, 0.05]\\
-earlier & 0.05 & {}[0.04, 0.05]\\
-earlier:channelthin & -0.01 & {}[-0.02, 0]\\
-earlier:channelthin:gameSize6 & -0.02 & {}[-0.03, -0.01]\\
+channelthin & -0.124 & {}[-0.159, -0.088]\\
+channelthin:gameSize6 & 0.000 & {}[-0.051, 0.049]\\
+earlier & 0.046 & {}[0.041, 0.052]\\
+earlier:channelthin & -0.010 & {}[-0.018, -0.002]\\
+earlier:channelthin:gameSize6 & -0.018 & {}[-0.029, -0.007]\\
 \addlinespace
-earlier:gameSize6 & 0.00 & {}[-0.01, 0]\\
-gameSize6 & -0.03 & {}[-0.07, 0]\\
-Intercept & 0.71 & {}[0.68, 0.75]\\
+earlier:gameSize6 & -0.003 & {}[-0.011, 0.004]\\
+gameSize6 & -0.034 & {}[-0.069, 0.003]\\
+Intercept & 0.714 & {}[0.682, 0.746]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1202,10 +1269,10 @@ We also looked at how similar an utterance was to the first round utterance. Thi
 \toprule
 Term & Est. & CrI\\
 \midrule
-condition & -0.01 & {}[-0.02, 0]\\
-Intercept & 0.65 & {}[0.59, 0.7]\\
-later & -0.03 & {}[-0.04, -0.02]\\
-later:condition & 0.00 & {}[0, 0]\\
+condition & -0.010 & {}[-0.022, 0.003]\\
+Intercept & 0.647 & {}[0.591, 0.705]\\
+later & -0.030 & {}[-0.041, -0.019]\\
+later:condition & 0.001 & {}[-0.002, 0.004]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1218,8 +1285,8 @@ later:condition & 0.00 & {}[0, 0]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-Intercept & 0.68 & {}[0.63, 0.73]\\
-later & -0.04 & {}[-0.05, -0.03]\\
+Intercept & 0.680 & {}[0.628, 0.728]\\
+later & -0.042 & {}[-0.049, -0.035]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1232,8 +1299,8 @@ later & -0.04 & {}[-0.05, -0.03]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-Intercept & 0.64 & {}[0.58, 0.71]\\
-later & -0.04 & {}[-0.05, -0.04]\\
+Intercept & 0.644 & {}[0.584, 0.706]\\
+later & -0.044 & {}[-0.052, -0.037]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1246,8 +1313,8 @@ later & -0.04 & {}[-0.05, -0.04]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-Intercept & 0.54 & {}[0.49, 0.58]\\
-later & -0.01 & {}[-0.02, 0]\\
+Intercept & 0.537 & {}[0.49, 0.584]\\
+later & -0.014 & {}[-0.023, -0.004]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1260,15 +1327,15 @@ later & -0.01 & {}[-0.02, 0]\\
 \toprule
 Term & Est. & CrI\\
 \midrule
-channelthin & -0.08 & {}[-0.12, -0.03]\\
-channelthin:gameSize6 & -0.06 & {}[-0.13, 0]\\
-gameSize6 & -0.02 & {}[-0.06, 0.03]\\
-Intercept & 0.72 & {}[0.68, 0.76]\\
-later & -0.03 & {}[-0.04, -0.03]\\
+channelthin & -0.076 & {}[-0.123, -0.026]\\
+channelthin:gameSize6 & -0.062 & {}[-0.127, 0.001]\\
+gameSize6 & -0.017 & {}[-0.062, 0.03]\\
+Intercept & 0.721 & {}[0.681, 0.76]\\
+later & -0.034 & {}[-0.039, -0.028]\\
 \addlinespace
-later:channelthin & 0.01 & {}[0, 0.02]\\
-later:channelthin:gameSize6 & 0.02 & {}[0.01, 0.03]\\
-later:gameSize6 & -0.01 & {}[-0.02, 0]\\
+later:channelthin & 0.011 & {}[0.003, 0.019]\\
+later:channelthin:gameSize6 & 0.021 & {}[0.01, 0.032]\\
+later:gameSize6 & -0.011 & {}[-0.019, -0.004]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1295,14 +1362,8 @@ Almaatouq A, Becker J, Houghton JP, Paton N, Watts DJ, Whiting ME (2020) \href{h
 \leavevmode\vadjust pre{\hypertarget{ref-branigan2006}{}}%
 Branigan H (2006) Perspectives on multi-party dialogue. \emph{Research on Language and Computation} \textbf{4}:153--177
 
-\leavevmode\vadjust pre{\hypertarget{ref-carletta1998}{}}%
-Carletta J, Garrod S, Fraser-Krauss H (1998) Placement of {Authority} and {Communication Patterns} in {Workplace Groups}: {The Consequences} for {Innovation}. \emph{Small Group Research} \textbf{29}:531--559. doi:\href{https://doi.org/10.1177/1046496498295001}{10.1177/1046496498295001}
-
 \leavevmode\vadjust pre{\hypertarget{ref-clarkReferringCollaborativeProcess1986}{}}%
 Clark HH, Wilkes-Gibbs D (1986) \href{http://www.speech.kth.se/~edlund/bielefeld/references/clark-and-wilkes-gibbs-1986.pdf}{Referring as a collaborative process}. \emph{Cognition}
-
-\leavevmode\vadjust pre{\hypertarget{ref-fay2000}{}}%
-Fay N, Garrod S, Carletta J (2000) Group {Discussion} as {Interactive Dialogue} or as {Serial Monologue}: {The Influence} of {Group Size}. \emph{Psychol Sci} \textbf{11}:481--486. doi:\href{https://doi.org/10.1111/1467-9280.00292}{10.1111/1467-9280.00292}
 
 \leavevmode\vadjust pre{\hypertarget{ref-fox-tree2013}{}}%
 Fox Tree JE, Clark NB (2013) Communicative {Effectiveness} of {Written Versus Spoken Feedback}. \emph{Discourse Processes} \textbf{50}:339--359. doi:\href{https://doi.org/10.1080/0163853X.2013.797241}{10.1080/0163853X.2013.797241}
