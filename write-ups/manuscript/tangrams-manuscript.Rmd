@@ -38,7 +38,7 @@ output:
     keep_tex: TRUE
     template: generic_article_template.tex
     #md_extensions: "-autolink_bare_uris"
-    number_sections: TRUE
+    number_sections: FALSE
     citation_package: default # Can also be "natbib"
 lang: en # Main document language in BCP47 format
 geometry: "margin=25mm"
@@ -70,6 +70,36 @@ Group communication is ubiquitous, but it presents some challenges not found in 
 
 <!------------ Main text -------------------->
  
+# TODOs
+ <!--
+ Comments on tangrams ms draft!
+[yellow highlight means “had a question about this”, pink means “highlighting this sentence”]
+“How does the formation of shared conventions proceed in multi party … ” - this is tagged as the key research question by position in the paragraph, but it’s a bit more descriptive than our key question about the nature of interaction structure. I think we might want to think about how best to set up the intro to frame a question about interaction structure. First part of the intro nicely sets up the broad idea, but then from there it’s tricker…
+
+Biggest remaining writing challenge here is writing narrative results focused on what the take homes are. You can do this in a way that is responsible to the data but structured around particular expository points. Remember when we did the cogsci paper, we set up key signatures in the intro and then looked at them in the results. Same thing will be helpful here - you can do it super explicitly with headings and numbers or a little more implicitly with prose, but the principle is the same - we need to understand why particular patterns relate to interpretations (“interaction structure constrains emergence of conventions” - what in our data tells us this?). This gets set up in intro and then reinforced in the results.
+
+perhaps a figure on reduction as one panel of the multi-panel design figure?
+
+
+Think about structuring these sorts of narrative results around key descriptive claims, e.g., the topic sentences of paragraphs.
+e.g., “Accuracy reduced modestly in larger groups.”
+e.g., “Listeners also produced less language over the duration of games, consistent with the idea that backchannels were used primarily earlier in games before conventions emerged.
+
+“Behaviorally, larger games are similar to smaller … ” - this is a key summary sentence, maybe it can be provided before results rather than after? (though again behaviorally maybe not the right modifier)
+
+Section 2 - “in addition to …” - start by telling us WHY! what’s the goal of this analysis?
+
+
+Results for 1.2 need much more interpretation up front to guide us to what you want us to see… the pink sentences in the GD are the key ones and need to be hammered in results AND the GD.
+
+I know you feel the limitations and it’s good to point them out. but you only need 1-2 paragraphs max. It’s also very good to use them to point to future work! how can your innovative method help answer some of these limitations in future?
+-->
+
+* Clean up supp figs
+* Consider clean up more of real figs
+* Shorten limitations
+* Reoutline takeaways, propogate to set up/intro, results, GD
+
 
 ```{r set-up, include=FALSE}
 library(tidyverse)
@@ -188,7 +218,7 @@ We find that the characteristic pattern of increasing accuracy and decreasing ut
 
 
 
-```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Diagram of the experimental space explored in these experiments. Experiment 1 (pink) has a backchannel where listeners can use the chat and low group coherence from a rotating speaker and limited feedback. Experiment 1's conditions vary the group size from 2 - 6 players. Experiment 2 (blue) games keep group size constant at 6 and vary along the other dimensions. 6 single speaker and 6 full feedback each add one component of group coherence relative to experiment 1. 6 thin varies the backchannel (relative to experiment 1) by having listeners communicate with emoji rather than the full text chat the speaker uses. Experiment 3 (green) tests 4 corners of the space, crossing group size (2 or 6 players) with thin games that have low group coherence and low backchannel or thick games that have high group coherence and high backchannel.  The not-yet-an-inset shows the structure of the experiment, each trial a speaker describes a target image to the listeners, and this process repeats for all 12 images to comprise a block, and the block repeats for a total of 6 iterations."}
+```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="TODO: needs some visual help!. \\ A: Diagram of the experimental space explored in these experiments. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink labels) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue labels) keep group size constant at 6 and varied the other dimensions. Relative to experiment1, 6 single speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green labels) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel). \\  B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \\ C: Differences between conditions. See text for explanation."}
 knitr::include_graphics("expt-diagram.pdf")
 
 ```
@@ -204,9 +234,9 @@ Figure \@ref(fig:diagram) schematically illustrates the dimensions of variation 
 
 Experiment 1 varied group size with games of 2,3,4,5 or 6 players all with low group coherence and high listener backchannel. Experiment 2 held group size constant at 6 while each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin switched to a low backchannel. Finally, experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players. 
 
-We first compare across all of these conditions on the two behavioral measures that are the common markers of reduction in the literature:  listener accuracy and speaker reduction [CITE]. We then explore look at how the speaker's language changes within and between games over time by looking at similarities between utterances. 
+We first compare across all of these conditions on the two behavioral measures that are the common markers of reduction in the literature:  listener accuracy and speaker reduction [CITE]. We then explore look at how the speaker's language changes within and between games over time by looking at similarities between utterances. All of these were modelled in a Bayesian multi-level regression framework, using weakly regularizing priors; accuracy was modelled with logistic regression, all other analyses use linear regression [CITE BRMS] [See methods for full priors, and supplement for a full list of models and model results].  
 
-## Behavioral results
+## Accuracy and language quantity
 
 The two key behavioral outcomes were how accurately listeners selected the target images and how many words the speaker produced each trial.
 
@@ -225,7 +255,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  annotate("text", x=3.5,y=1,label="Experiment 1", size=6)+
+  #annotate("text", x=3.5,y=1,label="Experiment 1", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -247,12 +277,14 @@ two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", 
      coord_cartesian(ylim=c(.65,1))+
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  labs(x="Block", y="Fraction correctly selected", color="")+
-    annotate("text", x=3.5,y=1,label="Experiment 2", size=6)+
+  #labs(x="Block", y="Fraction correctly selected", color="")+
+  labs(x="", y="", color="")+
+    annotate("text", x=3.5,y=1,label="Accuracy", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+        axis.title=element_text(size=14))+ 
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
         scale_color_manual(values=color_scheme_2)
 
 #3
@@ -265,8 +297,9 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
    coord_cartesian(ylim=c(.65,1))+
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
-  labs(x="Block", y="Fraction correctly selected", color="")+
-     annotate("text", x=3.5,y=1,label="Experiment 3", size=6)+
+ # labs(x="Block", y="Fraction correctly selected", color="")+
+  #   annotate("text", x=3.5,y=1,label="Experiment 3", size=6)+
+     labs(x="", y="", color="")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -291,7 +324,7 @@ ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
+#annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -317,8 +350,10 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=60,label="Experiment 2", size=6)+
+ # labs( y="Number of words", x="Block", color="")+
+    labs(x="", y="", color="")+
+
+annotate("text", x=3.5,y=60,label="Speaker Reduction", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -339,8 +374,9 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=60,label="Experiment 3", size=6)+
+ # labs( y="Number of words", x="Block", color="")+
+    labs(x="", y="", color="")+
+#annotate("text", x=3.5,y=60,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -414,7 +450,7 @@ Listeners do not talk as much as speakers, but they also show patterns of reduct
  While the volume of listener contributions is low, the substantial differences in accuracy between thick and thin games suggest that these listener contributions have a crucial role to play. 
  
 
-## Comparisons of language between and within games
+## Linguistic content analyses
 
 
 ```{r sbert-diagram, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between utterances from the same round across games."}
@@ -440,7 +476,7 @@ one <- one_two_converge |> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3,y=1,label="Experiment 1", size=6)+
+#annotate("text", x=3,y=1,label="Experiment 1", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -461,8 +497,9 @@ two <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3,y=1,label="Experiment 2", size=6)+
+ # labs(y="Cosine Similarity", x="Block", color="")+
+    labs(x="", y="", color="")+
+annotate("text", x=3,y=1,label="Within game", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -479,9 +516,11 @@ three <- three_converge |> mutate(condition=str_c(str_sub(condition,1,1)," ", st
   geom_smooth(formula=y~poly(x,2))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
-  labs(y="Cosine Similarity", x="Block", color="")+
+ # labs(y="Cosine Similarity", x="Block", color="")+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3,y=1,label="Experiment 3", size=6)+
+#annotate("text", x=3,y=1,label="Experiment 3", size=6)+
+    labs(x="", y="", color="")+
+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -502,8 +541,9 @@ one <-  one_two_diverge |> filter(condition %in% c("2", "3","4","5","6")) |>
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=.7,label="Experiment 1", size=6)+
+ # labs(y="Cosine Similarity", x="Block", color="")+
+    labs(x="", y="", color="")+
+#annotate("text", x=3.5,y=.7,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -522,9 +562,10 @@ two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   geom_smooth(formula=y~poly(x,2))+
   scale_x_continuous(breaks=seq(1,6))+
       coord_cartesian(ylim=c(.1,.7))+
-  labs(y="Cosine Similarity", x="Block", color="")+
+  #labs(y="Cosine Similarity", x="Block", color="")+
+    labs(x="", y="", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=.7,label="Experiment 2", size=6)+
+annotate("text", x=3.5,y=.7,label="Between games", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -538,8 +579,9 @@ three <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", st
   scale_x_continuous(breaks=seq(1,6))+
    coord_cartesian(ylim=c(.1,.7))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
+  #labs(y="Cosine Similarity", x="Block", color="")+
+    labs(x="", y="", color="")+
+#annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -700,7 +742,7 @@ When skimming transcripts to tag non-referential utterances, we noticed that one
 ## Modelling strategy
 In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player. 
 
-We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and priors and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. 
+We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and priors and formulae are reported in TODO supplement). Accuracy results used a logistic model, other results use linear models. Accuracy models were all run as logistic models with normal(0,1) priors for both betas and sd. Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
 
 
 # Supplement
