@@ -91,6 +91,32 @@ form <- function(model){
 # Supplement
 This supplement will get moved to a separate file, but for now is tacked on. 
 
+TODO graphs of how many players the 6* games in expt 3 actually had
+```{r participants}
+
+players <- combined_results |> mutate(realPlayer=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
+                                       numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> group_by(condition, numPlayers, gameId) |> summarize(count=max(realPlayer)) |> group_by(condition, numPlayers) |> summarize(`Total Participants`=sum(count))
+
+summary <- combined_results |> group_by(condition, trialNum, repNum, gameId, numPlayers) |> 
+  mutate(numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> 
+  group_by(gameId, numPlayers, condition) |> 
+  summarize(num_trials=max(trialNum)) |> 
+  arrange(numPlayers) |> 
+  mutate(complete=ifelse(num_trials==71,T,F)) |> 
+  group_by(numPlayers,complete, condition) |> 
+  tally() |> 
+  pivot_wider(names_from=complete, values_from=n) |> 
+    left_join(players) |> 
+  rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) |> 
+  mutate(Partial=ifelse(is.na(Partial), 0, Partial)) |> 
+  mutate(Experiment=factor(condition, levels=c("rotate","no_rotate","full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
+                          labels=c("1: baseline", "2: single speaker", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
+  select(Experiment, Players, Complete, Partial, `Total Participants`) |> 
+  arrange(Experiment, Players,Complete,Partial, `Total Participants`)
+
+knitr::kable(summary, caption="The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.")
+```
+
 ## Figures of listener performance
 
 Emoji use is common in the 6 player thin games where most trials at least one listener used at least one emoji, but emoji use declines over blocks. SEE FIGURE WHATEVER IN SUPPLEMENT  The use of emoji in the thin games is not directly comparable to listener contributes, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language could be due to it's non-equivalence, a lower level of accuracy in thin games, or emojis being a lower threshold for sending than written out questions. 
