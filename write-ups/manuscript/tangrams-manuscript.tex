@@ -329,7 +329,7 @@ What aspects of conversational infrastructure are needed to support this reducti
 
 }
 
-\caption{TODO: needs some visual help!. \ A: Diagram of the experimental space explored in these experiments. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink labels) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue labels) keep group size constant at 6 and varied the other dimensions. Relative to experiment1, 6 single speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green labels) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel). \  B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \ C: Differences between conditions. See text for explanation.}\label{fig:diagram}
+\caption{TODO CLEAN UP HIGH FEEDBACK IMAGE \ A: Diagram of the experimental space explored in these experiments. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink labels) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue labels) keep group size constant at 6 and varied the other dimensions. Relative to experiment1, 6 single speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green labels) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel). \  B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \ C: Differences between conditions. See text for explanation.}\label{fig:diagram}
 \end{figure*}
 
 \hypertarget{results}{%
@@ -341,12 +341,12 @@ Figure \ref{fig:diagram}A schematically illustrates the three dimensions of vari
 
 We ran three experiments that each explored a different aspect of the experimental space (Figure \ref{fig:diagram}A). Experiment 1 varied group size with games of 2, 3, 4, 5, or 6 players all with low group coherence and high listener backchannel. Experiment 2 held group size constant at 6 while each condition deviated from experiment 1 in one aspect: 6 single speaker and 6 full feedback changed components of group coherence and 6 thin switched to a low backchannel. Finally, experiment 3 tested 4 corners of the experimental space at larger scale, with thin (low backchannel, low coherence) and thick (high backchannel, high coherence) games with either 2 or 6 players.
 
-We analysed these 3 experiments on 4 key measures: listener accuracy, speaker reduction, convergence of descriptions within games, and divergence of descriptions between games. For analyses, we used a Bayesian multi-level regression framework with weakly regularizing priors; listener accuracy used a logistic regression, all other analyses used linear regression {[}CITE BRMS{]} {[}See methods for full priors, and supplement for a full list of models and model results{]}.
+We analysed these 3 experiments on 4 key measures: listener accuracy, speaker reduction, convergence of descriptions within games, and divergence of descriptions between games. For analyses, we used a Bayesian multi-level regression framework with weakly regularizing priors (\protect\hyperlink{ref-burkner2018}{Bürkner 2018}); listener accuracy used a logistic regression, all other analyses used linear regression {[}See methods for full priors, and supplement for a full list of models and model results{]}.
 
 \hypertarget{accuracy-and-language-quantity}{%
 \subsection{Accuracy and language quantity}\label{accuracy-and-language-quantity}}
 
-The canonical findings from dyadic reference games are that, over repetitions, listener accuracy is high and increasing while the amount of referential language decreases dramatically. Listener accuracy measures how successful speakers are at communicating the target referent to the listeners. The combination of accuracy and reduction of speaker descriptions indicates that speaker and listeners have formed a shared conceptualization of the target that can be distilled into a shorter form, while still retaining the same level of informativity to listeners. CITATIONS
+The canonical findings from dyadic reference games are that, over repetitions, listener accuracy is high and increasing while the amount of referential language decreases dramatically. Listener accuracy measures how successful speakers are at communicating the target referent to the listeners. The combination of accuracy and reduction of speaker descriptions indicates that speaker and listeners have formed a shared conceptualization of the target that can be distilled into a shorter form, while still retaining the same level of informativity to listeners.
 
 \begin{figure*}[t!]
 
@@ -379,7 +379,7 @@ According to the traditional metrics of iterated reference games, larger games a
 
 The reduction in words is a signal of the formation of a partner-specific conceptualization of the target image, but the formation of partner-specific shorthands can be measured more directly by looking at shifts in the semantic similarity of descriptions. As a group converges to a nickname for a target, descriptions within a game, to the same target, become more similar to each other and to the eventual convention. At the same time, as different groups latch onto different features as the key concept, descriptions of the same image from different groups decrease in similarity over time.
 
-These two key trends occurred across conditions, but were much weaker in the 6-player thin games than in other conditions. We quantified description similarity by concatenating speaker messages together within a trial and embedding this description into a high-dimensional vector space using SBERT (CITE). Then, we compared the similarity between pairs of utterances by taking the cosine similarity between their embeddings. Figure \ref{fig:sbert-diagram} shows an example of concatenated utterances and their cosine similarities.
+These two key trends occurred across conditions, but were much weaker in the 6-player thin games than in other conditions. We quantified description similarity by concatenating speaker messages together within a trial and embedding this description into a high-dimensional vector space using SBERT (\protect\hyperlink{ref-reimers2019}{Reimers \& Gurevych 2019}). Then, we compared the similarity between pairs of utterances by taking the cosine similarity between their embeddings. Figure \ref{fig:sbert-diagram} shows an example of concatenated utterances and their cosine similarities.
 
 \begin{figure*}[t!]
 
@@ -394,7 +394,7 @@ Speaker descriptions converged toward the final description across conditions; c
 
 Over repetitions, speaker descriptions diverged from descriptions used in other groups: divergence was fastest in groups with thick communication channels, while the 6-player thin condition games barely diverged at all (Figure \ref{fig:sbert}B). In experiment 1, cross-group similarities started off the same regardless of group size (condition: 0.002 {[}0, 0.004{]}), but larger groups diverged from each other slightly slower than smaller groups (block:condition: 0.001 {[}0.001, 0.002{]}). In experiment 2, divergence was stronger in the single speaker (block: -0.041 {[}-0.043, -0.039{]}) and full feedback conditions (block: -0.038 {[}-0.04, -0.035{]}) than in the 6 thin condition (block: -0.004 {[}-0.006, -0.001{]}). In experiment 3, the 2-player thick condition diverged at a moderate speed (block: -0.024 {[}-0.025, -0.023{]}), and the 6-player thick condition had initially higher similarity (gameSize6: 0.051 {[}0.047, 0.055{]} and faster divergence (block:gameSize6: -0.008 {[}-0.01, -0.007{]} in comparison. Compared to the two-player thick games, two-player thin games started with slightly higher similarity (channelthin: 0.014 {[}0.01, 0.018{]}) and diverged slightly more slowly (block:channelthin: 0.004 {[}0.002, 0.005{]}). Most noticeably, the 6 player thin games diverged much more slowly than the other conditions (block:channelthin:gameSize6: 0.017 {[}0.015, 0.019{]}).
 
-Theoretical approaches treat reduction and partner-specific convention formation as synonymous, but these measures come apart in the 6 player thin condition. The 6-player thin games show much less divergence between games and convergence within games, even compared to the 2 thin and 6 thick conditions, but 6 player thin games showed smaller (and statistically inconconclusive) differences to 6 thick games for accuracy and reduction. This gap between the traditional measures and the semantic measures raises the possibility that it is possible to become more concise (and more accurate) without developing group-specific nicknames. CITE THAT PAPER ABOUT GROUP SIZE This gap highlights the need to use measures of the type of language (and not just amount of language) when looking for convention-formation phenomena.
+Theoretical approaches treat reduction and partner-specific convention formation as synonymous, but these measures come apart in the 6 player thin condition. The 6-player thin games show much less divergence between games and convergence within games, even compared to the 2 thin and 6 thick conditions, but 6 player thin games showed smaller (and statistically inconconclusive) differences to 6 thick games for accuracy and reduction. This gap between the traditional measures and the semantic measures raises the possibility that it is possible to become more concise (and more accurate) without developing group-specific nicknames, but instead perhaps relying on group priors and reducing the amount of detail (\protect\hyperlink{ref-guilbeault2021}{Guilbeault et al. 2021}). This gap highlights the need to use measures of the type of language (and not just amount of language) when looking for convention-formation phenomena.
 
 \hypertarget{general-discussion}{%
 \section{General Discussion}\label{general-discussion}}
@@ -468,7 +468,7 @@ When skimming transcripts to tag non-referential utterances, we noticed that one
 
 In experiment 3, some of the 6 player games did not have 6 players for the entire game. We do not model this, as it is unclear at what point in the game group size is most relevant. We note that this is a conservative choice that will underestimate differences between 2 player and (genuine) 6 player games, by labelling some smaller groups as 6 player.
 
-We ran all models in brms (CITE) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and priors and formulae are reported in TODO supplement). Accuracy models were run as logistic models with normal(0,1) priors for both betas and sd. Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd.
+We ran all models in BRMS (\protect\hyperlink{ref-burkner2018}{Bürkner 2018}) with weakly regularizing priors. We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what heirarchical effects were reasonable. (All model results and priors and formulae are reported in TODO supplement). Accuracy models were run as logistic models with normal(0,1) priors for both betas and sd. Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd.
 
 \hypertarget{references}{%
 \section{References}\label{references}}
@@ -486,6 +486,9 @@ Almaatouq A, Becker J, Houghton JP, Paton N, Watts DJ, Whiting ME (2020) \href{h
 \leavevmode\vadjust pre{\hypertarget{ref-branigan2006}{}}%
 Branigan H (2006) Perspectives on multi-party dialogue. \emph{Research on Language and Computation} \textbf{4}:153--177
 
+\leavevmode\vadjust pre{\hypertarget{ref-burkner2018}{}}%
+Bürkner P-C (2018) Advanced bayesian multilevel modeling with the r package brms. \emph{The R Journal} \textbf{10}:395--411
+
 \leavevmode\vadjust pre{\hypertarget{ref-clarkReferringCollaborativeProcess1986}{}}%
 Clark HH, Wilkes-Gibbs D (1986) \href{http://www.speech.kth.se/~edlund/bielefeld/references/clark-and-wilkes-gibbs-1986.pdf}{Referring as a collaborative process}. \emph{Cognition}
 
@@ -494,6 +497,9 @@ Fox Tree JE, Clark NB (2013) Communicative {Effectiveness} of {Written Versus Sp
 
 \leavevmode\vadjust pre{\hypertarget{ref-ginzburg2005}{}}%
 Ginzburg J, Fernandez R (2005) Action at a distance: The difference between dialogue and multilogue. \emph{Proceedings of DIALOR}:9
+
+\leavevmode\vadjust pre{\hypertarget{ref-guilbeault2021}{}}%
+Guilbeault D, Baronchelli A, Centola D (2021) Experimental evidence for scale-induced category convergence across populations. \emph{Nat Commun} \textbf{12}:327. doi:\href{https://doi.org/10.1038/s41467-020-20037-y}{10.1038/s41467-020-20037-y}
 
 \leavevmode\vadjust pre{\hypertarget{ref-haber2019}{}}%
 Haber J, Baumgärtner T, Takmaz E, Gelderloos L, Bruni E, Fernández R (2019) The {PhotoBook Dataset}: {Building Common Ground} through {Visually-Grounded Dialogue}. In: \emph{Proc. 57th {Annu}. {Meet}. {Assoc}. {Comput}. {Linguist}.} {Association for Computational Linguistics}, {Florence, Italy}, p 1895--1910. Available from: \url{https://www.aclweb.org/anthology/P19-1184} {[}Last accessed 1 February 2022{]}. doi:\href{https://doi.org/10.18653/v1/P19-1184}{10.18653/v1/P19-1184}
@@ -512,6 +518,9 @@ Krauss RM, Weinheimer S (1964) Changes in reference phrases as a function of fre
 
 \leavevmode\vadjust pre{\hypertarget{ref-kraussConcurrentFeedbackConfirmation1966}{}}%
 Krauss RM, Weinheimer S (1966) Concurrent feedback, confirmation, and the encoding of referents in verbal communication. \emph{Journal of Personality and Social Psychology} \textbf{4}:343--346. doi:\href{https://doi.org/10.1037/h0023705}{10.1037/h0023705}
+
+\leavevmode\vadjust pre{\hypertarget{ref-reimers2019}{}}%
+Reimers N, Gurevych I (2019) Sentence-{BERT}: {Sentence Embeddings} using {Siamese BERT-Networks}. doi:\href{https://doi.org/10.48550/arXiv.1908.10084}{10.48550/arXiv.1908.10084}
 
 \leavevmode\vadjust pre{\hypertarget{ref-schober1989}{}}%
 Schober MF, Clark HH (1989) Understanding by addressees and overhearers. \emph{Cognitive Psychology} \textbf{21}:211--232. doi:\href{https://doi.org/10.1016/0010-0285(89)90008-X}{10.1016/0010-0285(89)90008-X}
