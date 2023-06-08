@@ -1,6 +1,9 @@
 ---
 title: "Supplement"
-output: pdf_document
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
 date: "2023-05-05"
 ---
 ```{r set-up, include=FALSE}
@@ -88,10 +91,8 @@ form <- function(model){
 }
 ```
 
-# Supplement
-This supplement will get moved to a separate file, but for now is tacked on. 
+# Number of games
 
-TODO graphs of how many players the 6* games in expt 3 actually had
 ```{r participants}
 
 players <- combined_results |> mutate(realPlayer=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
@@ -117,9 +118,18 @@ summary <- combined_results |> group_by(condition, trialNum, repNum, gameId, num
 knitr::kable(summary, caption="The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.")
 ```
 
-## Figures of listener performance
+In experiment 3, the 6* player games did not all have 6 players, both because games continued as participants dropped out and because if there weren't enough players after 5 minutes of waiting, the game would start with whoever was there. All analyses use "intent to treat" and call these 6 player games. 
 
-Emoji use is common in the 6 player thin games where most trials at least one listener used at least one emoji, but emoji use declines over blocks. SEE FIGURE WHATEVER IN SUPPLEMENT  The use of emoji in the thin games is not directly comparable to listener contributes, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language could be due to it's non-equivalence, a lower level of accuracy in thin games, or emojis being a lower threshold for sending than written out questions. 
+The number of games goes up in some cases because only complete blocks (where the speaker said something every trial) are analysed. If there was initial confusion and a speaker missed a trial, that block was excluded. 
+
+```{r player-count, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of players during 6 thin and 6 thick games in experiment 3." }
+
+combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(gameId, trialNum, activePlayerCount, condition) |> unique() |>mutate(numplayers=as.factor(activePlayerCount)) |>  ggplot(aes(x=trialNum,fill=numplayers))+geom_bar(width=1,position="stack", alpha=.7)+facet_grid(.~condition)+labs(fill="Number of players")+theme(legend.position = "bottom")
+
+```
+
+# More on listener utterances 
+
  
 ```{r}
 
@@ -142,91 +152,10 @@ listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listene
   all_list <- listener_chat |> union(count_emoji) |> mutate(condition2=ifelse(condition=="rotate", str_c(numPlayers,condition), condition))
 ```
 
-```{r emoji, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji (or any emoji." }
-combined_emoji |> mutate(emoji=case_when(
-    text=="✅"~  "check",
-    text=="🤔" ~ "think",
-    text=="❌" ~ "x",
-    text=="😂" ~ "lol",
-  )) |>  filter(!is.na(emoji)) |> full_join(listeners) |> 
-  filter(condition %in% c("2_thin", "6_thin", "emoji"))|> 
-  unique() |> 
-  mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
-    pivot_wider(names_from=emoji, values_from=is.emoji, values_fill=0) |> 
-  select(-`NA`) |> 
-  mutate(total=check+think+x+lol) |> 
-  pivot_longer(`think`:`total`, names_to="emoji", values_to="count") |> 
-  group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |>  ggplot(aes(x=repNum, y=any, color=emoji))+geom_smooth(method="lm")+facet_wrap(~condition)
 
-```
+Listeners' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to listener language use in thick games, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to it's non-equivalence, a lower level of accuracy in thin games, or emojis being a lower threshold for sending than written out questions. 
 
-
-
-```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of words of referential language produced by listeners over time. Excludes trials where no listeners contributed descriptive language.  "}
-
-one <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
-    mutate(numPlayers=as.character(numPlayers)) |> 
-ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
-
-
-#2
-
-two <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback")) |>
-  filter(numPlayers==6) |> 
-    mutate(condition=case_when(
-    condition=="no_rotate" ~ "6 single speaker",
-    condition=="full_feedback" ~ "6 full feedback",
-    condition=="emoji" ~ "6 thin")) |>
-ggplot(aes(x=repNum+1, y=words, color=condition))+
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=23,label="Experiment 2", size=6)+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+
-    scale_color_manual(values=color_scheme_2)
-
-#3
-
-
-three <- all_list|>   filter(words!=0) |> filter(condition %in% c( "2_thick", "6_thick")) |>  
-  mutate(condition=str_replace(condition, "_", " ")) |> 
-ggplot(aes(x=repNum+1, y=words, color=condition))+
-  geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_3)
-
-  plot_grid(one, two, three, nrow=1)
-
-```
-
-```{r listeners2, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials when any reference language (or emoji) was produced by any listener."}
+```{r listeners2, fig.env = "figure*", fig.pos = "h!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials when any reference language (or emoji) was produced by any listener."}
 
 # do any talk per trial
 
@@ -295,7 +224,110 @@ geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   plot_grid(one, two, three, nrow=1)
 ```
 
-```{r other, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=11, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. C is divergence in descriptions of different tangrams within a group", cache=T}
+When listeners did provide descriptions for references, the amount of language used was greater in early trial than in later trials. 
+
+```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of words of referential language produced by listeners over time. Excludes trials where no listeners contributed descriptive language.  "}
+
+one <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
+    mutate(numPlayers=as.character(numPlayers)) |> 
+ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  coord_cartesian(ylim=c(0,25))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_1)
+
+
+#2
+
+two <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback")) |>
+  filter(numPlayers==6) |> 
+    mutate(condition=case_when(
+    condition=="no_rotate" ~ "6 single speaker",
+    condition=="full_feedback" ~ "6 full feedback",
+    condition=="emoji" ~ "6 thin")) |>
+ggplot(aes(x=repNum+1, y=words, color=condition))+
+      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  coord_cartesian(ylim=c(0,25))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+annotate("text", x=3.5,y=23,label="Experiment 2", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+    scale_color_manual(values=color_scheme_2)
+
+#3
+
+
+three <- all_list|>   filter(words!=0) |> filter(condition %in% c( "2_thick", "6_thick")) |>  
+  mutate(condition=str_replace(condition, "_", " ")) |> 
+ggplot(aes(x=repNum+1, y=words, color=condition))+
+  geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  coord_cartesian(ylim=c(0,25))+
+       scale_x_continuous(breaks=seq(1,6))+
+  labs( y="Number of words", x="Block", color="")+
+annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
+  theme(legend.position="bottom",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=14),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_3)
+
+  plot_grid(one, two, three, nrow=1)
+
+```
+
+In thin games, the rate at which listeners use specific emojis, or any emoji at all declines over time. 
+
+```{r emoji, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji (or any emoji." }
+combined_emoji |> mutate(emoji=case_when(
+    text=="✅"~  "check",
+    text=="🤔" ~ "think",
+    text=="❌" ~ "x",
+    text=="😂" ~ "lol",
+  )) |>  filter(!is.na(emoji)) |> full_join(listeners) |> 
+  filter(condition %in% c("2_thin", "6_thin", "emoji"))|> 
+  unique() |> 
+  mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
+    pivot_wider(names_from=emoji, values_from=is.emoji, values_fill=0) |> 
+  select(-`NA`) |> 
+  mutate(total=check+think+x+lol) |> 
+  pivot_longer(`think`:`total`, names_to="emoji", values_to="count") |> 
+  group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |> 
+  mutate(cond=case_when(
+    condition=="2 thin" ~ "Expt 3: 2 thin",
+    condition=="6 thin" ~ "Expt 3: 6 thin",
+    condition=="emoji" ~ "Expt 2: 6 thin"
+  )) |> 
+  ggplot(aes(x=repNum, y=any, color=emoji))+geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+facet_wrap(~cond)
+
+```
+
+TODO 
+Written about 6thin in experiment 2 and for 2 and 6 thin in 3
+Additionally, exclusive to this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length.
+
+# Additional measure of convergence
+
+The main text included the graph for convergence comparing utterances from blocks 1-5 to the utterance from block 6. Here we show two other measures of semantic shifts for descriptions for the same tangram in the same game: similarity to the first utterance and similarity to the next utterance. 
+
+Similarity to the first utterance is not very informative (but we pre-registered it). Similarity to the next utterance is what actually drives the convergence phenomena: pairs of utterances from adjacent blocks become closer together over time. 
+
+```{r other, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. ", cache=T}
 
 #first
 
@@ -413,6 +445,14 @@ scale_color_manual(values=color_scheme_3)
 
 tonext <- plot_grid(one,two,three, nrow=1)
 
+
+plot_grid(tofirst, tonext, nrow=2, labels="AUTO", rel_heights = c(.8,1), label_size=20)
+```
+
+# Distinctiveness of tangrams
+
+```{r dist, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Divergence in descriptions of different tangrams within a group", cache=T}
+
 one_two_tandiv<- read_rds(here("code/models/one_two_tangrams_div.rds"))
 three_tandiv<- read_rds(here("code/models/three_tangrams_div.rds"))
 # divergence
@@ -469,14 +509,10 @@ annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
         axis.title=element_text(size=14))+
 scale_color_manual(values=color_scheme_3)
 
-tandiv <- plot_grid(one,two,three, nrow=1)
+plot_grid(one,two,three, nrow=1)
 
 
-plot_grid(tofirst, tonext, tandiv, nrow=3, labels="AUTO", rel_heights = c(.8,.8,1), label_size=20)
 ```
-
-## Distinctiveness of tangrams
-
 ```{r}
 
 tandiv_1 <- read_rds(here(msum_loc, "tandiv_1.rds"))
@@ -522,21 +558,11 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 ```
 
-Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position. 
+Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position. Over the course of the game, descriptions for each tangram become more distinctive.
 
-Over the course of the game, descriptions for each tangram become more distinctive (`r stats_text(tandiv_1, 1,3)`). 
-In all three subexperiments, the descriptions of tangrams become more distinctive within games across time. (2a `r stats_text(tandiv_2a,1,3)`, 2b `r stats_text(tandiv_2b, 1,3)`, 2c `r stats_text(tandiv_2c,1,3)`). 
+# Summary of model reporting
 
-
-Tangram distinctiveness within games increased over time (`r stats_text(tandiv_3, 1,3)`). There might be more to say about other effects, but it's mostly a starting places being different in larger games and then the slopes also differ a bit? 
-
-
-### play with more diagrams
-Comparing utterances between adjacent rounds reveals similar patterns. Thin games have lower similarity between adjacent blocks (`r stats_text(tonext_3, 1,3)`) as do larger games (`r stats_text(tonext_3,7,3)`). Later in the game adjacent blocks are more similar than earlier adjacent blocks (`r stats_text(tonext_3, 3,3)`), painting an overall nonlinear convergent pattern (as seen in Figure \@ref(fig:other)). 
-
-
-
-
+Note that for all models, block was 0 indexed, so intercepts are what happened during the first block. 
  
 ```{r}
 form <- function(model){
@@ -566,11 +592,9 @@ kable(model |> select(Term, Est.=Estimate, CrI=`Credible Interval`), escape=F, f
       align='lll', pos='h!')
 }
 ```
-## Models
 
-Note that for all models, block was 0 indexed, so intercepts are what happened during the first block. 
 
-## Accuracy models
+# Accuracy models
 
 Accuracy models were all run as logistic models with normal(0,1) priors for both betas and sd. This model was not explicitly included in the experiment 1 and 2 pre-registrations; it was included with more ambitious mixed effects (which did not run in a timely manner) in the experiment 3 pre-reg. 
 
@@ -584,10 +608,10 @@ do_table("acc_3.rds", "Experiment 3 logistic model of listener accuracy")
 
 ```
 
-\pagebreak
 
-## Reduction models 
-Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). This model was pre-registered for each experiment and run with the mixed effects structure as prespecified. 
+# Reduction models 
+
+Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). This model was pre-registered for each experiment and run with the mixed effects structure as pre-specified. 
 
 ```{r}
 
@@ -601,9 +625,9 @@ do_table("red_3.rds", "Experiment 3")
 
 ### Extra reduction model
 
-For experiment 1, we also pre-specified models about whether the speaker's correctness (as a listener) on the prior block had an effect 
+For experiment 1, we also pre-specified a model about whether the speaker's correctness (as a listener) on the prior block had an effect on how many words of description they produced. 
 
-Model of whether speaker’s correct/incorrect answer in previous block  has an effect 
+TODO priors
 
 ```{r}
 
@@ -612,7 +636,11 @@ do_table("weird_1.rds", "Experiment 1")
 
 ```
 
-### Listener models
+## Listener reduction models
+
+These models were not pre-registered. 
+
+TODO priors
 
 ```{r}
 
@@ -622,15 +650,15 @@ do_table("anylist_1.rds", "Experiment 1")
 
 
 ```
-\pagebreak
 
-## SBERT models
 
-For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
+# SBERT models
+
+For all of the models using cosine similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
 
 These models were verbally described (but not formally specified) in the pre-registrations for experiment 2 in the full feedback and thin conditions and for experiment 3, for looking at divergence between games, convergence within games (compare to first, next, and last), and divergence between tangrams within games. 
 
-### Convergence within games: comparison to last round
+## Convergence within games: comparison to last round
 This is the convergence metric presented in the paper. 
 
 ```{r}
@@ -643,11 +671,11 @@ do_table("tolast_3.rds", "Experiment 3", decimal=3)
 
 ```
 
-\pagebreak
 
-### Divergence across games
+## Divergence across games
 
-To look at how games diverged from each other ... TODO
+This is the divergence metric presented in the paper. 
+
 ```{r}
 
 do_table("div_1.rds", "Experiment 1", decimal=3)
@@ -658,9 +686,8 @@ do_table("div_3.rds", "Experiment 3",decimal=3)
 
 ```
 
-\pagebreak
 
-### Divergence across tangrams
+## Divergence across tangrams
 
 
 ```{r}
@@ -675,9 +702,10 @@ do_table("tandiv_3.rds", "Experiment 3",decimal=3)
 
 \pagebreak
 
-### convergence to next
+## Convergence to next
 
 We also looked at how similar an utterance was to the next round utterance: this can be thought of as the derivative of the to-last comparison. (although cosine similarities are not actually additive in the same way integrals are)
+
 ```{r}
 
 do_table("tonext_1.rds", "Experiment 1",decimal=3)
@@ -688,11 +716,11 @@ do_table("tonext_3.rds", "Experiment 3",decimal=3)
 
 ```
 
-\pagebreak
 
-### divergence from first
+## divergence from first
 
-We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty unwieldy. TODO explain more or don't include
+We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty unwieldy. 
+
 ```{r}
 
 do_table("tofirst_1.rds", "Experiment 1",decimal=3)
@@ -703,6 +731,5 @@ do_table("tofirst_3.rds", "Experiment 3",decimal=3)
 
 ```
 
-### Extra emoji analysis
-Written about 6thin in experiment 2 and for 2 and 6 thin in 3
-Additionally, exclusive to this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length.
+
+
