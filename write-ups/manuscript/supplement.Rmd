@@ -4,6 +4,7 @@ output:
   pdf_document:
     toc: true
     toc_depth: 2
+    keep_tex: true
 date: "2023-05-05"
 ---
 ```{r set-up, include=FALSE}
@@ -226,7 +227,7 @@ geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
 
 When listeners did provide descriptions for references, the amount of language used was greater in early trial than in later trials. 
 
-```{r listeners, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of words of referential language produced by listeners over time. Excludes trials where no listeners contributed descriptive language.  "}
+```{r listeners, fig.env = "figure*", fig.pos = "h!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of words of referential language produced by listeners over time. Excludes trials where no listeners contributed descriptive language.  "}
 
 one <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
     mutate(numPlayers=as.character(numPlayers)) |> 
@@ -237,7 +238,6 @@ ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=23,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -260,7 +260,6 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
   coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=23,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -279,7 +278,6 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
   coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="Block", color="")+
-annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -292,7 +290,7 @@ annotate("text", x=3.5,y=23,label="Experiment 3", size=6)+
 
 In thin games, the rate at which listeners use specific emojis, or any emoji at all declines over time. 
 
-```{r emoji, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji (or any emoji." }
+```{r emoji, fig.env = "figure*", fig.pos = "h!", fig.width=10, fig.height=3.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji (or any emoji." }
 combined_emoji |> mutate(emoji=case_when(
     text=="✅"~  "check",
     text=="🤔" ~ "think",
@@ -308,8 +306,8 @@ combined_emoji |> mutate(emoji=case_when(
   pivot_longer(`think`:`total`, names_to="emoji", values_to="count") |> 
   group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |> 
   mutate(cond=case_when(
-    condition=="2 thin" ~ "Expt 3: 2 thin",
-    condition=="6 thin" ~ "Expt 3: 6 thin",
+    condition=="2_thin" ~ "Expt 3: 2 thin",
+    condition=="6_thin" ~ "Expt 3: 6 thin",
     condition=="emoji" ~ "Expt 2: 6 thin"
   )) |> 
   ggplot(aes(x=repNum, y=any, color=emoji))+geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
@@ -327,7 +325,7 @@ The main text included the graph for convergence comparing utterances from block
 
 Similarity to the first utterance is not very informative (but we pre-registered it). Similarity to the next utterance is what actually drives the convergence phenomena: pairs of utterances from adjacent blocks become closer together over time. 
 
-```{r other, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. ", cache=T}
+```{r other, fig.env = "figure*", fig.pos = "h!", fig.width=10, fig.height=7, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A is similarity to first utterance. B is similarity between utterances from adjacent blocks. ", cache=T}
 
 #first
 
@@ -342,7 +340,6 @@ one <- one_two_first |> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(2,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=4,y=1,label="Experiment 1", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -364,7 +361,7 @@ two <- one_two_first |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")
   coord_cartesian(ylim=c(.2,1))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=4,y=1,label="Experiment 2", size=6)+
+annotate("text", x=4,y=1,label="Similarity to first block", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -378,7 +375,6 @@ three <- three_tofirst |> mutate(condition=str_c(str_sub(condition,1,1)," ", str
   coord_cartesian(ylim=c(.2,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=4,y=1,label="Experiment 3", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -400,8 +396,7 @@ one <-  one_two_next|> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.1,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=1,label="Experiment 1", size=6)+
-  theme(legend.position="none",
+  theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
@@ -421,8 +416,8 @@ two <-  one_two_next |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")
       coord_cartesian(ylim=c(.1,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=1,label="Experiment 2", size=6)+
-  theme(legend.position="none",
+annotate("text", x=3,y=1,label="Similarity to next block", size=6)+
+  theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
@@ -436,8 +431,7 @@ three <-  three_next |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_s
    coord_cartesian(ylim=c(.1,1))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=1,label="Experiment 3", size=6)+
-  theme(legend.position="none",
+  theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
@@ -451,7 +445,7 @@ plot_grid(tofirst, tonext, nrow=2, labels="AUTO", rel_heights = c(.8,1), label_s
 
 # Distinctiveness of tangrams
 
-```{r dist, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Divergence in descriptions of different tangrams within a group", cache=T}
+```{r dist, fig.env = "figure*", fig.pos = "h!", fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Divergence in descriptions of different tangrams within a group", cache=T}
 
 one_two_tandiv<- read_rds(here("code/models/one_two_tangrams_div.rds"))
 three_tandiv<- read_rds(here("code/models/three_tangrams_div.rds"))
@@ -466,7 +460,6 @@ one <-  one_two_tandiv |> filter(condition %in% c("2", "3","4","5","6")) |>
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=.7,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -487,7 +480,6 @@ two <-  one_two_tandiv |>  filter(condition %in% c("6emoji", "6highfeed", "6noro
       coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-annotate("text", x=3.5,y=.7,label="Experiment 2", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -502,7 +494,6 @@ three <-  three_tandiv |> mutate(condition=str_c(str_sub(condition,1,1)," ", str
    coord_cartesian(ylim=c(.1,.7))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   labs(y="Cosine Similarity", x="Block", color="")+
-annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
@@ -560,6 +551,8 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 Another way of looking at how language changes over the course of the game is looking at how games start to refer to different tangrams more differently. This could reflect initial overlap in descriping many figures as sitting or standing or by leg and arm and head position. Over the course of the game, descriptions for each tangram become more distinctive.
 
+\pagebreak
+
 # Summary of model reporting
 
 Note that for all models, block was 0 indexed, so intercepts are what happened during the first block. 
@@ -588,7 +581,7 @@ do_table <- function(mod, cap,decimal=2){
 spec <- read_rds(here(mform_loc,mod))
 
 kable(model |> select(Term, Est.=Estimate, CrI=`Credible Interval`), escape=F, format='latex', booktabs=T,
-      caption=str_c(cap, ":\\\\\ ",form(spec)),
+      caption=str_c(cap, ":  \\\\\ ",form(spec)),
       align='lll', pos='h!')
 }
 ```
@@ -625,13 +618,10 @@ do_table("red_3.rds", "Experiment 3")
 
 ### Extra reduction model
 
-For experiment 1, we also pre-specified a model about whether the speaker's correctness (as a listener) on the prior block had an effect on how many words of description they produced. 
-
-TODO priors
+For experiment 1, we also pre-specified a model about whether the speaker's correctness (as a listener) on the prior block had an effect on how many words of description they produced. Priors were the same as for primary reduction model.
 
 ```{r}
 
-read_rds(here(mform_loc, "weird_1.rds")) |> form()
 do_table("weird_1.rds", "Experiment 1")
 
 ```
@@ -640,8 +630,9 @@ do_table("weird_1.rds", "Experiment 1")
 
 These models were not pre-registered. 
 
-TODO priors
+For the model of how often any listener talked, the priors were normal(0,1) for both beta and sd. 
 
+For the model of how much was said on trials when listeners talked, the priors were the same as for the primary (speaker) reduction model. 
 ```{r}
 
 do_table("list_1.rds", "Experiment 1")
@@ -704,7 +695,7 @@ do_table("tandiv_3.rds", "Experiment 3",decimal=3)
 
 ## Convergence to next
 
-We also looked at how similar an utterance was to the next round utterance: this can be thought of as the derivative of the to-last comparison. (although cosine similarities are not actually additive in the same way integrals are)
+We also looked at how similar an utterance was to the next round utterance: this can be thought of as the derivative of the to-last comparison. (Although cosine similarities are not actually additive in the same way integrals are).
 
 ```{r}
 
@@ -717,9 +708,9 @@ do_table("tonext_3.rds", "Experiment 3",decimal=3)
 ```
 
 
-## divergence from first
+## Divergence from first
 
-We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty unwieldy. 
+We also looked at how similar an utterance was to the first round utterance. This is not very informative because first round utterances tend to be pretty noisy with lots of hedges and filler words. 
 
 ```{r}
 
