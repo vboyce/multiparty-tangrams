@@ -23,30 +23,32 @@
 	\definecolor{expt1col}{HTML}{FF0099}
 	\definecolor{expt3col}{HTML}{527319}
 	\definecolor{expt2col}{HTML}{0000FF}
+	\tikzset{nodes={font=\sffamily}} 
 	\tikzset{
+		axis/.style={nodes={font=\sffamily\bfseries}},
 		expt1/.style={
-			draw, circle, color=expt1col, line width=0, align=center, scale=1.8},
+			draw, circle, color=expt1col, line width=0, align=center, scale=1.5, font=\sffamily},
 		expt2/.style={
-			draw, circle, color=expt2col, line width=0,  align=center, scale=1.8},
+			draw, circle, color=expt2col, line width=0,  align=center, scale=1.5, font=\sffamily},
 		expt3/.style={
-			draw, circle, color=expt3col, line width=0, align=center, scale=1.8},
+			draw, circle, color=expt3col, line width=0, align=center, scale=1.5, font=\sffamily},
 		illus/.style={draw, rectangle, align=center},
 		annotate/.style={
 			color=black!60, line width=0, align=center, scale=1, font=\sffamily},
 		illus/.style={draw, rectangle, align=center, color=black!50, font=\sffamily, scale=1}
 	}
-	\tikzset{nodes={font=\sffamily\bfseries}} 
+	
 \begin{document}
 \begin{tikzpicture}
 		
-		\node at (-3.5,5) {\LARGE{A}};
-		\node at (8.5,5) {\LARGE{B}};
-		\node at (5,-4.5) {\LARGE{C}};
+		\node at (-3.5,5) {\LARGE\bfseries{A}};
+		\node at (8.5,5) {\LARGE\bfseries{B}};
+		\node at (5,-4.5) {\LARGE\bfseries{C}};
 
 		\def\r{5}
-		\draw (0,0) edge[-Stealth, line width=1] ["Backchannel", sloped, pos=.4] (-\r/1.4,  -\r/1.4) ;
-		\draw (0,0) edge[-Stealth, line width=1] ["Group Size", pos=1.05] (\r, 0) ;
-		\draw (0,0) edge[-Stealth, line width=1] ["Group coherence", sloped, pos=.4] (0, \r);
+		\draw (0,0) edge[-Stealth, line width=1] [axis, "Listener Backchannel", sloped, pos=.41] (-\r/1.4,  -\r/1.4) ;
+		\draw (0,0) edge[-Stealth, line width=1] [axis, "Group Size", pos=1.05] (\r, 0) ;
+		\draw (0,0) edge[-Stealth, line width=1] [axis, "Group coherence", sloped, pos=.4] (0, \r);
 		\draw[dashed] (4,0) edge [] (4-4/1.4, -4/1.4);
 		\draw[dashed] (-4/1.4,-4/1.4) edge [] (4-4/1.4, -4/1.4);
 		\draw[dashed] (0,4) edge [] (4,4);
@@ -75,12 +77,12 @@
 		
 		\node[annotate, anchor=north] (lab1) at (-2,2) {Rotating speaker;\\limited feedback};
 		\node[annotate,anchor=north] (lab2) at (-2.5,4.5) {Consistent speaker;\\full feedback};
-		\node[annotate,anchor=north] (lab3) at (-3,0.2) {Listeners \\use chat};
-		\node[annotate,anchor=north] (lab4) at (-3.5,-1.2) {Listeners \\use emoji};
+		\node[annotate,anchor=north] (lab3) at (-3,0.8) {Listeners \\use chat};
+		\node[annotate,anchor=north] (lab4) at (-3.3,-.5) {Listeners \\use emoji};
 		
 		\node[align=center,anchor=north, text=expt1col] (ex1) at (2,1) {Experiment 1};
 		\node[align=center,anchor=north, text=expt2col] (ex1) at (2,2.75) {Experiment 2};
-		\node[align=center,anchor=north, text=expt3col] (ex1) at (.7,-1.7) {Experiment 3};
+		\node[align=center,anchor=north, text=expt3col] (ex1) at (.3,-1.4) {Experiment 3};
 			\begin{scope}[line width=1 pt, >=Stealth, color=black!60]
 			\draw[->] (lab1) -> (n2);
 			\draw[->] (lab2) -> (n2thick);
@@ -104,13 +106,13 @@
 	\node[illus, anchor=west] () at (11.2,-3.3) {Consistent speaker\\ \includegraphics[height=3em]{images/norotate.png}};
 	
 	\node[illus, anchor=east] () at (8.8,-6) {Limited feedback\\ \includegraphics[height=4em]{images/limited-wrong.png} 
-\phantom{m} \includegraphics[scale=.1]{images/limited-correct.png}};
+\phantom{m} \includegraphics[height=4em]{images/limited-correct.png}};
 	\node[align=center, anchor=center] at (10,-6) {Group \\ coherence: \\ Feedback};
-	\node[illus, anchor=west] () at (11.2,-6) {Full feedback \\  \includegraphics[height=4em]{images/full-wrong.png}  \phantom{m} \includegraphics[scale=.1]{images/full-correct.png}	};
+	\node[illus, anchor=west] () at (11.2,-6) {Full feedback \\  \includegraphics[height=4em]{images/full-wrong.png}  \phantom{m} \includegraphics[height=4em]{images/full-correct.png}	};
 
 		
-		\node[illus, anchor=north west] () at (8.75, 3.5) {\includegraphics[width=15em]{images/diagram.png}};
-		\node[anchor=north west] () at (11, 4) {Trial};
+		\node[illus, anchor=north west] () at (9, 3.3) {\includegraphics[width=15em]{images/diagram.png}};
+		\node[anchor=north west] () at (11, 3.7) {Trial};
 		
 		\node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (8.5, 4) {};
 		\node[anchor=north west] () at (11, 4.5) {Block};
