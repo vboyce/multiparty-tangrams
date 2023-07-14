@@ -99,7 +99,7 @@ knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%
                       message=F, sanitize = T)
 
 color_scheme_1 <- c("2"="#FFBDD4", "3"="#FF7DF0","4"="#D24AFF", "5"="#A12EFF","6"="#6940FF")
-color_scheme_2 <- c( "6 consistent speaker"="#00A2FF","6 thin"="#D47E04","6 full feedback"="#425df5")
+color_scheme_2 <- c( "6 full feedback"="#425df5", "6 consistent speaker"="#00A2FF","6 thin"="#D47E04")
 
 color_scheme_3 <- c("6 thin"="#D47E04", "6 thick"="#00BDA8",
                   "2 thin"="#FFDA09", "2 thick"="#77F3DB")
@@ -142,7 +142,7 @@ stats_text  <- function(model, row, decimal=2){
            Upper=round(upper, digits=decimal),
            `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
     select(Term, Estimate, `Credible Interval`)
-  str_c("$\\beta=", model[row,2],",\\:95\\%\\:\\mathrm{CrI}=",model[row,3], "$")
+  str_c("", model[row,2],",($95\\%\\mathrm{CrI}=",model[row,3], "$)")
 }
 
 form <- function(model){
@@ -237,11 +237,11 @@ one <- combined_results |> filter(condition=="rotate") |> group_by(playerId,repN
 geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.2))+
   labs(x="Block", y="Fraction correctly selected", color="")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+  #guides(color = guide_legend(nrow=1, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
   #annotate("text", x=3.5,y=1,label="Experiment 1", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
 scale_color_manual(values=color_scheme_1)
 #2
@@ -254,7 +254,8 @@ two <- combined_results |> filter(condition %in% c("no_rotate","full_feedback", 
   mutate(condition=case_when(
     condition=="no_rotate" ~ "6 consistent speaker",
     condition=="full_feedback" ~ "6 full feedback",
-    condition=="emoji" ~ "6 thin")) |> 
+    condition=="emoji" ~ "6 thin"),
+    condition=factor(condition, levels=c("6 full feedback", "6 consistent speaker", "6 thin"))) |> 
   ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
      scale_x_continuous(breaks=seq(1,6))+
      coord_cartesian(ylim=c(.65,1))+
@@ -265,16 +266,17 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
     #annotate("text", x=3.5,y=1,label="Accuracy", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+ 
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+  #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
         scale_color_manual(values=color_scheme_2)
 
 #3
  three <- combined_results |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> group_by(playerId,repNum, gameId, condition) |> 
   filter(response!="false") |> 
   mutate(correct.num=ifelse(correct,1,0)) |>
-   mutate(condition=str_replace(condition, "_", " ")) |> 
+   mutate(condition=str_replace(condition, "_", " "),
+          condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin"))) |> 
   ggplot(aes(x=repNum+1, y=correct.num, color=condition))+
      scale_x_continuous(breaks=seq(1,6))+
    coord_cartesian(ylim=c(.65,1))+
@@ -285,9 +287,9 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
      labs(x="", y="", color="")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+  #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
    scale_color_manual(values=color_scheme_3)
  
  acc <- plot_grid(one, two, three, nrow=1)
@@ -309,8 +311,9 @@ ggplot(aes(x=repNum+1, y=words, color=numPlayers))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 #annotate("text", x=3.5,y=60,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
+                axis.title.x=element_blank(),
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
@@ -326,10 +329,11 @@ two <- combined_chat|> filter(condition %in% c("no_rotate","full_feedback", "emo
     mutate(condition=case_when(
     condition=="no_rotate" ~ "6 consistent speaker",
     condition=="full_feedback" ~ "6 full feedback",
-    condition=="emoji" ~ "6 thin") |> factor(levels=c("6 consistent speaker", "6 full feedback", "6 thin"))) |> 
+    condition=="emoji" ~ "6 thin"),
+        condition=factor(condition, levels=c("6 full feedback", "6 consistent speaker", "6 thin"))) |> 
 ggplot(aes(x=repNum+1, y=words, color=condition))+
       geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
@@ -338,8 +342,9 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
 
 #annotate("text", x=3.5,y=60,label="Speaker Reduction", size=6)+
   theme(legend.position="bottom",
+                axis.title.x=element_blank(),
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
     scale_color_manual(values=color_scheme_2)
 
@@ -350,11 +355,12 @@ three <- combined_chat |> filter(condition %in% c("2_thin", "2_thick", "6_thin",
     mutate(groupxtangram=str_c(gameId,tangram)) |> 
   group_by(repNum, gameId,tangram, groupxtangram, condition) |> 
   summarize(words=sum(total_num_words)) |> 
-  mutate(condition=str_replace(condition, "_", " ")) |> 
+  mutate(condition=str_replace(condition, "_", " "),
+                   condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin"))) |> 
 ggplot(aes(x=repNum+1, y=words, color=condition))+
   geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   coord_cartesian(ylim=c(0,60))+
        scale_x_continuous(breaks=seq(1,6))+
  # labs( y="Number of words", x="Block", color="")+
@@ -362,7 +368,8 @@ ggplot(aes(x=repNum+1, y=words, color=condition))+
 #annotate("text", x=3.5,y=60,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+                axis.title.x=element_blank(),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3)
 
@@ -391,7 +398,11 @@ acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 ### Accuracy is high and increasing
 
 
-In our experiments, listener accuracy rose over repetitions in all conditions and approached ceiling in most conditions; however, 6 player thin games were the least accurate (Figure \@ref(fig:behavioral)A). We constructed logistic models to predict accuracy as a function of the manipulated variables, block, and their interactions. Group size did not have a strong effect on initial accuracy in experiment 1 (`r stats(acc_1,4)`) but 6 player games had lower accuracy than 2 player games in experiment 3 (`r stats(acc_3, 6)`). Initial accuracy was somewhat higher for consistent speaker games (`r stats(acc_2a,2)`) and full feedback games (`r stats(acc_2b, 2)`) than for 6 thin games (Expt 2, `r stats(acc_2c, 2)`), but the difference between thick and thin games was not reliable (Expt 3, `r stats(acc_3,5)`). Game size did not affect improvement rate in experiment 1(`r stats(acc_1,2)`), but 6-person games were slower to improve than 2-person games in experiment 3  (`r stats(acc_3, 3)`). Improvement rates were higher for consistent speaker games (`r stats(acc_2a,1)`) and full feedback games (`r stats(acc_2b, 1)`) than for 6 thin games (Expt 2, `r stats(acc_2c, 1)`), but the difference in improvement rates between thick and thin games was not reliable (Expt 3, `r stats(acc_3,2)`). Across experiments, the high and increasing levels of accuracy indicate that across all of these conditions, participants are able to succeed in communicating about the images. 
+In our experiments, listener accuracy rose over repetitions in all conditions and approached ceiling in most conditions; however, 6 player thin games were the least accurate (Figure \@ref(fig:behavioral)A). We constructed logistic models to predict accuracy as a function of the manipulated variables, block, and their interactions. 
+
+Group size did not have a strong effect on initial accuracy or improvement rate (`r stats(acc_1,2)`) in the baseline condition (expt 1, `r stats(acc_1,4)`). 6 player thick games had lower initial accuracy  (expt 3, `r stats(acc_3, 6)`)  and were slower to improve were slower to improve than 2-person thick games (expt 3, `r stats(acc_3, 3)`).
+
+Initial accuracy was somewhat higher for consistent speaker games (`r stats(acc_2a,2)`) and full feedback games (`r stats(acc_2b, 2)`) than for 6 thin games (expt 2, `r stats(acc_2c, 2)`), and improvement rates were higher for consistent speaker games (`r stats(acc_2a,1)`) and full feedback games (`r stats(acc_2b, 1)`) than for 6 thin games (expt 2, `r stats(acc_2c, 1)`). Thick and thin 2-player games were not reliably different in their initial accuracy (expt 3, `r stats(acc_3,5)`) or improvement rate (expt 3, `r stats(acc_3,2)`). There was no interaction between thinness and group size on initial condition (`r stats(acc_3, 7)`) or improvement rate (`r stats(acc_3, 4)`).  Across experiments, the high and increasing levels of accuracy indicate that across all of these conditions, participants are able to succeed in communicating about the images. 
 
 
 ```{r}
@@ -407,13 +418,21 @@ red_3 <- read_rds(here(msum_loc, "red_3.rds"))
 
 ```
 
-### Speaker utterances shorter over repetition
+<!--### Speaker utterances shorten over repetition
 
 Speakers in larger games were more verbose than speakers in smaller games, and in some cases, these speakers showed sharper reduction from initial wordiness to eventual concision (Figure \@ref(fig:behavioral)B). We constructed linear models of the number of words a speaker said each trial as a function of condition and block. Speakers in larger groups said more to start with than speakers in smaller groups (expt 1, `r stats_text(red_1,4)`; expt 3, `r stats(red_3,7)`). Thin games were similar to thick games in initial verbosity (expt 3, `r stats(red_3, 5)`). 
   
 The numbers of words said decreased at a similar rate across group size in Experiment 1 (`r stats(red_1,2)`), but 6-player games decreased faster than 2-player games in Experiment 3 (`r stats(red_3, 4)`). Thin games were similar to thick games in reduction rate (expt 3, `r stats(red_3, 2)`). 
 
 The main effect of being one block later was `r stats_text(red_1,1)` words per trial in Experiment 1; `r stats_text(red_2a,1)` words per trial for 6 consistent speaker; `r stats_text(red_2b,1)` words for 6 full feedback, `r stats_text(red_2c,1)` words for 6 thin; and `r stats(red_3,1)` for the 2 thick condition of experiment 3. Overall, all conditions exhibited reduction, with variations in the speed at which speaker utterances got shorter. 
+-->
+### Speaker utterances shorten over repetition
+
+Speakers in larger games were more verbose than speakers in smaller games, and in some cases, these speakers showed sharper reduction from initial wordiness to eventual concision (Figure \@ref(fig:behavioral)B). We constructed linear models of the number of words a speaker said each trial as a function of condition and block. 
+
+In the initial round, speakers in larger groups said more than speakers in smaller groups (expt 1, `r stats(red_1,4)`; expt 3, `r stats(red_3,7)`). The rate of reduction was relatively similar across group size for baseline games (expt 1, `r stats(red_1,2)`), but 6-player games reduced faster than 2-player games in thick games (`r stats(red_3, 4)`). Taken together, smaller games on average said less at each stage of the game than larger games, although the gap closed in later rounds. Thin 2-player games were similar to thick 2-player games in initial verbosity (expt 3, `r stats(red_3, 5)`) and in reduction rate (expt 3, `r stats(red_3, 2)`). There was no effect of the interaction between thinness and game size on initial verbosity (`r stats(red_3, 6)`) or reduction rate (`r stats(red_3,3)`). 
+
+The main effect of being one block later was `r stats_text(red_1,1)` words per trial in Experiment 1; `r stats_text(red_2a,1)` words per trial for 6 consistent speaker; `r stats_text(red_2b,1)` words for 6 full feedback, `r stats_text(red_2c,1)` words for 6 thin; and `r stats(red_3,1)` for 2-player thick. Overall, all conditions exhibited reduction, with some variation in the slope of reduction. 
 
 ```{r}
 list_1 <- read_rds(here(msum_loc, "list_1.rds"))
@@ -427,11 +446,10 @@ anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 
 ### Listener utterances are more common in larger games
 
-Listeners talk much less than speakers, and listener contributions are concentrated in early trials. The more listeners, the more likely it was that some listener talked, and the more listeners said if they talked (TODO CROSSREF SUPPLEMENT IMAGE). The number of trials where any listener said anything related to the image was higher in larger groups (expt 1, `r stats(anylist_1, 4)`) and declined across blocks (expt 1, `r stats(anylist_1, 1)`). When referential language was produced, larger groups produced more language (expt 1, `r stats(list_1, 4)`), but the difference in group size closed in later blocks (expt 1, `r stats(list_1, 2)`). This pattern is consistent with early listener involvement in establishing a common conceptualization by asking questions and offering alternative descriptions. Once a shared idea is in place, listener descriptions are rarer and more perfunctory. Emoji use is not directly comparable to referential language, but similar trends occurred in the thin games. Emoji use was more common in the 6 player games than the two player games and decreased over the course of the game (SUPP FIGURE). 
+Listeners talked much less than speakers, and listener contributions were concentrated in the earlier trials. The more listeners, the more likely it was that some listener talked, and the more listeners said if they talked (TODO CROSSREF SUPPLEMENT IMAGE). We fit a logistic model predicting if listeners said anything, and for trials where they did, we fit a linear model predicting how many total words listeners said. The number of trials where any listener said anything related to the image was higher in larger groups (expt 1, `r stats(anylist_1, 4)`) and declined across blocks (expt 1, `r stats(anylist_1, 1)`). When referential language was produced, larger groups produced more language (expt 1, `r stats(list_1, 4)`), but the difference in group size closed in later blocks (expt 1, `r stats(list_1, 2)`). This pattern is consistent with early listener involvement in establishing a common conceptualization by asking questions and offering alternative descriptions. Once a shared idea is in place, listener descriptions are rarer and more perfunctory. Emoji use is not directly comparable to referential language, but similar trends occurred in the thin games: emoji use was more common in the 6-player games than the 2-player games and decreased over the course of the game (SUPP FIGURE). 
 
-<!--[TODO: address throughout! as a higher-level comment: I'd try to catch everywhere we're framing results like this, a backward-looking framing of 'traditional metrics' or 'classic effects' and instead take ownership of what we found on its own terms. What makes these measures interesting isn't that they were used in earlier studies, what makes them interesting is that they measure the *communicative performance* of the group, and we should emphasize the latter over the former.]-->
-
-According to these metrics of group performance and efficiency in iterated reference games, larger games are similar to smaller games, except with more talking, especially early in the games. Larger groups seem to generally take the time to elaborate descriptions in order for most listeners to understand, especially when listeners can ask specific clarifying questions. This leads to more talking in early rounds for larger games, sometimes followed by sharp reduction once a shared conceptualization is agreed upon. 
+### Interim summary that TODO needs a better name
+According to these performance and efficiency metrics, larger games are similar to smaller games, except with more talking, especially early in the games. Larger groups seem to generally take the time to elaborate descriptions in order for most listeners to understand, especially when listeners can ask specific clarifying questions. This leads to more talking in early rounds for larger games, sometimes followed by sharp reduction once a shared conceptualization is agreed upon. 
 
 ## Linguistic Content
 
@@ -443,7 +461,7 @@ knitr::include_graphics("sbert.pdf")
 
 <!--[TODO: i'd try to start this paragraph off with a set of hypotheses similar to the way we tried to originally motivate these analyses in terms of 'arbitrariness' and 'stability', but in this case trying to deepen particular patterns we observed across different group sizes and feedback channels (e.g. 'there are a number of reasons larger group may reduce to more efficient referring expressions when thicker feedback is available. one possibility is that these speakers simply get bored of the task faster and lose track of their own idiosyncratic labels, saying something different every block. another possibility is that there is a universal 'best' label for every tangram, and those speakers are better able to discover it. A final possibility is that each group coordinates on their own idiosyncratic conventions but those speakers are better able to pool the group's feedback. To distinguish between these possibilities, we turn to the linguistic content of the utterances. In particular, we examine the *semantic similarity* of descriptions within and across games.']-->
 
-Partner-specific reduction is characterized by high accuracy and shortening utterances, but the key phenomena of interest is that pairs are forming joint conventions about how to refer to particular images. How well groups are able to do this may vary based on game condition: we might predict that it's easier for two people to agree on a label, but harder when the labels are coming from 6 different individuals who may have different conceptualizations. Convergence to a shared name might be faster if only one person provides the labels, since they can match their own labels. Feedback and listener contributions may help a group get on the same page about what descriptions go with what images, letting a speaker reduce to shorthand expressions. While initially many groups may overlap with descriptions that include descriptions of the shapes or body parts in the image, their descriptions are predicted to become increasingly dissimilar as these descriptive portions drop out, leaving just group-specific conventionalized names.
+Partner-specific reduction is characterized by high accuracy and shortening utterances, but the key phenomena of interest is that pairs are forming joint conventions about how to refer to particular images. How well groups are able to do this may vary based on game condition: we might predict that it's easier for two people to agree on a label, but harder when the labels are coming from 6 different individuals who may have different conceptualizations. Convergence to a shared name might be faster if only one person provides the labels, since they can match their own labels. Feedback and listener contributions may help a group get on the same page about what descriptions go with what images, letting a speaker reduce to shorthand expressions. While initially many groups may overlap with descriptions that include descriptions of the shapes or body parts in the image, their descriptions are predicted to become increasingly dissimilar as these descriptive portions drop out, leaving just the conventionalized nicknames that are group-dependent.
 
 To assess the linguistic patterns of speaker descriptions, we examine the *semantic similarity* of descriptions within and across games. We quantified description similarity by concatenating speaker messages together within a trial and embedding this description into a high-dimensional vector space using SBERT [@reimers2019]. Then, we compared the similarity between pairs of utterances by taking the cosine similarity between their embeddings. Figure \@ref(fig:sbert-diagram) shows an example of concatenated utterances and their cosine similarities. We looked at the similarity between utterances within a game compared to the final description of that image as a measure of convergence to a shared nickname. We looked at similarity between utterances across games for the same image in the same block as a measure of divergence between games, predicted to occur as each develops a different nickname. 
 
@@ -461,11 +479,11 @@ one <- one_two_converge |> filter(condition %in% c("2", "3","4","5","6")) |>
   coord_cartesian(ylim=c(.2,1))+
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 #annotate("text", x=3,y=1,label="Experiment 1", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
@@ -482,13 +500,13 @@ two <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
  # labs(y="Cosine Similarity", x="Block", color="")+
     labs(x="", y="", color="")+
 annotate("text", x=3,y=1,label="Within game", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+    scale_color_manual(values=color_scheme_2)
 
 
@@ -503,13 +521,13 @@ three <- three_converge |> mutate(condition=str_c(str_sub(condition,1,1)," ", st
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
  # labs(y="Cosine Similarity", x="Block", color="")+
-    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+    #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 #annotate("text", x=3,y=1,label="Experiment 3", size=6)+
     labs(x="", y="", color="")+
 
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3)
 
@@ -531,8 +549,9 @@ one <-  one_two_diverge |> filter(condition %in% c("2", "3","4","5","6")) |>
     labs(x="", y="", color="")+
 #annotate("text", x=3.5,y=.7,label="Experiment 1", size=6)+
   theme(legend.position="bottom",
+        axis.title.x=element_blank(),
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
@@ -542,7 +561,8 @@ two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
   mutate(condition=case_when(
     condition=="6noro" ~ "6 consistent speaker",
     condition=="6highfeed" ~ "6 full feedback",
-    condition=="6emoji" ~ "6 thin")) |>
+    condition=="6emoji" ~ "6 thin"),
+     condition=factor(condition, levels=c("6 full feedback", "6 consistent speaker", "6 thin"))) |>
                               ggplot( aes(x=repNum+1,y=sim,color=condition))+
       stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
   geom_smooth(formula=y~poly(x,2))+
@@ -550,27 +570,30 @@ two <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed", "6nor
       coord_cartesian(ylim=c(.1,.7))+
   #labs(y="Cosine Similarity", x="Block", color="")+
     labs(x="", y="", color="")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
 annotate("text", x=3.5,y=.7,label="Between games", size=6)+
   theme(legend.position="bottom",
+                axis.title.x=element_blank(),
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
    scale_color_manual(values=color_scheme_2)
 
 #3
-three <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1))) |> ggplot(aes(x=repNum+1,y=sim,color=condition))+
+three <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)),                    condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin"))) |> 
+  ggplot(aes(x=repNum+1,y=sim,color=condition))+
       stat_summary(aes(group=str_c(condition,tangram), color=condition),fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=.5, geom="point")+
   geom_smooth(formula=y~poly(x,2))+
   scale_x_continuous(breaks=seq(1,6))+
    coord_cartesian(ylim=c(.1,.7))+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   #labs(y="Cosine Similarity", x="Block", color="")+
     labs(x="", y="", color="")+
 #annotate("text", x=3.5,y=.7,label="Experiment 3", size=6)+
   theme(legend.position="bottom",
+                axis.title.x=element_blank(),
         axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
+        legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
 scale_color_manual(values=color_scheme_3)
 
@@ -603,9 +626,20 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 ```
 
+<!--### Convergence within groups
+
+Across conditions, speaker descriptions increased in semantic similarity to the final description over repetition; convergence was fastest in smaller and higher coherence groups, and was least strong in the 6-player thin condition (Figure \@ref(fig:sbert)A). We modeled semantic convergence by looking at the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. The similarity of the first utterance to the last utterance was invariant across group size (expt 1 `r stats(tolast_1, 1,3)`), but smaller groups converged faster (expt 1, `r stats(tolast_1, 3,3)`). Convergence was especially rapid for the consistent speaker condition  where all the utterances come from the same person (expt 2, `r stats(tolast_2a, 1,3)`). Convergence was slower in thin games than thick games (expt 3, `r stats(tolast_3, 4,3)`) and was especially slow for thin 6 player games (expt 3, `r stats(tolast_3, 5,3)`). Convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (see TODO SUPPLMENT). Overall, descriptions were more similar if provided by the same person, if fewer people were in the game, and if listeners could contribute via a text channel. -->
+
 ### Convergence within groups
 
-Across conditions, speaker descriptions increased in semantic similarity to the final description over repetition; convergence was fastest in smaller and higher coherence groups, and was least strong in the 6-player thin condition (Figure \@ref(fig:sbert)A). We modeled semantic convergence by looking at the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. The similarity of the first utterance to the last utterance was invariant across group size (expt 1 `r stats(tolast_1, 1,3)`), but smaller groups converged faster (expt 1, `r stats(tolast_1, 3,3)`). Convergence was especially rapid for the consistent speaker condition  where all the utterances come from the same person (expt 2, `r stats(tolast_2a, 1,3)`). Convergence was slower in thin games than thick games (expt 3, `r stats(tolast_3, 4,3)`) and was especially slow for thin 6 player games (expt 3, `r stats(tolast_3, 5,3)`). Convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (see TODO SUPPLMENT). Overall, descriptions were more similar if provided by the same person, if fewer people were in the game, and if listeners could contribute via a text channel. 
+Across conditions, speaker descriptions increased in semantic similarity to the final description over repetition; convergence was fastest in smaller and higher coherence groups, and was least strong in the 6-player thin condition (Figure \@ref(fig:sbert)A). We modeled semantic convergence by looking at the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. 
+
+Smaller groups converged more strongly than larger groups. In the baseline condition, the similarity of the first utterance to the last utterance was invariant across group size (expt 1 `r stats(tolast_1, 1,3)`), but smaller groups converged faster (expt 1, `r stats(tolast_1, 3,3)`). In thick games, 6-player games had initially lower similarity (expt 3, `r stats(tolast_3, 7,3)`), but caught up to 2-player games (expt 3, `r stats(tolast_3, 6,3)`). In both experiments, smaller games were always on average more similar to their latter utterances than larger games. 
+
+Thicker games converged more strongly than thinner groups. Convergence was especially rapid for the consistent speaker condition where all utterances came from the same person (expt 2, `r stats(tolast_2a, 1,3)`). Convergence was stronger for full-feedback (expt 2, `r stats(tolast_2b, 1,3)`) than 6 thin (expt 2, `r stats(tolast_2c, 1,3)`), and for 2-player thick games than 2-player thin games (expt 3, `r stats(tolast_3, 4,3)`). 
+
+Convergence was especially slow and weak for thin 6-player games (expt3, `r stats(tolast_3,5,3)`).Convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (see TODO SUPPLMENT). Overall, descriptions were more similar if provided by the same person, if fewer people were in the game, and if listeners could contribute via a text channel.  
+
 
 ```{r}
 div_1 <- read_rds(here(msum_loc, "div_1.rds"))
@@ -618,9 +652,20 @@ div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 ```
 
+<!-- ### Divergence between groups
+
+Over repetitions, speaker descriptions diverged from descriptions used in other groups: divergence was fastest in groups with thick communication channels, while the 6-player thin condition games barely diverged at all (Figure \@ref(fig:sbert)B). We modeled semantic divergence by looking at the similarity between a pair of utterances for the same image from the same block across different games as a function of the block number and condition. Cross-group similarities started off the same regardless of group size (expt 1, `r stats(div_1, 3,3)`), but larger groups diverged from each other slightly slower than smaller groups (expt 1,`r stats(div_1,2,3)`). Divergence was stronger in the consistent speaker (expt 2,`r stats(div_2a, 1,3)`) and full feedback conditions (expt 2, `r stats(div_2b, 1,3)`) than in the 6 thin condition (expt 2, `r stats(div_2c, 1,3)`). The 2-player thick condition diverged at a moderate speed (expt 3, `r stats(div_3, 1,3)`), and the 6-player thick condition had initially higher similarity (expt 3, `r stats(div_3, 7,3)` and faster divergence (expt 3, `r stats(div_3, 4,3)` in comparison. Compared to the two-player thick games, two-player thin games started with slightly higher similarity (expt 3, `r stats(div_3, 5, 3)`) and diverged slightly more slowly (expt 3, `r stats(div_3, 2,3)`). Most noticeably, the 6 player thin games diverged much more slowly than the other conditions (expt 3, `r stats(div_3, 3,3)`). -->
+
 ### Divergence between groups
 
-Over repetitions, speaker descriptions diverged from descriptions used in other groups: divergence was fastest in groups with thick communication channels, while the 6-player thin condition games barely diverged at all (Figure \@ref(fig:sbert)B). We modeled semantic divergence by looking at the similarity between a pair of utterances for the same image from the same block across different games as a function of the block number and condition. Cross-group similarities started off the same regardless of group size (expt 1, `r stats(div_1, 3,3)`), but larger groups diverged from each other slightly slower than smaller groups (expt 1,`r stats(div_1,2,3)`). Divergence was stronger in the consistent speaker (expt 2,`r stats(div_2a, 1,3)`) and full feedback conditions (expt 2, `r stats(div_2b, 1,3)`) than in the 6 thin condition (expt 2, `r stats(div_2c, 1,3)`). The 2-player thick condition diverged at a moderate speed (expt 3, `r stats(div_3, 1,3)`), and the 6-player thick condition had initially higher similarity (expt 3, `r stats(div_3, 7,3)` and faster divergence (expt 3, `r stats(div_3, 4,3)` in comparison. Compared to the two-player thick games, two-player thin games started with slightly higher similarity (expt 3, `r stats(div_3, 5, 3)`) and diverged slightly more slowly (expt 3, `r stats(div_3, 2,3)`). Most noticeably, the 6 player thin games diverged much more slowly than the other conditions (expt 3, `r stats(div_3, 3,3)`). 
+Over repetitions, speaker descriptions diverged from descriptions used in other groups: divergence was fastest in groups with thick communication channels, while the 6-player thin condition games barely diverged at all (Figure \@ref(fig:sbert)B). We modeled semantic divergence by looking at the similarity between a pair of utterances for the same image from the same block across different games as a function of the block number and condition. 
+
+Game size had inconsistent effects on divergence slope: in baseline games, smaller games diverged faster than larger games (expt 1,`r stats(div_1,2,3)`) from the same starting point (expt 1, `r stats(div_1, 3,3)`).  In thick games, 6-player games diverged faster than 2-player games (expt 3, `r stats(div_3, 4,3)`) but from initially higher cross-game similarity (expt 3, `r stats(div_3, 7,3)`). In both cases, smaller games were less similar to each other on average.  
+
+Thicker games tended to diverge faster than thinner games. Both consistent speaker (expt 2, `r stats(div_2a, 1,3)`) and full feedback games (expt 2, `r stats(div_2b, 1,3)`) diverged faster than thin games. Thick 2-person games diverged faster than thin 2-person games (expt 3, `r stats(div_3, 2,3)`). Most noticeably, the 6 player thin games diverged much more slowly than the other conditions (expt 3, `r stats(div_3, 3,3)`). 
+
+Overall, thicker communication channels seem to be necessary for fast divergence, although 2-player games can diverge, albeit more slowly, even with a thin channel. Similarly to the convergence data, the 6 player thin condition is an outlier that barely follows trends present across other conditions. 
+
 
 ### Different patterns of performance and content
 Theoretical approaches treat reduction in referring expression length as a consequence of partner-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018], but in our current work, reduction and semantic measures of partner-specificity pattern differently in the 6 player thin condition. The 6-player thin games show much less divergence between games and convergence within games, even compared to the 2 thin and 6 thick conditions, but 6 player thin games showed smaller (and statistically inconconclusive) differences to 6 thick games for accuracy and reduction. This gap between the group performance measures and the semantic measures raises the possibility that it is possible to become more concise (and more accurate) without developing group-specific nicknames, but instead perhaps relying on group priors and reducing the amount of detail [@guilbeault2021]. This gap highlights the need to use measures of the type of language (and not just amount of language) when looking for convention-formation phenomena. 
