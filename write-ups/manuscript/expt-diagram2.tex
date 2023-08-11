@@ -35,15 +35,16 @@
 		illus/.style={draw, rectangle, align=center},
 		annotate/.style={
 			color=black!60, line width=0, align=center, scale=1, font=\sffamily},
-		illus/.style={draw, rectangle, align=center, color=black!50, font=\sffamily, scale=1}
+		illus/.style={draw, rectangle, align=center, color=black!50, font=\sffamily, scale=1},
+		bound/.style={draw, rectangle, align=center, color=black, font=\sffamily, scale=1}
 	}
 	
 \begin{document}
 \begin{tikzpicture}
 		
-		\node at (-3,4) {\LARGE\bfseries{A}};
-		\node at (6,4) {\LARGE\bfseries{B}};
-		\node at (13,4) {\LARGE\bfseries{C}};
+		\node at (-4.5,5.5) {\LARGE\bfseries{A}};
+
+	%	\node at (13,4) {\LARGE\bfseries{C}};
 
 		\def\r{4}
 		\def\t{3}
@@ -90,34 +91,40 @@
 			\draw[->] (lab4) -> (n2thin);
 			
 		\end{scope}
-	
-	
-		
-	 \node[illus, anchor=east] () at (15,-2.5) {Emoji \\ \includegraphics[height=2.5em]{images/nochat.png}};
-	 \node[align=center, anchor=center] at (15.5,-1.5) {Listener  Backchannel};
-	\node[illus, anchor=west] () at (15.2,-2.5) {Chat \\ \includegraphics[height=2.5em]{images/chat.png}};
+		%	\node[bound, ultra thick, anchor=north west, minimum width=28em, minimum height=28em] (block) at (-4, 5) {};
 
-		%\node[illus,anchor=east] () at (15,-4.5) {Two person \\ \includegraphics[height=2em]{images/two.png}};
-		%	 \node[align=center, anchor=center] at (15,-3.7) {Group  size};
-	%\node[illus, anchor=west] () at (15.2,-4.5) {Six person \\ \includegraphics[height=2em]{images/six.png}};
-	
-	\node[illus, anchor=east] () at (15.4,2.5) {Rotate speaker\\ \includegraphics[height=3em]{images/rotate.png}};
-		 \node[align=center, anchor=center] at (15.5,3.5) {Group  coherence:  Speaker rotation};
-	\node[illus, anchor=west] () at (15.6,2.5) {Consistent speaker\\ \includegraphics[height=3em]{images/norotate.png}};
-	
-	\node[illus, anchor=east] () at (15.4,0) {Limited feedback\\ \includegraphics[height=4em]{images/limited-wrong.png} 
-\phantom{m} \includegraphics[height=4em]{images/limited-correct.png}};
-	\node[align=center, anchor=center] at (15.5,1.1) {Group  coherence:  Feedback};
-	\node[illus, anchor=west] () at (15.6,0) {Full feedback \\  \includegraphics[height=4em]{images/full-wrong.png}  \phantom{m} \includegraphics[height=4em]{images/full-correct.png}	};
+		\node at (6.5,5.5) {\LARGE\bfseries{B}};
+	%	\node[bound, ultra thick, anchor=north west, minimum width=28em, minimum height=28em] (block) at (7, 5) {};
+		\node[illus, anchor=north west] () at (8.3, 2.3) {\includegraphics[width=20em]{images/diagram.png}};
+		\node[anchor=north west] () at (11.5, 2.7) {Trial};
+		
+		\node[illus, anchor=north west, minimum width=25em, minimum height=18em] (block) at (7.5, 3) {};
+		\node[anchor=north west] () at (11.5, 3.5) {Block};
+		\node[anchor=north west] () at (14, -2.5) {x 12 images};
+		\node[anchor=north west] () at (14, -3.3) {x 6 iterations};
 
+
+	\node at (-4.5,-5.2) {\LARGE\bfseries{C}};
+%	\node[bound, ultra thick, anchor=north, minimum width=50em, minimum height=17em] (block) at (6.5, -5.5) {};
 		
-		\node[illus, anchor=north west] () at (6, 2.3) {\includegraphics[width=15em]{images/diagram.png}};
-		\node[anchor=north west] () at (8, 2.7) {Trial};
-		
-		\node[illus, anchor=north west, minimum width=18.5em, minimum height=14.5em] (block) at (5.5, 3) {};
-		\node[anchor=north west] () at (8, 3.5) {Block};
-		\node[anchor=north west] () at (10, -1.5) {x 12 images};
-		\node[anchor=north west] () at (10, -2.1) {x 6 iterations};
+	 \node[illus, anchor=east] () at (1.8,-10.3) {Emoji \\ \includegraphics[height=3.5em]{images/nochat.png}};
+	 \node[align=center, anchor=center] at (2.5,-9) {Listener  Backchannel};
+	\node[illus, anchor=west] () at (2,-10.3) {Chat \\ \includegraphics[height=3.5em]{images/chat.png}};
+
+		\node[illus,anchor=east] () at (11.4,-10.3) {Two person \\ \includegraphics[height=3em]{images/two.png}};
+			 \node[align=center, anchor=center] at (11.5,-9) {Group  size};
+	\node[illus, anchor=west] () at (11.6,-10.3) {Six person \\ \includegraphics[height=3em]{images/six.png}};
+	
+	\node[illus, anchor=east] () at (2.4,-6.8) {Rotate speaker\\ \includegraphics[height=4em]{images/rotate.png}};
+		 \node[align=center, anchor=center] at (2.5,-5.5) {Group  coherence:  Speaker rotation};
+	\node[illus, anchor=west] () at (2.6,-6.8) {Consistent speaker\\ \includegraphics[height=4em]{images/norotate.png}};
+	
+	\node[illus, anchor=east] () at (11.4,-7) {Limited feedback\\ \includegraphics[height=5em]{images/limited-wrong.png} 
+\phantom{m} \includegraphics[height=5em]{images/limited-correct.png}};
+	\node[align=center, anchor=center] at (11.5,-5.5) {Group  coherence:  Feedback};
+	\node[illus, anchor=west] () at (11.6,-7) {Full feedback \\  \includegraphics[height=5em]{images/full-wrong.png}  \phantom{m} \includegraphics[height=5em]{images/full-correct.png}	};
+
+
 		
 
 		
