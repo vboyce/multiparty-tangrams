@@ -171,8 +171,11 @@ TODO forshadow interaction structure in intro (re group size and channel width)
 (TODO check ordering of legends on Figures! )
 TODO fix discussion
 
+TODO for supplement: fulfill promised analysis of 
+Written about 6thin in experiment 2 and for 2 and 6 thin in 3
+Additionally, exclusive to this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length.
 
-* TODO apply graphical niceties to supplement images 6-player
+TODO update crossrefs with supplement
 
 
 
