@@ -345,6 +345,8 @@ combined_emoji |> mutate(emoji=case_when(
 
 ```
 
+We note a deviation from the pre-registration here in the analysis of the emojis. In the pre-registration we said we would "analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length." We did not do this beyond the emoji -- block graphing shown here. 
+
 \pagebreak
 
 # Additional measure of convergence

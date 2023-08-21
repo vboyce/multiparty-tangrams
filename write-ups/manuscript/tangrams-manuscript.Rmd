@@ -63,7 +63,7 @@ tables: TRUE # Needed to be able to include tables
 
 ::: {.abstract data-latex="" lang=en}
 
-Multi-party communication is ubiquitous, but the need to take multiple interlocuter's perspectives into account presents challenges not found in dyadic communication. One test case for communication is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, groups shorten their utterances and form shared descriptions. Smaller groups and groups with thicker communication channels converge to shared conventions more rapidly than larger groups with thin communication channels. [TODO need another sentence translating this back to the unique challenges of multi-party communication and exposing the relevance of the results for theory/application (e.g. 'Taken together, these results provide new insight into the conditions under which group communication can thrive, with implications for eduction, management, and ...')] Taken together, these results provide new insight into the conditions under which group communication can succeed and even thrive. 
+Multi-party communication is ubiquitous, but the need to take multiple interlocuter's perspectives into account presents challenges not found in dyadic communication. One test case for communication is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, groups shorten their utterances and form shared descriptions. Smaller groups and groups with thicker communication channels converge to shared conventions more rapidly than larger groups with thin communication channels.  Taken together, these results provide new insight into the conditions under which group communication can succeed and even thrive. 
 
 :::
 
@@ -171,11 +171,7 @@ TODO forshadow interaction structure in intro (re group size and channel width)
 (TODO check ordering of legends on Figures! )
 TODO fix discussion
 
-TODO for supplement: fulfill promised analysis of 
-Written about 6thin in experiment 2 and for 2 and 6 thin in 3
-Additionally, exclusive to this condition, we will analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length.
 
-TODO update crossrefs with supplement
 
 
 
@@ -427,7 +423,7 @@ red_3 <- read_rds(here(msum_loc, "red_3.rds"))
 
 Speakers in larger games were more verbose than speakers in smaller games, and in some cases, these speakers showed sharper reduction from initial wordiness to eventual concision (Figure \@ref(fig:behavioral)D-F). We constructed linear models of the number of words a speaker said each trial as a function of condition and block. 
 
-Speakers in larger groups said more to start with than speakers in smaller groups in both baseline conditions (Figure \@ref(fig:behavioral)D, `r stats_text(red_1,4)`) and thick conditions (Figure \@ref(fig:behavioral)F, `r stats(red_3,7)`). The numbers of words said decreased at a similar rate across group size in baseline conditions (`r stats(red_1,2)`), but 6-player thick games decreased faster than 2-player thick games (`r stats(red_3, 4)`).  
+Speakers in larger groups said more to start with than speakers in smaller groups in both baseline conditions (Figure \@ref(fig:behavioral)D, `r stats(red_1,4)`) and thick conditions (Figure \@ref(fig:behavioral)F, `r stats(red_3,7)`). The numbers of words said decreased at a similar rate across group size in baseline conditions (`r stats(red_1,2)`), but 6-player thick games decreased faster than 2-player thick games (`r stats(red_3, 4)`).  
 
 Thin games were similar to thick games in initial verbosity (Figure \@ref(fig:behavioral)F, `r stats(red_3, 5)`) and reduction rate ( `r stats(red_3, 2)`).
   

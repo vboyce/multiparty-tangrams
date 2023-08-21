@@ -58,6 +58,8 @@ combined_chat <- one_chat |>
   rbind(two_c_chat) |> 
   mutate(activePlayerCount=NA) |> 
   rename(condition=rotate) |> 
-  rbind(three_chat)
+  rbind(three_chat) |> 
+  mutate(total_num_words=str_count(text, "\\S+")) #note, the individual expts used "\\W+" + 1 but this counted "don't" as two words instead of one
+# so here we instead count non-white space chunks for words 
 
 combined_emoji <- two_c_raw |> rbind(three_raw)
