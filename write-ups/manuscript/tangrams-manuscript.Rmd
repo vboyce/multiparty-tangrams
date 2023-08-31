@@ -64,13 +64,13 @@ tables: TRUE # Needed to be able to include tables
 ::: {.abstract data-latex="" lang=en}
 
 Real-world communication frequently requires speakers to address more than one listener at once. 
-As their audience grows, speakers face new challenges that do not arise in one-on-one conversation. 
+As the audience size grows, speakers face new challenges that do not arise in one-on-one conversation. 
 They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
-Here, we explore several key properties of the group's *interaction structure* that may facilitate successful communication under these conditions.
-First, we introduce a novel extension of the dyadic repeated reference game paradigm for groups ranging from two to six participants. 
-Across 313 games (1319 participants), we manipulated several constraints on the group's interaction structure, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
-While larger groups suffered disproportionately under these constraints, we found that larger groups were able to converge on efficient shared conventions as effectively as smaller groups under favorable interaction structure. 
-Overall, these results shed new light on the core structural factors that enable group communication to thrive.
+Here, we ask which properties of the group's *interaction structure* facilitates successful communication under these challenging conditions.
+We began by developing a novel extension of the dyadic repeated reference game paradigm for groups ranging from two to six participants. 
+Across 313 games (1319 participants), we manipulated several key constraints on the group's interaction, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
+While larger groups suffered disproportionately under these constraints, we found that they were able to converge on efficient shared conventions as effectively as smaller groups under the most favorable interaction structure. 
+Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
 
 :::
 
@@ -160,25 +160,23 @@ games <- combined_results |> select(gameId) |> unique() |> nrow()
 players <- combined_results |> select(gameId, numPlayers) |> unique() |> summarize(players=sum(numPlayers))
 
 words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) 
-
 ```
 
-TODO what does Mike's abstract comment mean ("question?")
 TODO forshadow interaction structure in intro (re group size and channel width) 
 (TODO check ordering of legends on Figures! )
 TODO fix discussion
 
-
-
-
-
 ---
 
+Much of human social life revolves around communication in groups. 
+At school, teachers address large classrooms of children. 
+At home, we chat with groups of friends and family members over dinner.
+At the office, we attend meetings with groups of colleagues and managers.
+Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006;@ginzburg2005;@traum2004]. 
+For example, speakers need to account for the fact that different listeners in the group may have different mental states and levels of background understanding [@horton2005; @horton2002;@yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not directly tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @schober1989;@tolins2016]. 
+What enables speakers and listeners to nevertheless overcome these challenges and navigate multi-party settings with relative ease? 
 
-While most psychological studies of communication focus on one-on-one conversations, much of our daily lives center around communicating in larger groups. In school, children sit in classrooms with peers and teachers; at home, we have dinner with multiple friends and family; and in the office, we attend meetings with colleagues and managers. 
-
-Communicating in groups can present challenges not present in two-party (dyadic) communication [@branigan2006;@ginzburg2005;@traum2004]. Speakers need to produce utterances for multiple listeners who may have different levels of background understanding [@horton2005; @horton2002;@yoon2018; @yoon2014; @weber2003;@fox-tree2013]. Listeners must comprehend utterances that are less tailored to them due to the presence of other interlocuters [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @schober1989;@tolins2016]. In spite of these considerable challenges, however, speakers are often able to navigate multi-party settings with ease. What aspects of communication channels and interaction structure determine how efficiently a group can communicate?
-
+What aspects of communication channels and interaction structure determine how efficiently a group can communicate?
 One component of effective communication is establishing shared reference, that is a joint understanding among interlocuters that a certain phrase uttered by the speaker refers to a certain object or idea in the world. Sometimes, shared reference is the end goal (in for example, "can you hand me the small bowl?"), and sometimes shared reference is a pre-requisite to larger conversational goals (example, in a debate, interlocuters still need a mutual understanding of what the words mean).  In many cases, conventional semantic meanings of words from a shared language plus culturally shared conventions around language use are sufficient for two people to establish shared reference. In other cases, mappings between words and objects may rely on shared history to be understood (ex. "pass me my favorite cup.").
 
 Reference is a component of communication that can be isolated and tested in experimentally manipulated contexts, so it has been used as a case study for efficient communication more broadly TODO ADD CITATIONS. Some reference games examine how interlocuters communicate in the absence of conventional labels. In these cases, interlocuters must invent ad-hoc reference expressions to communicate about objects without canonical names. 
@@ -198,11 +196,13 @@ What aspects of conversational infrastructure are needed to support this reducti
 knitr::include_graphics("expt-diagram2.pdf")
 
 ```
+
 # Results
 
-Reference game experiments can vary along numerous dimensions: how many people are participating, whether they have any prior relationships with one another, what roles they have within the game, what types of targets they are describing, what type of communication channel they have, and what sorts of feedback they get on their selections, among others. This makes for a very large space of possible iterated reference game experiments [@almaatouq2022]! 
-
-We focused on dimensions that could affect how groups interacted with each other and sampled along four dimensions that parameterized the interaction space. Our experiments varied along the dimensions of game size, speaker rotation, level of feedback, and the form of the listener backchannel; other possible dimensions, such as what the target images were or if participants had prior relationships, were held constant across games. Across the three experiments, we sampled 11 different points in the experimental space, illustrated in Figure \@ref(fig:diagram)A. 
+Reference game experiments can vary along numerous dimensions: how many people are participating, whether they have any prior relationships with one another, what roles they have within the game, what types of targets they are describing, what type of communication channel they have, and what sorts of feedback they get on their selections, among others. This makes for a very large space of possible iterated reference game experiments [@almaatouq2022].
+We focused on dimensions that could affect how groups interacted with each other and sampled points along four dimensions that parameterize the interaction space. 
+Our experiments systematically manipulated group size, speaker rotation, level of feedback, and the form of the listener backchannel; other possible dimensions, such as what the target images were or if participants had prior relationships, were held constant across games. 
+Across the three experiments, we sampled 11 different points in the experimental space, illustrated in Figure \@ref(fig:diagram)A. 
 
 All games followed the iterated reference game framework, where a set of target images are described repeatedly over a series of blocks. Our games used 12 tangram images, previously used in in  @clark1986 and @hawkins2020. Our games were run online, with crowd-sourced participants who were strangers to one another. The speaker knew which image was the target, and their goal was to describe it to the listeners over a chat interface so each listener could select the target. After all listeners had selected, players received feedback on the selections. The process repeated with the same speaker describing each of the 12 images to form one block. The games consisted of 6 blocks, for a total of 72 trials, where each image was described 6 times over the course of the game (Figure \@ref(fig:diagram)B). 
 
