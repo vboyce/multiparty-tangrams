@@ -63,11 +63,16 @@ tables: TRUE # Needed to be able to include tables
 
 ::: {.abstract data-latex="" lang=en}
 
-Multi-party communication is ubiquitous, but the need to take multiple interlocuter's perspectives into account presents challenges not found in dyadic communication. One test case for communication is iterated reference games, where the phenomenon of reduction over repeated reference is well-attested in dyadic contexts and could explain how pairs of people build shared meanings. We extend the repeated reference game paradigm to groups of 2 to 6 people under varied interaction structure constraints across 313 games (1319 participants). Across conditions, groups shorten their utterances and form shared descriptions. Smaller groups and groups with thicker communication channels converge to shared conventions more rapidly than larger groups with thin communication channels.  Taken together, these results provide new insight into the conditions under which group communication can succeed and even thrive. 
+Real-world communication frequently requires speakers to address more than one listener at once. 
+As their audience grows, speakers face new challenges that do not arise in one-on-one conversation. 
+They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
+Here, we explore several key properties of the group's *interaction structure* that may facilitate successful communication under these conditions.
+First, we introduce a novel extension of the dyadic repeated reference game paradigm for groups ranging from two to six participants. 
+Across 313 games (1319 participants), we manipulated several constraints on the group's interaction structure, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
+While larger groups suffered disproportionately under these constraints, we found that larger groups were able to converge on efficient shared conventions as effectively as smaller groups under favorable interaction structure. 
+Overall, these results shed new light on the core structural factors that enable group communication to thrive.
 
 :::
-
-
 
 <!------------ Main text -------------------->
 
@@ -92,7 +97,6 @@ rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
-
 knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
                       fig.pos = "tb", fig.path='figs/', fig.env="figure",
                       echo=F, warning=F, cache=T, 
@@ -103,8 +107,6 @@ color_scheme_2 <- c( "6 full feedback"="#425df5", "6 consistent speaker"="#00A2F
 
 color_scheme_3 <- c("2 thin"="#FFDA09","6 thin"="#D47E04", 
                     "2 thick"="#77F3DB","6 thick"="#00BDA8")
-
-
 		
 ParseJSONColumn <- function(x) {
   str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  |> 
@@ -113,12 +115,7 @@ ParseJSONColumn <- function(x) {
 
 ##Data import constants
 data_location="data/study1"
-
-
-
-
 image_location="write-ups/images"
-
 msum_loc="code/paper_mods/summary"
 mform_loc="code/paper_mods/formulae"
 
