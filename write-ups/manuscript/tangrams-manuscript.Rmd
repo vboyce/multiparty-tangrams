@@ -169,27 +169,31 @@ TODO fix discussion
 ---
 
 Much of human social life revolves around communication in groups. 
-At school, teachers address large classrooms of children. 
-At home, we chat with groups of friends and family members over dinner.
-At the office, we attend meetings with groups of colleagues and managers.
-Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006;@ginzburg2005;@traum2004]. 
-For example, speakers need to account for the fact that different listeners in the group may have different mental states and levels of background understanding [@horton2005; @horton2002;@yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not directly tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @schober1989;@tolins2016]. 
+At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational, @zack1993interactivity].
+Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006; @ginzburg2005; @traum2004]. 
+For example, speakers need to account for the fact that different listeners in the group may have different mental states or levels of background understanding [@horton2005; @horton2002; @yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not necessarily tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @tolins2016].^[Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
 What enables speakers and listeners to nevertheless overcome these challenges and navigate multi-party settings with relative ease? 
 
-What aspects of communication channels and interaction structure determine how efficiently a group can communicate?
-One component of effective communication is establishing shared reference, that is a joint understanding among interlocuters that a certain phrase uttered by the speaker refers to a certain object or idea in the world. Sometimes, shared reference is the end goal (in for example, "can you hand me the small bowl?"), and sometimes shared reference is a pre-requisite to larger conversational goals (example, in a debate, interlocuters still need a mutual understanding of what the words mean).  In many cases, conventional semantic meanings of words from a shared language plus culturally shared conventions around language use are sufficient for two people to establish shared reference. In other cases, mappings between words and objects may rely on shared history to be understood (ex. "pass me my favorite cup.").
+One promising set of hypotheses centers on the group's *interaction structure*, the set of constraints placed on the group's shared communication channel. 
+Many different aspects of interaction structure have been implicated in the effectiveness of dyadic communication, including the availability and quality of concurrent feedback [@krauss1966; @KraussBricker67_Delay; @kraut1982listener], the bandwidth of the communication modality [@KraussEtAl77;@dewhirst1971influence], and access to a shared workspace [@clark2004speaking; @garrod2007foundations].
+Yet group settings introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors [@swaab2012communication; @hiltz1986experiments].
+While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004, @seaman1997communication], several factors have been identified in previous qualitative work that may slow such deterioration, each of which relates to the "thickness" of feedback [@ahern1994effect, @parisi2005evaluating]. 
 
-Reference is a component of communication that can be isolated and tested in experimentally manipulated contexts, so it has been used as a case study for efficient communication more broadly TODO ADD CITATIONS. Some reference games examine how interlocuters communicate in the absence of conventional labels. In these cases, interlocuters must invent ad-hoc reference expressions to communicate about objects without canonical names. 
+In this paper, we systematically manipulated these factors in a multi-party repeated reference game paradigm.
+Reference, or the ability to distinguish one particular entity from other possible entities, is one of the most primitive and ubiquitous functions of communication.
+Reference games [@Wittgenstein1953; @lewis1969convention] have been widely used to study dyadic communication under controlled conditions in the lab. 
+They provide a clear metric of communicative effectiveness: how many words are required to allow a listener to successfully choose a target image from a context of distractors? 
+*Repeated* reference games, where the same target images appear multiple times in succession, were introduced to examine how interlocutors establish shared reference in the absence of conventional labels [@krauss1964; @clark1986].
+At the beginning of the game, long and costly descriptions are typically required to succeed. 
+A key finding, however, is that dyads become increasingly efficient over the course of interaction. 
+Later utterances require fewer words, but also become more impenetrable to outsiders [@schober1989; @wilkes1992coordinating]. 
 
-The formation of these new reference expressions is well-studied in dyadic contexts. @clark1986 established an experimental method for studying the emergence of new referring expressions that has now become standard [building on @krauss1964;@krauss1966]. Two participants see the same set of figures; the speaker describes each figure in turn so the listener can select the target from the set of figures. The speaker and listener repeat this process many times with the same images. 
-
-Early descriptions are long and make reference to multiple features in the figure, but over the course of the game, shorthand conventional names for each figure emerge; this shortening of utterances is called 'reduction'. Not only are later utterances shorter than earlier utterances, but later utterances are a tacitly agreed upon name, understandable within the dyad, but different from the conventions chosen by other dyads. 
-
-Recently, online participant recruitment and web-based experiments have made it possible to study this convergence in larger populations [@hawkins2020;@haber2019]. In line with results from face-to-face, oral paradigms, in these online, chat-based paradigms, speakers reduced their utterances, producing fewer words per image in later blocks than in earlier blocks. (Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.)
-
-What aspects of conversational infrastructure are needed to support this reduction to efficient referring expressions? In the current work, we address how components of interaction structure, including group size and communication channels, shape how successfully groups form partner-specific conventionalized names for target objects over the course of an iterated reference game. We recruited `r players` participants who were organized into `r games` groups distributed across 3 online experiments and 11 conditions. Collectively, players produced `r words |> round(-3)` words during their games. We analysed the games along 4 metrics: two group performance metrics of 1) listener accuracy and 2) number of words produced per trial, as well as two computational measures of semantic similarity that addressed 3) how utterances converge towards a conventions with a game and 4) how utterances diverge from descriptions in other games as they become more partner-specific. 
-
-
+In principle, repeated reference games provide a strong operationalization of communicative effectiveness for the problem of multi-party communication: speakers must simultaneously achieve shared reference with multiple listeners. 
+However, empirically studying multi-party communication raises a number of difficulties in practice. 
+A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings [@almaatouq2022].
+We address this problem by drawing on recent technical breakthroughs that have made it newly possible to achieve such samples using an interactive web-based platform [@haber2019;@hawkins2023partners]. 
+Repeated reference games in online, chat-based paradigms have closely replicated earlier results from face-to-face studies [@hawkins2020], and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
+Our findings illuminate the mechanisms of social interaction in larger groups and suggest design features that may ease the communciative overhead associated with larger groups in real-world settings.
 
 
 ```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="A: Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink labels) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue labels) keep group size constant at 6 and varied the other dimensions. Relative to experiment 1, 6 consistent speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green labels) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel).   B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \\ C: Differences between conditions. See text for explanation."}
@@ -199,25 +203,29 @@ knitr::include_graphics("expt-diagram2.pdf")
 
 # Results
 
-Reference game experiments can vary along numerous dimensions: how many people are participating, whether they have any prior relationships with one another, what roles they have within the game, what types of targets they are describing, what type of communication channel they have, and what sorts of feedback they get on their selections, among others. This makes for a very large space of possible iterated reference game experiments [@almaatouq2022].
-We focused on dimensions that could affect how groups interacted with each other and sampled points along four dimensions that parameterize the interaction space. 
-Our experiments systematically manipulated group size, speaker rotation, level of feedback, and the form of the listener backchannel; other possible dimensions, such as what the target images were or if participants had prior relationships, were held constant across games. 
-Across the three experiments, we sampled 11 different points in the experimental space, illustrated in Figure \@ref(fig:diagram)A. 
+We recruited `r players` participants through an online crowd-sourcing platform.
+Participants were organized into `r games` groups for a multi-party repeated reference game.
+In each session, a set of 12 tangram images [@clark1986; @hawkins2020; @ji2022abstract] were presented repeatedly over a series of blocks, and a speaker was asked to use a chat box interface to describe a privately indicated *target* image for a group of listeners. 
+After listeners chatted and eventually made a selection, all players received task feedback.
+The experiment consisted of 72 trials structured into 6 repetition blocks, where each image was described exactly 6 times over the course of the game (Figure \@ref(fig:diagram)B). 
 
-All games followed the iterated reference game framework, where a set of target images are described repeatedly over a series of blocks. Our games used 12 tangram images, previously used in in  @clark1986 and @hawkins2020. Our games were run online, with crowd-sourced participants who were strangers to one another. The speaker knew which image was the target, and their goal was to describe it to the listeners over a chat interface so each listener could select the target. After all listeners had selected, players received feedback on the selections. The process repeated with the same speaker describing each of the 12 images to form one block. The games consisted of 6 blocks, for a total of 72 trials, where each image was described 6 times over the course of the game (Figure \@ref(fig:diagram)B). 
+Groups were assigned to one of 11 distinct conditions in 3 distinct experiments (Figure \@ref(fig:diagram)A). 
+These conditions systematically sampled points along four dimensions that parameterized the interaction space. 
+We manipulated *group size* (ranging from two to six), *role rotation* (whether or not participants took turns being the speaker), richness of *task feedback* (whether or not listeners were able to see one another's responses), and richness of the *listener backchannel* (whether listeners were able to freely respond through the chatbox).
+Other factors, such as the set of stimuli and background knowledge about one's partners, were held constant across games. 
 
 In experiment 1, we varied the size of the games continuously from *2 to 6 players* while keeping other factors constant to explore what how performance varied across group size. For these conditions, the *speaker role rotated* after each block, so that all players had at least one turn as speaker. We gave *limited feedback* to listeners, showing each listener only whether their individual selection was correct or not, but not revealing others' selections or the right answer. Listeners had access to a *chat box* as their backchannel, so they could freely type questions and offer their own descriptions to the group. 
 
-In experiment 2, we explored varying different factors within 6-player games. We tried two different variations that we thought might improve group coherence and lead to better performance: having a *consistent speaker* rather than a rotating speaker, and separately, showing all the listeners *full feedback* on what each person in the group had selected and what the right answer had been. Additionally, we tested the role of listener contributions in establishing mutual understanding with a condition where listeners' backchannel was limited to four *emojis*. Listeners could send 4 discrete messages (green check, thinking face, red x, and laughing-crying face) to the chat. This limited backchannel allowed listeners to convey valence and level of comprehension, but not to contribute any referential content.
+In experiment 2, we explored varying different factors within 6-player games. We tried two different variations that we expected to improve group coherence and lead to better performance: having a *consistent speaker* rather than a rotating speaker, and separately, showing all the listeners *full feedback* on what each person in the group had selected and what the right answer had been. Additionally, we tested the role of listener contributions in establishing mutual understanding with a condition where listeners' backchannel was limited to four *emojis*. Listeners could send 4 discrete messages (green check, thinking face, red x, and laughing-crying face) to the chat. This limited backchannel allowed listeners to convey valence and level of comprehension, but not to contribute any referential content.
 
 In experiment 3, we crossed the extremes of group size from experiment 1 (2 or 6 people) with extremes of group interactions from experiment 2. In the *thick* condition, we combined a consistent speaker with full feedback to create *high group coherence* and let listeners use the chat freely. In the *thin* condition, we repeated the emoji backchannel condition from experiment 2, which had *low group coherence* and an emoji backchannel. The 2-player thick game was similar to the condition used in @hawkins2020. 
 
-<!--We analysed these 3 experiments on 4 key measures: listener accuracy, speaker reduction, convergence of descriptions within games, and divergence of descriptions between games. -->
-
-
 ## Group Performance
 
-In dyadic reference games, listener accuracy remains high while the amount of referential language decreases dramatically over repetitions [@clark1986, @hawkins2020]. Listener accuracy measures how successful speakers are at communicating the target referent to the listeners. The combination of accuracy and reduction of speaker descriptions indicates that speaker and listeners have formed a shared conceptualization of the target that can be distilled into a shorter form, while still retaining the same level of informativity to listeners.
+We begin by characterizing group performance along two complementary metrics: (1) listener accuracy and (2) speaker efficiency.
+Listener accuracy is given by the percent of listeners on each trial who successfully identify the target referent from the speaker's description. 
+Speaker efficiency is given by the number of words produced by the speaker to achieve that degree of listener accuracy in the group.
+The degree to which speaker efficiency improves without decreasing listener accuracy can be interpreted as indicative of convergence on a more effective shared communication protocol within the group.
 
 
 ```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. A-C. Listener accuracy at selecting the target image. Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines.   D-F. Number of words said by the speaker each trial. Faint dots represent individual trials from individual games. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible. "}
@@ -388,18 +396,14 @@ acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 ```
 
 
-
-
 ### Accuracy was high and increased.
 
 
 In our experiments, listener accuracy rose over repetitions in all conditions and approached ceiling in most conditions; however, 6-player thin games were the least accurate (Figure \@ref(fig:behavioral)A-C). We constructed logistic models to predict accuracy as a function of the manipulated variables, block, and their interactions. Both initial accuracy and improvement rate showed some variation based on group size and channel width, with smaller and thicker games having better and faster improving accuracy in some experiments. 
-
 Group size did not have a strong effect on initial accuracy when measured continuously in the baseline condition (Figure \@ref(fig:behavioral)A, `r stats(acc_1,4)`), but 6-player thick games had lower accuracy than 2-player thick games (Figure \@ref(fig:behavioral)C, `r stats(acc_3, 6)`). Improvement rates were similar, with no effect of group size in the baseline condition (`r stats(acc_1,2)`), but 6-person thick games were slower to improve than 2-person thick games (`r stats(acc_3, 3)`). 
 
 Initial accuracy was somewhat higher for consistent speaker games (`r stats(acc_2a,2)`) and full feedback games (`r stats(acc_2b, 2)`) than for 6 thin games (Figure \@ref(fig:behavioral)B, `r stats(acc_2c, 2)`), but the difference between thick and thin 2-player games was not reliable (Figure \@ref(fig:behavioral)C, `r stats(acc_3,5)`). Similarly, improvement rates were higher for consistent speaker games (`r stats(acc_2a,1)`) and full feedback games (`r stats(acc_2b, 1)`) than for 6 thin games ( `r stats(acc_2c, 1)`), but the difference in improvement rates between thick and thin 2-player games was not reliable (`r stats(acc_3,2)`). 
-
-Across experiments, the high and increasing levels of accuracy indicate that across all of these conditions, participants are able to succeed in communicating about the images. 
+In sum, the high and increasing levels of accuracy indicate that across all of these conditions, participants are able to succeed in communicating about the images. 
 
 
 ```{r}
