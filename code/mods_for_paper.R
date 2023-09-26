@@ -473,5 +473,5 @@ draws <- m |> spread_draws(`b_block:channelthin`, b_block,
          thick6=`b_block:gameSize6`+b_block,
          thin2=b_block+`b_block:channelthin`,
          diff6=`b_block:channelthin`+`b_block:channelthin:gameSize6`) |> 
-  summarize(across(everything(), ~quantile(.x,probs=c(.025, .5, .975), names=T))) |> 
+  summarize(across(everything(), ~quantile(.x,probs=c(.025, .5, .975), names=F))) |> 
   write_rds(here(model_location,"summary/red_3_extra"))
