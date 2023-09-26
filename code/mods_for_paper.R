@@ -462,3 +462,16 @@ mods <- list.files(path=here(model_location), pattern=".*rds") |> walk(~do_model
 # }
 # 
 # 
+
+# extracting combinations of factors for red3
+m <- model_3_red
+library(tidybayes)
+
+draws <- m |> spread_draws(`b_block:channelthin`, b_block, 
+                           `b_block:gameSize6`, `b_block:channelthin:gameSize6`) |> 
+  mutate(thin6=`b_block:channelthin`+`b_block:gameSize6`+b_block+`b_block:channelthin:gameSize6`,
+         thick6=`b_block:gameSize6`+b_block,
+         thin2=b_block+`b_block:channelthin`,
+         diff6=`b_block:channelthin`+`b_block:channelthin:gameSize6`) |> 
+  summarize(across(everything(), ~quantile(.x,probs=c(.025, .5, .975), names=T))) |> 
+  write_rds(here(model_location,"summary/red_3_extra"))
