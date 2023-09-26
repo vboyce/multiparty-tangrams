@@ -165,11 +165,11 @@ words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(word
 TODO forshadow interaction structure in intro (re group size and channel width) 
 (TODO check ordering of legends on Figures! )
 TODO fix discussion
-
+TODO rendering on accuracy messing dots?
 ---
 
 Much of human social life revolves around communication in groups. 
-At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational, @zack1993interactivity].
+At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational; @zack1993interactivity].
 Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006; @ginzburg2005; @traum2004]. 
 For example, speakers need to account for the fact that different listeners in the group may have different mental states or levels of background understanding [@horton2005; @horton2002; @yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not necessarily tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @tolins2016].^[Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
 What enables speakers and listeners to nevertheless overcome these challenges and navigate multi-party settings with relative ease? 
@@ -177,7 +177,7 @@ What enables speakers and listeners to nevertheless overcome these challenges an
 One promising set of hypotheses centers on the group's *interaction structure*, the set of constraints placed on the group's shared communication channel. 
 Many different aspects of interaction structure have been implicated in the effectiveness of dyadic communication, including the availability and quality of concurrent feedback [@krauss1966; @KraussBricker67_Delay; @kraut1982listener], the bandwidth of the communication modality [@KraussEtAl77;@dewhirst1971influence], and access to a shared workspace [@clark2004speaking; @garrod2007foundations].
 Yet group settings introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors [@swaab2012communication; @hiltz1986experiments].
-While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004, @seaman1997communication], several factors have been identified in previous qualitative work that may slow such deterioration, each of which relates to the "thickness" of feedback [@ahern1994effect, @parisi2005evaluating]. 
+While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004, @seaman1997communication], several factors have been identified in previous qualitative work that may slow such deterioration, each of which relates to the "thickness" of feedback [@ahern1994effect; @parisi2005evaluating]. 
 
 In this paper, we systematically manipulated these factors in a multi-party repeated reference game paradigm.
 Reference, or the ability to distinguish one particular entity from other possible entities, is one of the most primitive and ubiquitous functions of communication.
@@ -244,6 +244,7 @@ geom_smooth(method = "glm", method.args = list(family = "binomial")) +
   labs(x="Block", y="Fraction correctly selected", color="")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
   annotate("text", x=1,y=1,label="A", size=6, fontface="bold")+
+  annotate("text", x=3.5,y=1.2,label="Experiment 1", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
