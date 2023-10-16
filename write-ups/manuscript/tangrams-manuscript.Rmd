@@ -1,5 +1,7 @@
 ---
-title: Interaction structure constrains the emergence of conventions in group communication
+title: |
+  | Interaction structure constrains 
+  | the emergence of conventions in group communication
 
 author:
   - name: Veronica Boyce
@@ -41,9 +43,8 @@ output:
     number_sections: FALSE
     citation_package: default # Can also be "natbib"
 lang: en # Main document language in BCP47 format
-geometry: "margin=25mm"
-papersize: a4
-#linestretch: 2 # for double spacing
+geometry: "margin=1.25in"
+linestretch: 1 # for double spacing
 endfloat: FALSE # Set to TRUE to turn on latex endfloat package to place figures and tables at end of document
 # endfloatoption: # See endfloat documentation for more possibilities
 #   - tablesfirst # Default
@@ -68,7 +69,7 @@ As the audience size grows, speakers face new challenges that do not arise in on
 They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
 Here, we ask which properties of the group's *interaction structure* facilitates successful communication under these challenging conditions.
 We began by developing a novel extension of the dyadic repeated reference game paradigm for groups ranging from two to six participants. 
-Across 313 games (1319 participants), we manipulated several key constraints on the group's interaction, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
+Across 313 games ($N=1319$ participants), we manipulated several key constraints on the group's interaction, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
 While larger groups suffered disproportionately under these constraints, we found that they were able to converge on efficient shared conventions as effectively as smaller groups under the most favorable interaction structure. 
 Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
 
@@ -162,10 +163,6 @@ players <- combined_results |> select(gameId, numPlayers) |> unique() |> summari
 words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) 
 ```
 
-(TODO check ordering of legends on Figures! )
-TODO fix discussion
----
-
 # Introduction
 
 Much of human social life revolves around communication in groups. 
@@ -196,9 +193,8 @@ Repeated reference games in online, chat-based paradigms have closely replicated
 Our findings illuminate the mechanisms of social interaction in larger groups and suggest design features that may ease the communciative overhead associated with larger groups in real-world settings.
 
 
-```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="A: Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. Each condition is shown as a dot. Experiment 1 (pink) varied group size from 2-6 players while holding group coherence and backchannel constant. Experiment 2 (blue) keep group size constant at 6 and varied the other dimensions. Relative to experiment 1, 6 consistent speaker and 6 full feedback each added one component of group coherence, and 6 thin reduced the backchannel. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 or 6 players) with thin games (low coherence, low backchannel) or thick games (high coherence, high backchannel).   B: Each trial a speaker described a target image to the listeners, and this process repeated for all 12 images to comprise a block, and the block repeated for a total of 6 iterations. \\ C: Differences between conditions. See text for explanation."}
-knitr::include_graphics("expt-diagram3.pdf")
-
+```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, speakers described a target image to the listeners. Each image appeared once per block for six blocks. (B) Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. (C) Schematic of the axes we manipulated. Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel)."}
+knitr::include_graphics("fig1.pdf")
 ```
 
 # Results
@@ -216,7 +212,7 @@ We systematically sampled points along four dimensions parameterizing different 
 We manipulated *group size* (ranging from two to six), *role stability* (whether or not participants took turns in the speaker role), richness of *task feedback* (whether or not listeners were able to see each other's responses), and richness of the *listener backchannel* (whether listeners were able to freely respond through a chatbox or asked to use emojis; Figure \@ref(fig:behavioral)C).
 Other factors, such as the set of stimuli and background knowledge about one's partners, were held constant across games. 
 
-Experiment 1 investigated how performance scales with group size.
+Experiment 1 investigated how performance scaled with group size.
 Based on prior qualitative work, we predicted that larger groups face a more challenging coordination problem. 
 We continuously varied the number of players from 2 to 6 players while keeping other factors constant. 
 For these conditions, the speaker role rotated after each block, so that all players had at least one turn as speaker. 
@@ -234,7 +230,7 @@ In the *thick* condition, we maintained a consistent speaker, gave all listeners
 In the *thin* condition, we forced the speaker to rotate on each block, restricted feedback to their own binary correctness, and restricted the backchannel to the four emojis.
 Note that the 2-player thick game most closely resembles the design of classic repeated reference games [@clark1986; @hawkins2020].
 
-```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. A-C. Listener accuracy at selecting the target image. Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines.   D-F. Number of words said by the speaker each trial. Faint dots represent individual trials from individual games. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible. "}
+```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Listener accuracy at selecting the target image. Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines.  (D-F). Number of words said by the speaker each trial. Faint dots represent individual trials from individual games. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible. **(TODO check ordering of legends!)** **(TODO: it's currently a bit odd that (D-F) is the only figure in the paper with the raw dots in the background, which also forces a real compression of the y-axis making it hard to see big differences between curves. I'd shoot for consistency and either have everything in the main text show the fits only (with 'raw distribution' versions in supplement) or show some 'direct' version of the empirical data in every figure, like the mean dots with error bars at each block size.)**"}
 # accuracy
 # 1
 one <- combined_results |> 
@@ -420,7 +416,7 @@ We begin by examining the impact of interaction structure on referential success
 We predicted that larger groups would struggle under thinner interaction structures, but that thicker interaction structures would ease some of the challenges associated with multi-listener communication. 
 To test these effects, we constructed a series of logistic mixed-effects regression models predicting accuracy as a function of the manipulated variables, repetition block, and their interactions. (**TODO: clarify whether this is a single big regression for all factors in the 11 conditions, or a separate regression model for each of the three experiments?**)
 
-First, we observed strong main effects of repetition block, indicating improved performance across all conditions (**STAT**).
+First, we observed strong main effects of repetition block, indicating improved performance across all conditions (**TODO: STAT**).
 Second, we examined the *initial* accuracy as an indicator of the challenges facing groups under different conditions. 
 Although group size did not have a strong effect on the *initial* accuracy under the baseline interaction structure of Experiment 1 (Figure \@ref(fig:behavioral)A, `r stats(acc_1,4)`), 6-player thick games had lower initial accuracy than 2-player thick games (Figure \@ref(fig:behavioral)C, `r stats(acc_3,6)`).
 Among 6-player games, initial accuracy was also higher when the speaker was consistent (`r stats(acc_2a,2)`) and listeners received full feedback (`r stats(acc_2b, 2)`) than for games with a thin feedback channel (Figure \@ref(fig:behavioral)B, `r stats(acc_2c, 2)`).
@@ -527,7 +523,7 @@ To measure arbitrariness, or divergence across groups, depending on group-specif
 Figure \@ref(fig:sbert-diagram) illustrates these two measures with example concatenated utterances and their within-game and between-game cosine similarities. 
 
 
-```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A-C. Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. D-F. Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic."}
+```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A-C. Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. D-F. Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic. **(TODO check ordering of legends!)**"}
 #convergence
 
 one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
