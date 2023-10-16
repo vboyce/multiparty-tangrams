@@ -431,7 +431,7 @@ Third, we examined the interaction between condition and repetition block to tes
 Again, although there was no reliable effect of group size in Experiment 1, 6-player thin games were strictly slower to improve than 2-player thin games (`r stats(acc_3, 3)`). 
 Among large groups in Experiment 2, improvement rates were higher for consistent speaker games (`r stats(acc_2a,1)`) and full feedback games (`r stats(acc_2b, 1)`) than for thin games ( `r stats(acc_2c, 1)`).
 The difference in improvement rates between thick and thin 2-player games was not reliable (`r stats(acc_3,2)`). 
-In sum, although participants may struggle in larger groups, thicker interaction structures may lower barriers to communication.
+In sum, although participants may struggle in larger groups, thicker interaction structures lower barriers to communication.
 
 ```{r}
 red_1 <- read_rds(here(msum_loc, "red_1.rds"))
@@ -457,19 +457,21 @@ thick6 <- str_c("$\\beta=", round(red_3_extra[2,4],2),", (95\\%\\:\\mathrm{CrI}=
 
 ### Larger groups require more information.
 
-
 After establishing that thicker interaction structure eases the challenges of communication faced by larger groups, we turned to the challenges faced by speakers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow speakers to communicate more effectively over time.
 We tested these predictions using linear mixed-effects models predicting the number of words a speaker produced on each trial as a function of condition and block. 
-**(TODO: was this just the initial message before listeners had a chance to respond, or all utterances produced by the speaker across a potentially multi-turn dialogue? Whichever it is, it might help to include the other in Supplementary Information)**
+**(TODO: was this just the initial message before listeners had a chance to respond, or all utterances produced by the speaker across a potentially multi-turn dialogue? Whichever it is, it might help to include the other in Supplementary Information. Also, include the exact `brms` formula in Supplemental?)**
 
-Speakers in larger groups said more to start with than speakers in smaller groups in both baseline conditions (Figure \@ref(fig:behavioral)D, `r stats(red_1,4)`) and thick conditions (Figure \@ref(fig:behavioral)F, `r stats(red_3,7)`). The numbers of words said decreased at a similar rate across group size in baseline conditions (`r stats(red_1,2)`), but 6-player thick games decreased faster than 2-player thick games (`r stats(red_3, 4)`).  
-Thin 2-player games were similar to thick 2-player games in initial verbosity (Figure \@ref(fig:behavioral)F, `r stats(red_3, 5)`) and reduction rate ( `r stats(red_3, 2)`). 
-However, 6-player thin games reduced more slowly than 6-player thick games (`r diff6`).
-  
-The main effect of being one block later was `r stats_text(red_1,1)` words per trial in experiment 1; `r stats_text(red_2a,1)` words for 6 consistent speaker; `r stats_text(red_2b,1)` words for 6 full feedback, `r stats_text(red_2c,1)` words for 6 thin. 
+First, as predicted, speakers in larger groups used longer descriptions at the outset than speakers in smaller groups in Experiment 1 (Figure \@ref(fig:behavioral)D, `r stats(red_1,4)`)  and Experiment 3 (Figure \@ref(fig:behavioral)F, `r stats(red_3,7)`).
+**(TODO: these results would be much cleaner with a unified meta-analytic model combining data across all three experiments)**
+Second, although communicative efficiency improved at a similar rate across group size in Experiment 1 (`r stats(red_1,2)`), we found that thicker interaction structure allowed larger groups to improve faster than smaller ones in Experiment 3 (`r stats(red_3, 4)`).  
+In more interpretable terms, speakers were able to get away with `r stats_text(red_1,1)` fewer words than the previous block, on average, in Experiment 1. 
+In sum, while larger groups of listeners may initially require more information from the speaker, interaction structure modulates the ability of the group to converge on an efficient set of referential conventions. 
+
+**(TODO: I would probably put the following in a (supplemental) table rather than rattling off every condition -- we should only include the most theoretical central comparisons in the text)**
+Meanwhile, the interaction structure manipulations in Experiment 2 allowed for `r stats_text(red_2a,1)` fewer words for consistent speakers and `r stats_text(red_2b,1)` fewer words given full feedback, compared with `r stats_text(red_2c,1)` fewer words in the thin condition. 
 In experiment 3, the effect of being one block later was `r stats_text(red_3,1)` for 2 thick condition, `r thin2` for the 2 thin condition, `r thin6` for the 6 thin condition, and `r thick6` for the 6 thick condition. 
-Overall, all conditions exhibited reduction, with variations in the speed at which speaker utterances got shorter which partially covaried with how initially verbose speakers were. 
+Thin 2-player games were similar to thick 2-player games in initial verbosity (Figure \@ref(fig:behavioral)F, `r stats(red_3, 5)`) and reduction rate ( `r stats(red_3, 2)`). 
 
 ```{r}
 list_1 <- read_rds(here(msum_loc, "list_1.rds"))
@@ -481,17 +483,23 @@ anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 
 ### Listeners in larger groups rely more heavily on backchannels 
 
-Listeners talk much less than speakers, and listener contributions are concentrated in early trials. The more listeners, the more likely it was that some listener talked, and the more listeners said if they talked (Supplement Figure 2). We constructed a logistic regression predicting the presence of any listener utterances in experiment 1 as a function of group size and block, and a linear regression predicting the number of words said by listeners in experiment 1 as a function of group size and block. 
+Finally, we examine the back-and-forth interactions between the speaker and the group of listeners.
+The backchannel allows listeners to actively provide feedback and seek clarification about the speaker's referring expressions.
+**(TODO: ideally we could include an example here. e.g. were there any cases where one listener answered another listener's question in a larger group? these are the kinds of lateral interactions that motivate the utility of thicker interaction structures.)**
+We predicted that larger groups would initially rely more heavily on lateral peer interactions, the ability to deliberate and assist one another.
+However, as groups converged, we expected the use of these backchannels to decline.
+To test these predictions, we constructed a logistic regression predicting the presence of listener utterances (or emojis) as a function of group size and block (see Supplement for a similar analysis of the number of words produced by listeners).
 
-The number of trials where any listener said anything related to the image was higher in larger groups (Supplement Figure 2A, `r stats(anylist_1, 4)`) and declined across blocks (`r stats(anylist_1, 1)`). When referential language was produced, larger groups produced more language (Supplement Figure 2D, `r stats(list_1, 4)`), but the difference in group size closed in later blocks (`r stats(list_1, 2)`). 
-
-This pattern is consistent with early listener involvement in establishing a common conceptualization by asking questions and offering alternative descriptions. Once a shared reference description was in place, listener descriptions are rarer and more perfunctory. 
-Emoji use is not directly comparable to referential language, but similar trends occurred in the thin games. 
-Emoji use was more common in the 6-player games than the 2-player games and decreased over the course of the game (Supplement Figure 3). 
+Overall, larger groups displayed a higher proportion of trials where at least one listener backchannel response was produced (Supplement Figure 2A, `r stats(anylist_1, 4)`), which declined across blocks (`r stats(anylist_1, 1)`). 
+This pattern is consistent with early listener involvement in establishing a common conceptualization by asking questions and offering alternative descriptions. 
+We found that emoji use in Experiment 3 followed similar trends (Supplement Figure 3).
 
 ### Interim summary 
 
-According to these metrics of group performance and efficiency in iterated reference games, larger games are similar to smaller games, except with more talking, especially early in the games. Larger groups seem to generally take the time to elaborate descriptions in order for most listeners to understand, especially when listeners can ask specific clarifying questions. This leads to more communication by both speaker and listeners in early rounds for larger games, sometimes followed by sharp reduction once a shared conceptualization is agreed upon. 
+We examined three metrics of communicative performance in groups of different sizes and interaction structures.
+Broadly, as groups get larger, speakers must provide more information and listeners must provide more feedback to achieve similar accuracy.
+However, thicker interaction structures ease the burdens of larger group sizes. 
+Six-person groups can only approach the performance of two-person groups when listeners are free to ask specific clarifying questions and speakers are able to aggregate information across multiple repetition blocks. 
 
 ## Linguistic Content
 
@@ -499,20 +507,23 @@ According to these metrics of group performance and efficiency in iterated refer
 knitr::include_graphics("sbert.pdf")
 ```
 
-Partner-specific reduction is characterized by high accuracy and shortening utterances, but the key phenomena of interest is that pairs are forming joint conventions about how to refer to particular images. 
-How well groups are able to do this may vary based on game condition: we might predict that it's easier for two people to agree on a label, but harder when the labels are coming from 6 different individuals who may have different conceptualizations. 
-Convergence to a shared name might be faster if only one person provides the labels, since they can match their own labels. 
+In the previous sections, we explored the functional challenges facing multi-listener communication and the solutions afforded by thicker interaction structure.
+Here, we aim to better understand the mechanisms that make these solutions effective. 
+In particular, we explore the hypothesis that interaction structure affects performance by acting through a *convention formation* process [@clark1986]. 
+Under a recent models of convention formation [@hawkins2023partners], groups are able to leverage their shared history to coordinate on stable expectations about how to refer to particular images.
+This model makes specific predictions about how interaction structure affects the ability to coordinate, in terms of the available feedback.
 
-Feedback and listener contributions may help a group get on the same page about what descriptions go with what images, letting a speaker reduce to shorthand expressions. 
-While initially many groups may overlap with descriptions that include descriptions of the shapes or body parts in the image, their descriptions are predicted to become increasingly dissimilar as these descriptive portions drop out, leaving just the conventionalized nicknames that are group-dependent.
+First, due to heterogeneity in the group -- 6 individuals who may have diverging conceptualizations --- a rational speaker should provide a strictly more detailed initial description to hedge against multiple possible misunderstandings, as we previously observed. 
+Second, all groups should display the characteristic dynamics of conventions: *stability*, or convergence within group, and *arbitrariness*, or divergence to multiple equilibria across groups. 
+Third, convergence should be faster when a single individual is consistently in the speaker role and when listeners are able to freely respond in natural language, as speakers are able to aggregate feedback about the effectiveness of their own utterances from block to block and also immediately correct specific misunderstandings within a given trial.
 
-To assess the linguistic patterns of speaker descriptions, we examine the *semantic similarity* of descriptions within and across games.
+To assess the dynamics of speaker descriptions, we examine the *semantic similarity* of descriptions within and across games.
 We quantified description similarity by concatenating speaker messages together within a trial and embedding this description into a high-dimensional vector space using SBERT. 
-SBERT is a BERT-based sentence embedder designed to map semantically similar sentences to embeddings that are near each other in embedding space, which enables making semantically meaningful comparisons between sentences by taking pairwise cosine similarities between the embeddings [@reimers2019]. 
-Thus, we measure the similarity between two utterances by the cosine similarity between their embeddings.
+SBERT is a BERT-based sentence embedder designed to map semantically similar sentences to embeddings that are nearby in embedding space.
+Semantically meaningful comparisons between sentences are made by taking pairwise cosine similarities between the embeddings [@reimers2019]. 
 
-To measure convergence within games to shared nicknames, we compared utterances from blocks 1-5 to the corresponding final (block 6) description for the same image from the same game. 
-As games develop different nicknames, descriptions from different groups will diverge, which we measured by comparing utterances across games for the same image in the same block. 
+To measure stability, or convergence within groups, we compared utterances from blocks one through five to the final (block six) description for the same image from the same game. 
+To measure arbitrariness, or divergence across groups, depending on group-specific history, we compared utterances produced by different speakers for the same image in the corresponding blocks. 
 Figure \@ref(fig:sbert-diagram) illustrates these two measures with example concatenated utterances and their within-game and between-game cosine similarities. 
 
 
@@ -711,17 +722,20 @@ div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 
 ### Language in thicker games diverges faster from other games. 
 
-Over repetitions, speaker descriptions diverged from descriptions used in other groups: divergence was fastest in groups with thick communication channels, while the 6-player thin condition games barely diverged at all (Figure \@ref(fig:sbert)D-F). 
-We modeled semantic divergence by looking at the similarity between a pair of utterances for the same image from the same block across different games as a function of the block number and condition. 
-Initial similarities between groups were the same regardless of group size (Figure \@ref(fig:sbert)D, `r stats(div_1, 3,3)`), but smaller groups diverged from each other slightly faster than larger groups (`r stats(div_1,2,3)`). 
-The 2-player thick condition diverged at a moderate speed (Figure \@ref(fig:sbert)F, `r stats(div_3, 1,3)`), and the 6-player thick condition had initially higher similarity (`r stats(div_3, 7,3)` and faster divergence (`r stats(div_3, 4,3)` in comparison.
+While groups may initially overlap in their descriptions, including details of shapes or body parts, their descriptions are predicted to become increasingly dissimilar as groups increasingly adapt to their shared history.
+We modeled semantic divergence using a mixed-effects linear regression model predicting the similarity between a pair of utterances for the same image as a function of the block number and condition (Figure \@ref(fig:sbert)D-F). 
+Initial similarities between groups were the same regardless of group size (Figure \@ref(fig:sbert)D, `r stats(div_1, 3,3)`), 
+and divergence between groups, indicating increasing group-specificity of descriptions, occurred across all conditions to some degree. 
 
-Divergence was stronger in the consistent speaker (Figure \@ref(fig:sbert)E, `r stats(div_2a, 1,3)`) and full feedback conditions ( `r stats(div_2b, 1,3)`) than in the 6 thin condition ( `r stats(div_2c, 1,3)`). 
-Compared to the 2-player thick games, 2-player thin games started with slightly higher similarity (Figure \@ref(fig:sbert)F `r stats(div_3, 5, 3)`) and diverged slightly more slowly (`r stats(div_3, 2,3)`). 
-The most noticeable effect in this analysis was that the 6-player thin games diverged much more slowly than the other conditions. The interaction between larger group size and thinner channel was associated with a much lower rate of divergence (Figure \@ref(fig:sbert)F, `r stats(div_3, 3,3)`). 
-Divergence between groups, a sign of increasing group-specificity of descriptions, occurred across all conditions. 
-Smaller games and games with thicker channels diverged more than larger or thinner games. 
-In particular, the 6-player thin games showed a qualitatively different pattern of minimal divergence, diverging even less than would have been expected based on the rates in the other 3 conditions in Experiment 3. 
+However, different interaction structure conditions revealed different patterns.
+Broadly, thicker structure was associated with stronger group-specific divergence.
+In Experiment 2, divergence was stronger in the consistent speaker (Figure \@ref(fig:sbert)E, `r stats(div_2a, 1,3)`) and full feedback conditions ( `r stats(div_2b, 1,3)`) than in the thin condition ( `r stats(div_2c, 1,3)`). 
+In Experiment 3, the interaction between group size and thickness indicated a much lower rate of divergence under thin structure in large groups (Figure \@ref(fig:sbert)F, `r stats(div_3, 3,3)`). 
+The 6-player thin games barely diverged at all, indicating a failure of group adaptation.
+
+**(TODO: again, if we're going to report all effects, it might be easier just to point to a supplemental table with the full brms output?)**
+The 2-player thick condition diverged at a moderate speed (Figure \@ref(fig:sbert)F, `r stats(div_3, 1,3)`), and the 6-player thick condition had initially higher similarity (`r stats(div_3, 7,3)` and faster divergence (`r stats(div_3, 4,3)` in comparison.
+2-player thin games started with slightly higher similarity (Figure \@ref(fig:sbert)F `r stats(div_3, 5, 3)`) and diverged slightly more slowly (`r stats(div_3, 2,3)`) than 2-player thick games. 
 
 ### Interim summary 
 
@@ -729,17 +743,26 @@ Smaller groups show higher within-group similarities and between-group differenc
 
 # General Discussion
 
-Communication often occurs in multi-party settings, but research on referential communication often does not. In dyadic work, iterated reference games have been used to establish a phenomena of reduction over repeated reference, characterized by speaker-listener pairs creating short nicknames that they mutually understand, but which are not shared by other groups. In this work, we asked how this process of reference formation unfolds under varying interaction structures. 
+Communication often occurs in multi-party settings, but research on referential communication often does not. 
+In dyadic work, iterated reference games have been used to measure informational efficiency, characterized by speaker-listener pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups. 
+In this work, we asked how this process of reference formation unfolds under varying interaction structures. 
+Across 3 online experiments and 11 experimental conditions, we varied game features including group size, form of listener backchannel, and degree of group coherence. 
+All conditions replicated classic phenomena: increasing accuracy, reduction in speaker utterances, semantic convergence within games, and differentiation of descriptions between groups. 
+However, we also found that the interaction structure of a group substantially affects how rapidly groups develop partner-specific conventions. 
+Small groups may be able to succeed under limited feedback, but larger groups require thicker interaction structure.
+Multi-player groups thus reveal important factors for communication which are masked in purely dyadic settings.
 
-## All conditions show hallmarks of reduction, and interaction structure constrains speed of convention formation. 
-Across 3 online experiments and 11 experimental conditions, we varied game features including group size, form of listener backchannel, and degree of group coherence. All conditions showed the hallmarks of reduction: increasing accuracy, reduction in speaker utterances, semantic convergence within games, and differentiation of descriptions between groups. Even with larger groups and more constrained means of communication, reduction still occurs. 
+## Efficiency without semantic convergence 
 
-However, while results are directionally the same across conditions, the interaction structure of a group substantially affects how rapidly groups develop partner-specific conventions. Smaller groups and games with thicker communication channels converged faster and more robustly than games that were larger or had thinner communication channels. These factors add together to form the overall group experience. The differences between the 6-player thin condition and both the 2-player thin condition and other 6-player conditions point to an interaction: 2-player games can cope with limited feedback mechanisms, but 6-player games suffer without access to more feedback. Group dynamics differ depending on group size, and larger groups may be more sensitive to other factors affecting interaction structure. Multi-player groups thus make for a richer and more sensitive environment to study communication phenomena applicable to both pairs and small groups. 
-
-## Reduction and partner-specific convention formation pattern separately. 
-Theoretical approaches treat reduction in referring expression length as a consequence of partner-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018], but in our current work, reduction and semantic measures of partner-specificity pattern differently in the 6-player thin condition. The 6-player thin games show much less divergence between games and convergence within games, even compared to the 2 thin and 6 thick conditions, but 6-player thin games showed smaller (and statistically inconconclusive) differences to 6 thick games for accuracy and reduction. This gap between the group performance measures and the semantic measures raises the possibility that it is possible to become more concise (and more accurate) without developing group-specific nicknames, but instead perhaps relying on group priors and reducing the amount of detail [@guilbeault2021]. This gap highlights the need to use measures of the type of language (and not just amount of language) when looking for convention-formation phenomena. 
+Increasing efficiency has often been taken as an index of group-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018]. 
+In our work, however, we observe distinct patterns for measures of raw utterance length compared to the dynamics of semantic content. 
+In Experiment 3, thin 6-person games showed much less group-specific divergence despite comparable accuracy and efficiency. 
+This gap raises the possibility that it is possible to become more efficient without converging on a unified group-specific label. 
+Instead, they may be converging to a multi-modal solution based on group priors [@guilbeault2021]. 
+Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation.
 
 ## Limitations and future directions. 
+
 Just within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a "thin" channel by limited listeners to 4 discrete utterances (emojis), but there are other ways to manipulate channel width for speakers and listeners, such as rate limiting typing or adding time pressure. Future work could sample other points in the experimental space, including exploring other manipulations on channel thickness, the effects of different target images, or groups of people with real-life prior connections. 
 
 We cannot make claims about causal mechanisms between how experimental set-ups such as group size resulted in different outcomes: for instance, there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions. 
