@@ -816,15 +816,15 @@ When skimming transcripts to tag non-referential utterances, we noticed that one
 
 ## Modelling strategy
 
-We ran all models in BRMS [@burkner2018] with weakly regularizing priors.
+We fit all regression models in brms [@burkner2018] with weakly regularizing priors.
 We were often unable to fit the full mixed effects structure that we had pre-registered in a reasonable amount of time, so we included what hierarchical effects were reasonable. (All model results and priors and formulae are reported in the Supplement). 
-Models of listener accuracy were run as logistic models with normal(0,1) priors for both betas and sd. 
+Models of listener accuracy were logistic models with normal(0,1) priors for both betas and sd. 
 Models of speaker efficiency were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). 
-For all of the models of sbert similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
+For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
 
 We also needed to decide how to handle dropout in Experiment 3, as some of the 6-player games did retain all 6 players for the entire game. 
-We do not attempt to explicitly model this, as it is unclear at what point in the game group size is most relevant. 
-We note that this is a conservative choice that will underestimate differences between 2-player and (genuine) 6-player games, by labelling some smaller groups as 6-player. 
+Our decision was to follow an intent-to-treat analysis and treat data as missing completely at random. 
+We note that this choice will underestimate differences between 2-player and (genuine) 6-player games, by labeling some smaller groups as 6-player groups. 
 
 # References 
 
