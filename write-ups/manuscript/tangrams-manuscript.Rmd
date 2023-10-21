@@ -64,13 +64,13 @@ tables: TRUE # Needed to be able to include tables
 
 ::: {.abstract data-latex="" lang=en}
 
-Real-world communication frequently requires speakers to address more than one listener at once. 
-As the audience size grows, speakers face new challenges that do not arise in one-on-one conversation. 
+Real-world communication frequently requires speakers to address more than one listener at once, yet most psycholinguistic research focuses on one-on-one communication.
+As the audience size grows, speakers face new challenges that do not arise in dyads. 
 They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
-Here, we ask which properties of the group's *interaction structure* facilitates successful communication under these challenging conditions.
-We began by developing a novel extension of the dyadic repeated reference game paradigm for groups ranging from two to six participants. 
-Across 313 games ($N=1319$ participants), we manipulated several key constraints on the group's interaction, including the thickness of the feedback channel and the availability of lateral interaction within the audience of listeners.
-While larger groups suffered disproportionately under these constraints, we found that they were able to converge on efficient shared conventions as effectively as smaller groups under the most favorable interaction structure. 
+Here, we ask which properties of the group's *interaction structure* facilitates successful communication.
+We used a repeated reference game paradigm in which directors instructed between one and five matchers to choose specific targets out of a set of abstract figures. 
+Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of interaction between matchers.
+Larger groups suffered disproportionately under interaction constraints, but in less-constrained interaction structures ("thick channels"), they were able to converge on efficient shared conventions as effectively as smaller groups.     
 Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
 
 :::
@@ -168,7 +168,7 @@ words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(word
 Much of human social life revolves around communication in groups. 
 At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational; @zack1993interactivity].
 Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006; @ginzburg2005; @traum2004]. 
-For example, speakers need to account for the fact that different listeners in the group may have different mental states or levels of background understanding [@horton2005; @horton2002; @yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not necessarily tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @tolins2016].^[Throughout this paper, we use "speaker" and "listener" to refer to the roles describing and selecting targets, regardless of communication modality.]
+For example, speakers need to account for the fact that different listeners in the group may have different mental states or levels of background understanding [@horton2005; @horton2002; @yoon2018; @yoon2014; @weber2003;@fox-tree2013], while listeners must account for the fact that utterances are not necessarily tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @tolins2016].^[Throughout this paper, we use "speaker" and "listener" -- regardless of communication modality -- to refer to both the general conversation roles played by language producers and comprehenders as well as the the specific roles of describing and selecting targets in reference games of the type we study here.]
 What enables speakers and listeners to nevertheless overcome these challenges and navigate multi-party settings with relative ease? 
 
 One promising set of hypotheses centers on the group's *interaction structure*, the set of constraints placed on the group's shared communication channel. 
@@ -176,7 +176,7 @@ Many different aspects of interaction structure have been implicated in the effe
 Yet larger group introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors [@swaab2012communication; @hiltz1986experiments].
 While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004; @seaman1997communication], several factors that may slow such deterioration have been identified in qualitative work, each of which relates to the structural "thickness" of the feedback channel [@ahern1994effect; @parisi2005evaluating]. 
 
-In this paper, we introduce a new experimental paradigm for evaluating the relative contribution of these factors, which we call a *multi-party repeated reference game.*
+In this paper, we develop an experimental paradigm for evaluating the relative contribution of these factors: a *multi-party repeated reference game.*
 The ability to distinguish one particular entity from other possible entities, known as *reference*, is one of the most primitive and ubiquitous functions of communication.
 Reference games [@Wittgenstein1953; @lewis1969convention] have been widely used to study dyadic communication under controlled conditions in the lab. 
 They provide a clear metric of communicative effectiveness: how many words are required to allow a listener to successfully choose a target image from a context of distractors? 
@@ -188,9 +188,10 @@ Later utterances require fewer words, but also become more impenetrable to outsi
 In principle, repeated reference games provide a strong operationalization of communicative effectiveness for the problem of multi-party communication: speakers must simultaneously achieve shared reference with multiple listeners. 
 However, empirically studying multi-party communication raises a number of difficulties in practice. 
 A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings [@almaatouq2022].
-We address this problem by drawing on recent technical breakthroughs that have made it newly possible to achieve such samples using an interactive web-based platform [@haber2019;@hawkins2023partners]. 
+We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using an interactive web-based platform [@haber2019;@hawkins2023partners]. 
 Repeated reference games in online, chat-based paradigms have closely replicated earlier results from face-to-face studies [@hawkins2020], and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
-Our findings illuminate the mechanisms of social interaction in larger groups and suggest design features that may ease the communciative overhead associated with larger groups in real-world settings.
+
+We use the multi-party repeated reference game to explore effects of group size and interaction channel thickness through a series of three experiments. Taken together, our findings illuminate the mechanisms of social interaction in larger groups and suggest design features that may ease the communicative overhead associated with larger groups in real-world settings.
 
 
 ```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, speakers described a target image to the listeners. Each image appeared once per block for six blocks. (B) Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. (C) Schematic of the axes we manipulated. Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel)."}
@@ -207,14 +208,14 @@ The speaker was asked to use a chat box interface to describe a privately indica
 After all listeners guessed which of the 12 images was the target, they received task feedback and proceeded to the next trial.
 The game consisted of 72 trials structured into 6 repetition blocks, where each image appeared as the target exactly once per block.
 
-We manipulated the interaction structure of this game across 11 distinct conditions in 3 distinct experiments (Figure \@ref(fig:behavioral)B). 
+We manipulated the interaction structure of this game across 11 distinct conditions in 3 distinct pre-registered experiments (Figure \@ref(fig:behavioral)B). 
 We systematically sampled points along four dimensions parameterizing different aspects of the interaction space. 
 We manipulated *group size* (ranging from two to six), *role stability* (whether or not participants took turns in the speaker role), richness of *task feedback* (whether or not listeners were able to see each other's responses), and richness of the *listener backchannel* (whether listeners were able to freely respond through a chatbox or asked to use emojis; Figure \@ref(fig:behavioral)C).
 Other factors, such as the set of stimuli and background knowledge about one's partners, were held constant across games. 
 
 Experiment 1 investigated how performance scaled with group size.
 Based on prior qualitative work, we predicted that larger groups face a more challenging coordination problem. 
-We continuously varied the number of players from 2 to 6 players while keeping other factors constant. 
+We continuously varied the number of players from 2 to 6 while keeping other factors constant. 
 For these conditions, the speaker role rotated after each block, so that all players had at least one turn as speaker. 
 Listeners had access to an unrestricted chat box, but only received binary task feedback about whether their individual selection was correct without revealing others' selections or the intended target. 
 
@@ -690,7 +691,7 @@ tolast_3 <- read_rds(here(msum_loc, "tolast_3.rds"))
 tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 ```
 
-### Descriptions converge within groups. 
+### Descriptions converge within groups
 
 Across conditions, speaker descriptions increased in semantic similarity to the final description over repetition; convergence was fastest in smaller and higher coherence groups, and was least strong in the 6-player thin condition (Figure \@ref(fig:sbert)A-C).
 We modeled semantic convergence by looking at the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. 
@@ -698,9 +699,9 @@ The similarity of the first utterance to the last utterance was invariant across
 The 6-player thick games started off with greater distance between first and last utterances than 2-player thick games (`r stats(tolast_3, 7,3)`) but closed the gap over time (`r stats(tolast_3, 6,3)`). 
 Overall, smaller games reach a stable description faster than larger games. 
 
-Convergence was especially rapid for the consistent speaker condition  where all the utterances come from the same person (Figure \@ref(fig:sbert)B, `r stats(tolast_2a, 1,3)`). 
+Convergence was especially rapid for the consistent speaker condition, where all the utterances came from the same person (Figure \@ref(fig:sbert)B, `r stats(tolast_2a, 1,3)`). 
 Convergence was slower in thin games than thick games (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 4,3)`). 
-Beyond the slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
+Beyond the generally slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
 Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (Supplement Figure 4D-F). In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round. 
 All conditions showed some convergence toward a conventional nickname for the picture, but the speed of convergence was affected both by group size and channel width. Overall, descriptions were more similar if provided by the same person, if fewer people were in the game, and if listeners could contribute via a text channel. 
 
@@ -716,7 +717,7 @@ div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 ```
 
 
-### Language in thicker games diverges faster from other games. 
+### Games diverges from one another faster with thicker channels
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, their descriptions are predicted to become increasingly dissimilar as groups increasingly adapt to their shared history.
 We modeled semantic divergence using a mixed-effects linear regression model predicting the similarity between a pair of utterances for the same image as a function of the block number and condition (Figure \@ref(fig:sbert)D-F). 
@@ -739,16 +740,16 @@ Smaller groups show higher within-group similarities and between-group differenc
 
 # General Discussion
 
-Communication often occurs in multi-party settings, but research on referential communication often does not. 
-In dyadic work, iterated reference games have been used to measure informational efficiency, characterized by speaker-listener pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups. 
-In this work, we asked how this process of reference formation unfolds under varying interaction structures. 
+Communication often occurs in multi-party settings, but research on referential communication typically does not focus on such settings -- largely due to practical obstacles. 
+Dyadi reference games have been used to measure informational efficiency, characterized by speaker-listener pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups. 
+In the current work work, we asked how this process of reference formation unfolds in larger groups and under varying interaction structures. 
 Across 3 online experiments and 11 experimental conditions, we varied game features including group size, form of listener backchannel, and degree of group coherence. 
 All conditions replicated classic phenomena: increasing accuracy, reduction in speaker utterances, semantic convergence within games, and differentiation of descriptions between groups. 
 However, we also found that the interaction structure of a group substantially affects how rapidly groups develop partner-specific conventions. 
 Small groups may be able to succeed under limited feedback, but larger groups require thicker interaction structure.
 Multi-player groups thus reveal important factors for communication which are masked in purely dyadic settings.
 
-## Efficiency without semantic convergence 
+<!-- ## Efficiency without semantic convergence  -->
 
 Increasing efficiency has often been taken as an index of group-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018]. 
 In our work, however, we observe distinct patterns for measures of raw utterance length compared to the dynamics of semantic content. 
@@ -757,25 +758,27 @@ This gap raises the possibility that it is possible to become more efficient wit
 Instead, they may be converging to a multi-modal solution based on group priors [@guilbeault2021]. 
 Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation.
 
-## Limitations and future directions. 
+<!-- ## Limitations and future directions.  -->
 
 Just within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a "thin" channel by limited listeners to 4 discrete utterances (emojis), but there are other ways to manipulate channel width for speakers and listeners, such as rate limiting typing or adding time pressure. Future work could sample other points in the experimental space, including exploring other manipulations on channel thickness, the effects of different target images, or groups of people with real-life prior connections. 
 
 We cannot make claims about causal mechanisms between how experimental set-ups such as group size resulted in different outcomes: for instance, there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, speakers can tailor their utterances to the one listener, but in large groups, speakers must balance the competing needs of different listeners [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the listeners [@fox-tree2013;@horton2002; @horton2005]. Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions. 
 
-## Conclusion 
+<!-- ## Conclusion  -->
 
-Communication occurs across a broad range of situations, varying on many dimensions, including group size, medium of interaction, and group structure. A narrow focus on dyads with rich communication channels can lead to theories that mispredict how interactions play out in multi-party groups with varying interaction structure. Sampling from a broader range of communication space is necessary to better characterize the phenomena of interest.   
+Communication occurs across a broad range of situations, varying on many dimensions, including group size, medium of interaction, and group structure. 
+A narrow focus on dyads with rich communication channels can lead to theories that mispredict how interactions play out in multi-party groups with varying interaction structure. 
+Sampling from a broader range of communicative situations is thus a critical part of better understanding human communication. 
 
 # Methods
 
-For all experiments, we used Empirica [@almaatouq2020] to create real-time multi-player iterated reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted and communicated which figure to click to the other players (listeners). After the speaker had identified each of the 12 images in turn, the process repeated with the same images, but a total of 6 blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
+For all experiments, we used Empirica [@almaatouq2020] to create real-time multi-player iterated reference games. In each game, one of the players started as the speaker who saw an array of tangrams with one highlighted and communicated which figure to click to the other players (listeners). After the speaker had described each of the 12 images in turn, the process repeated with the same images over a total of 6 such blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
 
-These experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: consistent speaker at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] We followed the analysis plan, although additional analyses were added to early experiments that were only pre-registered in later experiments. Results from some pre-registered models were omitted from the main text, but are shown in the Supplement.
+These experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: consistent speaker at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] We followed the analysis plan for each, although some additional analyses were added to early experiments that were only pre-registered in later experiments. Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
 
 ## Participants
 
-Participants were recruited using the Prolific platform, and all participants self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants each took part in only one experiment. Experiment 1 took place between May and July 2021, experiment 2 between March and August 2022, and experiment 3 in October 2022. As games varied in length depending on the number of participants, we paid participants based on group size, with the goal of a \$10 hourly rate.  Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player had the speaker role for the entirety of a 6-player game, they gained an addition \$2 bonus. Across all games, each participant could early up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments, for roughly 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. A breakdown of number of games and participants in each condition is shown in the Supplement. 
+Participants were recruited using the Prolific platform, and all participants self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants each took part in only one experiment. Experiment 1 took place between May and July 2021, experiment 2 between March and August 2022, and experiment 3 in October 2022. As games varied in length depending on the number of participants, we paid participants based on group size, with the goal of a \$10 hourly rate.  Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player had the speaker role for the entirety of a 6-player game, they gained an additional \$2 bonus. Across all games, each participant could earn up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments, for roughly 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. A breakdown of number of games and participants in each condition is shown in the Supplement. 
 
 ## Materials
 
@@ -786,30 +789,30 @@ We used the 12 tangram images used by @hawkins2020 and @clark1986. These images 
 The experimental procedure was very similar across the three experiments. We first describe the procedure used in experiment 1 and then describe the differences in later experiments. 
 
 ### Experiment 1
-From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz to be able to play the game. They were then directed to a "waiting room" screen until their partner(s) were ready.
+From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz on the instructions to be able to play the game. They were then directed to a "waiting room" screen until their partner(s) were ready.
 
-Each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection. 
+On each trial, the speaker described the highlighted tangram image so that the listeners could identify and click it. All participants were free to use the chat box to communicate, but listeners could only click once the speaker had sent a message. Once a listener clicked, they could not change their selection. There was no signal to the speaker or other listeners about who had already made a selection. 
 
-Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback. Listeners learned whether they individually had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points translated into performance bonus at the end of the experiment. 
+Once all listeners had selected (or a 3-minute timer ran out), participants were given feedback. Listeners learned whether they had chosen correctly or not; listeners who were incorrect were not told the correct answer. The speaker saw which tangram each listener had selected, but listeners did not. Listeners got 4 points for each correct answer; the speaker got points equal to the average of the listeners' points. These points were translated into performance bonuses at the end of the experiment. 
 
-In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen to keep participants more equally engaged (the speaker role is more work), and to give a more robust test for reduction and convention. 
+In each block, each of the 12 tangrams was indicated to the speaker once. The same person was the speaker for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were speakers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the speaker was chosen in this first experiment to keep participants more equally engaged (the speaker role is more work), and to provide a more robust test of our hyppotheses regarding efficiency and convention formation. 
 
 After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
 
-### Differences in experiment 2
-Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6-player games. Each of these conditions differed from the experiment 1 baseline in one way. The consistent speaker condition differed only in that one person was designated the speaker for the entire game, rather than having the speaker role rotate. The full feedback condition differed from experiment 1 in that all participants were shown what each person had selected and what the right answer was; listeners still saw text saying whether they individually were right or wrong. This was similar to some dyadic work, such as @hawkins2020 where listeners were shown what the right answer was during feedback. For the thin condition, we altered the chatbox interface for listeners. Instead of a textbox, listeners had 4 buttons, each of which sent a different emoji to the chat. Listeners were given suggested meanings for the 4 emojis during instructions. They could send the emojis as often as desired, for instance, initially indicating confusion, and later indicating understanding. In addition, we added notifications that appeared in the chat box saying when a player had made a selection. 
+### Experiment 2
+Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6-player games. Each of these conditions differed from the experiment 1 baseline in one way. The consistent speaker condition differed only in that one person was designated the speaker for the entire game, rather than having the speaker role rotate. The full feedback condition differed from experiment 1 in that all participants were shown what each person had selected and what the right answer was; listeners still saw text saying whether they individually were right or wrong. This condition was similar to some dyadic work, such as @hawkins2020, where listeners were shown the right answer during feedback. For the thin condition, we altered the chatbox interface for listeners. Instead of a textbox, listeners had 4 buttons, each of which sent a different emoji to the chat. Listeners were given suggested meanings for the 4 emojis during instructions. They could send the emojis as often as desired, for instance, initially indicating confusion, and later indicating understanding. In addition, we added notifications that appeared in the chat box saying when a player had made a selection. 
 
-### Differences in experiment 3
+### Experiment 3
 
-The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated speaker throughout, and the feedback participants received included the right answer and what each player had selected. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
+The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated speaker throughout, and the feedback to participants included the right answer and what each player had selected. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
 
 ## Data pre-processing and exclusions
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We excluded these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
-In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game would drop below 2 players. The distribution of players in these 6* player games is at Supplement Figure 1. The realities of online recruitment and disconnection meant that the number of games varied between conditions. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Supplement Table 1).
+In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with speaker role reassigned if necessary), unless the game dropped below 2 players. The distribution of players in these games that were initially recruited to be 6 player games is in Supplement Figure 1. The realities of online recruitment and disconnection meant that the number of games varied between conditions. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See Supplement Table 1).
 
-When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick game had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses. 
+When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick condition had a speaker who did not give any sort of coherent descriptions, even with substantial listener prompting. We excluded this game from analyses. 
 
 ## Modelling strategy
 
