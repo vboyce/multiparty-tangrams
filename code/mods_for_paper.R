@@ -397,6 +397,45 @@ model_1_anylist <- brm(is.words ~ block*numPlayers+(1|gameId),
                        prior=anylistener_priors, 
                        control=list(adapt_delta=.95))
 
+### reduction models of only before listeners say anything
+
+pre_list_data <- pre_listener_chat |> 
+  mutate(block=repNum,
+         words=total_num_words)
+
+
+red_priors <- c(
+  set_prior("normal(12, 20)", class="Intercept"),
+  set_prior("normal(0, 10)", class="b"),
+  set_prior("normal(0, 5)", class="sd"),
+  set_prior("lkj(1)",       class="cor"))
+
+model_1_pre_list <- brm(words ~ block*numPlayers + (block|tangram) +(1|tangram:gameId)+(block|gameId),
+                   data=pre_list_data |> filter(condition=="rotate"),
+                   file=here(model_location, "pre_list_1"),
+                   prior=red_priors,
+                   control=list(adapt_delta=.95))
+
+model_2a_pre_list <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
+                    data=pre_list_data |> filter(condition=="no_rotate"),
+                    file=here(model_location, "pre_list_2a"),
+                    prior=red_priors,
+                    control=list(adapt_delta=.95))
+
+model_2b_pre_list <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
+                    data=pre_list_data |> filter(condition=="full_feedback"),
+                    file=here(model_location, "pre_list_2b"),
+                    prior=red_priors,
+                    control=list(adapt_delta=.95))
+
+pre_list_3 <- pre_list_data |> filter(condition %in% c("2_thick", "6_thick")) |> 
+  separate(condition, into= c("gameSize","channel"))
+
+model_3_pre_list <-  brm(words ~ block*gameSize +   (block*gameSize|tangram)+ (1|tangram:gameId)+ (block|gameId), 
+                    data=pre_list_3,
+                    file=here(model_location,"pre_list_3"),
+                    control=list(adapt_delta=.95),
+                    prior=red_priors)
 
 
 #### save reduced forms of models 
