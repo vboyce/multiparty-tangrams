@@ -50,7 +50,7 @@ knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%
 
 
 color_scheme_1 <- c("2"="#FFBDD4", "5"="#A12EFF", "3"="#FF7DF0","6"="#6940FF","4"="#D24AFF")
-color_scheme_2 <- c( "6 full feedback"="#425df5", "6 consistent speaker"="#00A2FF","6 thin"="#D47E04")
+color_scheme_2 <- c( "6 full feedback"="#425df5", "6 same describer"="#00A2FF","6 thin"="#D47E04")
 
 color_scheme_3 <- c("2 thin"="#FFDA09","6 thin"="#D47E04", 
                     "2 thick"="#77F3DB","6 thick"="#00BDA8")
@@ -127,7 +127,7 @@ summary <- combined_results |> group_by(condition, trialNum, repNum, gameId, num
   rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) |> 
   mutate(Partial=ifelse(is.na(Partial), 0, Partial)) |> 
   mutate(Experiment=factor(condition, levels=c("rotate","no_rotate","full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
-                          labels=c("1: baseline", "2: consistent speaker", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
+                          labels=c("1: baseline", "2: same describer", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
   select(Experiment, Players, Complete, Partial, `Total Participants`) |> 
   arrange(Experiment, Players,Complete,Partial, `Total Participants`)
 
@@ -136,9 +136,9 @@ knitr::kable(summary, caption="The number of games in each experiment and condit
 
 In experiment 3, the 6* player games did not all have 6 players, both because games continued as participants dropped out and because if there weren't enough players after 5 minutes of waiting, the game would start with whoever was there. All analyses use "intent to treat" and call these 6 player games. 
 
-The number of games goes up in some cases because only complete blocks (where the speaker said something every trial) are analysed. If there was initial confusion and a speaker missed a trial, that block was excluded. 
+The number of games goes up in some cases because only complete blocks (where the describer said something every trial) are analysed. If there was initial confusion and a desciber missed a trial, that block was excluded. 
 
-```{r player-count, fig.width=8, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of players during 6 thin and 6 thick games in experiment 3. Blocks that were incomplete were excluded, so if a speaker said nothing during a trial, that block was excluded." }
+```{r player-count, fig.width=8, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of players during 6 thin and 6 thick games in experiment 3. Blocks that were incomplete were excluded, so if a describer said nothing during a trial, that block was excluded." }
 
 combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(gameId, trialNum, activePlayerCount, condition) |> 
   unique() |>
@@ -153,7 +153,7 @@ combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(game
 
 \pagebreak
 
-# More on listener utterances 
+# More on matcher utterances 
 
  
 ```{r, include=T}
@@ -178,9 +178,9 @@ listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listene
 ```
 
 
-Listeners' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to listener language use in thick games, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential listener language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or listeners having a lower threshold for sending emojis compared to writing out clarifications. 
+Matchers' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
 
-```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Listener contributions. A-C: Fraction of trials where any listener said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one listener contributed, the number of words of referential language produced by listeners. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
+```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions. A-C: Fraction of trials where any matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one matcher contributed, the number of words of referential language produced by matchers. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
 anytalk <- all_list |> group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |> summarize(words=sum(words)) |> mutate(is.words=ifelse(words>0, 1,0)) 
 
 # maybe try per game trials/block where any listener talked?
@@ -210,7 +210,7 @@ ggplot(one_talk_dat, aes(x=repNum+1, y=is.words, color=numPlayers))+
 
 two_talk_dat <- anytalk|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
     mutate(condition=case_when(
-    condition=="no_rotate" ~ "6 consistent speaker",
+    condition=="no_rotate" ~ "6 same describer",
     condition=="full_feedback" ~ "6 full feedback",
     condition=="emoji" ~ "6 thin"))
 
@@ -224,7 +224,7 @@ ggplot(two_talk_dat, aes(x=repNum+1, y=is.words, color=condition))+
   labs( y="Fraction trials with any words", x="", color="", title="Experiment 2")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
   annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+
-    annotate("text", x=3.5,y=1.05,label="Any listener words", size=6)+
+    annotate("text", x=3.5,y=1.05,label="Any matcher words", size=6)+
    theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
@@ -285,7 +285,7 @@ geom_point(data=one_list_dat|> group_by(gameId, repNum, numPlayers) |> summarize
 two_list_dat <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback")) |>
   filter(numPlayers==6) |> 
     mutate(condition=case_when(
-    condition=="no_rotate" ~ "6 consistent speaker",
+    condition=="no_rotate" ~ "6 same describer",
     condition=="full_feedback" ~ "6 full feedback",
     condition=="emoji" ~ "6 thin"))
 
@@ -298,7 +298,7 @@ two_list_plot <- ggplot(two_list_dat, aes(x=repNum+1, y=words, color=condition))
        scale_x_continuous(breaks=seq(1,6))+
   labs( y="Number of words", x="", color="")+
       annotate("text", x=1,y=25,label="E", size=6, fontface="bold")+
-  annotate("text", x=3.5,y=25,label="Words from listeners", size=6)+
+  annotate("text", x=3.5,y=25,label="Words from matchers", size=6)+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
@@ -331,7 +331,7 @@ plot_grid(top, bot, nrow=2, rel_heights = c(1,.75))
 ```
 
 
-```{r emoji,  fig.width=8, fig.height=2.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one listener produced the labelled emoji. Fraction of trials when any emoji was produced are shown in black.  Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. "}
+```{r emoji,  fig.width=8, fig.height=2.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one matcher produced the labelled emoji. Fraction of trials when any emoji was produced are shown in black.  Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. "}
 combined_emoji |> mutate(emoji=case_when(
     text=="✅"~  "check",
     text=="🤔" ~ "think",
@@ -404,7 +404,7 @@ geom_point(data=one_first_dat |> group_by(later, gameId, condition) |> summarize
 
 two_first_dat <- one_two_first |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |> 
     mutate(condition=case_when(
-    condition=="6noro" ~ "6 consistent speaker",
+    condition=="6noro" ~ "6 same describer",
     condition=="6highfeed" ~ "6 full feedback",
     condition=="6emoji" ~ "6 thin"))
 
@@ -472,7 +472,7 @@ one_next_plot <- ggplot(one_next_dat, aes(x=earlier+1,y=sim,color=condition))+
 
 two_next_dat <-  one_two_next |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
   mutate(condition=case_when(
-    condition=="6noro" ~ "6 consistent speaker",
+    condition=="6noro" ~ "6 same describer",
     condition=="6highfeed" ~ "6 full feedback",
     condition=="6emoji" ~ "6 thin"))
 
@@ -547,7 +547,7 @@ one_div_plot <- ggplot(one_div_dat, aes(x=repNum+1,y=sim,color=condition))+
 
 two_div_dat <-  one_two_tandiv |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
   mutate(condition=case_when(
-    condition=="6noro" ~ "6 consistent speaker",
+    condition=="6noro" ~ "6 same describer",
     condition=="6highfeed" ~ "6 full feedback",
     condition=="6emoji" ~ "6 thin"))
 
@@ -681,11 +681,11 @@ Accuracy models were all run as logistic models with normal(0,1) priors for both
 
 ```{r}
 
-do_table("acc_1.rds", "Experiment 1 logistic model of listener accuracy")
-do_table("acc_2a.rds", "Experiment 2: 6 consistent speaker logistic model of listener accuracy")
-do_table("acc_2b.rds", "Experiment 2: 6 full feedback logistic model of listener accuracy")
-do_table("acc_2c.rds", "Experiment 2: 6 thin logistic model of listener accuracy")
-do_table("acc_3.rds", "Experiment 3 logistic model of listener accuracy")
+do_table("acc_1.rds", "Experiment 1 logistic model of matcher accuracy")
+do_table("acc_2a.rds", "Experiment 2: 6 same describer logistic model of matcher accuracy")
+do_table("acc_2b.rds", "Experiment 2: 6 full feedback logistic model of matcher accuracy")
+do_table("acc_2c.rds", "Experiment 2: 6 thin logistic model of matcher accuracy")
+do_table("acc_3.rds", "Experiment 3 logistic model of matcher accuracy")
 
 ```
 
@@ -699,7 +699,7 @@ Reduction models were run as linear models with an intercept prior of normal(12,
 ```{r}
 
 do_table("red_1.rds", "Experiment 1")
-do_table("red_2a.rds", "Experiment 2: 6 consistent speaker")
+do_table("red_2a.rds", "Experiment 2: 6 same describer")
 do_table("red_2b.rds", "Experiment 2: 6 full feedback")
 do_table("red_2c.rds", "Experiment 2: 6 thin")
 do_table("red_3.rds", "Experiment 3")
@@ -708,7 +708,7 @@ do_table("red_3.rds", "Experiment 3")
 
 ## Extra reduction model
 
-For experiment 1, we also pre-specified a model about whether the speaker's correctness on the prior block (when they were a listener) had an effect on how many words of description they produced. Priors were the same as for primary reduction model.
+For experiment 1, we also pre-specified a model about whether the describer's correctness on the prior block (when they were a matcher) had an effect on how many words of description they produced. Priors were the same as for primary reduction model.
 
 ```{r}
 
@@ -716,13 +716,13 @@ do_table("weird_1.rds", "Experiment 1")
 
 ```
 
-## Listener reduction models
+## Matcher reduction models
 
 These models were not pre-registered. 
 
-For the model of how often any listener talked, the priors were normal(0,1) for both beta and sd. 
+For the model of how often any matchers used the backchannel, the priors were normal(0,1) for both beta and sd. 
 
-For the model of how much was said on trials when listeners talked, the priors were the same as for the primary (speaker) reduction model. 
+For the model of how much was said on trials when matchers talked, the priors were the same as for the primary (describer) reduction model. 
 ```{r}
 
 do_table("list_1.rds", "Experiment 1")
@@ -734,14 +734,14 @@ do_table("anylist_1.rds", "Experiment 1")
 
 ## Initial utterance reduction model
 
-These models were not pre-registered. They looked at speaker reduction only on words that were produced prior to the first listener message each trial. These models were only run on experimental conditions where listeners could contribute textual responses. 
+These models were not pre-registered. They looked at describer reduction only on words that were produced prior to the first matcher message each trial. These models were only run on experimental conditions where matchers could contribute textual responses. 
 
 Reduction models were run as linear models with the same priors as the primary reduction model. 
 
 ```{r}
 
 do_table("pre_list_1.rds", "Experiment 1")
-do_table("pre_list_2a.rds", "Experiment 2: 6 consistent speaker")
+do_table("pre_list_2a.rds", "Experiment 2: 6 same describer")
 do_table("pre_list_2b.rds", "Experiment 2: 6 full feedback")
 do_table("pre_list_3.rds", "Experiment 3")
 
@@ -759,7 +759,7 @@ This is the primary convergence metric presented in the main paper.
 ```{r}
 
 do_table("tolast_1.rds", "Experiment 1", decimal=3)
-do_table("tolast_2a.rds", "Experiment 2: 6 consistent speaker", decimal=3)
+do_table("tolast_2a.rds", "Experiment 2: 6 same describer", decimal=3)
 do_table("tolast_2b.rds", "Experiment 2: 6 full feedback", decimal=3)
 do_table("tolast_2c.rds", "Experiment 2: 6 thin", decimal=3)
 do_table("tolast_3.rds", "Experiment 3", decimal=3)
@@ -774,7 +774,7 @@ This is the divergence metric presented in the paper.
 ```{r}
 
 do_table("div_1.rds", "Experiment 1", decimal=3)
-do_table("div_2a.rds", "Experiment 2: 6 consistent speaker",decimal=3)
+do_table("div_2a.rds", "Experiment 2: 6 same describer",decimal=3)
 do_table("div_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
 do_table("div_2c.rds", "Experiment 2: 6 thin",decimal=3)
 do_table("div_3.rds", "Experiment 3",decimal=3)
@@ -789,7 +789,7 @@ This is an additional metric comparing the similiarities between descriptions fo
 ```{r}
 
 do_table("tandiv_1.rds", "Experiment 1",decimal=3)
-do_table("tandiv_2a.rds", "Experiment 2: 6 consistent speaker",decimal=3)
+do_table("tandiv_2a.rds", "Experiment 2: 6 same describer",decimal=3)
 do_table("tandiv_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
 do_table("tandiv_2c.rds", "Experiment 2: 6 thin",decimal=3)
 do_table("tandiv_3.rds", "Experiment 3",decimal=3)
@@ -805,7 +805,7 @@ We also looked at how similar an utterance was to the next block utterance for t
 ```{r}
 
 do_table("tonext_1.rds", "Experiment 1",decimal=3)
-do_table("tonext_2a.rds", "Experiment 2: 6 consistent speaker",decimal=3)
+do_table("tonext_2a.rds", "Experiment 2: 6 same describer",decimal=3)
 do_table("tonext_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
 do_table("tonext_2c.rds", "Experiment 2: 6 thin",decimal=3)
 do_table("tonext_3.rds", "Experiment 3",decimal=3)
@@ -820,7 +820,7 @@ We also looked at how similar an utterance was to the first block utterance for 
 ```{r}
 
 do_table("tofirst_1.rds", "Experiment 1",decimal=3)
-do_table("tofirst_2a.rds", "Experiment 2: 6 consistent speaker",decimal=3)
+do_table("tofirst_2a.rds", "Experiment 2: 6 same describer",decimal=3)
 do_table("tofirst_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
 do_table("tofirst_2c.rds", "Experiment 2: 6 thin",decimal=3)
 do_table("tofirst_3.rds", "Experiment 3",decimal=3)

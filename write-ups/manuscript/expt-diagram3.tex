@@ -69,7 +69,7 @@
 		\node at (\ax+7,\ay+4.5) {\LARGE\bfseries{A}};
 		\node at (\cola-2,\clabx+.2) {\LARGE\bfseries{C}};
 		
-		\draw (\bx,\by) edge[-Stealth, line width=1] [axis, "Listener Backchannel", sloped, pos=.55] (\bx-\r/1.4,  \by-\r/1.4) ;
+		\draw (\bx,\by) edge[-Stealth, line width=1] [axis, "Matcher Backchannel", sloped, pos=.55] (\bx-\r/1.4,  \by-\r/1.4) ;
 		\draw (\bx,\by) edge[-Stealth, line width=1] [axis, "Group Size", pos=1.05] (\bx+\r, \by) ;
 		\draw (\bx,\by) edge[-Stealth, line width=1] [axis, "Group coherence", sloped, pos=.45] (\bx, \by+\r);
 		\draw[dashed] (\bx+\t,\by) edge [] (\bx+\t-\t/1.4, \by-\t/1.4);
@@ -91,16 +91,16 @@
 		\node (n6thick) at (\bx+\t,\by+\t) [expt3, fill=expt3col, label={[expt3col]right:6 thick}] {};
 		
 		\node (nfull) at (\bx+\t+.2,\by+\t/2-.2) [expt2, fill=expt2col, label={[expt2col, align=center] right :6 full \\feedback}] {};
-		\node (nsingle) at (\bx+\t-.2,\by+\t/2+.2) [expt2, fill=expt2col, label={[expt2col, align=center ]above right :6 consistent\\ speaker}] {};
+		\node (nsingle) at (\bx+\t-.2,\by+\t/2+.2) [expt2, fill=expt2col, label={[expt2col, align=center ]above right :6 consistent\\ describer}] {};
 		
 		\node (n2thin) at (\bx-\t/1.4, \by-\t/1.4) [expt3, fill=expt3col, label={[expt3col]below right: 2 thin}] {};
 		\node (n6thin2) at (\bx+\t-\t/1.4+.1, \by-\t/1.4+.1)[expt2, fill=expt2col, label={[expt2col] right: 6 thin}] {};
 		\node (n6thin) at (\bx+\t-\t/1.4-.1, \by-\t/1.4-.1) [expt3, fill=expt3col, label={[expt3col]below right: 6 thin}] {};
 		
-		\node[annotate, anchor=north] (lab1) at (\bx-2,\by+2) {Rotating speaker;\\limited feedback};
-		\node[annotate,anchor=north] (lab2) at (\bx-1.1,\by+4.5) {Consistent speaker;\\full feedback};
-		\node[annotate,anchor=north] (lab3) at (\bx-2,\by+0.8) {Listeners \\use chat};
-		\node[annotate,anchor=north] (lab4) at (\bx-1.5,\by-3) {Listeners \\use emoji};
+		\node[annotate, anchor=north] (lab1) at (\bx-2,\by+2) {Rotating describer;\\limited feedback};
+		\node[annotate,anchor=north] (lab2) at (\bx-1.1,\by+4.5) {Same describer;\\full feedback};
+		\node[annotate,anchor=north] (lab3) at (\bx-2,\by+0.8) {Matchers \\use chat};
+		\node[annotate,anchor=north] (lab4) at (\bx-1.5,\by-3) {Matchers \\use emoji};
 		
 		\node[align=center,anchor=north, text=expt1col] (ex1) at (\bx+1.2,\by+2.5) {Experiment 1};
 		\node[align=center,anchor=north, text=expt2col] (ex1) at (\bx+1.2,\by+2) {Experiment 2};
@@ -131,7 +131,7 @@
 
 %	\node[bound, ultra thick, anchor=north, minimum width=50em, minimum height=17em] (block) at (6.5, -5.5) {};
 		
-	\node[toplabel, align=center, anchor=north] at (\colb,\clabx) {Listener  Backchannel};
+	\node[toplabel, align=center, anchor=north] at (\colb,\clabx) {Matcher Backchannel};
 	 \node[illus, anchor=north, minimum width=12em] () at (\colb,\claby) {Emoji \\ \includegraphics[height=3.5em]{images/nochat.png}};
 	 \node[illus, anchor=north, minimum width=12em] () at (\colb,\clabz) {Chat \\ \includegraphics[height=3em]{images/chat.png}};
 	 	
@@ -146,10 +146,10 @@
  \node[toplabel, align=center, anchor=north] at (\colc/2+\cold/2,\clabx) {Group  coherence};		 
 
 	
-\node[align=center, anchor=north] at (\colc, \clabx-.9) {Speaker rotation};
+\node[align=center, anchor=north] at (\colc, \clabx-.9) {Describer rotation};
 
-	\node[illus, anchor=north, minimum width=12em] () at (\colc,\claby) {Rotating speaker\\ \includegraphics[height=4em]{images/rotate.png}};
-	\node[illus, anchor=north, minimum width=12em] () at (\colc, \clabz) {Consistent speaker\\ \includegraphics[height=4em]{images/norotate.png}};	
+	\node[illus, anchor=north, minimum width=12em] () at (\colc,\claby) {Rotating describer\\ \includegraphics[height=4em]{images/rotate.png}};
+	\node[illus, anchor=north, minimum width=12em] () at (\colc, \clabz) {Same describer\\ \includegraphics[height=4em]{images/norotate.png}};	
 
 		 
 
