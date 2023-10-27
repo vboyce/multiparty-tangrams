@@ -199,7 +199,7 @@ We use the multi-party repeated reference game to explore effects of group size 
 
 
 ```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, speakers described a target image to the listeners. Each image appeared once per block for six blocks. (B) Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and listener backchannel. (C) Schematic of the axes we manipulated. Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel)."}
-knitr::include_graphics("fig1.pdf")
+knitr::include_graphics("expt-diagram3.pdf")
 ```
 
 # Results
