@@ -70,7 +70,7 @@ They must consider multiple perspectives and weigh multiple sources of feedback 
 Here, we ask which properties of the group's *interaction structure* facilitates successful communication.
 We used a repeated reference game paradigm in which directors instructed between one and five matchers to choose specific targets out of a set of abstract figures. 
 Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of interaction between matchers.
-Larger groups suffered disproportionately under interaction constraints, but in less-constrained interaction structures ("thick channels"), **they were able to converge on efficient shared conventions as effectively as smaller groups.**
+**Larger groups suffered disproportionately under interaction constraints, but in less-constrained interaction structures ("thick channels"), they were able to converge on efficient shared conventions as effectively as smaller groups.**
 Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
 
 :::
@@ -238,6 +238,10 @@ Note that the 2-player thick game most closely resembles the design of classic r
 
 ```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. Small dots are per game, per block means. Smooths are binomial fit lines.  (D-F). Number of words produced by the describer each trial. Small dots are per game, per block means. Smooths are quadratic fit lines. Y-axes are truncated, and a few outliers points are not visible. **(TODO check ordering of legends!)**"}
 # accuracy
+
+acc_pred_1 <- read_rds(here("code/paper_mods/prediction/acc_pred_1.rds"))
+acc_pred_2 <- read_rds(here("code/paper_mods/prediction/acc_pred_2.rds"))
+acc_pred_3 <- read_rds(here("code/paper_mods/prediction/acc_pred_3.rds"))
 # 1
 one_acc_dat <- combined_results |> 
   filter(condition=="rotate") |> 
@@ -250,7 +254,8 @@ one_acc_plot <- ggplot(one_acc_dat, aes(x=repNum+1, y=correct.num, color=numPlay
      scale_x_continuous(breaks=seq(1,6))+
      coord_cartesian(ylim=c(.6,1.05))+
   geom_point(data=one_acc_dat |> group_by(repNum, gameId, numPlayers) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
-      geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+      #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  geom_lineribbon(data=acc_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
     labs(x="Block", y="Fraction correctly selected", color="", title="Experiment 1")+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
     annotate("text", x=1,y=1.05,label="A", size=6, fontface="bold")+
@@ -259,7 +264,7 @@ one_acc_plot <- ggplot(one_acc_dat, aes(x=repNum+1, y=correct.num, color=numPlay
           legend.text=element_text(size=13),
           axis.title=element_text(size=14),
           plot.title=element_text(size=16, hjust=.5))+
-    scale_color_manual(values=color_scheme_1)
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 two_acc_dat <- combined_results |>
   filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
@@ -278,7 +283,8 @@ two_acc_plot <- ggplot(two_acc_dat, aes(x=repNum+1, y=correct.num, color=conditi
     scale_x_continuous(breaks=seq(1,6))+
     coord_cartesian(ylim=c(.6,1.05))+
   geom_point(data=two_acc_dat |> group_by(repNum, gameId, condition) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
-    geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+    #geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+   geom_lineribbon(data=acc_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
     labs(x="", y="", color="", title="Experiment 2")+
     annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+     
     annotate("text", x=3.5,y=1.05,label="Accuracy", size=6)+
@@ -289,7 +295,7 @@ two_acc_plot <- ggplot(two_acc_dat, aes(x=repNum+1, y=correct.num, color=conditi
           plot.title=element_text(size=16, hjust=.5),
           axis.title.y=element_blank())+ 
     guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-    scale_color_manual(values=color_scheme_2)
+    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
 three_acc_dat <- combined_results |> 
@@ -303,7 +309,8 @@ three_acc_plot <-  ggplot(three_acc_dat, aes(x=repNum+1, y=correct.num, color=co
     scale_x_continuous(breaks=seq(1,6))+
     coord_cartesian(ylim=c(.6,1.05))+
       geom_point(data=three_acc_dat |> group_by(repNum, gameId, condition) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
-    geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+    #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+     geom_lineribbon(data=acc_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
     annotate("text", x=1,y=1.05,label="C", size=6, fontface="bold")+
     labs(x="", y="", color="", title="Experiment 3")+
     theme(legend.position="none",
@@ -313,11 +320,14 @@ three_acc_plot <-  ggplot(three_acc_dat, aes(x=repNum+1, y=correct.num, color=co
           axis.title=element_text(size=14),
           axis.title.y=element_blank())+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.1) ) )+
-    scale_color_manual(values=color_scheme_3)
+    scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
  
 acc <- plot_grid(one_acc_plot, two_acc_plot, three_acc_plot, nrow=1, rel_widths = c(1.05, 1, 1))
  
 
+red_pred_1 <- read_rds(here("code/paper_mods/prediction/red_pred_1.rds"))
+red_pred_2 <- read_rds(here("code/paper_mods/prediction/red_pred_2.rds"))
+red_pred_3 <- read_rds(here("code/paper_mods/prediction/red_pred_3.rds"))
 #1
 one_red_dat <- combined_chat |> 
   filter(condition=="rotate") |>  
@@ -329,18 +339,19 @@ one_red_dat <- combined_chat |>
 
 one_red_plot <-  ggplot(one_red_dat, aes(x=repNum+1, y=words, color=numPlayers))+
       geom_point(data=one_red_dat |> group_by(repNum, gameId, numPlayers) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
     labs( y="Number of words", x="Block", color="")+
-    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
     annotate("text", x=1,y=45,label="D", size=6, fontface="bold")+
     theme(legend.position="bottom",
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
           axis.title=element_text(size=14),
           axis.title.x=element_blank())+
-    scale_color_manual(values=color_scheme_1)
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color","fill"))
 
 
 #2
@@ -361,9 +372,10 @@ two_red_dat <- combined_chat|>
 
 two_red_plot <- ggplot(two_red_dat,aes(x=repNum+1, y=words, color=condition))+
     #geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
  geom_point(data=two_red_dat |> group_by(repNum, gameId, condition) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.5)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
     labs(x="", y="", color="")+
@@ -373,7 +385,7 @@ two_red_plot <- ggplot(two_red_dat,aes(x=repNum+1, y=words, color=condition))+
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
           axis.title=element_blank())+
-    scale_color_manual(values=color_scheme_2)
+    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
 three_red_dat <- combined_chat |> 
@@ -388,8 +400,9 @@ three_red_dat <- combined_chat |>
 
 three_red_plot <-  ggplot(three_red_dat, aes(x=repNum+1, y=words, color=condition))+
      geom_point(data=three_red_dat |> group_by(repNum, gameId, condition) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE )+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
     labs(x="", y="", color="")+
@@ -398,7 +411,7 @@ three_red_plot <-  ggplot(three_red_dat, aes(x=repNum+1, y=words, color=conditio
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
           axis.title=element_blank())+
-    scale_color_manual(values=color_scheme_3)
+    scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 red <- plot_grid(one_red_plot,two_red_plot, three_red_plot, nrow=1, rel_widths = c(1.05,1,1))
 plot_grid(acc, red, nrow=2, rel_heights = c(.95,1))
@@ -417,22 +430,25 @@ acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 ```
 
 ## Group Performance
+Before looking at the language used in groups, we first check group performance. 
 
-** Mention that this is the boring part, also make shorter **
-
-We characterize group performance along two complementary metrics: (1) matcher accuracy and (2) describer efficiency.
-Matcher accuracy is given by the percent of matchers on each trial who successfully identify the target referent from the describer's description. 
+We characterize group performance along two complementary metrics: (1) matcher accuracy and (2) describer efficiency. <!--These two metrics are commonly used to assess whether groups are forming conventions in iterated reference games (CITATIONS GO HERE). -->
+Matcher accuracy is given by the percent of matchers on each trial who successfully selected the target referent. 
 Describer efficiency is given by the number of words produced by the describer to achieve that degree of matcher accuracy in the group.
 The degree to which describers are able to communicate more efficiently without negatively impacting matcher accuracy is indicative of convergence on a more effective shared communication protocol within the group.
+
+
 
 ### Smaller and higher coherence groups tend to be more accurate.
 
 We begin by examining the impact of interaction structure on referential success, the ability to correctly transmit the intended target to all matchers (Figure \@ref(fig:behavioral)A-C).
-We predicted that larger groups would struggle under thinner interaction structures, but that thicker interaction structures would ease some of the challenges associated with multi-comprehender communication.
+<!--We predicted that larger groups would struggle under thinner interaction structures, but that thicker interaction structures would ease some of the challenges associated with multi-comprehender communication.-->
 To test these effects, we constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of the manipulated variables, repetition block, and their interactions (separate models were run for experiment 1, each condition in experiment 2, and experiment 3).
 
-First, we observed strong positive effects of repetition block, indicating improved performance over time in each condition (Figure \@ref(fig:behavioral)A-C, SI Tables 2-6).
+Crucially, we observed strong positive effects of repetition block, indicating improved performance over time in each condition (Figure \@ref(fig:behavioral)A-C, SI Tables 2-6).
+Group size and differences in interaction structure contributed to variation in group performance. Larger games had lower 
 Second, we examined the *initial* accuracy as an indicator of the challenges facing groups under different conditions. 
+In experiment 3, larger groups had worse initial accuracy (`r stats(acc_3,6)`)
 Although the continuous measure of group size in Experiment 1 did not have a strong effect on initial accuracy (Figure \@ref(fig:behavioral)A, SI Table 2), 6-player thick games had lower initial accuracy than 2-player thick games (Figure \@ref(fig:behavioral)C, `r stats(acc_3,6)`). Among 6-player games, initial accuracy was also higher when the describer was consistent or matchers received full feedback than for games with a thin feedback channel (Figure \@ref(fig:behavioral)B, SI Tables 3-5).
 
 <!--**(TODO: in this paragraph, we should be emphasizing the coefficients that are relevant for asking (1) whether group size (2vs6) matters more for THIN than THICK groups and (2) whether among larger (6p) groups, THICKNESS improves communication accuracy)**-->
@@ -543,7 +559,7 @@ knitr::include_graphics("sbert.pdf")
 
 **In the previous sections, we explored the functional challenges facing multi-matcher communication and the solutions afforded by thicker interaction structure.**
 Here, we aim to better understand the mechanisms that make these solutions effective. 
-In particular, we explore the hypothesis that interaction structure affects performance by acting through a *convention formation* process [@clark1986]. 
+In particular, we explore the hypothesis that interaction structure and group size affect performance by acting through a *convention formation* process [@clark1986]. 
 Under a recent models of convention formation [@hawkins2023partners], groups are able to leverage their shared history to coordinate on stable expectations about how to refer to particular images.
 This model makes specific predictions about how interaction structure affects the ability to coordinate, in terms of the available feedback.
 
@@ -561,6 +577,7 @@ To measure arbitrariness, or divergence across groups, depending on group-specif
 Figure \@ref(fig:sbert-diagram) illustrates these two measures with example concatenated utterances and their within-game and between-game cosine similarities. 
 
 
+
 ```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. A-C. Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. Dots are per-game averages, smooths are quadratic. D-F. Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. Dots are per-image averages, smooths are quadratic. **(TODO check ordering of legends!)**"}
 #convergence
 
@@ -569,9 +586,13 @@ three_converge <- read_rds(here("code/models/three_converge.rds"))
 #1
 one_conv_dat <- one_two_converge |> filter(condition %in% c("2", "3","4","5","6"))
 
+conv_pred_1 <- read_rds(here("code/paper_mods/prediction/conv_pred_1.rds"))
+conv_pred_2 <- read_rds(here("code/paper_mods/prediction/conv_pred_2.rds"))
+conv_pred_3 <- read_rds(here("code/paper_mods/prediction/conv_pred_3.rds"))
 one_conv_plot <- ggplot(one_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
             geom_point(data=one_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+ # geom_smooth(formula=y~poly(x,2))+
+     geom_lineribbon(data=conv_pred_1, aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
   coord_cartesian(ylim=c(.2,1))+
   scale_x_continuous(breaks=seq(1,6))+
   labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
@@ -582,7 +603,7 @@ one_conv_plot <- ggplot(one_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
         legend.text=element_text(size=13),
         plot.title=element_text(hjust=.5, size=16),
         axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 
 #2
@@ -596,7 +617,8 @@ two_conv_dat <- one_two_converge |>  filter(condition %in% c("6emoji", "6highfee
 
 two_conv_plot <- ggplot(two_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
       geom_point(data=two_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
+  #geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
+      geom_lineribbon(data=conv_pred_2, aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
   #guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
@@ -609,7 +631,8 @@ annotate("text", x=3,y=1,label="Within game", size=6)+
         plot.title=element_text(hjust=.5, size=16),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14),
-        axis.title.y=element_blank())+    scale_color_manual(values=color_scheme_2)
+        axis.title.y=element_blank())+    
+  scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 
 
@@ -622,7 +645,8 @@ three_conv_dat <- three_converge |> mutate(condition=str_c(str_sub(condition,1,1
 
 three_conv_plot <- ggplot(three_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
       geom_point(data=three_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+       geom_lineribbon(data=conv_pred_3, aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+  #geom_smooth(formula=y~poly(x,2))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
@@ -634,7 +658,7 @@ three_conv_plot <- ggplot(three_conv_dat, aes(x=earlier+1,y=sim,color=condition)
         axis.title=element_text(size=14),
         plot.title=element_text(hjust=.5, size=16),
         axis.title.y = element_blank())+
-  scale_color_manual(values=color_scheme_3)
+  scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 conv <- plot_grid(one_conv_plot, two_conv_plot, three_conv_plot, nrow=1, rel_widths = c(1.05, 1,1))
 
@@ -642,14 +666,18 @@ one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds"))
 three_diverge <- read_rds(here("code/models/three_diverge.rds"))
 # divergence
 
+div_pred_1 <- read_rds(here("code/paper_mods/prediction/div_pred_1.rds"))
+div_pred_2 <- read_rds(here("code/paper_mods/prediction/div_pred_2.rds"))
+div_pred_3 <- read_rds(here("code/paper_mods/prediction/div_pred_3.rds"))
 #1
 one_div_dat <-  one_two_diverge |> filter(condition %in% c("2", "3","4","5","6"))
 
 one_div_plot <- ggplot(one_div_dat,aes(x=repNum+1,y=sim,color=condition))+
 geom_point(data=one_div_dat |> group_by(repNum, tangram, condition) |>  
              summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+  #geom_smooth(formula=y~poly(x,2))+
+       geom_lineribbon(data=div_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="")+
@@ -660,7 +688,7 @@ geom_point(data=one_div_dat |> group_by(repNum, tangram, condition) |>
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 #2
 
@@ -674,11 +702,12 @@ two_div_dat <-  one_two_diverge |>  filter(condition %in% c("6emoji", "6highfeed
 two_div_plot <- ggplot(two_div_dat, aes(x=repNum+1,y=sim,color=condition))+
         geom_point(data=two_div_dat |> group_by(repNum, tangram, condition) |>
                      summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+  #geom_smooth(formula=y~poly(x,2))+
+       geom_lineribbon(data=div_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.1,.7))+
   labs(x="", y="", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) , fill=F)+
     annotate("text", x=1,y=.7,label="E", size=6, fontface="bold")+
 annotate("text", x=3.5,y=.7,label="Between games", size=6)+
   theme(legend.position="bottom",
@@ -687,7 +716,7 @@ annotate("text", x=3.5,y=.7,label="Between games", size=6)+
         legend.text=element_text(size=13),
         axis.title=element_text(size=14),
         axis.title.y=element_blank())+
-   scale_color_manual(values=color_scheme_2)
+   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
 three_div_dat <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)),                    condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin")))
@@ -695,11 +724,12 @@ three_div_dat <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)
  three_div_plot <-  ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
       geom_point(data=three_div_dat |> group_by(repNum, tangram, condition) |>
                    summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+        geom_lineribbon(data=div_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+  #geom_smooth(formula=y~poly(x,2))+
   scale_x_continuous(breaks=seq(1,6))+
    coord_cartesian(ylim=c(.1,.7))+
     labs(x="", y="", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   annotate("text", x=1,y=.7,label="F", size=6, fontface="bold")+
   theme(legend.position="bottom",
                 axis.title.x=element_blank(),
@@ -707,12 +737,15 @@ three_div_dat <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)
         legend.text=element_text(size=13),
         axis.title=element_text(size=14),
         axis.title.y=element_blank())+
-scale_color_manual(values=color_scheme_3)
+scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 div <- plot_grid(one_div_plot,two_div_plot,three_div_plot, nrow=1, rel_widths = c(1.05, 1, 1))
 
 plot_grid(conv, div, nrow=2,  rel_heights = c(.95,1))
 ```
+
+
+
 
 
 ```{r}
@@ -741,14 +774,15 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 
 Across conditions, describer descriptions increased in semantic similarity to the final description over repetition; convergence was fastest in smaller and higher coherence groups, and was least strong in the 6-player thin condition (Figure \@ref(fig:sbert)A-C; SI Tables 19-23).
 We modeled semantic convergence by looking at the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. 
-The similarity of the first utterance to the last utterance was invariant across group size in Experiment 1 (`r stats(tolast_1, 1,3)`), but smaller groups converged faster (Figure \@ref(fig:sbert)A, `r stats(tolast_1, 3,3)`). 
-The 6-player thick games started off with greater distance between first and last utterances than 2-player thick games (`r stats(tolast_3, 7,3)`) but closed the gap over time (`r stats(tolast_3, 6,3)`). 
-Overall, smaller games reached a stable description faster than larger games. 
 
-<!--Convergence was especially rapid for the consistent speaker condition, where all the utterances came from the same person (Figure \@ref(fig:sbert)B, `r stats(tolast_2a, 1,3)`). -->
-Convergence was slower in thin games than thick games (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 4,3)`). 
+Smaller groups reached a stable description faster than larger games. In Experiment 1, initial similarity was invariant across group size (`r stats(tolast_1, 1,3)`), but smaller groups converged faster (Figure \@ref(fig:sbert)A, `r stats(tolast_1, 3,3)`). In experiment 3, 6-player thick games started off further from their eventual convention than 2-player thick games (`r stats(tolast_3, 7,3)`) but closed the gap over time (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 6,3)`). 
+
+Thicker games converged faster than thin games (Figure \@ref(fig:sbert)B-C, `r stats(tolast_3, 4,3)`). 
+
 Beyond the generally slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
+
 Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (Supplement Figure 4D-F, SI Tables 34-38). In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round. 
+
 All conditions showed some convergence toward a conventional nickname for the picture, but the speed of convergence was affected both by group size and channel width. Overall, descriptions were more similar if provided by the same person, if fewer people were in the game, and if matchers could contribute via a text channel. 
 
 ```{r}
