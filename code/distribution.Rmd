@@ -1,0 +1,69 @@
+---
+title: "Check distributions"
+output: html_document
+date: "2023-11-15"
+---
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning=F, message=F)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+library(viridis)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
+    fromJSON(flatten = T)
+}
+
+source(here("code/prep_ms.R"))
+
+```
+
+```{r}
+ combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+  ggplot(aes(x=total_num_words))+
+  geom_histogram(bins=60)
+
+ combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+  ggplot(aes(x=log(total_num_words)))+
+  geom_histogram(bins=60)
+ 
+  combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+    filter(repNum==5) |> 
+  ggplot(aes(x=total_num_words))+
+  geom_histogram(bins=60)
+
+ combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+   filter(repNum==5) |> 
+  ggplot(aes(x=log(total_num_words)))+
+  geom_histogram(bins=60)+
+   labs(x="log(words), last block")
+ 
+  combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+    filter(repNum==0) |> 
+  ggplot(aes(x=total_num_words))+
+  geom_histogram(bins=60)
+
+ combined_chat |> filter(role=="speaker") |> 
+  select(total_num_words, condition, repNum) |>
+   filter(repNum==0) |> 
+  ggplot(aes(x=log(total_num_words)))+
+  geom_histogram(bins=60)+
+   labs(x="log(words), first block")
+ 
+```
