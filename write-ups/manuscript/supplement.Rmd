@@ -827,5 +827,36 @@ do_table("tofirst_3.rds", "Experiment 3",decimal=3)
 
 ```
 
+# Exploratory Mega-analytic models
 
+For the mega-analytic models:
 
+ - thin and emoji conditions are coded as thin; everything else is thick
+
+- group size is coded as intent to treat
+
+- the intercept condition is 2 player, thick, first block
+
+- "thinner" is thin condition instead
+
+- "larger" is per addiitonal player
+
+- "block" is per later block
+
+```{r}
+do_table("acc_meta.rds", "Mega-analytic on accuracy")
+do_table("mega_red.rds", "Mega-analytic of reduction")
+do_table("mega_div.rds", "Mega-analytic on divergence between groups", decimal=3)
+do_table("mega_tolast.rds", "Mega-analytic on convergence to last", decimal=3)
+
+```
+
+# Log reduction
+
+Reduction models re-run using log-words as DV; these are the same as reduction models except for this change. 
+
+```{r}
+
+do_table("log_red_1.rds", "Experiment 1 log reduction")
+do_table("log_red_3.rds", "Experiment 3 log reduction")
+```

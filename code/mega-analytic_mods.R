@@ -1,9 +1,9 @@
-# Models for paper
+# Exploratory mega-analytic models
+# this is dumping all data together, looking at gameSize x thin v. everything else
 
-
-# Models we need:
-
-# for 1, 2a, 2b, 2c x {accuracy, reduction, listener-reduction, speed?, converge, diverge, ?distinctiveness}
+# and we're going to do 
+# 2thick as the baseline with larger and thinner and terms
+# block is already 0 indexed
 
 library(tidyverse)
 library(brms)
@@ -15,7 +15,6 @@ options(mc.cores = parallel::detectCores())
 
 model_location="code/paper_mods"
 # Read data
-
 source(here("code/prep_ms.R"))
 
 #### Accuracy models
@@ -24,97 +23,49 @@ acc_data <- combined_results |>
   group_by(playerId,repNum, gameId, numPlayers) %>% 
   mutate(correct.num=ifelse(correct,1,0)) %>% 
   mutate(block=repNum,
-         tangram_group=str_c(tangram, gameId))
+         tangram_group=str_c(tangram, gameId),
+         gameSize=ifelse(condition %in% c("6_thick", "6_thin"),6,numPlayers)) |> 
+  mutate(larger=gameSize-2,
+         thinner=ifelse(condition %in% c("rotate","no_rotate", "full_feedback",
+                                         "2_thick", "6_thick"),0,1))
 
 acc_priors <- c(set_prior("normal(0,1)", class="b"),
-                set_prior("normal(0,1)", class="sd"))#, #we're doing logistic, so these are reasonable b/c transform
+                set_prior("normal(0,1)", class="sd")
+                ) #we're doing logistic, so these are reasonable b/c transform
 
-model_1_acc<- brm(correct.num ~ block*numPlayers+(1|gameId), 
+#acc_priors_me <- c(set_prior("normal(0,1)", class="b"),
+#                set_prior("normal(0,1)", class="sd")
+#) #we're doing logistic, so these are reasonable b/c transform
+
+model_all_acc<- brm(correct.num ~ block*thinner*larger+(1|gameId), 
              family=bernoulli(link="logit"),
-             data=acc_data |> filter(condition=="rotate"), 
-             file=here(model_location, "acc_1"), prior=acc_priors, control=list(adapt_delta=.95))
-
-model_2a_acc<- brm(correct.num ~ block+(1|gameId), 
-                  family=bernoulli(link="logit"),
-                  data=acc_data |> filter(condition=="no_rotate"), 
-                  file=here(model_location, "acc_2a"), prior=acc_priors, control=list(adapt_delta=.95))
-
-model_2b_acc<- brm(correct.num ~ block+(1|gameId), 
-                  family=bernoulli(link="logit"),
-                  data=acc_data |> filter(condition=="full_feedback"), 
-                  file=here(model_location, "acc_2b"), prior=acc_priors, control=list(adapt_delta=.95))
-
-model_2c_acc<- brm(correct.num ~ block+(1|gameId), 
-                  family=bernoulli(link="logit"),
-                  data=acc_data |> filter(condition=="emoji"), 
-                  file=here(model_location, "acc_2c"), prior=acc_priors, control=list(adapt_delta=.95))
-
-acc_3 <- acc_data |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
-                              separate(condition, into= c("gameSize","channel"))
-                            
-  
-# pre-reg for 3: listener_accurate ~ block*channel*group_size + (block*channel*group_size|tangram)+ (1|tangram*group)+(block|group)
-# breaking this pre-reg in the name of a model that doesn't take forever to fit...
-
-model_3_acc<- brm(correct.num ~ block*gameSize*channel+(1|gameId), 
-             family=bernoulli(link="logit"),
-             data=acc_3, 
-             file=here(model_location, "acc_3"), prior=acc_priors, control=list(adapt_delta=.95))
+             data=acc_data, 
+             file=here(model_location, "acc_meta"), prior=acc_priors, control=list(adapt_delta=.95))
 
 ### Reduction models
 
 red_data <- combined_chat |> filter(role=="speaker") |> 
   mutate(block=repNum,
-         words=total_num_words)
+         words=total_num_words,
+         gameSize=ifelse(condition %in% c("6_thick", "6_thin"),6,numPlayers)) |> 
+  mutate(larger=gameSize-2,
+         thinner=ifelse(condition %in% c("rotate","no_rotate", "full_feedback",
+                                         "2_thick", "6_thick"),0,1))
 
-     
 red_priors <- c(
   set_prior("normal(12, 20)", class="Intercept"),
   set_prior("normal(0, 10)", class="b"),
   set_prior("normal(0, 5)", class="sd"),
-  set_prior("lkj(1)",       class="cor"))
-
-model_1_red <- brm(words ~ block*numPlayers + (block|tangram) + (1|playerId)+(1|tangram:gameId)+(block|gameId),
-                   data=red_data |> filter(condition=="rotate"),
-                   file=here(model_location, "red_1"),
-                   prior=red_priors,
-                   control=list(adapt_delta=.95))
-
-model_2a_red <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
-                   data=red_data |> filter(condition=="no_rotate"),
-                   file=here(model_location, "red_2a"),
-                   prior=red_priors,
-                   control=list(adapt_delta=.95))
-
-model_2b_red <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
-                    data=red_data |> filter(condition=="full_feedback"),
-                    file=here(model_location, "red_2b"),
-                    prior=red_priors,
-                    control=list(adapt_delta=.95))
-
-model_2c_red <- brm(words ~ block + (block|tangram)+(1|tangram:gameId)+(block|gameId),
-                    data=red_data |> filter(condition=="emoji"),
-                    file=here(model_location, "red_2c"),
-                    prior=red_priors,
-                    control=list(adapt_delta=.95))
-red_3 <- red_data |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
-  separate(condition, into= c("gameSize","channel"))
-
-model_3_red <-  brm(words ~ block*channel*gameSize +   (block*channel*gameSize|tangram)+ (1|tangram:gameId)+ (block|gameId), 
-                   data=red_3,
-                   file=here(model_location,"red_3"),
-                   control=list(adapt_delta=.95),
-                   prior=red_priors)
-
-# pre-reg for 1: 
-#   words ~ block * player_count + (block|tangram) + (1|speaker)
-# + (1|tangram*group)+(block|group)
+  set_prior("lkj(1)",       class="cor")
+  )
 
 
-#pre-reg for 2: words ~ block + (block|tangram)+ (1|tangram*group)+(block|group)
+model_all_red <- brm(words ~ block*thinner*larger+(block|gameId),
+                     data=red_data,
+                     file=here(model_location, "mega_red"),
+                     prior=red_priors,
+                     control=list(adapt_delta=.95))
 
-
-# pre-reg for 3 : words ~ block*channel*group_size + (block*channel*group_size|tangram)+ (1|tangram*group)+(block|group)
 
 
 
@@ -126,29 +77,30 @@ model_3_red <-  brm(words ~ block*channel*gameSize +   (block*channel*gameSize|t
 
 one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds")) |> mutate(block=repNum)
 
-three_diverge <- read_rds(here("code/models/three_diverge.rds")) |> mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+three_diverge <- read_rds(here("code/models/three_diverge.rds")) |> 
+  mutate(block=repNum, gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
 
 ###  (divergence across games) For the same condition & block & tangram, distance between utterances from different games. 
-recode_conditions <- function(df){
-  df |> mutate(gameSize=case_when(
+
+div_priors <- c(set_prior("normal(.5, .2)", class="Intercept"),
+                set_prior("normal(0,.1)", class="b")#,
+                #set_prior("normal(0,.05)", class="sd")
+                )
+
+mega_diverge <- one_two_diverge |> bind_rows(three_diverge) |> 
+  mutate(gameSize=case_when(
     !is.na(gameSize)~as.numeric(gameSize),
     condition %in% c("2", "3", "4", "5", "6")~as.numeric(condition),
     condition %in% c("6noro", "6emoji", "6highfeed")~6,
     T ~ NA,
   ),
-  gameSize_offset=gameSize-2,
-  thickness=case_when(
-    condition %in% c("2thin", "6thin", "6emoji")~-1,
-    condition %in% c("2thick", "6thick")~1,
-    condition %in% c("2", "3", "4", "5", "6")~0,
-    condition %in% c("6noro", "6highfeed")~.5,
-    T ~ NA
-  ))}
+  larger=gameSize-2,
+  thinner=case_when(
+    condition %in% c("2thin", "6thin", "6emoji")~1,
+    T ~ 0
+  ))
 
-mega_diverge <- one_two_diverge |> bind_rows(three_diverge) |> recode_conditions()
-
-model_all_div <- brm(sim ~ block*thickness*gameSize_offset+
-                         (1|tangram),
+model_all_div <- brm(sim ~ block*thinner*larger,
                         data=mega_diverge,
                         control=list(adapt_delta=.95),
                         file=here(model_location,"mega_div"),
@@ -158,18 +110,28 @@ model_all_div <- brm(sim ~ block*thickness*gameSize_offset+
 # (convergence within games) For the same condition & game & tangram, distance between utterances from different blocks. 
 #block 6 with all earlier blocks; 
 
-div_priors <- c(set_prior("normal(.5, .2)", class="Intercept"),
-                set_prior("normal(0,.1)", class="b"),
-                set_prior("normal(0,.05)", class="sd"))
+
 
 
 one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
-three_converge <- read_rds(here("code/models/three_converge.rds"))|> mutate(gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
+three_converge <- read_rds(here("code/models/three_converge.rds"))|> 
+  mutate(gameSize=str_sub(condition, 1, 1), channel=str_sub(condition, 2, -1))
 
 
-mega_converge <- one_two_converge |> bind_rows(three_converge) |> recode_conditions()
+mega_converge <- one_two_converge |> bind_rows(three_converge) |>  
+  mutate(gameSize=case_when(
+    !is.na(gameSize)~as.numeric(gameSize),
+    condition %in% c("2", "3", "4", "5", "6")~as.numeric(condition),
+    condition %in% c("6noro", "6emoji", "6highfeed")~6,
+    T ~ NA,
+  ),
+  larger=gameSize-2,
+  thinner=case_when(
+    condition %in% c("2thin", "6thin", "6emoji")~1,
+    T ~ 0
+  ))
 
-model_all_to_last<- brm(sim ~ earlier*thickness*gameSize_offset + (1|tangram) + (1|gameId),
+model_all_to_last<- brm(sim ~ earlier*larger*thinner,
                         data=mega_converge,
                         control=list(adapt_delta=.95),
                         file=here(model_location,"mega_tolast"),

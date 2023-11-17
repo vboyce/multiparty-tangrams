@@ -1,0 +1,399 @@
+---
+title: "Posterior Pred Checks"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r set-up, include=FALSE}
+require(Hmisc)#not directly called, but needed for dots on plots with mean_ci_boot ! 
+#this has to go first b/c it defines summarize and that screws things up
+library(tidyverse)
+
+library(ggplot2)
+
+library(here)
+
+library(brms)
+library(rstan)
+library(cowplot)
+library(tidybayes)
+
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
+                      fig.pos = "tb", fig.path='figs/', fig.env="figure",
+                      echo=F, warning=F, cache=T, 
+                      message=F, sanitize = T)
+
+color_scheme_1 <- c("2"="#FFBDD4", "5"="#A12EFF", "3"="#FF7DF0","6"="#6940FF","4"="#D24AFF")
+color_scheme_2 <- c( "6 full feedback"="#425df5", "6 same describer"="#00A2FF","6 thin"="#D47E04")
+
+color_scheme_3 <- c("2 thin"="#FFDA09","6 thin"="#D47E04", 
+                    "2 thick"="#77F3DB","6 thick"="#00BDA8")
+		
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  |> 
+    fromJSON(flatten = T)
+}
+
+##Data import constants
+
+source(here("code/prep_ms.R"))
+model_loc="code/paper_mods"
+m_loc="code/paper_mods/prediction"
+```
+
+# Reduction
+
+## Expt 1
+
+```{r}
+
+expt_1_dat <- combined_chat |> filter(role=="speaker") |> 
+  mutate(block=repNum,
+         words=total_num_words) |> filter(condition=="rotate") |> 
+  select(gameId, block, words, numPlayers, tangram, playerId)
+
+red_1_mod <- here(model_loc,"red_1.rds") |> read_rds()
+
+pred <- expt_1_dat |> 
+  add_linpred_draws(red_1_mod, value="predicted", re_formula=NULL) |> 
+  group_by(gameId, block, words, numPlayers, tangram, playerId) |> 
+  summarize(predicted=mean(predicted)) |> 
+  mutate(diff=predicted-words)
+
+
+
+```
+
+
+```{r, fig.width=10, fig.height=10}
+
+ggplot(pred,
+       aes(x=words, y=predicted, color=as.factor(numPlayers)))+
+  geom_point(alpha=.5, size=1)+
+  coord_equal(xlim=c(0,50), ylim=c(0,50))+
+  geom_abline(intercept=0,slope=1,linetype="dashed")+
+  facet_grid(as.factor(numPlayers)~block)+
+  scale_color_manual(values=color_scheme_1)+
+  theme(legend.position = "none")+
+  labs(y="Predicted", x="Actual")
+  
+```
+
+```{r}
+ggplot(pred,
+       aes(x=words, y=diff, color=as.factor(numPlayers)))+
+  geom_point(alpha=.5, size=1)+
+  #coord_equal(xlim=c(0,50), ylim=c(0,50))+
+  geom_abline(intercept=0,slope=0,linetype="dashed")+
+  facet_grid(as.factor(numPlayers)~block)+
+  scale_color_manual(values=color_scheme_1)+
+  theme(legend.position = "none")+
+  labs(y="Predicted - Actual", x="Actual")
+```
+
+
+
+```{r, fig.height=4, fig.width=8}
+
+red_pred_1 <- read_rds(here("code/paper_mods/prediction/red_pred_1.rds"))
+
+
+one_red_plot <-  ggplot(pred |> mutate(numPlayers=as.factor(numPlayers)), aes(x=block+1, y=words, color=numPlayers))+
+      geom_point(data=pred |> mutate(numPlayers=as.factor(numPlayers)) |> group_by(block, gameId, numPlayers) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    coord_cartesian(ylim=c(0,45))+
+    scale_x_continuous(breaks=seq(1,6))+
+    labs( y="Number of words", x="Block", color="", title="Actual")+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          axis.title.x=element_blank())+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color","fill"))
+
+one_pred_red_plot <-  ggplot(pred |> mutate(numPlayers=as.factor(numPlayers)), aes(x=block+1, y=predicted, color=numPlayers))+
+      geom_point(data=pred |> mutate(numPlayers=as.factor(numPlayers)) |> group_by(block, gameId, numPlayers) |> summarize(predicted=mean(predicted)),position = position_dodge(width=.4), alpha=.3)+
+   geom_lineribbon(data=red_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    coord_cartesian(ylim=c(0,45))+
+    scale_x_continuous(breaks=seq(1,6))+
+    labs( y="Number of words", x="Block", color="",title="Predicted")+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          axis.title.x=element_blank())+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color","fill"))
+
+plot_grid(one_red_plot, one_pred_red_plot)
+```
+
+
+## Expt 3
+
+```{r}
+
+expt_3_dat <- combined_chat |> filter(role=="speaker") |> 
+  mutate(block=repNum,
+         words=total_num_words) |> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
+  separate(condition, into= c("gameSize","channel")) |> 
+  select(gameId, block, words, gameSize, channel, tangram, playerId)
+
+red_3_mod <- here(model_loc,"red_3.rds") |> read_rds()
+
+pred_3_red <- expt_3_dat |> 
+  add_linpred_draws(red_3_mod, value="predicted", re_formula=NULL) |> 
+  group_by(gameId, block, words, gameSize, channel, tangram, playerId) |> 
+  summarize(predicted=mean(predicted)) |> 
+  mutate(diff=predicted-words)
+
+
+
+```
+
+```{r, fig.width=10, fig.height=10}
+
+ggplot(pred_3_red |> mutate(condition=str_c(gameSize, " ", channel)),
+       aes(x=words, y=predicted, color=condition))+
+  geom_point(alpha=.5, size=1)+
+  coord_equal(xlim=c(0,50), ylim=c(0,50))+
+  geom_abline(intercept=0,slope=1,linetype="dashed")+
+  facet_grid(condition~block)+
+  scale_color_manual(values=color_scheme_3)+
+  theme(legend.position = "none")+
+  labs(y="Predicted", x="Actual")
+  
+```
+
+```{r}
+ggplot(pred_3_red |> mutate(condition=str_c(gameSize, " ", channel)),
+       aes(x=words, y=diff, color=condition))+
+  geom_point(alpha=.5, size=1)+
+  #coord_equal(xlim=c(0,50), ylim=c(0,50))+
+  geom_abline(intercept=0,slope=0,linetype="dashed")+
+  facet_grid(condition~block)+
+  scale_color_manual(values=color_scheme_3)+
+  theme(legend.position = "none")+
+  labs(y="Predicted - Actual", x="Actual")
+```
+
+```{r, fig.width=8, fig.height=4}
+red_pred_3 <- read_rds(here("code/paper_mods/prediction/red_pred_3.rds"))
+
+three_red_plot <-  ggplot(pred_3_red |> mutate(condition=str_c(gameSize, " ", channel)), aes(x=block+1, y=words, color=condition))+
+     geom_point(data=pred_3_red |> mutate(condition=str_c(gameSize, " ", channel))|> group_by(block, gameId, condition) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE )+
+    coord_cartesian(ylim=c(0,45))+
+    scale_x_continuous(breaks=seq(1,6))+
+    labs(x="", y="", color="", title="Actual")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_blank())+
+    scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
+
+three_pred_red_plot <-  ggplot(pred_3_red |> mutate(condition=str_c(gameSize, " ", channel)), aes(x=block+1, y=predicted, color=condition))+
+     geom_point(data=pred_3_red |> mutate(condition=str_c(gameSize, " ", channel)) |> group_by(block, gameId, condition) |> summarize(predicted=mean(predicted)),position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE )+
+    coord_cartesian(ylim=c(0,45))+
+    scale_x_continuous(breaks=seq(1,6))+
+    labs(x="", y="", color="", title="Predicted")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_blank())+
+    scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
+
+plot_grid(three_red_plot, three_pred_red_plot)
+```
+
+# Accuracy
+
+## Expt 1
+```{r}
+
+expt_1_acc <- combined_results |>
+  filter(condition=="rotate") |> 
+  group_by(repNum, gameId, numPlayers) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  summarize(correct=mean(correct.num)) |> 
+  mutate(block=repNum) |>
+  select(gameId, block, correct, numPlayers)
+
+acc_1_mod <- here(model_loc,"acc_1.rds") |> read_rds()
+
+pred_acc_1 <- expt_1_acc |> 
+  add_linpred_draws(acc_1_mod, value="predicted", re_formula=NULL) |> 
+  group_by(gameId, block, correct, numPlayers) |> 
+  summarize(predicted=mean(predicted)) |> 
+  mutate(predicted=inv_logit_scaled(predicted)) |> 
+  mutate(diff=predicted-correct)
+
+
+
+```
+
+
+
+```{r, fig.width=10, fig.height=10}
+
+ggplot(pred_acc_1,
+       aes(x=correct, y=predicted, color=as.factor(numPlayers)))+
+  geom_point(alpha=1)+
+  coord_equal(xlim=c(0.4,1), ylim=c(0.4,1))+
+  geom_abline(intercept=0,slope=1,linetype="dashed")+
+  facet_grid(as.factor(numPlayers)~block)+
+  scale_color_manual(values=color_scheme_1)+
+  theme(legend.position = "none")+
+  labs(y="Predicted", x="Actual")
+```
+ 
+```{r}
+
+ggplot(pred_acc_1,
+       aes(x=correct, y=diff, color=as.factor(numPlayers)))+
+  geom_point(alpha=1)+
+  geom_abline(intercept=0,slope=0,linetype="dashed")+
+  facet_grid(as.factor(numPlayers)~block)+
+  scale_color_manual(values=color_scheme_1)+
+  theme(legend.position = "none")+
+  labs(y="Predicted - Actual", x="Actual")
+```
+
+```{r, fig.width=8, fig.height=4}
+acc_pred_1 <- read_rds(here("code/paper_mods/prediction/acc_pred_1.rds"))
+
+one_acc_plot <- ggplot(pred_acc_1, aes(x=block+1, y=correct, color=as.factor(numPlayers)))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(.6,1.05))+
+  geom_point(position = position_dodge(width=.4), alpha=.3)+
+    geom_lineribbon(data=acc_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    labs(x="Block", y="Fraction correctly selected", color="", title="Actual")+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          plot.title=element_text(size=16, hjust=.5))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+one_pred_acc_plot <- ggplot(pred_acc_1, aes(x=block+1, y=predicted, color=as.factor(numPlayers)))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(.6,1.05))+
+  geom_point(position = position_dodge(width=.4), alpha=.3)+
+    geom_lineribbon(data=acc_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    labs(x="Block", y="Fraction correctly selected", color="", title="Predicted")+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          plot.title=element_text(size=16, hjust=.5))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+plot_grid(one_acc_plot, one_pred_acc_plot)
+```
+
+## Expt 3
+```{r}
+
+expt_3_acc <- combined_results |>
+ filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
+  separate(condition, into= c("gameSize","channel")) |> 
+group_by(repNum, gameId, gameSize, channel) %>% 
+  mutate(correct.num=ifelse(correct,1,0)) %>% 
+  summarize(correct=mean(correct.num)) |> 
+  mutate(block=repNum) |>
+  select(gameId, block, correct, gameSize, channel)
+
+acc_3_mod <- here(model_loc,"acc_3.rds") |> read_rds()
+
+pred_acc_3 <- expt_3_acc |> 
+  add_linpred_draws(acc_3_mod, value="predicted", re_formula=NULL) |> 
+  group_by(gameId, block, correct, gameSize, channel) |> 
+  summarize(predicted=mean(predicted)) |> 
+  mutate(predicted=inv_logit_scaled(predicted)) |> 
+  mutate(diff=predicted-correct)
+
+
+
+```
+
+```{r, fig.width=10, fig.height=10}
+
+ggplot(pred_acc_3 |> mutate(condition=str_c(gameSize, " ", channel)),
+       aes(x=correct, y=predicted, color=condition))+
+  geom_point(alpha=1)+
+  coord_equal(xlim=c(0.4,1), ylim=c(0.4,1))+
+  geom_abline(intercept=0,slope=1,linetype="dashed")+
+  facet_grid(condition~block)+
+  scale_color_manual(values=color_scheme_3)+
+  theme(legend.position = "none")+
+  labs(y="Predicted", x="Actual")
+  
+```
+
+```{r}
+ggplot(pred_acc_3 |> mutate(condition=str_c(gameSize, " ", channel)),
+       aes(x=correct, y=diff, color=condition))+
+  geom_point(alpha=1)+
+  geom_abline(intercept=0,slope=0,linetype="dashed")+
+  facet_grid(condition~block)+
+  scale_color_manual(values=color_scheme_3)+
+  theme(legend.position = "none")+
+  labs(y="Predicted - Actual", x="Actual")
+```
+
+
+```{r, fig.width=8, fig.height=4}
+acc_pred_3 <- read_rds(here("code/paper_mods/prediction/acc_pred_3.rds"))
+
+three_acc_plot <-  ggplot(pred_acc_3 |> mutate(condition=str_c(gameSize, " ", channel)), aes(x=block+1, y=correct, color=condition))+
+    scale_x_continuous(breaks=seq(1,6))+
+    coord_cartesian(ylim=c(.6,1.05))+
+      geom_point(position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+     geom_lineribbon(data=acc_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+    labs(x="", y="", color="", title="Actual")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+          plot.title=element_text(size=16, hjust=.5),
+          axis.title=element_text(size=14),
+          axis.title.y=element_blank())+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.1) ) )+
+    scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
+
+
+three_pred_acc_plot <-  ggplot(pred_acc_3 |> mutate(condition=str_c(gameSize, " ", channel)), aes(x=block+1, y=predicted, color=condition))+
+    scale_x_continuous(breaks=seq(1,6))+
+    coord_cartesian(ylim=c(.6,1.05))+
+      geom_point(position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+     geom_lineribbon(data=acc_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
+    labs(x="", y="", color="", title="Predicted")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+          plot.title=element_text(size=16, hjust=.5),
+          axis.title=element_text(size=14),
+          axis.title.y=element_blank())+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.1) ) )+
+    scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
+
+plot_grid(three_acc_plot, three_pred_acc_plot)
+
+```
