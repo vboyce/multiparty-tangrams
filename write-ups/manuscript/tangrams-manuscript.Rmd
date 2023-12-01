@@ -425,6 +425,8 @@ acc_2b <- read_rds(here(msum_loc,"acc_2b.rds"))
 acc_2c <- read_rds(here(msum_loc,"acc_2c.rds"))
 
 acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
+
+acc_mega <- read_rds(here(msum_loc,"acc_meta.rds"))
 ```
 
 ## Group Performance
@@ -435,17 +437,19 @@ Matcher accuracy is given by the percent of matchers on each trial who successfu
 Describer efficiency is given by the number of words produced by the describer to achieve that degree of matcher accuracy in the group.
 The degree to which describers are able to communicate more efficiently without negatively impacting matcher accuracy is indicative of convergence on a more effective shared communication protocol within the group.
 
-### Smaller and higher coherence groups tend to be more accurate.
+### Smaller and higher coherence groups are more accurate.
 
 We begin by examining the impact of interaction structure on referential success, the ability to correctly transmit the intended target to all matchers.
 
-To test these effects, we constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3).
+To test these effects, we constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3). 
 
 Across all conditions, we observed strong positive effects of repetition block, indicating improved performance over time (Figure \@ref(fig:behavioral)A-C, SI Tables 2-6).
 
-Group size and differences in interaction structure contributed to variation in group performance. Larger games had lower initial accuracy (`r stats(acc_3,6)`) and improved more slowly (`r stats(acc_3,6)`) than smaller games in Experiment 3, although group size differences were not reliable in Experiment 1 (SI Table 2). Among large groups in experiment 2, accuracy was higher in the thicker conditions  than in the condition with thin interaction structure (SI Tables 3-5); however, in experiment 3, no effects of game thickness were reliable (SI Table 6). 
+Group size and differences in interaction structure contributed to variation in group performance. Larger games had lower initial accuracy (`r stats(acc_3,6)`) and improved more slowly (`r stats(acc_3,6)`) than smaller games in Experiment 3, although group size differences were not reliable in Experiment 1 (SI Table 2). Among large groups in experiment 2, accuracy was higher in the thicker conditions than in the condition with thin interaction structure (SI Tables 3-5); however, in experiment 3, no effects of game thickness were reliable (SI Table 6). 
 
-Regardless of group size and interaction structure, groups were far above chance and improved over the course of the game. We also observed numerical effects such that smaller groups and groups with higher coherence tended to be more accurate, though the magnitude and reliability of these effects varied across experiments.
+We aggregated data from all experiments into a post-hoc mega-analytic model predicting accuracy as a function of game thickness (thin v. not-thin) and game size. Overall, accuracy increases over time (`r stats(acc_mega,2)`) but the rate of increase is reduced for thin games (`r stats(acc_mega, 4)`) and larger games (`r stats(acc_mega,3)`) compared to smaller, thicker games. 
+
+Regardless of group size and interaction structure, groups were far above chance and improved over the course of the game. Smaller groups and groups with higher coherence tended to be more accurate, though the magnitude and reliability of these effects varied across experiments.
  
 
 ```{r}
@@ -459,6 +463,7 @@ red_2c <- read_rds(here(msum_loc,"red_2c.rds"))
 
 red_3 <- read_rds(here(msum_loc, "red_3.rds"))
 
+red_mega <- read_rds(here(msum_loc,"mega_red.rds"))
 red_3_extra <- read_rds(here(msum_loc, "red_3_extra")) %>% select(diff6, thin2, thin6, thick6)
 
 diff6 <- str_c("$\\beta=", round(red_3_extra[2,1],2),",\\:95\\%\\:\\mathrm{CrI}=[",round(red_3_extra[1,1],2),", ",round(red_3_extra[3,1],1), "]$")
@@ -470,7 +475,7 @@ thin6 <- str_c("$\\beta=", round(red_3_extra[2,3],2),", (95\\%\\:\\mathrm{CrI}=[
 thick6 <- str_c("$\\beta=", round(red_3_extra[2,4],2),", (95\\%\\:\\mathrm{CrI}=[",round(red_3_extra[1,4],2),", ",round(red_3_extra[3,4],1), "]$)")
 ```
 
-### Larger groups require more information.
+### Smaller and higher coherence groups use shorter descriptions.
 
 After establishing that groups were able to communicate the targets successfully, we turned to the challenges faced by describers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow describers to communicate more effectively over time.
@@ -482,7 +487,9 @@ Samller groups tend to continue to use shorter descriptions than larger groups o
 
 Interaction structure did not show a consistent effect on utterance length. While thin 6 player games showed a flatter reduction trajectory than thicker 6 player games in Experiment 2 (SI Tables 8-10), there was not a reliable effect of game thickness on reduction in Experiment 3 for either smaller or larger groups (SI Table 11). 
 
-Overall, describers on average decreased their descriptions by a few words each repetition block. Smaller games use shorter descriptions than larger games across various time points in the experiment, and thinner games have numerically shallower slopes of reduction than thicker games. 
+Aggregating across experiments with a mega-analytic model revealed an overall pattern of reduction (`r stats(red_mega,2)`). Larger games were associated with steeper reduction (`r stats(red_mega,3)`) from a more verbose starting point (`r stats(red_mega,6)`) than smaller games, and thin games had shallower reduction curves (`r stats(red_mega,4)`) than thicker games. 
+
+Overall, describers on average decreased their descriptions by a few words each repetition block. Smaller games used shorter descriptions than larger games across various time points in the experiment, and thinner games reduced less than thicker games. 
 
 
 ```{r}
@@ -493,7 +500,7 @@ anylist_1 <- read_rds(here(msum_loc, "anylist_1.rds"))
 anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 ```
 
-### Larger groups use more backchannels
+### Larger groups use more backchannels.
 
 As a final measure of group performance, we examine the back-and-forth interactions between the describer and the group of matchers.
 The backchannel allows matchers to actively provide feedback and seek clarification about the describer's referring expressions. An example transcript from a game where matchers contributed in various ways is in Table \@ref(tab:listener-example).
@@ -741,9 +748,11 @@ tonext_2c <- read_rds(here(msum_loc, "tonext_2c.rds"))
 tolast_3 <- read_rds(here(msum_loc, "tolast_3.rds"))
 
 tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
+
+tolast_mega <- read_rds(here(msum_loc,"mega_tolast.rds"))
 ```
 
-### Descriptions converge within groups
+### Descriptions converge faster in groups with higher coherence.
 
 Across conditions, describer descriptions increased in semantic similarity to the final description over repetition, indicating convergence toward a stable description; convergence was fastest in smaller and higher coherence groups (Figure \@ref(fig:sbert)A-C; SI Tables 19-23).
 
@@ -754,6 +763,8 @@ Smaller groups reached more stable descriptions faster than larger games. In Exp
 Thicker games converged faster than thin games (Figure \@ref(fig:sbert)B-C). In experiment 3, small thin games started off slightly further from their convention than small thick games, and this gap widened over time (`r stats(tolast_3, 4,3)`).
 
 The combination of thin interaction structure and larger group hindered convergence more than either factor individually. Beyond the generally slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
+
+Aggregating across experiments confirms this pattern: Thin games converge less than thick games (`r stats(tolast_mega, 5,3)`), and larger thinner games are especially slow to converge (`r stats(tolast_mega, 4,3)`). 
 
 Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (Supplement Figure 4D-F, SI Tables 34-38). In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round. 
 
@@ -768,10 +779,12 @@ div_2b <- read_rds(here(msum_loc, "div_2b.rds"))
 
 div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
+
+div_mega <- read_rds(here(msum_loc,"mega_div.rds"))
 ```
 
 
-### Games diverges from one another faster with thicker channels
+### Games diverge from one another faster with thicker channels.
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, their descriptions are predicted to become increasingly dissimilar as groups increasingly adapt to their shared history. 
 
@@ -783,6 +796,8 @@ However, different game sizes and interaction structures revealed very different
 Smaller games used more group-specific language. In experiment 1, smaller games diverged more quickly than larger games in experiment 1 (`r stats(div_1,2,3)`). In experiment 3, 2-player thick games started off more dissimiliar than 6-player thick games, although 6-player games diverged faster and eventually approached the dissimilarity levels of 2-player thick games (SI Table 28). 
 
 Thicker interaction structure was associated with stronger group-specific divergence. In experiment 3, 2-player thin games diverged more slowly than 2-player thick games (`r stats(div_3, 2,3)`). As with the convergence patterns, large games with thin interaction structures had the flattest trajectories, as thinness and largeness compounded.  6-player thin games diverged even less than 2-player thin games (Figure \@ref(fig:sbert)F, `r stats(div_3, 3,3)`), and in experiment 2, 6-player thin games barely diverged at all (Figure \@ref(fig:sbert)E, `r stats(div_2c,1,3)`). 
+
+A mega-analytic model confirms this pattern: thin games differentiate less between groups (`r stats(div_mega,4,3)`) and large thin groups differentiate even less (`r stats(div_mega, 5,3)`).
 
 ### Interim summary 
 
@@ -870,6 +885,8 @@ We were unable to fit the full pre-registered mixed effects structure in a reaso
 Models of matcher accuracy were logistic models with normal(0,1) priors for both betas and sd. 
 Models of describer efficiency were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). 
 For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
+
+As an additional post-hoc analysis, we did mega-analytic models combining data across all experiments. For these models, we contrasted the 3 thin conditions (2c, and the two thin conditions of experiment 3) with all the other conditions lumped together as thick-ish. We coded game size as a continuous measure. 
 
 We also needed to decide how to handle dropout in Experiment 3, as some of the 6-player games did not retain all 6 players for the entire game. 
 Our decision was to follow an intent-to-treat analysis and treat data as missing completely at random. 
