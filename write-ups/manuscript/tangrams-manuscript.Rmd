@@ -67,9 +67,12 @@ tables: TRUE # Needed to be able to include tables
 Real-world communication frequently requires language producers to address more than one comprehender at once, yet most psycholinguistic research focuses on one-on-one communication.
 As the audience size grows, interlocuters face new challenges that do not arise in dyads. 
 They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
-Here, we ask which properties of the group's *interaction structure* facilitates successful communication.
+Here, we ask which properties of the group's *interaction structure* facilitate successful communication.
 We used a repeated reference game paradigm in which directors instructed between one and five matchers to choose specific targets out of a set of abstract figures. 
-Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of interaction between matchers. Across groups of different sizes and interaction constraints, describers used increasingly short utterances to convey their meaning to matchers who selected the targets with increasing accuracy. Smaller groups and groups with less-constrained interaction structures ("thick channels") showed stronger convergence to group-specific conventions, while large groups with limiting interaction structures ("thin channels") struggled with convention formation. Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
+Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of peer interaction between matchers. 
+Across groups of different sizes and interaction constraints, describers produced increasingly efficient utterances and matchers made increasingly accurate selections. 
+Critically, however, we found that smaller groups and groups with less-constrained interaction structures ("thick channels") showed stronger convergence to group-specific conventions than large groups with constrained interaction structures ("thin channels"), which struggled with convention formation. 
+Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
 
 :::
 
@@ -171,7 +174,6 @@ Much of human social life revolves around communication in groups.
 At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational; @zack1993interactivity].
 Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology [@branigan2006; @ginzburg2005; @traum2004]. 
 For example, producers need to account for the fact that different comprehenders in the group may have different mental states or levels of background understanding [@horton2005; @horton2002; @yoon2018; @yoon2014; @weber2003;@fox-tree2013], while comprehenders must account for the fact that utterances are not necessarily tailored to them [@fay2000; @carletta1998; @metzing2003; @yoon2019; @rogers2013; @cohngordon; @tolins2016].
-
 What enables producers and comprehenders to nevertheless overcome these challenges and navigate multi-party settings with relative ease? 
 
 One promising set of hypotheses centers on the group's *interaction structure*, the set of constraints placed on the group's shared communication channel. 
@@ -186,18 +188,21 @@ They provide a clear metric of communicative effectiveness: how many words are r
 *Repeated* reference games, where the same target images appear multiple times in succession, were introduced to examine how interlocutors establish shared reference in the absence of conventional labels [@krauss1964; @clark1986].
 At the beginning of the game, long and costly descriptions are typically required to succeed. 
 A key finding, however, is that dyads become increasingly efficient over the course of interaction. 
-Later utterances require fewer words, but also become more impenetrable to outsiders [@schober1989; @wilkes1992coordinating]. 
+Fewer words are required to achieve the same accuracy, but referring expressions also become more impenetrable to outsiders [@schober1989; @wilkes1992coordinating]. 
 
 In principle, repeated reference games provide a strong operationalization of communicative effectiveness for the problem of multi-party communication: describers must simultaneously achieve shared reference with multiple matchers. 
 However, empirically studying multi-party communication raises a number of difficulties in practice. 
 A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings [@almaatouq2022].
-We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using an interactive web-based platform [@haber2019;@hawkins2023partners]. 
-Repeated reference games in online, chat-based paradigms have closely replicated earlier results from face-to-face studies [@hawkins2020], and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
+We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using interactive web-based platforms [@almaatouq2020empirica;@haber2019;@hawkins2023partners]. 
+Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies [@hawkins2020], and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
 
-We use the multi-party repeated reference game to explore effects of group size and interaction channel thickness through a series of three experiments. **Taken together, our findings illuminate the mechanisms of social interaction in larger groups and suggest that larger groups may be a more sensitive environment for studying communication. TODO WHAT'S OUR CALIBRATED CLAIM OF IMPORTANCE??**
+We leverage our platform to explore effects of group size and interaction channel thickness in a series of three experiments. 
+While we find that small groups reliably converge on group-specific "shorthand" regardless of the interaction structure, larger groups require thicker channels -- richer conversational feedback among members -- to achieve the same degree of coherence. 
+Thus, increasing group size alone does not impede communication; rather, larger groups may require stronger social and linguistic cues to establish common ground among all members.
+More broadly, our work suggests that studying communication in larger groups is necessary to unveil critical aspects of interaction structure that have not been evident in typical dyadic settings.
 
 
-```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, describers described a target image to the matchers. Each image appeared once per block for six blocks. (B) Diagram of the experimental space. Experiments varied along 3 dimensions: Group size, group coherence, and matcher backchannel. (C) Schematic of the axes we manipulated. Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel)."}
+```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, a describer described the target image to the group of matchers. Each image appeared once per block for six blocks. (B) Experiments varied along 3 dimensions: Group size, group coherence, and matcher backchannel. (C) Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel)."}
 knitr::include_graphics("expt-diagram3.pdf")
 ```
 
@@ -232,7 +237,7 @@ In the limited backchannel condition, matchers were limited to four discrete emo
 Experiment 3 crossed the extremes of group size from experiment 1 (2 vs. 6 people) with the extremes of group interactions from Experiment 2 (*thick* vs. *thin* interaction structure). 
 In the *thick* condition, we maintained a consistent describer, gave all matchers full task feedback, and allowed them to freely use a chat box. 
 In the *thin* condition, we forced the describer to rotate on each block, restricted feedback to their own binary correctness, and restricted the backchannel to the four emojis.
-Note that the 2-player thick game most closely resembles the design of classic repeated reference games [@clark1986; @hawkins2020].
+Note that the 2-player thick game most closely resembles the design of classic repeated reference games [@clark1986].
 
 ```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible. **(TODO check ordering of legends!)**"}
 # accuracy
@@ -430,25 +435,22 @@ acc_mega <- read_rds(here(msum_loc,"acc_meta.rds"))
 ```
 
 ## Group Performance
-We first examined how accurately and efficiently groups were able to match images, before moving on to examine how describer's descriptions vary over time and condition. 
 
+We first examined how accurately and efficiently groups were able to perform the referential task. 
 We characterize group performance along two complementary metrics: (1) matcher accuracy and (2) describer efficiency. 
 Matcher accuracy is given by the percent of matchers on each trial who successfully selected the target referent. 
 Describer efficiency is given by the number of words produced by the describer to achieve that degree of matcher accuracy in the group.
 The degree to which describers are able to communicate more efficiently without negatively impacting matcher accuracy is indicative of convergence on a more effective shared communication protocol within the group.
 
-### Smaller and higher coherence groups are more accurate.
+### Smaller and higher-coherence groups are more accurate.
 
 We begin by examining the impact of interaction structure on referential success, the ability to correctly transmit the intended target to all matchers.
-
 To test these effects, we constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3). 
-
 Across all conditions, we observed strong positive effects of repetition block, indicating improved performance over time (Figure \@ref(fig:behavioral)A-C, SI Tables 2-6).
 
 Group size and differences in interaction structure contributed to variation in group performance. Larger games had lower initial accuracy (`r stats(acc_3,6)`) and improved more slowly (`r stats(acc_3,6)`) than smaller games in Experiment 3, although group size differences were not reliable in Experiment 1 (SI Table 2). Among large groups in experiment 2, accuracy was higher in the thicker conditions than in the condition with thin interaction structure (SI Tables 3-5); however, in experiment 3, no effects of game thickness were reliable (SI Table 6). 
 
 We aggregated data from all experiments into a post-hoc mega-analytic model predicting accuracy as a function of game thickness (thin v. not-thin) and game size. Overall, accuracy increases over time (`r stats(acc_mega,2)`) but the rate of increase is reduced for thin games (`r stats(acc_mega, 4)`) and larger games (`r stats(acc_mega,3)`) compared to smaller, thicker games. 
-
 Regardless of group size and interaction structure, groups were far above chance and improved over the course of the game. Smaller groups and groups with higher coherence tended to be more accurate, though the magnitude and reliability of these effects varied across experiments.
  
 
@@ -475,20 +477,17 @@ thin6 <- str_c("$\\beta=", round(red_3_extra[2,3],2),", (95\\%\\:\\mathrm{CrI}=[
 thick6 <- str_c("$\\beta=", round(red_3_extra[2,4],2),", (95\\%\\:\\mathrm{CrI}=[",round(red_3_extra[1,4],2),", ",round(red_3_extra[3,4],1), "]$)")
 ```
 
-### Smaller and higher coherence groups use shorter descriptions.
+### Smaller and higher-coherence groups use shorter descriptions.
 
 After establishing that groups were able to communicate the targets successfully, we turned to the challenges faced by describers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow describers to communicate more effectively over time.
 We tested these predictions using linear mixed-effects models predicting the number of words a describer produced on each trial as a function of condition and block. These models counted all words the describer produced, including after matcher contributions (for similar models predicting the length of describer's utterances before any matcher contributions, see SI Tables 15-18).
 
 First, as predicted, describers in larger groups used longer descriptions at the outset than describers in smaller groups (Figure \@ref(fig:behavioral)D-F). This effect held for the continuous measure of group size for Experiment 1 (`r stats(red_1,4)`) and the 2-person versus 6-person groups in Experiment 3 (`r stats(red_3,7)`).
-
-Samller groups tend to continue to use shorter descriptions than larger groups over the course of the game. In experiment 1, the rate of reduction was similar across different size groups (`r stats(red_1,2)`). In Experiment 3, larger groups reduced faster than smaller ones (`r stats(red_3, 4)`), but the faster reduction did not fully make up for the longer initial starting point. 
+Smaller groups tend to continue to use shorter descriptions than larger groups over the course of the game. In experiment 1, the rate of reduction was similar across different size groups (`r stats(red_1,2)`). In Experiment 3, larger groups reduced faster than smaller ones (`r stats(red_3, 4)`), but the faster reduction did not fully make up for the longer initial starting point. 
 
 Interaction structure did not show a consistent effect on utterance length. While thin 6 player games showed a flatter reduction trajectory than thicker 6 player games in Experiment 2 (SI Tables 8-10), there was not a reliable effect of game thickness on reduction in Experiment 3 for either smaller or larger groups (SI Table 11). 
-
 Aggregating across experiments with a mega-analytic model revealed an overall pattern of reduction (`r stats(red_mega,2)`). Larger games were associated with steeper reduction (`r stats(red_mega,3)`) from a more verbose starting point (`r stats(red_mega,6)`) than smaller games, and thin games had shallower reduction curves (`r stats(red_mega,4)`) than thicker games. 
-
 Overall, describers on average decreased their descriptions by a few words each repetition block. Smaller games used shorter descriptions than larger games across various time points in the experiment, and thinner games reduced less than thicker games. 
 
 
@@ -528,6 +527,7 @@ column_spec(2, width = "28em") %>% kable_styling(latex_options="H") |>
   pack_rows("Block 5", 23, 23) |> 
   pack_rows("Block 6", 24,24)
 ```
+
 ### Interim summary 
 
 As an initial check on group performance, we examined three metrics of communicative performance in groups of different sizes and interaction structures. Groups in all conditions were able to communicate about the target images with a high and increasing degree of accuracy even as describers and matchers both decreased the length of their descriptions over time. Smaller groups and groups with thicker interaction structures tended to perform better, although some of the comparisons were not reliably different from one another. 
@@ -754,21 +754,16 @@ tolast_mega <- read_rds(here(msum_loc,"mega_tolast.rds"))
 
 ### Descriptions converge faster in groups with higher coherence.
 
-Across conditions, describer descriptions increased in semantic similarity to the final description over repetition, indicating convergence toward a stable description; convergence was fastest in smaller and higher coherence groups (Figure \@ref(fig:sbert)A-C; SI Tables 19-23).
-
+Across conditions, descriptions increased in semantic similarity to the final description over repetition, indicating convergence toward a stable description (Figure \@ref(fig:sbert)A-C; SI Tables 19-23).
 We modeled semantic convergence with a mixed effects linear regression model predicting the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition. 
+First, we found that smaller groups reached more stable descriptions faster than larger games. In Experiment 1, initial similarity was invariant across group size (`r stats(tolast_1, 1,3)`), but smaller groups converged faster (Figure \@ref(fig:sbert)A, `r stats(tolast_1, 3,3)`). In experiment 3, 6-player thick games started off further from their eventual convention than 2-player thick games (`r stats(tolast_3, 7,3)`) but closed the gap over time (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 6,3)`). 
 
-Smaller groups reached more stable descriptions faster than larger games. In Experiment 1, initial similarity was invariant across group size (`r stats(tolast_1, 1,3)`), but smaller groups converged faster (Figure \@ref(fig:sbert)A, `r stats(tolast_1, 3,3)`). In experiment 3, 6-player thick games started off further from their eventual convention than 2-player thick games (`r stats(tolast_3, 7,3)`) but closed the gap over time (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 6,3)`). 
-
-Thicker games converged faster than thin games (Figure \@ref(fig:sbert)B-C). In experiment 3, small thin games started off slightly further from their convention than small thick games, and this gap widened over time (`r stats(tolast_3, 4,3)`).
-
-The combination of thin interaction structure and larger group hindered convergence more than either factor individually. Beyond the generally slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
+Thicker games also tended to converge faster than thin games (Figure \@ref(fig:sbert)B-C). In experiment 3, small thin games started off slightly further from their convention than small thick games, and this gap widened over time (`r stats(tolast_3, 4,3)`).
+Finally, the combination of thin interaction structure and larger group hindered convergence more than either factor individually. Beyond the generally slower convergence in thin games, 6-player thin games showed substantially slower convergence even compared to 2-player thin games (expt 3, `r stats(tolast_3, 5,3)`). 
 
 Aggregating across experiments confirms this pattern: Thin games converge less than thick games (`r stats(tolast_mega, 5,3)`), and larger thinner games are especially slow to converge (`r stats(tolast_mega, 4,3)`). 
-
 Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (Supplement Figure 4D-F, SI Tables 34-38). In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round. 
-
-All conditions showed some convergence toward a conventional nickname for the picture, but the speed of convergence was affected both by group size and channel width. Overall, stable descriptions emerged earlier if the describer role was consistent, if the group was smaller, and if matchers could contribute via a text channel. 
+All conditions showed some convergence toward a conventional ``shorthand'' for the picture, but the speed of convergence was affected both by group size and channel width. Overall, stable descriptions emerged earlier if the describer role was consistent, if the group was smaller, and if matchers could contribute via a text channel. 
 
 ```{r}
 div_1 <- read_rds(here(msum_loc, "div_1.rds"))
