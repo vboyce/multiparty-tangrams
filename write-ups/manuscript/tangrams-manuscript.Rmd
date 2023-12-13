@@ -541,7 +541,7 @@ column_spec(2, width = "28em") %>% kable_styling(latex_options="H") |>
   pack_rows("Block 6", 24,24)
 ```
 
-### Descriptions converge faster in groups with higher coherence.
+### Descriptions converge faster in groups with thicker channels
 
 ```{r sbert-diagram, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between embeddings of utterances from the same round across games."}
 knitr::include_graphics("sbert.pdf")
@@ -626,9 +626,6 @@ two_conv_plot <- ggplot(two_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
 
 
 #3
-
-
-
 three_conv_dat <- three_converge |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)))
 three_conv_plot <- ggplot(three_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
   geom_point(position = position_dodge(width=.4), alpha=.3,
@@ -703,7 +700,9 @@ two_div_plot <- ggplot(two_div_dat, aes(x=repNum+1,y=sim,color=condition))+
    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
-three_div_dat <-  three_diverge |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)),                    condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin")))
+three_div_dat <-  three_diverge |> 
+  mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)),                    
+         condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin")))
 
 three_div_plot <- ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
   geom_point(data=three_div_dat |> group_by(repNum, tangram, condition) |>
@@ -774,13 +773,14 @@ div_2a <- read_rds(here(msum_loc, "div_2a.rds"))
 div_2b <- read_rds(here(msum_loc, "div_2b.rds"))
 
 div_2c <- read_rds(here(msum_loc, "div_2c.rds"))
+
 div_3 <- read_rds(here(msum_loc, "div_3.rds"))
 
 div_mega <- read_rds(here(msum_loc,"mega_div.rds"))
 ```
 
 
-### Games diverge from one another faster with thicker channels.
+### Games with thicker channels diverge from one another more quickly 
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, we predicted that their descriptions would become increasingly dissimilar as groups increasingly adapt to their own idiosyncratic shared history. 
 To test this effect, we constructed a mixed-effects linear regression model predicting the cross-game similarity between a pair of utterances for the same image. 
@@ -830,63 +830,101 @@ Sampling from a broader range of communicative situations is thus a critical par
 
 # Methods
 
-For all experiments, we used Empirica [@almaatouq2020empirica] to create real-time multi-player iterated reference games. In each game, one of the players started as the describer who saw an array of tangrams with one highlighted and communicated which figure to click to the other players (matchers). After the describer had described each of the 12 images in turn, the process repeated with the same images over a total of 6 such blocks (72 trials). We recorded what participants said in the chat, as well as who selected what image and how long they took to make their selections. 
+Our iterated reference task was implemented with Empirica [@almaatouq2020empirica], a React-based web development framework for real-time multi-player tasks. 
+Our experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: same describer at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] 
+We followed the pre-registered analysis plan for each experiment, although accuracy models were not explicitly specified until Experiment 3, and linguistic analyses were only verbally described starting with Experiment 2b. 
+Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
+Exploratory mega-analytic models pooling across the three experiments were not pre-registered.
 
-These experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: same describer at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] We followed the analysis plan for each, although accuracy models were not explicitly specified until experiment 3, and linguistic analyses were only verbally described starting with 2b.  Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
+### Participants
 
-## Participants
+Participants were recruited using the Prolific platform. 
+All participants self-reported as fluent native English speakers on Prolific's demographic prescreen. 
+Experiment 1 took place between May and July 2021, Experiment 2 between March and August 2022, and Experiment 3 in October 2022. 
+Each participant took part in only one experiment and were blocked from participating in subsequent experiments. 
+As games with more participants tended to run longer, we paid participants different rates based on group size, with the goal of a consistent \$10 hourly rate.  Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player occupied the describer role for the entirety of a 6-player game, they were rewarded an additional \$2 bonus. Across all games, participants could earn up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments, for roughly 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. A breakdown of number of games and participants in each condition is shown in SI Table 1. 
 
-Participants were recruited using the Prolific platform, and all participants self-reported as fluent native English speakers on Prolific's demographic prescreen. Participants each took part in only one experiment. Experiment 1 took place between May and July 2021, experiment 2 between March and August 2022, and experiment 3 in October 2022. As games varied in length depending on the number of participants, we paid participants based on group size, with the goal of a \$10 hourly rate.  Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player had the describer role for the entirety of a 6-player game, they gained an additional \$2 bonus. Across all games, each participant could earn up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments, for roughly 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. A breakdown of number of games and participants in each condition is shown in SI Table 1. 
+### Materials
 
-## Materials
+The same 12 tangram images, drawn from @hawkins2020 and @clark1986, were used every block. 
+These images were displayed in a 4 $\times$ 3 grid with the order randomized across participants to disincentivize spatial descriptions such as "top left," as the image might be in a different place on the describer's and matchers' screens.
+To reduce cognitive load from visual search, the locations were fixed for each participant across trials.
 
-We used the 12 tangram images used by @hawkins2020 and @clark1986. These images were displayed in a grid with order randomized for each participant (thus descriptions such as "top left" were ineffective as the image might be in a different place on the describer's and matchers' screens). The same images were used every block. 
+### Procedure
 
-## Procedure
+The experimental procedure was very similar across the three experiments.
+We first describe the procedure used in Experiment 1 and then describe the differences in later experiments. 
 
-The experimental procedure was very similar across the three experiments. We first describe the procedure used in experiment 1 and then describe the differences in later experiments. 
+\paragraph{Experiment 1}
+Participants were directed from Prolific to our custom web application, where they were presented with a consent form and a series of instruction pages explaining the protocol. 
+After finishing the instructions, they needed to pass a quiz to proceed. 
+They were then directed to a "waiting room" lobby.
+Once the lobby filled to the required number of players, the game began. 
+One of the participants was randomly selected to begin in the role of describer, and the other participants were assigned to the role of matchers. 
+On each trial, the describer saw a fixed array of tangrams with one tangram (privately) highlighted as the *target*. 
+They were given a chat interface to communicate the target to the matchers, who were asked to determine which of the 12 images was the referential target.
+All participants were free to use the chat box to communicate at any time, but matchers could only make a selection after the describer had sent a message. 
+Once a matcher clicked, they could not change their selection. 
+There was no signal to the describer or other matchers about who had already made a selection. 
+We recorded what all participants said in the chat, as well as who selected which image and how long they took to make their selections. 
 
-### Experiment 1
-From Prolific, participants were directed to our website where they navigated through a self-paced series of instruction pages explaining the game. Participants had to pass a quiz on the instructions to be able to play the game. They were then directed to a "waiting room" screen until their partner(s) were ready.
+Once all matchers had made a selection (or a 3-minute timer ran out), participants were given feedback and proceeded to the next trial. 
+Matchers only received *binary* feedback about whether they had chosen correctly or not; that is, matchers who made an incorrect choice were not shown the correct answer. 
+The describer saw which tangram each matcher selected, but matchers did not see one another's selections. 
+Matchers got 4 points for each correct answer; the describer got points equal to the average of the matchers' points.
+These points were translated into performance bonuses at the end of the experiment. 
+After the describer had described each of the 12 images as targets, in a randomized sequence, the process repeated with the same set of targets, for a total of 6 such repetition blocks (72 trials). 
 
-On each trial, the describer described the highlighted tangram image so that the matchers could identify and click it. All participants were free to use the chat box to communicate, but matchers could only click once the describer had sent a message. Once a matcher clicked, they could not change their selection. There was no signal to the describer or other matchers about who had already made a selection. 
-
-Once all matchers had selected (or a 3-minute timer ran out), participants were given feedback. Matchers learned whether they had chosen correctly or not; matchers who were incorrect were not told the correct answer. The describer saw which tangram each matcher had selected, but matchers did not. Matchers got 4 points for each correct answer; the describer got points equal to the average of the matchers' points. These points were translated into performance bonuses at the end of the experiment. 
-
-In each block, each of the 12 tangrams was indicated to the describer once. The same person was the describer for an entire block, but participants rotated roles between blocks. Thus, over the course of the 6 blocks, participants were describers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. Rotating the describer was chosen in this first experiment to keep participants more equally engaged (the describer role is more work), and to provide a more robust test of our hyppotheses regarding efficiency and convention formation. 
-
+The same person was the describer for an entire block, but participants rotated roles between blocks. 
+Thus, over the course of the 6 blocks, participants were describers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. 
+Rotating the describer was chosen in this first experiment to keep participants more equally engaged (the describer role is more work), and to provide a more robust test of our hypotheses regarding efficiency and convention formation. 
 After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
 
-### Experiment 2
-Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6-player games. Each of these conditions differed from the experiment 1 baseline in one way. The same describer condition differed only in that one person was designated the describer for the entire game, rather than having the describer role rotate. The full feedback condition differed from experiment 1 in that all participants were shown what each person had selected and what the right answer was; matchers still saw text saying whether they individually were right or wrong. This condition was similar to some dyadic work, such as @hawkins2020, where matchers were shown the right answer during feedback. For the thin condition, we altered the chatbox interface for matchers. Instead of a textbox, matchers had 4 buttons, each of which sent a different emoji to the chat. Matchers were given suggested meanings for the 4 emojis during instructions. They could send the emojis as often as desired, for instance, initially indicating confusion, and later indicating understanding. In addition, we added notifications that appeared in the chat box saying when a player had made a selection. 
+\paragraph{Experiment 2}
+Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6-player games. 
+Each of these conditions differed from the Experiment 1 baseline in exactly one way. 
+In the *same describer* condition, one person was designated the describer for the entire game, rather than having the describer role rotate. 
+In the *full feedback* condition, all participants were shown what all others had selected as well as the identity of the correct target.
+This condition was similar to previous dyadic work, such as @hawkins2020, where the correct answer was indicated during feedback. 
+In the *thin* condition, we altered the chatbox interface for matchers. 
+Instead of a textbox, matchers had 4 buttons, each of which sent a different emoji to the chat. Matchers were given suggested meanings for the 4 emojis during the instruction phase. They could send as many emojis as desired; for instance, they might initially indicate confusion, and later indicate understanding. In addition, we added notifications that appeared in the chat box marking the time when each player had made a selection. 
 
-### Experiment 3
+\paragraph{Experiment 3}
+The thin channel condition in Experiment 3 was the same as the thin condition in Experiment 2. 
+The thick condition combined the two coherency-enhancing variations from Experiment 2: the same participant remained in the describer role throughout, and full feedback was given about the correct answer and what all other players had selected. 
+Across both conditions in Experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
 
-The thin channel condition in experiment 3 was the same as the thin condition in experiment 2, above. The thick condition combined the two group coherency enhancing variations from experiment 2: one person was the designated describer throughout, and the feedback to participants included the right answer and what each player had selected. Across both conditions in experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
+### Data pre-processing and exclusions
 
-## Data pre-processing and exclusions
+Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well the task was going, and bare confirmations or denials ("ok", "got it", "yes", "no"). We excluded these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
-Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well the task was going, and confirmations or denials ("ok", "got it", "yes", "no"). We excluded these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
-
-In experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. In experiment 3, games started after a waiting period even if they were not full and continued even after a participant disconnected (with describer role reassigned if necessary), unless the game dropped below 2 players. The distribution of players in these games that were initially recruited to be 6 player games is in SI Figure 1. The realities of online recruitment and disconnection meant that the number of games varied between conditions. We excluded incomplete blocks from analyses, but included complete blocks from partial games (See SI Table 1).
-
+In Experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. 
+In Experiment 3, games started after a waiting period even if they were not entirely full and continued even in the event that a participant disconnected (with describer role reassigned if necessary), unless the game dropped below 2 players. 
+The distribution of player counts in games that were initially recruited to be 6 player games is shown in SI Figure 1. 
+The realities of online recruitment and disconnection meant that the number of games varied between conditions. 
+We excluded incomplete blocks from analyses, but included complete blocks from partial games (See SI Table 1).
 When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick condition had a describer who did not give any sort of coherent descriptions, even with substantial matcher prompting. We excluded this game from analyses. 
 
-## Modelling strategy
+### Modelling strategy
 
 We fit all regression models in brms [@burkner2018] with weakly regularizing priors.
-We were unable to fit the full pre-registered mixed effects structure in a reasonable amount of time for some models, so we included what hierarchical effects were reasonable. Models of accuracy had by-group random intercepts; models of reduction had full mixed effect structure; models of S-BERT similarities had random intercepts per game and image as applicable.   (All model results and priors and formulae are reported in the Supplement). 
-Models of matcher accuracy were logistic models with normal(0,1) priors for both betas and sd. 
-Models of describer efficiency were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). 
-For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for intercept, normal(0,.1) for beta, and normal(0,.05) for sd. 
-
-As an additional post-hoc analysis, we did mega-analytic models combining data across all experiments. For these models, we contrasted the 3 thin conditions (2c, and the two thin conditions of experiment 3) with all the other conditions lumped together as thick-ish. We coded game size as a continuous measure. 
+We were unable to fit the full pre-registered mixed effects structure in a reasonable amount of time for some models, so we included the maximal  hierarchical effects that were tractable. 
+All model results and priors and formulae are reported in the Supplement.
+Models of accuracy used by-group random intercepts only, models of word count used full mixed effect structure, and models of S-BERT similarities used by-group and by-target random intercepts as applicable.
+Models of matcher accuracy were logistic models with normal(0,1) priors for betas and sd.
+Models of describer efficiency were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a random-effect correlation prior of lkj(1). 
+For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for the intercept, normal(0,.1) for betas, and normal(0,.05) for sd. 
+As an additional post-hoc analysis, we ran mega-analytic models combining data across all experiments. 
+For these models, we grouped the 3 thin-ish conditions (2c, and the two thin conditions of experiment 3) as one level, and coded the rest of the conditions as thick-ish. 
+Game size was coded as a continuous measure (2 through 6). 
 
 We also needed to decide how to handle dropout in Experiment 3, as some of the 6-player games did not retain all 6 players for the entire game. 
 Our decision was to follow an intent-to-treat analysis and treat data as missing completely at random. 
-We note that this choice will underestimate differences between 2-player and (genuine) 6-player games, by labeling some smaller groups as 6-player groups. 
-
-We do not know what leads some participants to drop out, but it is possible that some factors may be random (ex. connection issues) and others may be correlated with performance (ex. frustration because group is struggling).   We don't know to what extent groups that start and continue at the full size may differ from games where some participants drop out. This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group. The number of games in each condition and rates of dropoff are shown in SI Table 1 and SI Figure 1. 
+Note that this choice underestimates differences between 2-player and (genuine) 6-player games by labeling some smaller groups as 6-player groups.
+We do not know exactly what leads some participants to drop out, but it is possible that some factors may be random (ex. connection issues) and others may be correlated with performance (ex. frustration because group is struggling).   
+We do not know whether groups that start and continue at the full size differ from games where some participants drop out. 
+This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group. 
+The number of games in each condition and rates of dropoff are shown in SI Table 1 and SI Figure 1. 
 
 # References 
 
