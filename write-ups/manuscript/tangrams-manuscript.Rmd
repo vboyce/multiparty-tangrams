@@ -34,6 +34,8 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{angles,positioning,arrows.meta, quotes, shapes, shapes.geometric}
   - \usepackage{graphicx}
+  - \usepackage{emoji}
+  - \usepackage{caption, subcaption}
 output:
   bookdown::pdf_document2:
     toc: FALSE
@@ -510,36 +512,108 @@ anylist_1 <- read_rds(here(msum_loc, "anylist_1.rds"))
 anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 ```
 
+```{=latex}
+
+
+\begin{table}
+	\centering
+
+	\caption{Examples from 6-player groups in Experiment 3 describing the same image across repetitions. Describers are indicated with an asterisk.\\\label{listener-examples}}
+	\begin{subtable}{0.5\linewidth}
+		\centering
+			\begin{tabular}{lp{2.5in}}
+						\multicolumn{2}{c}{\includegraphics[width=1.5in]{images/tangram_H.png}}\\
+			\hline
+			
+			\multicolumn{2}{c}{\textbf{6-person thick game}}\\
+			\multicolumn{2}{l}{\textit{Rep 1: 4/5 correct}}\\
+			A*  &   sitting down no legs showing   \\                
+			C   & no arms?\\                       
+			B  &    Bunny ears?  \\                                  
+			A*  &   legs showing to one side no arms  \\             
+			C  &    kinda like kneeling?  \\                         
+			A*  &   no feet      \\                                  
+			A*   &  yes kneeling  \\
+			\multicolumn{2}{l}{\textit{Rep 2: 5/5 correct}}\\
+			A*  &   sitting down with no feet showing. legs to one side \\
+			A*  &  no arms   \\                                     
+			E &      Swaddled up like a bb \\                         
+			C  &    cute bb    \\                                    
+			D  &    I think that's the one that looks like a ghost to me, like he's wearing a sheet. (?)\\
+			\multicolumn{2}{l}{\textit{Rep 3: 5/5 correct}}\\
+			A*  &    sitting down no arms showing legs to one side  \\
+			E  &   the bb   \\                                      
+			B  &  Swadled baby?  \\                                
+			F &    Baby?   \\   
+			A* &    the bb     \\ 
+			\multicolumn{2}{l}{\textit{Rep 4: 5/5 correct}}\\
+			A*    & sitting down with no arms legs to one side \\
+			\hline
+		\end{tabular}
+	\end{subtable}%
+	\hspace*{2em}
+	\begin{subtable}{0.5\linewidth}
+		\centering
+		\begin{tabular}{lp{2.5in}}
+		\hline
+			\multicolumn{2}{c}{\textbf{6-person thin game}}\\
+			\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct}}\\
+			I* &  Looks like a skinnier candle but with a shadow at the bottom\\
+			J & 	 \emoji{thinking-face}\\
+			G & 	 \emoji{check-mark-button}\\
+			I* &  The top square looks like the flame\\
+			I* & It has a triangle leading to that flame\\
+			H & 	 \emoji{cross-mark}\\
+			\multicolumn{2}{l}{\textit{Rep 2: 3/5 correct}}\\
+			J & \emoji{thinking-face}\\
+			H* & the simplest image in the whole, no much issues\\
+			I & \emoji{thinking-face}\\
+			K & 	 \emoji{thinking-face}\\
+			H* & 1 square as the head\\
+			K & 	 \emoji{thinking-face}\\
+			I & 	 \emoji{thinking-face}\\
+			G & 	 \emoji{thinking-face}\\
+			J & 	 \emoji{thinking-face}\\
+			H* & candle with more missing chunks \\
+			\hline
+			\multicolumn{2}{c}{\textbf{Another 6-person thin game}}\\
+			\multicolumn{2}{l}{\textit{Rep 1: 5/5 correct}}\\
+			L* & man with no arms or legs \\
+			O & 	 \emoji{thinking-face}\\
+			P & 	 \emoji{thinking-face}\\
+			L* & slight protrubence on the right \\
+			\multicolumn{2}{l}{\textit{Rep 2: 5/5 correct}}\\
+			N* & 	Can't see any arms. Imagine wrapped in a blanket completely. \\
+			N* & Armless and legless \\
+			N* & Burrito with a head \\
+			M & 		 \emoji{face-with-tears-of-joy}\\
+			O & 	 \emoji{face-with-tears-of-joy}\\
+			P & 			 \emoji{thinking-face}\\
+			\multicolumn{2}{l}{\textit{Rep 3: 5/5 correct}}\\	
+			O* & burrito \\
+			\multicolumn{2}{l}{\textit{Rep 4: 5/5 correct}}\\
+			Q* & burrito \\
+			\multicolumn{2}{l}{\textit{Rep 5: 5/5 correct}}\\
+			M* & burrito\\
+			\hline
+			
+		\end{tabular}
+	\end{subtable}
+\end{table}
+
+
+```
+
 ### Larger groups make greater use of backchannels.
 
 As a final measure of group performance, we examined the back-and-forth interactions between the describer and the group of matchers.
 The backchannel allows matchers to actively provide feedback, ask questions, offer alternative descriptions, and seek clarification about the describer's referring expressions. 
-An example transcript from a game where matchers contributed in various ways is in Table \@ref(tab:listener-example).
+An example transcript from a game where matchers contributed in various ways is in Table \ref{listener-examples}.
 Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (Supplement Figure 2A, `r stats(anylist_1, 4)`), which declined across repetition blocks (`r stats(anylist_1, 1)`).
 The length of matcher interjections also decreased over time for all games (Supplement Figure 2B, `r stats(list_1,1)`), consistent with the need for early matcher involvement in establishing referential conventions. 
 Emoji use in Experiment 3 followed similar trends (Supplement Figure 3).
 In summary, larger groups may require greater participation by matchers to reliably establish common ground.
 
-```{r listener-example}
-
-listener_sample <- pre_chat_1 |> filter(gameId=="k4otZKu35xehtF93F", target=="/experiment/tangram_C.png") |> 
-  filter(!is.chitchat)|> select(playerId, repNum, text, target, role
-                                ) |> mutate(person=factor(playerId, labels=c("A","B","C","D","E","F"))) |> select(-playerId) |> 
-  mutate(person_name=str_c(person,ifelse(role=="speaker"," (describer)","")),
-         repNum=repNum+1) |> 
-  select(Person=person_name, Utterance=text)
-
-knitr::kable(listener_sample, col.names=NULL, caption = "Example transcript of a 6-player group for Experiment 1 describing the same image each repetition. Matchers sometimes asked questions or offered clarifications, including in reference to prior descriptions.",  format="latex", booktabs=TRUE, linesep="") %>%
-kable_styling(full_width = T) %>%
-  column_spec(1,width="8em") |> 
-column_spec(2, width = "28em") %>% kable_styling(latex_options="H") |> 
-  pack_rows("Block 1", 1,8) |> 
-  pack_rows("Block 2", 9,15) |> 
-  pack_rows("Block 3", 16, 20) |> 
-  pack_rows("Block 4",21,22) |> 
-  pack_rows("Block 5", 23, 23) |> 
-  pack_rows("Block 6", 24,24)
-```
 
 ### Descriptions converge faster in groups with thicker channels
 
@@ -859,7 +933,7 @@ We first describe the procedure used in Experiment 1 and then describe the diffe
 Participants were directed from Prolific to our custom web application, where they were presented with a consent form and a series of instruction pages explaining the protocol. 
 After finishing the instructions, they needed to pass a quiz to proceed. 
 They were then directed to a "waiting room" lobby.
-Once the lobby filled to the required number of players, the game began. 
+Once the lobby filled to the required number of players, the game began. One lobby was filled before another was started; if a participant was waiting for 5 minutes, that lobby timed out, and the participant was paid without completing the experiment. Do to technical constraints with assigning participants to lobbies and games, only games of a single experimental condition could be active at a time. Thus, different conditions were run on different days or times of day.   
 One of the participants was randomly selected to begin in the role of describer, and the other participants were assigned to the role of matchers. 
 On each trial, the describer saw a fixed array of tangrams with one tangram (privately) highlighted as the *target*. 
 They were given a chat interface to communicate the target to the matchers, who were asked to determine which of the 12 images was the referential target.
@@ -869,16 +943,18 @@ There was no signal to the describer or other matchers about who had already mad
 We recorded what all participants said in the chat, as well as who selected which image and how long they took to make their selections. 
 
 Once all matchers had made a selection (or a 3-minute timer ran out), participants were given feedback and proceeded to the next trial. 
-Matchers only received *binary* feedback about whether they had chosen correctly or not; that is, matchers who made an incorrect choice were not shown the correct answer. 
+Matchers only received *binary* feedback about whether they had chosen correctly or not; that is, matchers who made an incorrect choice were not shown the correct answer (see Supplement Figure 1 for example feedback). 
 The describer saw which tangram each matcher selected, but matchers did not see one another's selections. 
 Matchers got 4 points for each correct answer; the describer got points equal to the average of the matchers' points.
-These points were translated into performance bonuses at the end of the experiment. 
+These points were translated into performance bonuses at the end of the experiment (1 point = 1 cent bonus). 
 After the describer had described each of the 12 images as targets, in a randomized sequence, the process repeated with the same set of targets, for a total of 6 such repetition blocks (72 trials). 
 
 The same person was the describer for an entire block, but participants rotated roles between blocks. 
 Thus, over the course of the 6 blocks, participants were describers 3 times in 2-player games, twice in 3-player games, once or twice in 4 and 5-player games, and once in 6-player games. 
 Rotating the describer was chosen in this first experiment to keep participants more equally engaged (the describer role is more work), and to provide a more robust test of our hypotheses regarding efficiency and convention formation. 
 After the game finished, participants were given a survey asking for optional demographic information and feedback on their experience with the game. 
+
+If a participant disconnected from the experiment, the game would stop. 
 
 \paragraph{Experiment 2}
 Experiment 2 consisted of three different variations on Experiment 1, all conducted in 6-player games. 
@@ -887,12 +963,13 @@ In the *same describer* condition, one person was designated the describer for t
 In the *full feedback* condition, all participants were shown what all others had selected as well as the identity of the correct target.
 This condition was similar to previous dyadic work, such as @hawkins2020, where the correct answer was indicated during feedback. 
 In the *thin* condition, we altered the chatbox interface for matchers. 
-Instead of a textbox, matchers had 4 buttons, each of which sent a different emoji to the chat. Matchers were given suggested meanings for the 4 emojis during the instruction phase. They could send as many emojis as desired; for instance, they might initially indicate confusion, and later indicate understanding. In addition, we added notifications that appeared in the chat box marking the time when each player had made a selection. 
+Instead of a textbox, matchers had 4 buttons, each of which sent a different emoji to the chat. Matchers were given suggested meanings for the 4 emojis during the instruction phase. They could send as many emojis as desired; for instance, they might initially indicate confusion, and later indicate understanding. In addition, for the thin condition, we added notifications that appeared in the chat box marking the time when each player had made a selection. 
 
 \paragraph{Experiment 3}
 The thin channel condition in Experiment 3 was the same as the thin condition in Experiment 2. 
 The thick condition combined the two coherency-enhancing variations from Experiment 2: the same participant remained in the describer role throughout, and full feedback was given about the correct answer and what all other players had selected. 
 Across both conditions in Experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
+For experiment 3, game lobbies worked slightly differently, and 5 minutes after the first participant had joined the lobby, the game started if there were at least two participants. Correspondingly, in experiment 3, games did not stop if a player disconnected, instead if there were at least two players still active, the game continued, swapping a player into the role of describer if necessary to continue the game.  
 
 ### Data pre-processing and exclusions
 
@@ -916,7 +993,7 @@ Models of describer efficiency were run as linear models with an intercept prior
 For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for the intercept, normal(0,.1) for betas, and normal(0,.05) for sd. 
 As an additional post-hoc analysis, we ran mega-analytic models combining data across all experiments. 
 For these models, we grouped the 3 thin-ish conditions (2c, and the two thin conditions of experiment 3) as one level, and coded the rest of the conditions as thick-ish. 
-Game size was coded as a continuous measure (2 through 6). 
+Game size was coded as a continuous measure (2 through 6). The priors for the mega-analytic models were the same as for the per-experiment models described above. 
 
 We also needed to decide how to handle dropout in Experiment 3, as some of the 6-player games did not retain all 6 players for the entire game. 
 Our decision was to follow an intent-to-treat analysis and treat data as missing completely at random. 

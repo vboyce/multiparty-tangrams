@@ -106,6 +106,17 @@ form <- function(model){
    str_replace_all("~", "$\\\\sim$ ")
 }
 ```
+# Feedback
+
+```{r feedback-diag, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Feedback shown to participants. In low-coherence games, matchers saw feedback as shown in A and B. In all games, describers saw feedback like in C; icons were associated with players and indicated who selected which. In high feedback games, matchers saw grids like C, but with text as in A and B."}
+a <- ggplot()+draw_image(here(image_location,"listener_correct.png"))
+
+b <- ggplot()+draw_image(here(image_location, "listener_wrong.png"))
+
+c <- ggplot()+draw_image(here(image_location,"speaker_feedback.png"))
+
+plot_grid(a,b,c, labels="AUTO")
+```
 
 # Number of games
 
@@ -723,7 +734,7 @@ These models were not pre-registered.
 For the model of how often any matchers used the backchannel, the priors were normal(0,1) for both beta and sd. 
 
 For the model of how much was said on trials when matchers talked, the priors were the same as for the primary (describer) reduction model. 
-```{r}
+```{r }
 
 do_table("list_1.rds", "Experiment 1")
 
