@@ -518,11 +518,10 @@ anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 \begin{table}
 	\centering
 
-	\caption{Examples from 6-player groups in Experiment 3 describing the same image across repetitions. Describers are indicated with an asterisk.\\\label{listener-examples}}
+	\caption{Examples from 6-player groups in Experiment 3 of successful descriptions for the same image across repetitions. Describers are indicated with an asterisk. More example descriptions are in TODO. \\\label{listener-examples}}
 	\begin{subtable}{0.5\linewidth}
 		\centering
 			\begin{tabular}{lp{2.5in}}
-						\multicolumn{2}{c}{\includegraphics[width=1.5in]{images/tangram_H.png}}\\
 			\hline
 			
 			\multicolumn{2}{c}{\textbf{6-person thick game}}\\
@@ -555,33 +554,15 @@ anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 	\begin{subtable}{0.5\linewidth}
 		\centering
 		\begin{tabular}{lp{2.5in}}
+		\multicolumn{2}{c}{\includegraphics[width=1in]{images/tangram_H.png}}\\
 		\hline
+
 			\multicolumn{2}{c}{\textbf{6-person thin game}}\\
-			\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct}}\\
-			I* &  Looks like a skinnier candle but with a shadow at the bottom\\
-			J & 	 \emoji{thinking-face}\\
-			G & 	 \emoji{check-mark-button}\\
-			I* &  The top square looks like the flame\\
-			I* & It has a triangle leading to that flame\\
-			H & 	 \emoji{cross-mark}\\
-			\multicolumn{2}{l}{\textit{Rep 2: 3/5 correct}}\\
-			J & \emoji{thinking-face}\\
-			H* & the simplest image in the whole, no much issues\\
-			I & \emoji{thinking-face}\\
-			K & 	 \emoji{thinking-face}\\
-			H* & 1 square as the head\\
-			K & 	 \emoji{thinking-face}\\
-			I & 	 \emoji{thinking-face}\\
-			G & 	 \emoji{thinking-face}\\
-			J & 	 \emoji{thinking-face}\\
-			H* & candle with more missing chunks \\
-			\hline
-			\multicolumn{2}{c}{\textbf{Another 6-person thin game}}\\
 			\multicolumn{2}{l}{\textit{Rep 1: 5/5 correct}}\\
 			L* & man with no arms or legs \\
 			O & 	 \emoji{thinking-face}\\
 			P & 	 \emoji{thinking-face}\\
-			L* & slight protrubence on the right \\
+			L* & slight protuberance on the right \\
 			\multicolumn{2}{l}{\textit{Rep 2: 5/5 correct}}\\
 			N* & 	Can't see any arms. Imagine wrapped in a blanket completely. \\
 			N* & Armless and legless \\
@@ -600,6 +581,34 @@ anylist_spec_1 <- read_rds(here(mform_loc, "anylist_1.rds"))
 		\end{tabular}
 	\end{subtable}
 \end{table}
+
+
+```
+
+
+```{r, include=F}
+
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> filter(gameId=="E8n7PT7sEpCcbb7AD") |> 
+  select(playerId, repNum, text, countCorrect, role) |> 
+  mutate(playerId=factor(playerId, labels=c("A", "B", "C", "D", "E", "F"))) |> 
+  mutate(id=str_c(playerId, ifelse(role=="speaker", "*", ""))) |> select(id, repNum, text, countCorrect)
+  
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |>  filter(gameId=="RBnjoHwwmyq7ojwD7") |> 
+  select(playerId, repNum, text, countCorrect, role) |> 
+  mutate(playerId=factor(playerId, labels=c("G", "H", "I", "J", "K", "L"))) |> 
+  mutate(id=str_c(playerId, ifelse(role=="speaker", "*", ""))) |> select(id, repNum, text, countCorrect)
+
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
+  filter(gameId=="GWCD2NGoiA2n5Wh2i") |> 
+  select(playerId, repNum, text, countCorrect, role) |> 
+  mutate(playerId=factor(playerId, labels=c("M", "N", "O", "P", "Q"))) |> 
+  mutate(id=str_c(playerId, ifelse(role=="speaker", "*", ""))) |> select(id, repNum, text, countCorrect)
+
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |>  filter(gameId=="kR9MDbh9ktZFmJkcK") |> 
+  select(playerId, repNum, text, countCorrect, role) |> 
+  mutate(playerId=factor(playerId, labels=c("V", "U", "W", "X", "Y"))) |> 
+  mutate(id=str_c(playerId, ifelse(role=="speaker", "*", ""))) |> select(id, repNum, text, countCorrect)
+
 
 
 ```

@@ -17,7 +17,9 @@ header-includes:
  - \renewcommand{\floatpagefraction}{1}
  - \setcounter{topnumber}{5}
  - \setcounter{bottomnumber}{5}
- - \setcounter{totalnumber}{6}
+ - \setcounter{totalnumber}{6}  
+ - \usepackage{emoji}
+ - \usepackage{caption, subcaption}
 
 ---
 ```{r set-up, include=FALSE}
@@ -116,6 +118,219 @@ b <- ggplot()+draw_image(here(image_location, "listener_wrong.png"))
 c <- ggplot()+draw_image(here(image_location,"speaker_feedback.png"))
 
 plot_grid(a,b,c, labels="AUTO")
+```
+
+# Additional game transcripts
+
+```{=latex}
+
+
+\begin{table}[h!]
+	\centering
+
+		\caption{Additional examples from 6-player thick games for the same image across repetitions. Describers are indicated with an asterisk.}
+	\begin{subtable}{0.5\linewidth}
+			\centering
+\begin{tabular}{lp{2.5in}}
+		\multicolumn{2}{c}{\includegraphics[width=1in]{images/tangram_H.png}}\\
+\hline
+	\multicolumn{2}{c}{\textbf{6-person thick game}}\\
+	\multicolumn{2}{l}{\textit{Rep 1: 5/5 correct} }\\
+	
+	Q* & oh no. okay. this one is similar to the one i called minnesota, so like pretty simple, with just a distinct ``head'' diamond and then a body beneath \\
+	Q*  & the body has sort of sloping shoulders\\                    
+	P   &BEAN SHAPED BODY?\\                                       
+	O     & with a small triangle on the bottom right?\\                      
+	Q*     &yeah i think so! bean is a good description lol\\                   
+	Q* & bean body\\                                                           
+	\multicolumn{2}{l}{\textit{Rep 2: 5/5 correct} }\\
+	Q*        &bean body!!\\                                                          
+	\multicolumn{2}{l}{\textit{Rep 3: 5/5 correct} }\\
+	Q*    & bean body!\\                                                        
+	\multicolumn{2}{l}{\textit{Rep 4: 5/5 correct} }\\
+	
+	Q*  &bean body!\\                                                   
+	\multicolumn{2}{l}{\textit{Rep 5: 5/5 correct} }\\
+	Q*        & you guys are doin' great. :) bean body for this one                \\
+	\multicolumn{2}{l}{\textit{Rep 6: 5/5 correct} }\\
+	
+	Q*         & bean body for this one     \\                                     
+	\hline
+\end{tabular}
+	\end{subtable}%
+\hspace*{2em}
+\begin{subtable}{0.5\linewidth}
+\centering
+
+
+\begin{tabular}{lp{2.5in}}
+	\multicolumn{2}{c}{\textbf{6-person thick game}}\\
+	\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct} }\\
+	V* & This shape hasn't got much sticking out. Small triangle pointing right, tilted square on top\\
+	Y & Is the triangle on the right at the bottom?\\
+	V* & Long tall shape, not far off symmetrical.\\
+	V* & Yes triangle bottom right \\
+	W & Are their two triangles on it? \\
+	X & does it look like a rabbit?\\
+	V* & Not the rabbit\\
+	X & does it look like someone on their back kicking a square soccer ball\\
+	V* & It's like one block like a gemstone \\
+	V* & but square on top \\
+	V* & Not on back \\
+	V* & It's the one with the least sharp corners I think\\
+	V* & One long gem shape with small triangle bottom right, tilted square on top\\
+	
+                                                          
+	\multicolumn{2}{l}{\textit{Rep 2: 4/5 correct} }\\
+V* & Long tall shape. Little triangle sticking out bottom right. Diamond on top \\
+
+	\multicolumn{2}{l}{\textit{Rep 3: 3/5 correct} }\\
+
+V* & Long tall hexagon, triangle bottom right, diamond on top \\
+	\multicolumn{2}{l}{\textit{Rep 4: 4/5 correct} }\\
+	
+V* & Long hexagon \\
+V* & little triangle bottom right \\
+V* & Diamond top \\
+	\multicolumn{2}{l}{\textit{Rep 5: 4/5 correct} }\\
+V* & Long hexagon. \\
+V* & Diamond on top \\
+V* & little triangle bottom right \\
+	\multicolumn{2}{l}{\textit{Rep 6: 4/5 correct} }\\
+	V* & Long hexagon\\
+	V* & Triangle bottom right  \\
+	\hline
+\end{tabular}
+	\end{subtable}
+\end{table}
+
+
+```
+
+```{=latex}
+
+
+\begin{table}[h!]
+	\centering
+
+	\caption{Additional examples from 6-player thin games for the same image across repetitions. Describers are indicated with an asterisk.}
+	\begin{subtable}{0.5\linewidth}
+			\centering
+\begin{tabular}{lp{2.5in}}
+\hline
+	\multicolumn{2}{c}{\textbf{6-person thin game}}\\
+	\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct} }\\
+	J* &  Looks like a skinnier candle but with a shadow at the bottom\\
+	K & 	 \emoji{thinking-face}\\
+	H & 	 \emoji{check-mark-button}\\
+	J* &  The top square looks like the flame\\
+	J* & It has a triangle leading to that flame\\
+	I & 	 \emoji{cross-mark}\\
+	\multicolumn{2}{l}{\textit{Rep 2: 3/5 correct}}\\
+	K & \emoji{thinking-face}\\
+	I* & the simplest image in the whole, no much issues\\
+	J & \emoji{thinking-face}\\
+	L & 	 \emoji{thinking-face}\\
+	I* & 1 square as the head\\
+	L & 	 \emoji{thinking-face}\\
+	J & 	 \emoji{thinking-face}\\
+	H & 	 \emoji{thinking-face}\\
+	K& 	 \emoji{thinking-face}\\
+	I* & candle with more missing chunks \\
+	\multicolumn{2}{l}{\textit{Rep 3: 1/5 correct}}\\
+	L* & looks like a candle with more chunks missing \\
+	J & \emoji{thinking-face} \\
+	I & \emoji{thinking-face} \\
+	L* &The bottom part faces the right and forms a triangle \\
+	L* & The top is a square \\
+	I & \emoji{check-mark-button} \\
+	J & \emoji{cross-mark} \\
+	
+	\multicolumn{2}{l}{\textit{Rep 4: 3/5 correct}}\\
+	H* & Candle one with shadow \\
+	H* & The straight one not the one with bits missing \\
+	L & \emoji{thinking-face} \\
+	I & \emoji{face-with-tears-of-joy} \\
+	L & \emoji{thinking-face}\\
+	H*  & Lower case j but the bottom swings to the right \\
+	I & \emoji{check-mark-button} \emoji{check-mark-button} \emoji{check-mark-button} \emoji{check-mark-button}   \\
+	
+	
+	
+	\multicolumn{2}{l}{\textit{Rep 5: 0/5 correct}}\\
+	K* & Candle with chunks missing on the right \\
+	I & \emoji{check-mark-button} \emoji{check-mark-button}   \emoji{check-mark-button} \\
+	
+	
+	\multicolumn{2}{l}{\textit{Rep 6: 4/5 correct}}\\
+	G* & candle shape with a chunk of the bottom left missing and added to the bottom right instead \\
+	K & \emoji{thinking-face}   \emoji{thinking-face}\\
+	H & \emoji{check-mark-button}  \\
+	I & \emoji{check-mark-button}  \\
+	
+	
+	\hline
+	
+	
+	
+\end{tabular}
+	\end{subtable}%
+\hspace*{2em}
+\begin{subtable}{0.5\linewidth}
+\centering
+\begin{tabular}{lp{2.5in}}
+		\multicolumn{2}{c}{\includegraphics[width=1in]{images/tangram_H.png}}\\
+\hline
+	\multicolumn{2}{c}{\textbf{6-person thin game}}\\
+	\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct} }\\
+A* & Square on top \\
+A* & At the bottom of the base part of it sticks out to the right\\
+A* & The base has 8 faces (8 sides of the shape) \\
+C & \emoji{check-mark-button} \\
+A* & The square balances on a triangular point of the base \\
+A* & It is a thick base shape, the bottom curves right \\
+D & \emoji{check-mark-button}\\
+
+	\multicolumn{2}{l}{\textit{Rep 2: 5/5 correct} }\\
+B* & tombstone and its shadow with a rotated square on top \\
+D & \emoji{check-mark-button} \\
+F & \emoji{check-mark-button} \\
+C & \emoji{thinking-face} \\
+
+
+	
+	\multicolumn{2}{l}{\textit{Rep 3: 5/5 correct} }\\
+	D* & tombstone casting a shadow (sorry i've pinched that from before) \\
+	C & \emoji{thinking-face} \\
+	B & \emoji{face-with-tears-of-joy} \\
+	E & \emoji{thinking-face} \\
+	C & \emoji{thinking-face} \\
+	E & \emoji{thinking-face} \\
+	E & \emoji{thinking-face} \\
+	D* & square on top sitting on top of a triangle which is on top of a square, with 5 side shape at the bottom \\
+	
+
+	\multicolumn{2}{l}{\textit{Rep 4: 4/5 correct} }\\
+	C* & looks mummified \\
+	C* & person with no limbs \\
+	D & \emoji{check-mark-button}   \\
+	B & \emoji{thinking-face} \\
+C* & 	square atop, chunky with triangle bottom right \\
+	
+	\multicolumn{2}{l}{\textit{Rep 5: 5/5 correct} }\\
+F* & Gravestone casting shadow. Square on top \\
+D & \emoji{check-mark-button}  \\
+
+	\multicolumn{2}{l}{\textit{Rep 6: 5/5 correct} }\\
+E* & tombstone \\
+D & \emoji{check-mark-button}\\
+	\hline
+\end{tabular}
+
+	\end{subtable}
+\end{table}
+
+
 ```
 
 # Number of games
