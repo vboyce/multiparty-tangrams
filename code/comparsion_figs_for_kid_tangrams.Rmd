@@ -1,0 +1,151 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# CAMP graphs slides
+```{r}
+
+require(Hmisc)#not directly called, but needed for dots on plots with mean_ci_boot ! 
+#this has to go first b/c it defines summarize and that screws things up
+library(tidyverse)
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+library(rstan)
+library(viridis)
+library(cowplot)
+library(tidybayes)
+library(kableExtra)
+ 
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
+                      fig.pos = "tb", fig.path='figs/', fig.env="figure",
+                      echo=F, warning=F, cache=T, 
+                      message=F, sanitize = T)
+
+color_scheme_1 <- c("2"="#6940FF")
+
+	
+
+##Data import constants
+data_location="data/study1"
+image_location="write-ups/images"
+msum_loc="code/paper_mods/summary"
+mform_loc="code/paper_mods/formulae"
+
+source(here("code/prep_ms.R"))
+
+
+```
+
+```{r, fig.width=8, fig.height=3}
+acc_pred_1 <- read_rds(here("code/paper_mods/prediction/acc_pred_1.rds")) |> filter(numPlayers=="2")
+
+# 1
+one_acc_dat <- combined_results |> 
+  filter(condition=="rotate") |> 
+  group_by(playerId,repNum, gameId, numPlayers) |> 
+  filter(response!="false") |> 
+  mutate(correct.num=ifelse(correct,1,0)) |> 
+  mutate(numPlayers=as.character(numPlayers)) |> 
+  filter(numPlayers=="2")
+
+one_acc_plot <- ggplot(one_acc_dat, aes(x=repNum+1, y=correct.num, color=numPlayers))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(.6,1.05))+
+  geom_point(data=one_acc_dat |> group_by(repNum, gameId, numPlayers) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
+      #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
+  geom_lineribbon(data=acc_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    labs(x="Block", y="Fraction correctly selected", color="", title="Accuracy")+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          plot.title=element_text(hjust=.5))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+red_pred_1 <- read_rds(here("code/paper_mods/prediction/red_pred_1.rds")) |> 
+  filter(numPlayers=="2")
+
+one_red_dat <- combined_chat |> 
+  filter(condition=="rotate") |>  
+  filter(role=="speaker") |> 
+  mutate(groupxtangram=str_c(gameId,tangram)) |> 
+  group_by(repNum, gameId,tangram, groupxtangram, numPlayers) |> 
+  summarize(words=sum(total_num_words)) |>
+  mutate(numPlayers=as.character(numPlayers)) |> filter(numPlayers=="2")
+
+one_red_plot <-  ggplot(one_red_dat, aes(x=repNum+1, y=words, color=numPlayers))+
+      geom_point(data=one_red_dat |> group_by(repNum, gameId, numPlayers) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+
+    #geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+   geom_lineribbon(data=red_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
+    coord_cartesian(ylim=c(0,45))+
+    scale_x_continuous(breaks=seq(1,6))+
+    labs( y="Number of words", x="Block", color="", title="Reduction")+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+                  plot.title=element_text(hjust=.5))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color","fill"))
+
+one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
+
+one_conv_dat <- one_two_converge |> filter(condition %in% c("2"))
+conv_pred_1 <- read_rds(here("code/paper_mods/prediction/conv_pred_1.rds")) |> filter(condition=="2")
+one_conv_plot <- ggplot(one_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
+  geom_point(position = position_dodge(width=.4), alpha=.3,
+             data=one_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)))+
+  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=conv_pred_1)+
+  coord_cartesian(ylim=c(.2,1))+
+  scale_x_continuous(breaks=seq(1,6))+
+  labs(y="Cosine Similarity", x="Block", color="", title="Convergence")+
+  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  theme(legend.position="none",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=13),
+        plot.title=element_text(hjust=.5),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+
+one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds"))
+# divergence
+div_pred_1 <- read_rds(here("code/paper_mods/prediction/div_pred_1.rds")) |> filter(condition=="2")
+#1
+one_div_dat <-  one_two_diverge |> filter(condition %in% c("2"))
+one_div_plot <- ggplot(one_div_dat,aes(x=repNum+1,y=sim,color=condition))+
+  geom_point(position = position_dodge(width=.4), alpha=.3,
+             data=one_div_dat |> group_by(repNum, tangram, condition) |>  summarize(sim=mean(sim)))+
+  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=div_pred_1)+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
+  scale_x_continuous(breaks=seq(1,6))+
+        coord_cartesian(ylim=c(.1,.7))+
+  labs(y="Cosine Similarity", x="Block", color="", title="Divergence")+
+  #annotate("text", x=1,y=.7,label="D", size=6, fontface="bold")+
+  theme(legend.position="none",
+        axis.text=element_text(size=12),
+        legend.text=element_text(size=13),
+                plot.title=element_text(hjust=.5),
+        axis.title=element_text(size=14))+
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+foo <- plot_grid(one_acc_plot, one_red_plot, one_conv_plot,nrow=1)
+
+save_plot(here(image_location,"CAMP-2p_comparison.png"),foo, base_width=8, base_height=3)
+```
