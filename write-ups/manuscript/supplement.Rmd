@@ -20,6 +20,7 @@ header-includes:
  - \setcounter{totalnumber}{6}  
  - \usepackage{emoji}
  - \usepackage{caption, subcaption}
+ - \usepackage{placeins}
 
 ---
 ```{r set-up, include=FALSE}
@@ -108,9 +109,12 @@ form <- function(model){
    str_replace_all("~", "$\\\\sim$ ")
 }
 ```
+
+\pagebreak
 # Feedback
 
-```{r feedback-diag, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Feedback shown to participants. In low-coherence games, matchers saw feedback as shown in A and B. In all games, describers saw feedback like in C; icons were associated with players and indicated who selected which. In high feedback games, matchers saw grids like C, but with text as in A and B."}
+
+```{r feedback-diag, fig.env = "figure*", fig.pos = "b!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Feedback shown to participants. In low-coherence games, matchers saw feedback as shown in A and B. In all games, describers saw feedback like in C; icons were associated with players and indicated who selected which. In high feedback games, matchers saw grids like C, but with text as in A and B."}
 a <- ggplot()+draw_image(here(image_location,"listener_correct.png"))
 
 b <- ggplot()+draw_image(here(image_location, "listener_wrong.png"))
@@ -119,6 +123,9 @@ c <- ggplot()+draw_image(here(image_location,"speaker_feedback.png"))
 
 plot_grid(a,b,c, labels="AUTO")
 ```
+
+\FloatBarrier
+\pagebreak
 
 # Additional game transcripts
 
@@ -333,6 +340,8 @@ D & \emoji{check-mark-button}\\
 
 ```
 
+\FloatBarrier
+
 # Number of games
 
 ```{r participants}
@@ -377,7 +386,7 @@ combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(game
 
 ```
 
-\pagebreak
+\FloatBarrier
 
 # More on matcher utterances 
 
@@ -558,40 +567,42 @@ plot_grid(top, bot, nrow=2, rel_heights = c(1,.75))
 
 
 ```{r emoji,  fig.width=8, fig.height=2.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one matcher produced the labelled emoji. Fraction of trials when any emoji was produced are shown in black.  Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. "}
-combined_emoji |> mutate(emoji=case_when(
-    text=="✅"~  "check",
-    text=="🤔" ~ "think",
-    text=="❌" ~ "x",
-    text=="😂" ~ "lol",
+to_plot <- combined_emoji |> mutate(emoji=case_when(
+    text=="✅"~  "checkmark",
+    text=="🤔" ~ "thinking face",
+    text=="❌" ~ "red x",
+    text=="😂" ~ "laughing face",
   )) |>  filter(!is.na(emoji)) |> full_join(listeners) |> 
   filter(condition %in% c("2_thin", "6_thin", "emoji"))|> 
   unique() |> 
   mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
     pivot_wider(names_from=emoji, values_from=is.emoji, values_fill=0) |> 
   select(-`NA`) |> 
-  mutate(total=check+think+x+lol) |> 
-  pivot_longer(`think`:`total`, names_to="emoji", values_to="count") |> 
+  mutate(total=checkmark+`thinking face`+`red x`+`laughing face`) |> 
+  pivot_longer(`thinking face`:`total`, names_to="emoji", values_to="count") |> 
   group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |> 
   mutate(cond=case_when(
     condition=="2_thin" ~ "Expt 3: 2 thin",
     condition=="6_thin" ~ "Expt 3: 6 thin",
     condition=="emoji" ~ "Expt 2: 6 thin"
-  )) -> to_plot
+  )) |> mutate(emoji=factor(emoji, levels=c("total", "checkmark", "thinking face", "red x", "laughing face")))
 
-  ggplot(to_plot |> filter(emoji!="total"),aes(x=repNum+1, y=any, color=emoji))+
+ colors <- c("black", "#268bd2", "#6c71c4", "#dc3225", "#859900")
+
+  ggplot(to_plot, aes(x=repNum+1, y=any, color=emoji))+
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-        stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
-        scale_color_solarized()+
-     geom_smooth(data=to_plot |> filter(emoji=="total"), method=glm, formula=y~poly(x,2), alpha=.3,  color="black")+
-        stat_summary(data=to_plot |> filter(emoji=="total"), fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1, color="black")+
+        stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
+        scale_color_manual(values=colors)+
   facet_wrap(~cond)+
-    labs(x="Block", y="Fraction trials")+
+    labs(x="Block", y="Fraction trials", color="")+
   guides(color = guide_legend(override.aes = list(linetype = 0, alpha=1, fill=NA) ) )+
     theme(legend.text=element_text(size=12))
 
 ```
 
 We note a deviation from the pre-registration here in the analysis of the emojis. In the pre-registration we said we would "analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length." We did not do this beyond the visualization shown here. 
+
+\FloatBarrier
 
 \pagebreak
 
@@ -600,31 +611,32 @@ We note a deviation from the pre-registration here in the analysis of the emojis
 The main text included the graph for convergence comparing utterances from blocks 1-5 to the utterance from block 6. Here we show two other measures of semantic shifts for descriptions for the same tangram in the same game: similarity to the first utterance and similarity to the next utterance. 
 
 Similarity to the first utterance is not very informative (but we pre-registered it). Similarity to the next utterance is what actually drives the convergence phenomena: pairs of utterances from adjacent blocks become closer together over time. 
-
 ```{r other,  fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A-C is the similarity between utterances on a given block to the first block utterance for the same image, in the same game.  Dots are per-game averages, smooths are quadratic. D-F is the similarity between utterances on a given block to the corresponding utterances in the next block.  Dots are per-game averages, smooths are quadratic.", cache=T}
-
-#first
+#convergence
 
 one_two_first <- read_rds(here("code/models/one_two_tofirst.rds"))
 three_tofirst <- read_rds(here("code/models/three_tofirst.rds"))
 #1
 one_first_dat <- one_two_first |> filter(condition %in% c("2", "3","4","5","6"))
-
+first_pred_1 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_1.rds"))
+first_pred_2 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_2.rds"))
+first_pred_3 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_3.rds"))
 one_first_plot <- ggplot(one_first_dat, aes(x=later+1,y=sim,color=condition))+
 geom_point(data=one_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
-  coord_cartesian(ylim=c(.25,.9))+
+  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=first_pred_1)+  coord_cartesian(ylim=c(.25,.9))+
   scale_x_continuous(breaks=seq(2,6))+
   labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
       annotate("text", x=2,y=.9,label="A", size=6, fontface="bold")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
                  plot.title=element_text(size=16, hjust=.5),
         axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
+#1
 
 #2
 
@@ -637,10 +649,10 @@ two_first_dat <- one_two_first |>  filter(condition %in% c("6emoji", "6highfeed"
 two_first_plot <- 
   ggplot(two_first_dat, aes(x=later+1,y=sim,color=condition))+
 geom_point(data=two_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(method="glm", formula=y~poly(x,2), show_guide=F)+ # the smooth isn't working b/c singularities
-  scale_x_continuous(breaks=seq(2,6))+
+  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=first_pred_2)+  scale_x_continuous(breaks=seq(2,6))+
   coord_cartesian(ylim=c(.25,.9))+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   labs(y="Cosine Similarity", x="", color="", title="Experiment 2")+
       annotate("text", x=2,y=.9,label="B", size=6, fontface="bold")+
 annotate("text", x=4,y=.9,label="Similarity to first block", size=5)+
@@ -649,18 +661,19 @@ annotate("text", x=4,y=.9,label="Similarity to first block", size=5)+
         legend.text=element_text(size=14),
          plot.title=element_text(size=16, hjust=.5),
         axis.title.y=element_blank(),
-        axis.title=element_text(size=14))+    scale_color_manual(values=color_scheme_2)
+        axis.title=element_text(size=14))+    
+  scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 #3
 
 three_first_dat <- three_tofirst |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)))
 
 three_first_plot <- ggplot(three_first_dat, aes(x=later+1,y=sim,color=condition))+
 geom_point(data=three_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
-  scale_x_continuous(breaks=seq(2,6))+
+  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=first_pred_3)+  scale_x_continuous(breaks=seq(2,6))+
   coord_cartesian(ylim=c(.25,.9))+
   labs(y="Cosine Similarity", x="", color="", title="Experiment 3")+
-    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
       annotate("text", x=2,y=.9,label="C", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
@@ -668,21 +681,25 @@ geom_point(data=three_first_dat |> group_by(later, gameId, condition) |> summari
                  plot.title=element_text(size=16, hjust=.5),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_3)
+  scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 tofirst <- plot_grid(one_first_plot, two_first_plot, three_first_plot, nrow=1, rel_widths = c(1.05,1,1))
 
 one_two_next <- read_rds(here("code/models/one_two_tonext.rds"))
 three_next <- read_rds(here("code/models/three_tonext.rds"))
 # divergence
-
+next_pred_1 <- read_rds(here("code/paper_mods/prediction/tonext_pred_1.rds"))
+next_pred_2 <- read_rds(here("code/paper_mods/prediction/tonext_pred_2.rds"))
+next_pred_3 <- read_rds(here("code/paper_mods/prediction/tonext_pred_3.rds"))
 #1
 one_next_dat <-  one_two_next|> filter(condition %in% c("2", "3","4","5","6"))
 
 one_next_plot <- ggplot(one_next_dat, aes(x=earlier+1,y=sim,color=condition))+
    geom_point(data=one_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2), method="lm")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=next_pred_1)+  
+  scale_x_continuous(breaks=seq(2,6))+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
   labs(y="Cosine Similarity", x="Block", color="")+
@@ -692,7 +709,7 @@ one_next_plot <- ggplot(one_next_dat, aes(x=earlier+1,y=sim,color=condition))+
         legend.text=element_text(size=13),
         axis.title=element_text(size=14),
         axis.title.x = element_blank())+
-  scale_color_manual(values=color_scheme_1)
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 #2
 
@@ -704,35 +721,37 @@ two_next_dat <-  one_two_next |>  filter(condition %in% c("6emoji", "6highfeed",
 
 two_next_plot <- ggplot(two_next_dat, aes(x=earlier+1,y=sim,color=condition))+
      geom_point(data=two_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2), method="lm")+
+  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=next_pred_2)+  
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
   labs(y="Cosine Similarity", x="", color="")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
 annotate("text", x=3,y=1,label="Similarity to next block", size=5)+
       annotate("text", x=1,y=1,label="E", size=6, fontface="bold")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
         axis.title=element_blank())+
-   scale_color_manual(values=color_scheme_2)
+   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
 three_next_dat <-  three_next |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)))
 
 three_next_plot <- ggplot(three_next_dat, aes(x=earlier+1,y=sim,color=condition))+
       geom_point(data=three_next_dat |> group_by(earlier,gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2), method="lm")+
+  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=next_pred_3)+  
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
     annotate("text", x=1,y=1,label="F", size=6, fontface="bold")+
   labs(y="Cosine Similarity", x="Block", color="")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
         axis.title=element_blank())+
-scale_color_manual(values=color_scheme_3)
+scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 tonext <- plot_grid(one_next_plot,two_next_plot,three_next_plot, nrow=1, rel_widths = c(1.05,1,1))
 
@@ -740,6 +759,7 @@ tonext <- plot_grid(one_next_plot,two_next_plot,three_next_plot, nrow=1, rel_wid
 plot_grid(tofirst, tonext, nrow=2, rel_heights = c(.8,1), label_size=20)
 ```
 
+\FloatBarrier
 \pagebreak
 
 # Distinctiveness of tangrams
@@ -751,14 +771,18 @@ An additional measure of convergence/divergence patterns is how different tangra
 one_two_tandiv<- read_rds(here("code/models/one_two_tangrams_div.rds"))
 three_tandiv<- read_rds(here("code/models/three_tangrams_div.rds"))
 # divergence
+tandiv_pred_1 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_1.rds"))
+tandiv_pred_2 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_2.rds"))
+tandiv_pred_3 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_3.rds"))
 
 #1
 one_div_dat <-  one_two_tandiv |> filter(condition %in% c("2", "3","4","5","6"))
 
 one_div_plot <- ggplot(one_div_dat, aes(x=repNum+1,y=sim,color=condition))+
       geom_point(data=one_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=tandiv_pred_1)+   
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
@@ -767,7 +791,7 @@ one_div_plot <- ggplot(one_div_dat, aes(x=repNum+1,y=sim,color=condition))+
         legend.text=element_text(size=13),
                  plot.title=element_text(size=16, hjust=.5),
         axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
+  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 #2
 
@@ -779,28 +803,30 @@ two_div_dat <-  one_two_tandiv |>  filter(condition %in% c("6emoji", "6highfeed"
 
 two_div_plot <- ggplot(two_div_dat, aes(x=repNum+1,y=sim,color=condition))+
     geom_point(data=two_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=tandiv_pred_2)+   
   scale_x_continuous(breaks=seq(1,6))+
       coord_cartesian(ylim=c(.1,.7))+
   labs(y="Cosine Similarity", x="", color="", title="Experiment 2")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
         axis.title=element_text(size=14),
                  plot.title=element_text(size=16, hjust=.5),
         axis.title.y=element_blank())+
-   scale_color_manual(values=color_scheme_2)
+   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
 three_div_dat <-  three_tandiv |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1))) 
 
 three_div_plot <- ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
       geom_point(data=three_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_smooth(formula=y~poly(x,2))+
+  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
+                  data=tandiv_pred_3)+   
   scale_x_continuous(breaks=seq(1,6))+
    coord_cartesian(ylim=c(.1,.7))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
+  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   labs(y="Cosine Similarity", x="", color="", title="Experiment 3")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
@@ -808,7 +834,7 @@ three_div_plot <- ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
         axis.title=element_text(size=14),
                  plot.title=element_text(size=16, hjust=.5),
         axis.title.y=element_blank())+
-scale_color_manual(values=color_scheme_3)
+scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
 plot_grid(one_div_plot,two_div_plot,three_div_plot, nrow=1, rel_widths = c(1.05,1,1))
 
@@ -861,6 +887,7 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 ```
 
 
+\FloatBarrier
 \pagebreak
 
 # Summaries of model outputs
@@ -915,6 +942,7 @@ do_table("acc_3.rds", "Experiment 3 logistic model of matcher accuracy")
 
 ```
 
+\FloatBarrier
 
 # Reduction models 
 
@@ -932,6 +960,7 @@ do_table("red_3.rds", "Experiment 3")
 
 ```
 
+\FloatBarrier
 ## Extra reduction model
 
 For experiment 1, we also pre-specified a model about whether the describer's correctness on the prior block (when they were a matcher) had an effect on how many words of description they produced. Priors were the same as for primary reduction model.
@@ -940,6 +969,18 @@ For experiment 1, we also pre-specified a model about whether the describer's co
 
 do_table("weird_1.rds", "Experiment 1")
 
+```
+
+\FloatBarrier
+
+## Log reduction model
+
+As an exploratory check, we reran some of the primary reduction models using the log number of words as the DV; otherwise model specifications and priors were the same.
+
+```{r}
+
+do_table("log_red_1.rds", "Experiment 1 log reduction")
+do_table("log_red_3.rds", "Experiment 3 log reduction")
 ```
 
 ## Matcher reduction models
@@ -958,6 +999,8 @@ do_table("anylist_1.rds", "Experiment 1")
 
 ```
 
+\FloatBarrier
+
 ## Initial utterance reduction model
 
 These models were not pre-registered. They looked at describer reduction only on words that were produced prior to the first matcher message each trial. These models were only run on experimental conditions where matchers could contribute textual responses. 
@@ -972,6 +1015,8 @@ do_table("pre_list_2b.rds", "Experiment 2: 6 full feedback")
 do_table("pre_list_3.rds", "Experiment 3")
 
 ```
+
+\FloatBarrier
 
 # Linguistic content models
 
@@ -992,6 +1037,7 @@ do_table("tolast_3.rds", "Experiment 3", decimal=3)
 
 ```
 
+\FloatBarrier
 
 ## Divergence across games
 
@@ -1007,7 +1053,7 @@ do_table("div_3.rds", "Experiment 3",decimal=3)
 
 ```
 
-
+\FloatBarrier
 ## Divergence across tangrams
 
 This is an additional metric comparing the similiarities between descriptions for different tangrams within a game. It measures how distinct the descriptions for different tangram images are. 
@@ -1022,7 +1068,7 @@ do_table("tandiv_3.rds", "Experiment 3",decimal=3)
 
 ```
 
-\pagebreak
+\FloatBarrier
 
 ## Convergence to next
 
@@ -1038,6 +1084,7 @@ do_table("tonext_3.rds", "Experiment 3",decimal=3)
 
 ```
 
+\FloatBarrier
 
 ## Divergence from first
 
@@ -1053,21 +1100,9 @@ do_table("tofirst_3.rds", "Experiment 3",decimal=3)
 
 ```
 
+\FloatBarrier
 # Exploratory Mega-analytic models
-
-For the mega-analytic models:
-
- - thin and emoji conditions are coded as thin; everything else is thick
-
-- group size is coded as intent to treat
-
-- the intercept condition is 2 player, thick, first block
-
-- "thinner" is thin condition instead
-
-- "larger" is per addiitonal player
-
-- "block" is per later block
+As an exploratory measure, we combined data across all experiments and re-run the core set of models (same structure and priors as for the individual models). We binarized game thickness: all games that were not thin were counted as thick. The intercept condition is a 2-player game, in the thick condition, for the first block. Thinner means the game was in the thin condition; larger is per additional player, and block is per later block. Group size was coded based on assigned condition, not based on actual number of players at the time. 
 
 ```{r}
 do_table("acc_meta.rds", "Mega-analytic on accuracy")
@@ -1077,12 +1112,3 @@ do_table("mega_tolast.rds", "Mega-analytic on convergence to last", decimal=3)
 
 ```
 
-# Log reduction
-
-Reduction models re-run using log-words as DV; these are the same as reduction models except for this change. 
-
-```{r}
-
-do_table("log_red_1.rds", "Experiment 1 log reduction")
-do_table("log_red_3.rds", "Experiment 3 log reduction")
-```

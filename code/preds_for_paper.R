@@ -50,6 +50,36 @@ div_pred_1 <- expand_grid(block=0:5, condition=2:6) |>
             high=quantile(predicted,.975)) |> 
   write_rds(here(m_loc,"div_pred_1.rds"))
 
+to_first_1 <- here(model_loc,"tofirst_1.rds") |> read_rds()
+to_first_pred_1 <- expand_grid(later=1:5, condition=2:6) |> 
+  add_linpred_draws(to_first_1, value="predicted", re_formula=NA) |> 
+  mutate(condition=as.factor(condition)) |> 
+  group_by(later,condition) |> 
+  summarize(mean=mean(predicted),
+            low=quantile(predicted,.025),
+            high=quantile(predicted,.975)) |> 
+  write_rds(here(m_loc,"tofirst_pred_1.rds"))
+
+to_next_1 <- here(model_loc, "tonext_1.rds") |> read_rds()
+to_next_pred_1 <- expand_grid(earlier=0:4, condition=2:6) |> 
+  add_linpred_draws(to_next_1, value="predicted", re_formula=NA) |> 
+  mutate(condition=as.factor(condition)) |> 
+  group_by(earlier,condition) |> 
+  summarize(mean=mean(predicted),
+            low=quantile(predicted,.025),
+            high=quantile(predicted,.975)) |> 
+  write_rds(here(m_loc,"tonext_pred_1.rds"))
+
+tandiv_1 <- here(model_loc, "tandiv_1.rds") |> read_rds()
+tandiv_pred_1 <- expand_grid(block=0:6, condition=2:6) |> 
+  add_linpred_draws(tandiv_1, value="predicted", re_formula=NA) |> 
+  mutate(condition=as.factor(condition)) |> 
+  group_by(block,condition) |> 
+  summarize(mean=mean(predicted),
+            low=quantile(predicted,.025),
+            high=quantile(predicted,.975)) |> 
+  write_rds(here(m_loc,"tandiv_pred_1.rds"))
+
 ## Expt 2
 do_expt_2 <- function(m2a, m2b, m2c){
   mod_2a <- here(model_loc,m2a) |> read_rds()
@@ -100,6 +130,30 @@ do_conv_2 <- function(m2a, m2b, m2c){
               high=quantile(predicted,.975))
   return(pred_2)
 }
+
+do_tofirst_2 <- function(m2a, m2b, m2c){
+  mod_2a <- here(model_loc,m2a) |> read_rds()
+  mod_2b <- here(model_loc,m2b) |> read_rds()
+  mod_2c <- here(model_loc,m2c) |> read_rds()
+  pred_2a <- expand_grid(later=1:5) |> 
+    add_linpred_draws(mod_2a, value="predicted", re_formula=NA) |> 
+    mutate(condition="6 same describer") 
+  
+  pred_2b <-  expand_grid(later=1:5) |>
+    add_linpred_draws(mod_2b, value="predicted", re_formula=NA) |> 
+    mutate(condition="6 full feedback") 
+  
+  pred_2c <-  expand_grid(later=1:5) |>
+    add_linpred_draws(mod_2c, value="predicted", re_formula=NA) |> 
+    mutate(condition="6 thin") 
+  
+  pred_2<- pred_2a |> bind_rows(pred_2b, pred_2c) |> 
+    group_by(later, condition) |> 
+    summarize(mean=mean(predicted),
+              low=quantile(predicted,.025),
+              high=quantile(predicted,.975))
+  return(pred_2)
+}
 acc_pred_2 <- do_expt_2("acc_2a.rds", "acc_2b.rds", "acc_2c.rds") |> 
   mutate(across(mean:high, inv_logit_scaled)) |> write_rds(here(m_loc,"acc_pred_2.rds"))
 
@@ -108,11 +162,17 @@ red_pred_2 <- do_expt_2("red_2a.rds", "red_2b.rds", "red_2c.rds") |> write_rds(h
 div_pred_2 <- do_expt_2("div_2a.rds", "div_2b.rds", "div_2c.rds") |> 
   write_rds(here(m_loc,"div_pred_2.rds"))
 
+tandiv_pred_2 <- do_expt_2("tandiv_2a.rds", "tandiv_2b.rds", "tandiv_2c.rds") |> 
+  write_rds(here(m_loc,"tandiv_pred_2.rds"))
+
 conv_pred_2 <- do_conv_2("tolast_2a.rds", "tolast_2b.rds", "tolast_2c.rds") |> 
   write_rds(here(m_loc,"conv_pred_2.rds"))
 
+tonext_pred_2 <- do_conv_2("tonext_2a.rds", "tonext_2b.rds", "tonext_2c.rds") |> 
+  write_rds(here(m_loc,"tonext_pred_2.rds"))
 
-
+tofirst_pred_2 <- do_tofirst_2("tofirst_2a.rds", "tofirst_2b.rds", "tofirst_2c.rds") |> 
+  write_rds(here(m_loc,"tofirst_pred_2.rds"))
 ## Expt 3
 do_expt_3 <- function(model){
   mod <- here(model_loc,model) |> read_rds()
@@ -137,6 +197,18 @@ do_conv_3 <- function(model){
   return(pred_3)
 }
 
+do_tofirst_3 <- function(model){
+  mod <- here(model_loc,model) |> read_rds()
+  pred_3 <- expand_grid(later=1:5, gameSize=c("2", "6"),channel=c("thin", "thick")) |>  add_linpred_draws(mod, value="predicted", re_formula=NA) |> 
+    group_by(later, channel, gameSize) |> 
+    summarize(mean=mean(predicted),
+              low=quantile(predicted,.025),
+              high=quantile(predicted,.975)) |> 
+    mutate(condition=str_c(gameSize," ", channel))
+  
+  return(pred_3)
+}
+
 acc_pred_3 <-do_expt_3("acc_3.rds") |> 
   mutate(across(mean:high, inv_logit_scaled)) |> write_rds(here(m_loc,"acc_pred_3.rds"))
 
@@ -144,6 +216,11 @@ red_pred_3 <- do_expt_3("red_3.rds") |> write_rds(here(m_loc,"red_pred_3.rds"))
 
 div_pred_3 <- do_expt_3("div_3.rds") |> write_rds(here(m_loc,"div_pred_3.rds"))
 
+tandiv_pred_3 <- do_expt_3("tandiv_3.rds") |> write_rds(here(m_loc,"tandiv_pred_3.rds"))
+tonext_pred_3 <- do_conv_3("tonext_3.rds") |> write_rds(here(m_loc,"tonext_pred_3.rds"))
+
+
 conv_pred_3 <- do_conv_3("tolast_3.rds") |> write_rds(here(m_loc,"conv_pred_3.rds"))
 
+tofirst_pred_3 <- do_tofirst_3("tofirst_3.rds") |> write_rds(here(m_loc,"tofirst_pred_3.rds"))
 
