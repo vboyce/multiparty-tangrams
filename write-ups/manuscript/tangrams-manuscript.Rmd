@@ -243,7 +243,7 @@ In the *thick* condition, we maintained a consistent describer, gave all matcher
 In the *thin* condition, we forced the describer to rotate on each block, restricted feedback to their own binary correctness, and restricted the backchannel to the four emojis.
 Note that the 2-player thick game most closely resembles the design of classic repeated reference games [@clark1986].
 
-```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible. **(TODO check ordering of legends!)**"}
+```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible. **(TODO check ordering of legends!)**"}
 # accuracy
 
 acc_pred_1 <- read_rds(here("code/paper_mods/prediction/acc_pred_1.rds"))
@@ -263,14 +263,15 @@ one_acc_plot <- ggplot(one_acc_dat, aes(x=repNum+1, y=correct.num, color=numPlay
   geom_point(data=one_acc_dat |> group_by(repNum, gameId, numPlayers) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
       #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
   geom_lineribbon(data=acc_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
-    labs(x="Block", y="Fraction correctly selected", color="", title="Experiment 1")+
+    labs(x="Block", y="Fraction correctly selected", color="", title="", subtitle="Experiment 1")+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-    annotate("text", x=1,y=1.05,label="A", size=6, fontface="bold")+
+    #annotate("text", x=1,y=1.05,label="A", size=6, fontface="bold")+
     theme(legend.position="none",
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
           axis.title=element_text(size=14),
-          plot.title=element_text(size=16, hjust=.5))+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"))+
     scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 two_acc_dat <- combined_results |>
@@ -292,14 +293,15 @@ two_acc_plot <- ggplot(two_acc_dat, aes(x=repNum+1, y=correct.num, color=conditi
   geom_point(data=two_acc_dat |> group_by(repNum, gameId, condition) |> summarize(correct.num=mean(correct.num)),position = position_dodge(width=.4), alpha=.3)+
     #geom_smooth(method = "glm", method.args = list(family = "binomial")) +
    geom_lineribbon(data=acc_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
-    labs(x="", y="", color="", title="Experiment 2")+
-    annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+     
-    annotate("text", x=3.5,y=1.05,label="Accuracy", size=6)+
+    labs(x="", y="", color="", title="Accuracy", subtitle="Experiment 2")+
+    #annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+     
+    #annotate("text", x=3.5,y=1.05,label="Accuracy", size=6)+
     theme(legend.position="none",
           axis.text=element_text(size=12),
           legend.text=element_text(size=14),
           axis.title=element_text(size=14),
-          plot.title=element_text(size=16, hjust=.5),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
           axis.title.y=element_blank())+ 
     guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
     scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
@@ -321,18 +323,19 @@ three_acc_plot <-  ggplot(three_acc_dat, aes(x=repNum+1, y=correct.num, color=co
     #geom_smooth(method = "glm", method.args = list(family = "binomial")) + 
     geom_lineribbon(data=acc_pred_3, 
                      aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
-    annotate("text", x=1,y=1.05,label="C", size=6, fontface="bold")+
-    labs(x="", y="", color="", title="Experiment 3")+
+    #annotate("text", x=1,y=1.05,label="C", size=6, fontface="bold")+
+    labs(x="", y="", color="", title="", subtitle="Experiment 3")+
     theme(legend.position="none",
           axis.text=element_text(size=12),
           legend.text=element_text(size=14),
-          plot.title=element_text(size=16, hjust=.5),
+                   plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
           axis.title=element_text(size=14),
           axis.title.y=element_blank())+
     guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.1) ) )+
     scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
  
-acc <- plot_grid(one_acc_plot, two_acc_plot, three_acc_plot, nrow=1, rel_widths = c(1.05, 1, 1))
+acc <- plot_grid(one_acc_plot, two_acc_plot, three_acc_plot, nrow=1, rel_widths = c(1.05, 1, 1), labels=c("A", "B", "C"), label_size=20, label_y=.9)
  
 
 red_pred_1 <- read_rds(here("code/paper_mods/prediction/red_pred_1.rds"))
@@ -353,14 +356,15 @@ one_red_plot <-  ggplot(one_red_dat, aes(x=repNum+1, y=words, color=numPlayers))
    geom_lineribbon(data=red_pred_1, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(numPlayers,after_scale=alpha(fill,.2))))+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
-    labs( y="Number of words", x="Block", color="")+
+    labs( y="Number of words", x="Block", color="", title="", subtitle="Experiment 1")+
     guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
-    annotate("text", x=1,y=45,label="D", size=6, fontface="bold")+
+    #annotate("text", x=1,y=45,label="D", size=6, fontface="bold")+
     theme(legend.position="bottom",
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
           axis.title=element_text(size=14),
-          axis.title.x=element_blank())+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),          axis.title.x=element_blank())+
     scale_color_manual(values=color_scheme_1, aesthetics=c("color","fill"))
 
 
@@ -388,13 +392,14 @@ two_red_plot <- ggplot(two_red_dat,aes(x=repNum+1, y=words, color=condition))+
    geom_lineribbon(data=red_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
-    labs(x="", y="", color="")+
-    annotate("text", x=1,y=45,label="E", size=6, fontface="bold")+
-    annotate("text", x=3.5,y=45,label="Words from describer", size=6)+
+    labs(x="", y="", color="", title="Words from describer", subtitle="Experiment 2")+
+    #annotate("text", x=1,y=45,label="E", size=6, fontface="bold")+
+    #annotate("text", x=3.5,y=45,label="Words from describer", size=6)+
     theme(legend.position="bottom",
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
-          axis.title=element_blank())+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),          axis.title=element_blank())+
     scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
 #3
@@ -416,16 +421,19 @@ three_red_plot <-  ggplot(three_red_dat, aes(x=repNum+1, y=words, color=conditio
     guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE )+
     coord_cartesian(ylim=c(0,45))+
     scale_x_continuous(breaks=seq(1,6))+
-    labs(x="", y="", color="")+
-    annotate("text", x=1,y=45,label="F", size=6, fontface="bold")+
+    labs(x="", y="", color="", title="", subtitle="Experiment 3")+
+    #annotate("text", x=1,y=45,label="F", size=6, fontface="bold")+
     theme(legend.position="bottom",
           axis.text=element_text(size=12),
           legend.text=element_text(size=13),
-          axis.title=element_blank())+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),          axis.title=element_blank())+
     scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
-red <- plot_grid(one_red_plot,two_red_plot, three_red_plot, nrow=1, rel_widths = c(1.05,1,1))
-plot_grid(acc, red, nrow=2, rel_heights = c(.95,1))
+red <- plot_grid(one_red_plot,two_red_plot, three_red_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("D", "E", "F"), label_size=20, label_y=.9)
+ plot_grid(acc, red, nrow=2, rel_heights = c(.95,1.1))
+
+
 ```
 
 ```{r}
@@ -593,6 +601,12 @@ listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
   mutate(playerId=factor(playerId, labels=c("A", "B", "C", "D", "E", "F"))) |> 
   mutate(id=str_c(playerId, ifelse(role=="speaker", "*", ""))) |> select(id, repNum, text, countCorrect)
   
+
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
+  filter(gameId=="BTbGhXZvjdSFubTBg") |>   select(playerId, repNum, text, countCorrect, role) |> filter(repNum>3)
+
+listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
+  filter(gameId=="2nZ79PA8WMtYNqLrS") |>   select(playerId, repNum, text, countCorrect, role) |> filter(repNum>3)
 listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |>  filter(gameId=="RBnjoHwwmyq7ojwD7") |> 
   select(playerId, repNum, text, countCorrect, role) |> 
   mutate(playerId=factor(playerId, labels=c("G", "H", "I", "J", "K", "L"))) |> 
@@ -651,7 +665,7 @@ To measure stability, or convergence within groups, we compared utterances from 
 To measure arbitrariness, or divergence across groups depending on group-specific history, we compared utterances produced by different describers for the same image in the corresponding blocks. 
 Figure \@ref(fig:sbert-diagram) illustrates these two measures with example of concatenated utterances and their within-game and between-game cosine similarities. 
 
-```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=7.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. (A-C). Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. (D-F). Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible.**(TODO check ordering of legends!)**"}
+```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. (A-C). Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. (D-F). Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible.**(TODO check ordering of legends!)**"}
 #convergence
 one_two_converge <- read_rds(here("code/models/one_two_converge.rds"))
 three_converge <- read_rds(here("code/models/three_converge.rds"))
@@ -669,14 +683,13 @@ one_conv_plot <- ggplot(one_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
                   data=conv_pred_1)+
   coord_cartesian(ylim=c(.2,1))+
   scale_x_continuous(breaks=seq(1,6))+
-  labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
+  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  annotate("text", x=1,y=1,label="A", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
-        plot.title=element_text(hjust=.5, size=16),
-        axis.title=element_text(size=14))+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 
@@ -695,13 +708,11 @@ two_conv_plot <- ggplot(two_conv_dat, aes(x=earlier+1,y=sim,color=condition))+
                   data=conv_pred_2)+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
-  labs(x="", y="", color="", title="Experiment 2")+
-  annotate("text", x=1,y=1,label="B", size=6, fontface="bold")+
-  annotate("text", x=3,y=1,label="Within game", size=6)+
+  labs(x="", y="", color="", title="Within game", subtitle="Experiment 2")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
-        plot.title=element_text(hjust=.5, size=16),
-        legend.text=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        legend.text=element_text(size=14),
         axis.title=element_text(size=14),
         axis.title.y=element_blank())+    
   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
@@ -718,17 +729,17 @@ three_conv_plot <- ggplot(three_conv_dat, aes(x=earlier+1,y=sim,color=condition)
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.2,1))+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  annotate("text", x=1,y=1,label="C", size=6, fontface="bold")+
-  labs(x="", y="", color="", title="Experiment 3")+
+  labs(x="", y="", color="", title="", subtitle="Experiment 3")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
         axis.title=element_text(size=14),
-        plot.title=element_text(hjust=.5, size=16),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title.y = element_blank())+
   scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
-conv <- plot_grid(one_conv_plot, two_conv_plot, three_conv_plot, nrow=1, rel_widths = c(1.05, 1,1))
+conv <- plot_grid(one_conv_plot, two_conv_plot, three_conv_plot, nrow=1, rel_widths = c(1.05, 1,1), labels=c("A", "B", "C"), label_y=.9, label_size = 20)
 one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds"))
 three_diverge <- read_rds(here("code/models/three_diverge.rds"))
 
@@ -747,11 +758,12 @@ one_div_plot <- ggplot(one_div_dat,aes(x=repNum+1,y=sim,color=condition))+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   scale_x_continuous(breaks=seq(1,6))+
         coord_cartesian(ylim=c(.1,.7))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-  annotate("text", x=1,y=.7,label="D", size=6, fontface="bold")+
+  labs(y="Cosine Similarity", x="Block", color="", subtitle="Experiment 1", title="")+
   theme(legend.position="bottom",
         axis.title.x=element_blank(),
         axis.text=element_text(size=12),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         legend.text=element_text(size=13),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
@@ -770,14 +782,14 @@ two_div_plot <- ggplot(two_div_dat, aes(x=repNum+1,y=sim,color=condition))+
   geom_lineribbon(data=div_pred_2, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.1,.7))+
-  labs(x="", y="", color="")+
+  labs(x="", y="", color="", title="Between games", subtitle="Experiment 2")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ) , fill=F)+
-  annotate("text", x=1,y=.7,label="E", size=6, fontface="bold")+
-  annotate("text", x=3.5,y=.7,label="Between games", size=6)+
   theme(legend.position="bottom",
         axis.title.x=element_blank(),
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_text(size=14),
         axis.title.y=element_blank())+
    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
@@ -793,19 +805,20 @@ three_div_plot <- ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
   geom_lineribbon(data=div_pred_3, aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))))+
   scale_x_continuous(breaks=seq(1,6))+
   coord_cartesian(ylim=c(.1,.7))+
-  labs(x="", y="", color="")+
+  labs(x="", y="", color="", subtitle="Experiment 3", title="")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  annotate("text", x=1,y=.7,label="F", size=6, fontface="bold")+
   theme(legend.position="bottom",
         axis.title.x=element_blank(),
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_text(size=14),
         axis.title.y=element_blank())+
   scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
-div <- plot_grid(one_div_plot,two_div_plot,three_div_plot, nrow=1, rel_widths = c(1.05, 1, 1))
-plot_grid(conv, div, nrow=2,  rel_heights = c(.95,1))
+div <- plot_grid(one_div_plot,two_div_plot,three_div_plot, nrow=1, rel_widths = c(1.05, 1, 1), labels=c("D", "E", "F"), label_y=.9, label_size=20)
+plot_grid(conv, div, nrow=2,  rel_heights = c(.95,1.1))
 ```
 
 ```{r}

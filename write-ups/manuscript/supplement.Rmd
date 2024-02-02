@@ -121,7 +121,7 @@ b <- ggplot()+draw_image(here(image_location, "listener_wrong.png"))
 
 c <- ggplot()+draw_image(here(image_location,"speaker_feedback.png"))
 
-plot_grid(a,b,c, labels="AUTO")
+plot_grid(a,b,c, labels="AUTO", label_size=20, label_y=.95, label_x=.05)
 ```
 
 \FloatBarrier
@@ -431,13 +431,14 @@ ggplot(one_talk_dat, aes(x=repNum+1, y=is.words, color=numPlayers))+
     stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
   coord_cartesian(ylim=c(0,1.05))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="Block", color="", title="Experiment 1")+
+  labs( y="Fraction trials with any words", x="Block", color="", title="", subtitle="Experiment 1")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  annotate("text", x=1,y=1.05,label="A", size=6, fontface="bold")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
-        axis.title=element_text(size=14),        plot.title=element_text(size=16, hjust=.5))+
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
+        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1)
 
 
@@ -456,14 +457,14 @@ ggplot(two_talk_dat, aes(x=repNum+1, y=is.words, color=condition))+
     stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
   coord_cartesian(ylim=c(0,1.05))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="", color="", title="Experiment 2")+
+  labs( y="Fraction trials with any words", x="", color="", title="Any matcher words", subtitle="Experiment 2")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+
-    annotate("text", x=3.5,y=1.05,label="Any matcher words", size=6)+
-   theme(legend.position="bottom",
+  theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
-        axis.title=element_text(size=14),        plot.title=element_text(size=16, hjust=.5),
+        axis.title=element_text(size=14),       
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title.y=element_blank())+
     scale_color_manual(values=color_scheme_2)
 
@@ -480,17 +481,17 @@ geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
     stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
   coord_cartesian(ylim=c(0,1.05))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="", color="", title="Experiment 3")+
+  labs( y="Fraction trials with any words", x="", color="", title="", subtitle="Experiment 3")+
   guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  annotate("text", x=1,y=1.05,label="C", size=6, fontface="bold")+
    theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
-        axis.title=element_text(size=14),        plot.title=element_text(size=16, hjust=.5),
-        axis.title.y=element_blank())+
+        axis.title=element_text(size=14),        
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title.y=element_blank())+
   scale_color_manual(values=color_scheme_3)
 
-  top <- plot_grid(one_talk_plot, two_talk_plot, three_talk_plot, nrow=1, rel_widths = c(1.05,1,1))
+  top <- plot_grid(one_talk_plot, two_talk_plot, three_talk_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("A", "B", "C"), label_y=.9, label_size=20)
   
   
   
@@ -504,13 +505,14 @@ geom_point(data=one_list_dat|> group_by(gameId, repNum, numPlayers) |> summarize
   geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="")+
+  labs( y="Number of words", x="Block", color="", title="", subtitle="Experiment 1")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-    annotate("text", x=1,y=25,label="D", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
         axis.title=element_text(size=14),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title.x=element_blank())+
   scale_color_manual(values=color_scheme_1, drop=F)
 
@@ -531,12 +533,12 @@ two_list_plot <- ggplot(two_list_dat, aes(x=repNum+1, y=words, color=condition))
     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
   coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="", color="")+
-      annotate("text", x=1,y=25,label="E", size=6, fontface="bold")+
-  annotate("text", x=3.5,y=25,label="Words from matchers", size=6)+
+  labs( y="Number of words", x="", color="", title="Words from matchers", subtitle="Experiment 2")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_blank())+
     scale_color_manual(values=color_scheme_2, drop=F)
 
@@ -552,14 +554,15 @@ geom_point(data=three_list_dat|> group_by(gameId, repNum, condition) |> summariz
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
   coord_cartesian(ylim=c(0,25))+
        scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="", color="")+
-      annotate("text", x=1,y=25,label="F", size=6, fontface="bold")+
+  labs( y="Number of words", x="", color="", title="", subtitle="Experiment 3")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_blank())
 
-  bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow=1, rel_widths=c(1.05,1,1))
+  bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow=1, rel_widths=c(1.05,1,1), labels=c("D", "E", "F"), label_y=.9, label_size=20)
   
 plot_grid(top, bot, nrow=2, rel_heights = c(1,.75))
 
@@ -626,14 +629,14 @@ geom_point(data=one_first_dat |> group_by(later, gameId, condition) |> summarize
   geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
                   data=first_pred_1)+  coord_cartesian(ylim=c(.25,.9))+
   scale_x_continuous(breaks=seq(2,6))+
-  labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
+  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
       annotate("text", x=2,y=.9,label="A", size=6, fontface="bold")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
-                 plot.title=element_text(size=16, hjust=.5),
-        axis.title=element_text(size=14))+
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
 
 #1
@@ -653,14 +656,12 @@ geom_point(data=two_first_dat |> group_by(later, gameId, condition) |> summarize
                   data=first_pred_2)+  scale_x_continuous(breaks=seq(2,6))+
   coord_cartesian(ylim=c(.25,.9))+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  labs(y="Cosine Similarity", x="", color="", title="Experiment 2")+
-      annotate("text", x=2,y=.9,label="B", size=6, fontface="bold")+
-annotate("text", x=4,y=.9,label="Similarity to first block", size=5)+
+  labs(y="Cosine Similarity", x="", color="", title="Similarity to first block", subtitle="Experiment 2")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         legend.text=element_text(size=14),
-         plot.title=element_text(size=16, hjust=.5),
-        axis.title.y=element_blank(),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title.y=element_blank(),
         axis.title=element_text(size=14))+    
   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 #3
@@ -672,18 +673,18 @@ geom_point(data=three_first_dat |> group_by(later, gameId, condition) |> summari
   geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
                   data=first_pred_3)+  scale_x_continuous(breaks=seq(2,6))+
   coord_cartesian(ylim=c(.25,.9))+
-  labs(y="Cosine Similarity", x="", color="", title="Experiment 3")+
+  labs(y="Cosine Similarity", x="", color="", title="", subtitle="Experiment 3")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
       annotate("text", x=2,y=.9,label="C", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         axis.title.y=element_blank(),
-                 plot.title=element_text(size=16, hjust=.5),
-        legend.text=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),        legend.text=element_text(size=14),
         axis.title=element_text(size=14))+
   scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
-tofirst <- plot_grid(one_first_plot, two_first_plot, three_first_plot, nrow=1, rel_widths = c(1.05,1,1))
+tofirst <- plot_grid(one_first_plot, two_first_plot, three_first_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("A","B", "C"), label_y=.9, label_size=20)
 
 one_two_next <- read_rds(here("code/models/one_two_tonext.rds"))
 three_next <- read_rds(here("code/models/three_tonext.rds"))
@@ -702,11 +703,12 @@ one_next_plot <- ggplot(one_next_dat, aes(x=earlier+1,y=sim,color=condition))+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
-  labs(y="Cosine Similarity", x="Block", color="")+
-      annotate("text", x=1,y=1,label="D", size=6, fontface="bold")+
+  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_text(size=14),
         axis.title.x = element_blank())+
   scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
@@ -725,13 +727,13 @@ two_next_plot <- ggplot(two_next_dat, aes(x=earlier+1,y=sim,color=condition))+
                   data=next_pred_2)+  
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
-  labs(y="Cosine Similarity", x="", color="")+
+  labs(y="Cosine Similarity", x="", color="", title="Similarity to next block", subtitle="Experiment 2")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-annotate("text", x=3,y=1,label="Similarity to next block", size=5)+
-      annotate("text", x=1,y=1,label="E", size=6, fontface="bold")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_blank())+
    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
 
@@ -745,18 +747,19 @@ three_next_plot <- ggplot(three_next_dat, aes(x=earlier+1,y=sim,color=condition)
   scale_x_continuous(breaks=seq(1,5))+
         coord_cartesian(ylim=c(.25,1))+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-    annotate("text", x=1,y=1,label="F", size=6, fontface="bold")+
-  labs(y="Cosine Similarity", x="Block", color="")+
+  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 3")+
   theme(legend.position="bottom",
         axis.text=element_text(size=12),
         legend.text=element_text(size=13),
+                  plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
         axis.title=element_blank())+
 scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
 
-tonext <- plot_grid(one_next_plot,two_next_plot,three_next_plot, nrow=1, rel_widths = c(1.05,1,1))
+tonext <- plot_grid(one_next_plot,two_next_plot,three_next_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("D", "E","F"), label_y=.9, label_size=20)
 
 
-plot_grid(tofirst, tonext, nrow=2, rel_heights = c(.8,1), label_size=20)
+plot_grid(tofirst, tonext, nrow=2, rel_heights = c(.8,1))
 ```
 
 \FloatBarrier
