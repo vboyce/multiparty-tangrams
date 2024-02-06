@@ -650,7 +650,7 @@ As a final measure of group performance, we examined the back-and-forth interact
 The backchannel allows matchers to actively provide feedback, ask questions, offer alternative descriptions, and seek clarification about the describer's referring expressions. 
 Example transcripts from successful games, one in the 6-thick condition and one in the 6-thin condition, are shown in Table \ref{listener-examples}. Additional examples are in the Supplement Tables 1 and 2. 
 Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (Supplement Figure 3A, `r stats(anylist_1, 4)`), which declined across repetition blocks (`r stats(anylist_1, 2)`).
-The length of matcher interjections also decreased over time for all games (Supplement Figure 3B, `r stats(list_1,2)`), consistent with the need for early matcher involvement in establishing referential conventions. 
+The length of matcher interjections also decreased over time, especially for large groups (Supplement Figure 3B, `r stats(list_1,3)`), consistent with the need for early matcher involvement in establishing referential conventions. 
 Emoji use in Experiment 3 followed similar trends (Supplement Figure 4).
 Larger groups may require greater participation by matchers to reliably establish common ground.
 
