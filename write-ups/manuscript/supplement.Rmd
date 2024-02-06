@@ -171,6 +171,7 @@ plot_grid(a,b,c, labels="AUTO", label_size=20, label_y=.95, label_x=.05)
 
 
 \begin{tabular}{lp{2.5in}}
+\hline
 	\multicolumn{2}{c}{\textbf{6-person thick game}}\\
 	\multicolumn{2}{l}{\textit{Rep 1: 2/5 correct} }\\
 	V* & This shape hasn't got much sticking out. Small triangle pointing right, tilted square on top\\
@@ -312,8 +313,7 @@ C & \emoji{thinking-face} \\
 	B & \emoji{face-with-tears-of-joy} \\
 	E & \emoji{thinking-face} \\
 	C & \emoji{thinking-face} \\
-	E & \emoji{thinking-face} \\
-	E & \emoji{thinking-face} \\
+	E & \emoji{thinking-face}  \emoji{thinking-face}\\
 	D* & square on top sitting on top of a triangle which is on top of a square, with 5 side shape at the bottom \\
 	
 
@@ -413,7 +413,7 @@ listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listene
 ```
 
 
-Matchers' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) are most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
+Matchers' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) is most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
 
 ```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions. A-C: Fraction of trials where any matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one matcher contributed, the number of words of referential language produced by matchers. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
 anytalk <- all_list |> group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |> summarize(words=sum(words)) |> mutate(is.words=ifelse(words>0, 1,0)) 
@@ -630,7 +630,6 @@ geom_point(data=one_first_dat |> group_by(later, gameId, condition) |> summarize
                   data=first_pred_1)+  coord_cartesian(ylim=c(.25,.9))+
   scale_x_continuous(breaks=seq(2,6))+
   labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
-      annotate("text", x=2,y=.9,label="A", size=6, fontface="bold")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
   theme(legend.position="none",
         axis.text=element_text(size=12),
@@ -675,7 +674,6 @@ geom_point(data=three_first_dat |> group_by(later, gameId, condition) |> summari
   coord_cartesian(ylim=c(.25,.9))+
   labs(y="Cosine Similarity", x="", color="", title="", subtitle="Experiment 3")+
   guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-      annotate("text", x=2,y=.9,label="C", size=6, fontface="bold")+
   theme(legend.position="none",
         axis.text=element_text(size=12),
         axis.title.y=element_blank(),
@@ -1105,7 +1103,7 @@ do_table("tofirst_3.rds", "Experiment 3",decimal=3)
 
 \FloatBarrier
 # Exploratory Mega-analytic models
-As an exploratory measure, we combined data across all experiments and re-run the core set of models (same structure and priors as for the individual models). We binarized game thickness: all games that were not thin were counted as thick. The intercept condition is a 2-player game, in the thick condition, for the first block. Thinner means the game was in the thin condition; larger is per additional player, and block is per later block. Group size was coded based on assigned condition, not based on actual number of players at the time. 
+As an exploratory measure, we combined data across all experiments and re-ran the core set of models (same structure and priors as for the individual models). We binarized game thickness: all games that were not thin were counted as thick. The intercept condition is a 2-player game, in the thick condition, for the first block. Thinner means the game was in the thin condition; larger is per additional player, and block is per later block. Group size was coded based on assigned condition, not based on actual number of players at the time. 
 
 ```{r}
 do_table("acc_meta.rds", "Mega-analytic on accuracy")
