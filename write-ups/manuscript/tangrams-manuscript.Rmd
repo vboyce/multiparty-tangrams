@@ -191,6 +191,8 @@ They provide a clear metric of communicative effectiveness: how many words are r
 At the beginning of the game, long and costly descriptions are typically required to succeed. 
 A key finding, however, is that dyads become increasingly efficient over the course of interaction. 
 Fewer words are required to achieve the same accuracy, but referring expressions also become more impenetrable to outsiders [@schober1989; @wilkes1992coordinating]. 
+The evolution of referring expressions over repetitions shows the characteristic dynamics of conventions: *stability*, or convergence on labels within a group, and *arbitrariness*, or divergence to different across groups, suggesting that dyads leverage their shared communication history to coordinate on expectations about how to label the target images [@hawkins2023partners]. 
+
 
 In principle, repeated reference games provide a strong operationalization of communicative effectiveness for the problem of multi-party communication: describers must simultaneously achieve shared reference with multiple matchers. 
 However, empirically studying multi-party communication raises a number of difficulties in practice. 
