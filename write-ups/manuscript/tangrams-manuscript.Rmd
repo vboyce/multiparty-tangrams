@@ -10,7 +10,7 @@ author:
       - Stanford 
     footnote:
       - corresp
-  - name: Robert Hawkins
+  - name: Robert D. Hawkins
     affiliation: 
       - UW-Madison
   - name: Noah D. Goodman
@@ -181,7 +181,7 @@ What enables producers and comprehenders to nevertheless overcome these challeng
 One promising set of hypotheses centers on the group's *interaction structure*, the set of constraints placed on the group's shared communication channel. 
 Many different aspects of interaction structure have been implicated in the effectiveness of dyadic communication, including the availability and quality of concurrent feedback [@krauss1966; @KraussBricker67_Delay; @kraut1982listener], the bandwidth of the communication modality [@KraussEtAl77;@dewhirst1971influence], and the group's access to a shared workspace [@clark2004speaking; @garrod2007foundations].
 Yet larger groups introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors [@swaab2012communication; @hiltz1986experiments].
-While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004; @seaman1997communication], several factors that may slow such deterioration have been identified in qualitative work, each of which relates to the structural "thickness" of the feedback channel [@ahern1994effect; @parisi2005evaluating]. 
+While communication is generally expected to deteriorate as groups get larger [@macmillan_communication_2004; @seaman1997communication], the structural "thickness" of the feedback channel may slow such deterioration [@ahern1994effect; @parisi2005evaluating]. 
 
 In this paper, we develop an experimental paradigm for evaluating the relative contribution of these factors: a *multi-party repeated reference game.*
 The ability to distinguish one particular entity from other possible entities, known as *reference*, is one of the most primitive and ubiquitous functions of communication.
@@ -1041,6 +1041,13 @@ We do not know exactly what leads some participants to drop out, but it is possi
 We do not know whether groups that start and continue at the full size differ from games where some participants drop out. 
 This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group. 
 The number of games in each condition and rates of dropoff are shown in SI Table 3 and SI Figure 2. 
+
+# Author's Note
+Experiment 1 was previously reported in Proceedings of the Annual Meeting of the Cognitive Science Society 44 (2022). 
+
+We thank the LangCog Lab, Saxelab, CAMP 5, HSP 2023, and Cogsci 2022 audiences for helpful feedback on this work. This work was supported by a Hoffman-Yee Grant from the Stanford Institute for Human-Centered AI.
+
+We report CRediT taxonomy contributions as follows: All authors did conceptualization and methodology. VB did data curation, formal analysis, investigation, visualization, and writing -- original draft. VB and RDH did software. RDH, NDG, and MCF did writing -- editing. MCF and NDG did funding. MCF did supervision. 
 
 # References 
 
