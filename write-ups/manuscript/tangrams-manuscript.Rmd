@@ -51,7 +51,7 @@ endfloat: FALSE # Set to TRUE to turn on latex endfloat package to place figures
 # endfloatoption: # See endfloat documentation for more possibilities
 #   - tablesfirst # Default
 #   - nomarkers # Default
-numberlines: FALSE
+numberlines: TRUE
 authblk: TRUE # FALSE = author affiliations in footnotes; TRUE = author affiliations in a block below author names
 footnotehyper: FALSE # TRUE will give you enhanced table footnote capabilities. Set to FALSE to be able to use French blocks. Needed due to what appears to be a latex bug.
 urlcolor: blue
@@ -948,6 +948,8 @@ Our experiments were designed sequentially and pre-registered individually.^[Exp
 We followed the pre-registered analysis plan for each experiment, although accuracy models were not explicitly specified until Experiment 3, and linguistic analyses were only verbally described starting with Experiment 2b. 
 Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
 Exploratory mega-analytic models pooling across the three experiments were not pre-registered.
+
+All materials, data, and analysis code is available at \url{https://github.com/vboyce/multiparty-tangrams}.
 
 ### Participants
 
