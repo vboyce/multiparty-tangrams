@@ -7,6 +7,8 @@
 
 library(tidyverse)
 library(jsonlite)
+library(here)
+library(rlang)
 
 ParseJSONColumn <- function(x) {
   str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  %>% 
@@ -127,6 +129,7 @@ d.round_results <-  read_csv(here(data_location_a,'raw_results.csv')) %>%
 d.correct <- d.round_results %>% 
   group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
            numPlayers,countCorrect,speaker,tangram) %>% 
+  mutate(correct=ifelse(is.na(correct),F,correct)) |> 
   summarize(realCorrect=sum(ifelse(correct,1,0)))
 
 d.round_results %>% left_join(d.correct) %>% write_rds(here(data_location,"round_results.rds"))
@@ -226,6 +229,7 @@ d.round_results <-(read_csv(here(data_location,'raw_results.csv'))) %>%
 d.correct <- d.round_results %>% 
   group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
            numPlayers,countCorrect,speaker,tangram) %>% 
+  mutate(correct=ifelse(is.na(correct),F,correct)) |> 
   summarize(realCorrect=sum(ifelse(correct,1,0)))
 
 d.round_results %>% left_join(d.correct) %>% write_rds(here(data_location,"round_results.rds"))
@@ -325,6 +329,7 @@ d.round_results <-(read_csv(here(data_location,'raw_results.csv'))) %>% inner_jo
 d.correct <- d.round_results %>% 
   group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
            numPlayers,countCorrect,speaker,tangram) %>% 
+  mutate(correct=ifelse(is.na(correct),F,correct)) |> 
   summarize(realCorrect=sum(ifelse(correct,1,0)))
 
 d.round_results %>% left_join(d.correct) %>% write_rds(here(data_location,"round_results.rds"))
@@ -425,6 +430,7 @@ d.round_results <-(read_csv(here(data_location,'raw_results.csv'))) %>% inner_jo
 d.correct <- d.round_results %>% 
   group_by(`_id`,gameId,target,targetNum,repNum,trialNum,
            numPlayers,countCorrect,speaker,tangram) %>% 
+  mutate(correct=ifelse(is.na(correct),F,correct)) |> 
   summarize(realCorrect=sum(ifelse(correct,1,0)))
 
 d.round_results %>% left_join(d.correct) %>% write_rds(here(data_location,"round_results.rds"))
@@ -531,6 +537,7 @@ d.round_results <-(read_csv(here(data_location,'raw_results.csv'))) %>% inner_jo
 d.correct <- d.round_results %>% 
   group_by(`X_id`,gameId,target,targetNum,repNum,trialNum,
            numPlayers,countCorrect,speaker,tangram) %>% 
+  mutate(correct=ifelse(is.na(correct),F,correct)) |> 
   summarize(realCorrect=sum(ifelse(correct,1,0)))
 
 d.round_results %>% left_join(d.correct) %>% 
