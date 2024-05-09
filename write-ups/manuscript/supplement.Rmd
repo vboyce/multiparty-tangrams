@@ -46,67 +46,80 @@ options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
 
 
-knitr::opts_chunk$set(fig.width=8, fig.height=8, fig.crop = F, out.width = "100%", dpi=300,
-                      fig.pos = "H", fig.path='figs/', fig.env="figure",
-                      echo=F, warning=F, cache=F, 
-                      message=F, sanitize = T, out.extra="")
+knitr::opts_chunk$set(
+  fig.width = 8, fig.height = 8, fig.crop = F, out.width = "100%", dpi = 300,
+  fig.pos = "H", fig.path = "figs/", fig.env = "figure",
+  echo = F, warning = F, cache = F,
+  message = F, sanitize = T, out.extra = ""
+)
 
 
-color_scheme_1 <- c("2"="#FFBDD4", "5"="#A12EFF", "3"="#FF7DF0","6"="#6940FF","4"="#D24AFF")
-color_scheme_2 <- c( "6 full feedback"="#425df5", "6 same describer"="#00A2FF","6 thin"="#D47E04")
+color_scheme_1 <- c("2" = "#FFBDD4", "5" = "#A12EFF", "3" = "#FF7DF0", "6" = "#6940FF", "4" = "#D24AFF")
+color_scheme_2 <- c("6 full feedback" = "#425df5", "6 same describer" = "#00A2FF", "6 thin" = "#D47E04")
 
-color_scheme_3 <- c("2 thin"="#FFDA09","6 thin"="#D47E04", 
-                    "2 thick"="#77F3DB","6 thick"="#00BDA8")
+color_scheme_3 <- c(
+  "2 thin" = "#FFDA09", "6 thin" = "#D47E04",
+  "2 thick" = "#77F3DB", "6 thick" = "#00BDA8"
+)
 
 
-		
+
 ParseJSONColumn <- function(x) {
-  str_c("[ ", str_c(x, collapse = ",", sep=" "), " ]")  |> 
+  str_c("[ ", str_c(x, collapse = ",", sep = " "), " ]") |>
     fromJSON(flatten = T)
 }
 
-##Data import constants
-data_location="data/study1"
+## Data import constants
+data_location <- "data/study1"
 
 
 
 
-image_location="write-ups/images"
+image_location <- "write-ups/images"
 
-msum_loc="code/paper_mods/summary"
-mform_loc="code/paper_mods/formulae"
+msum_loc <- "code/paper_mods/summary"
+mform_loc <- "code/paper_mods/formulae"
 
-source(here("code/prep_ms.R"))
+msum_complete_loc <- "code/paper_mods/complete_only/summary"
+mform_complete_loc <- "code/paper_mods/complete_only/formulae"
+
+# source(here("code/prep_ms.R"))
+source(here("code/prep_complete_game_only.R"))
 
 
-stats <- function(model, row, decimal=2){
-  model <- model |> 
-    mutate(Estimate=round(Estimate, digits=decimal),
-           Lower=round(lower, digits=decimal),
-           Upper=round(upper, digits=decimal),
-           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+stats <- function(model, row, decimal = 2) {
+  model <- model |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
     select(Term, Estimate, `Credible Interval`)
-  str_c(model[row,1],": ", model[row,2], " ", model[row,3])
+  str_c(model[row, 1], ": ", model[row, 2], " ", model[row, 3])
 }
 
-stats_text  <- function(model, row, decimal=2){
-    model <- model |> 
-    mutate(Estimate=round(Estimate, digits=decimal),
-           Lower=round(lower, digits=decimal),
-           Upper=round(upper, digits=decimal),
-           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+stats_text <- function(model, row, decimal = 2) {
+  model <- model |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
     select(Term, Estimate, `Credible Interval`)
-  str_c( model[row,2],"  ",model[row,3])
+  str_c(model[row, 2], "  ", model[row, 3])
 }
 
-form <- function(model){
- dep <- as.character(model$formula[2])
- ind <- as.character(model$formula[3])
- 
- str_c(dep," ~ ",ind) |> str_replace_all(" ","") |> 
-  str_replace_all("\\*"," $\\\\times$ ") |> 
-  str_replace_all("\\+", "&nbsp;+ ") |> 
-   str_replace_all("~", "$\\\\sim$ ")
+form <- function(model) {
+  dep <- as.character(model$formula[2])
+  ind <- as.character(model$formula[3])
+
+  str_c(dep, " ~ ", ind) |>
+    str_replace_all(" ", "") |>
+    str_replace_all("\\*", " $\\\\times$ ") |>
+    str_replace_all("\\+", "&nbsp;+ ") |>
+    str_replace_all("~", "$\\\\sim$ ")
 }
 ```
 
@@ -115,13 +128,16 @@ form <- function(model){
 
 
 ```{r feedback-diag, fig.env = "figure*", fig.pos = "b!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Feedback shown to participants. In low-coherence games, matchers saw feedback as shown in A and B. In all games, describers saw feedback like in C; icons were associated with players and indicated who selected which. In high feedback games, matchers saw grids like C, but with text as in A and B."}
-a <- ggplot()+draw_image(here(image_location,"listener_correct.png"))
+a <- ggplot() +
+  draw_image(here(image_location, "listener_correct.png"))
 
-b <- ggplot()+draw_image(here(image_location, "listener_wrong.png"))
+b <- ggplot() +
+  draw_image(here(image_location, "listener_wrong.png"))
 
-c <- ggplot()+draw_image(here(image_location,"speaker_feedback.png"))
+c <- ggplot() +
+  draw_image(here(image_location, "speaker_feedback.png"))
 
-plot_grid(a,b,c, labels="AUTO", label_size=20, label_y=.95, label_x=.05)
+plot_grid(a, b, c, labels = "AUTO", label_size = 20, label_y = .95, label_x = .05)
 ```
 
 \FloatBarrier
@@ -344,29 +360,44 @@ D & \emoji{check-mark-button}\\
 
 # Number of games
 
+We could control the number of games by how many participants we recruited on Prolific. Because of the real-time nature of the games, we relied on that most Prolific workers who accepted the task would rapidly open it and go to our experiment site, where they would read the instructions and be assigned into games. Due to technical details about how games filled, we only ran one condition of games at any one time. In experiments 1 and 2, games would only start if the game was full. Thus, if for example, we recruited 28 people, and 27 people went to the experiment when we were running a 4-person game, three people would be unable to make a complete game, and we also wouldn't have a game available for a 28th person who looked later. We ran games in large batches to try to minimize the number of people who wouldn't be matched to a game. If we fell well short of a target, we could recruit another batch of participants, taking the expected attrition rate into account. However, the logistics of needing participants to all open the study at roughly the same time to match into games meant that it was infeasible to recruit fewer than 20 or so people at a time, so we could not precisely achieve the desired number of games. Thus, the number of games varied somewhat across conditions. 
+
+In addition to not having control over exactly how many games started, some games also ended prematurely when participants disconnected. These partial games were more common in larger groups. We speculate it could be due either to just having more people who might have connection issues or need to leave the game, or more frustration causing people to quit the game (sometimes very early in the game). 
+
+In experiment 3, we tried to sidestep the large attrition rate for 6 player games by allowing them to start and continue with fewer than 6 people. 
+
 ```{r participants}
+players <- combined_results |>
+  mutate(
+    realPlayer = ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
+    numPlayers = ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))
+  ) |>
+  group_by(condition, numPlayers, gameId) |>
+  summarize(count = max(realPlayer)) |>
+  group_by(condition, numPlayers) |>
+  summarize(`Total Participants` = sum(count))
 
-players <- combined_results |> mutate(realPlayer=ifelse(is.na(activePlayerCount), numPlayers, activePlayerCount),
-                                       numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> group_by(condition, numPlayers, gameId) |> summarize(count=max(realPlayer)) |> group_by(condition, numPlayers) |> summarize(`Total Participants`=sum(count))
+summary <- combined_results |>
+  group_by(condition, trialNum, repNum, gameId, numPlayers) |>
+  mutate(numPlayers = ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |>
+  group_by(gameId, numPlayers, condition) |>
+  summarize(num_trials = max(trialNum)) |>
+  arrange(numPlayers) |>
+  mutate(complete = ifelse(num_trials == 71, T, F)) |>
+  group_by(numPlayers, complete, condition) |>
+  tally() |>
+  pivot_wider(names_from = complete, values_from = n) |>
+  left_join(players) |>
+  rename(Players = numPlayers, Complete = `TRUE`, Partial = `FALSE`) |>
+  mutate(Partial = ifelse(is.na(Partial), 0, Partial)) |>
+  mutate(Experiment = factor(condition,
+    levels = c("rotate", "no_rotate", "full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
+    labels = c("1: baseline", "2: same describer", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick")
+  )) |>
+  select(Experiment, Players, Complete, Partial, `Total Participants`) |>
+  arrange(Experiment, Players, Complete, Partial, `Total Participants`)
 
-summary <- combined_results |> group_by(condition, trialNum, repNum, gameId, numPlayers) |> 
-  mutate(numPlayers=ifelse(condition %in% c("6_thin", "6_thick"), "6*", as.character(numPlayers))) |> 
-  group_by(gameId, numPlayers, condition) |> 
-  summarize(num_trials=max(trialNum)) |> 
-  arrange(numPlayers) |> 
-  mutate(complete=ifelse(num_trials==71,T,F)) |> 
-  group_by(numPlayers,complete, condition) |> 
-  tally() |> 
-  pivot_wider(names_from=complete, values_from=n) |> 
-    left_join(players) |> 
-  rename(Players=numPlayers,Complete=`TRUE`, Partial=`FALSE`) |> 
-  mutate(Partial=ifelse(is.na(Partial), 0, Partial)) |> 
-  mutate(Experiment=factor(condition, levels=c("rotate","no_rotate","full_feedback", "emoji", "2_thin", "6_thin", "2_thick", "6_thick"),
-                          labels=c("1: baseline", "2: same describer", "2: full feedback", "2: thin", "3: thin", "3: thin", "3: thick", "3: thick"))) |> 
-  select(Experiment, Players, Complete, Partial, `Total Participants`) |> 
-  arrange(Experiment, Players,Complete,Partial, `Total Participants`)
-
-knitr::kable(summary, caption="The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.")
+knitr::kable(summary, caption = "The number of games in each experiment and condition. Complete games finished all 6 blocks; partial games ended early due to disconnections, but contributed at least one complete block of data. 6* indicates that some games started with fewer than 6 players or continued with fewer than 6 players after participants disconnected.")
 ```
 
 In experiment 3, the 6* player games did not all have 6 players, both because games continued as participants dropped out and because if there weren't enough players after 5 minutes of waiting, the game would start with whoever was there. All analyses use "intent to treat" and call these 6 player games. 
@@ -374,16 +405,17 @@ In experiment 3, the 6* player games did not all have 6 players, both because ga
 The number of games goes up in some cases because only complete blocks (where the describer said something every trial) are analysed. If there was initial confusion and a desciber missed a trial, that block was excluded. 
 
 ```{r player-count, fig.width=8, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of players during 6 thin and 6 thick games in experiment 3. Blocks that were incomplete were excluded, so if a describer said nothing during a trial, that block was excluded." }
-
-combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(gameId, trialNum, activePlayerCount, condition) |> 
+combined_results |>
+  filter(condition %in% c("6_thin", "6_thick")) |>
+  select(gameId, trialNum, activePlayerCount, condition) |>
   unique() |>
-  mutate(numplayers=as.factor(activePlayerCount)) |> 
-  ggplot(aes(x=trialNum+1,fill=numplayers))+
-  geom_bar(width=1,position="stack", alpha=.7)+
-  facet_grid(.~condition)+
-  labs(fill="Number of players", y="Count", x="Trial")+
-  theme(legend.position = "bottom")+scale_fill_solarized()
-
+  mutate(numplayers = as.factor(activePlayerCount)) |>
+  ggplot(aes(x = trialNum + 1, fill = numplayers)) +
+  geom_bar(width = 1, position = "stack", alpha = .7) +
+  facet_grid(. ~ condition) +
+  labs(fill = "Number of players", y = "Count", x = "Trial") +
+  theme(legend.position = "bottom") +
+  scale_fill_solarized()
 ```
 
 \FloatBarrier
@@ -392,215 +424,258 @@ combined_results |> filter(condition %in% c("6_thin", "6_thick")) |> select(game
 
  
 ```{r, include=T}
-
 listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
 
-listener_chat <- combined_chat |> filter(role=="listener") |>  full_join(listeners) |> group_by(condition,  numPlayers, trialNum, repNum, gameId) |> mutate(total_num_words=ifelse(is.na(total_num_words),0, total_num_words)) |> 
-  summarize(words=sum(total_num_words)) |> filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback"))
+listener_chat <- combined_chat |>
+  filter(role == "listener") |>
+  full_join(listeners) |>
+  group_by(condition, numPlayers, trialNum, repNum, gameId) |>
+  mutate(total_num_words = ifelse(is.na(total_num_words), 0, total_num_words)) |>
+  summarize(words = sum(total_num_words)) |>
+  filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback"))
 
-  emojis <- combined_emoji |> mutate(emoji=case_when(
-    text=="✅"~  "check",
-    text=="🤔" ~ "think",
-    text=="❌" ~ "x",
-    text=="😂" ~ "lol",
-  )) |> full_join(listeners) |> filter(condition %in% c("2_thin", "6_thin", "emoji"))|>
-    mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
-    group_by(gameId, trialNum, repNum, condition, numPlayers) 
-  
-  count_emoji <- emojis |> summarize(words=sum(is.emoji))
-  
-  all_list <- listener_chat |> union(count_emoji) |> mutate(condition2=ifelse(condition=="rotate", str_c(numPlayers,condition), condition))
+emojis <- combined_emoji |>
+  mutate(emoji = case_when(
+    text == "✅" ~ "check",
+    text == "🤔" ~ "think",
+    text == "❌" ~ "x",
+    text == "😂" ~ "lol",
+  )) |>
+  full_join(listeners) |>
+  filter(condition %in% c("2_thin", "6_thin", "emoji")) |>
+  mutate(is.emoji = ifelse(is.na(emoji), 0, 1)) |>
+  group_by(gameId, trialNum, repNum, condition, numPlayers)
+
+count_emoji <- emojis |> summarize(words = sum(is.emoji))
+
+all_list <- listener_chat |>
+  union(count_emoji) |>
+  mutate(condition2 = ifelse(condition == "rotate", str_c(numPlayers, condition), condition))
 ```
 
 
-Matchers' use of backchannel declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) is most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
+Matchers' contributions declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) is most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
 
 ```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions. A-C: Fraction of trials where any matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one matcher contributed, the number of words of referential language produced by matchers. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
-anytalk <- all_list |> group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |> summarize(words=sum(words)) |> mutate(is.words=ifelse(words>0, 1,0)) 
+anytalk <- all_list |>
+  group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |>
+  summarize(words = sum(words)) |>
+  mutate(is.words = ifelse(words > 0, 1, 0))
 
 # maybe try per game trials/block where any listener talked?
 
 
-one_talk_dat <- anytalk |> filter(condition=="rotate") |>  
-    mutate(numPlayers=as.character(numPlayers))
+one_talk_dat <- anytalk |>
+  filter(condition == "rotate") |>
+  mutate(numPlayers = as.character(numPlayers))
 
-one_talk_plot <- 
-ggplot(one_talk_dat, aes(x=repNum+1, y=is.words, color=numPlayers))+
-  geom_point(data=one_talk_dat|> group_by(gameId, repNum, numPlayers) |> summarize(is.words=mean(is.words)),position = position_dodge(width=.4), alpha=.3)+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
-  coord_cartesian(ylim=c(0,1.05))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="Block", color="", title="", subtitle="Experiment 1")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1)
-
-
-#2
-
-two_talk_dat <- anytalk|> filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
-    mutate(condition=case_when(
-    condition=="no_rotate" ~ "6 same describer",
-    condition=="full_feedback" ~ "6 full feedback",
-    condition=="emoji" ~ "6 thin"))
-
-two_talk_plot <- 
-ggplot(two_talk_dat, aes(x=repNum+1, y=is.words, color=condition))+
-  geom_point(data=two_talk_dat|> group_by(gameId, repNum, condition) |> summarize(is.words=mean(is.words)),position = position_dodge(width=.4), alpha=.3)+
-   geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
-  coord_cartesian(ylim=c(0,1.05))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="", color="", title="Any matcher words", subtitle="Experiment 2")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-        axis.title=element_text(size=14),       
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title.y=element_blank())+
-    scale_color_manual(values=color_scheme_2)
-
-#3
+one_talk_plot <-
+  ggplot(one_talk_dat, aes(x = repNum + 1, y = is.words, color = numPlayers)) +
+  geom_point(data = one_talk_dat |> group_by(gameId, repNum, numPlayers) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1)
 
 
-three_talk_dat <- anytalk|> filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>  
-  mutate(condition=str_replace(condition, "_", " "))
+# 2
 
-three_talk_plot <- 
-ggplot(three_talk_dat, aes(x=repNum+1, y=is.words, color=condition))+
-  geom_point(data=three_talk_dat|> group_by(gameId, repNum, condition) |> summarize(is.words=mean(is.words)),position = position_dodge(width=.4), alpha=.3)+
-geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
-  coord_cartesian(ylim=c(0,1.05))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Fraction trials with any words", x="", color="", title="", subtitle="Experiment 3")+
-  guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
-   theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-        axis.title=element_text(size=14),        
-          plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title.y=element_blank())+
-  scale_color_manual(values=color_scheme_3)
+two_talk_dat <- anytalk |>
+  filter(condition %in% c("no_rotate", "full_feedback", "emoji")) |>
+  mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
 
-  top <- plot_grid(one_talk_plot, two_talk_plot, three_talk_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("A", "B", "C"), label_y=.9, label_size=20)
-  
-  
-  
-  
-one_list_dat <- all_list |>    filter(words!=0)|> filter(condition=="rotate") |>  
-    mutate(numPlayers=as.character(numPlayers))
+two_talk_plot <-
+  ggplot(two_talk_dat, aes(x = repNum + 1, y = is.words, color = condition)) +
+  geom_point(data = two_talk_dat |> group_by(gameId, repNum, condition) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "", color = "", title = "Any matcher words", subtitle = "Experiment 2") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2)
 
-one_list_plot <- 
-ggplot(one_list_dat, aes(x=repNum+1, y=words, color=numPlayers))+
-geom_point(data=one_list_dat|> group_by(gameId, repNum, numPlayers) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+ 
-  geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="Block", color="", title="", subtitle="Experiment 1")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-        axis.title=element_text(size=14),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title.x=element_blank())+
-  scale_color_manual(values=color_scheme_1, drop=F)
+# 3
 
 
-#2
+three_talk_dat <- anytalk |>
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>
+  mutate(condition = str_replace(condition, "_", " "))
 
-two_list_dat <- all_list|>   filter(words!=0) |> filter(condition %in% c("no_rotate","full_feedback")) |>
-  filter(numPlayers==6) |> 
-    mutate(condition=case_when(
-    condition=="no_rotate" ~ "6 same describer",
-    condition=="full_feedback" ~ "6 full feedback",
-    condition=="emoji" ~ "6 thin"))
+three_talk_plot <-
+  ggplot(three_talk_dat, aes(x = repNum + 1, y = is.words, color = condition)) +
+  geom_point(data = three_talk_dat |> group_by(gameId, repNum, condition) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "", color = "", title = "", subtitle = "Experiment 3") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3)
 
-two_list_plot <- ggplot(two_list_dat, aes(x=repNum+1, y=words, color=condition))+
-  geom_point(data=two_list_dat|> group_by(gameId, repNum, condition) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+ 
-      geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="", color="", title="Words from matchers", subtitle="Experiment 2")+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_blank())+
-    scale_color_manual(values=color_scheme_2, drop=F)
-
-#3
+top <- plot_grid(one_talk_plot, two_talk_plot, three_talk_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("A", "B", "C"), label_y = .9, label_size = 20)
 
 
-three_list_dat <- all_list|>   filter(words!=0) |> filter(condition %in% c( "2_thick", "6_thick")) |>  
-  mutate(condition=str_replace(condition, "_", " "))
 
-three_list_plot <- 
-ggplot(three_list_dat, aes(x=repNum+1, y=words, color=condition))+
-geom_point(data=three_list_dat|> group_by(gameId, repNum, condition) |> summarize(words=mean(words)),position = position_dodge(width=.4), alpha=.3)+     geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+  scale_color_manual(values=color_scheme_3)+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=6) ) )+
-  coord_cartesian(ylim=c(0,25))+
-       scale_x_continuous(breaks=seq(1,6))+
-  labs( y="Number of words", x="", color="", title="", subtitle="Experiment 3")+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_blank())
 
-  bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow=1, rel_widths=c(1.05,1,1), labels=c("D", "E", "F"), label_y=.9, label_size=20)
-  
-plot_grid(top, bot, nrow=2, rel_heights = c(1,.75))
+one_list_dat <- all_list |>
+  filter(words != 0) |>
+  filter(condition == "rotate") |>
+  mutate(numPlayers = as.character(numPlayers))
 
+one_list_plot <-
+  ggplot(one_list_dat, aes(x = repNum + 1, y = words, color = numPlayers)) +
+  geom_point(data = one_list_dat |> group_by(gameId, repNum, numPlayers) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.x = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_1, drop = F)
+
+
+# 2
+
+two_list_dat <- all_list |>
+  filter(words != 0) |>
+  filter(condition %in% c("no_rotate", "full_feedback")) |>
+  filter(numPlayers == 6) |>
+  mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
+
+two_list_plot <- ggplot(two_list_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  geom_point(data = two_list_dat |> group_by(gameId, repNum, condition) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_point(size = 1, alpha = .05, position = position_dodge(width = .4)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "", color = "", title = "Words from matchers", subtitle = "Experiment 2") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, drop = F)
+
+# 3
+
+
+three_list_dat <- all_list |>
+  filter(words != 0) |>
+  filter(condition %in% c("2_thick", "6_thick")) |>
+  mutate(condition = str_replace(condition, "_", " "))
+
+three_list_plot <-
+  ggplot(three_list_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  geom_point(data = three_list_dat |> group_by(gameId, repNum, condition) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  scale_color_manual(values = color_scheme_3) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "", color = "", title = "", subtitle = "Experiment 3") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  )
+
+bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("D", "E", "F"), label_y = .9, label_size = 20)
+
+plot_grid(top, bot, nrow = 2, rel_heights = c(1, .75))
 ```
 
 
 ```{r emoji,  fig.width=8, fig.height=2.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one matcher produced the labelled emoji. Fraction of trials when any emoji was produced are shown in black.  Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. "}
-to_plot <- combined_emoji |> mutate(emoji=case_when(
-    text=="✅"~  "checkmark",
-    text=="🤔" ~ "thinking face",
-    text=="❌" ~ "red x",
-    text=="😂" ~ "laughing face",
-  )) |>  filter(!is.na(emoji)) |> full_join(listeners) |> 
-  filter(condition %in% c("2_thin", "6_thin", "emoji"))|> 
-  unique() |> 
-  mutate(is.emoji=ifelse(is.na(emoji), 0, 1)) |> 
-    pivot_wider(names_from=emoji, values_from=is.emoji, values_fill=0) |> 
-  select(-`NA`) |> 
-  mutate(total=checkmark+`thinking face`+`red x`+`laughing face`) |> 
-  pivot_longer(`thinking face`:`total`, names_to="emoji", values_to="count") |> 
-  group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |> mutate(num=ifelse(count>1, 1, count)) |> group_by(gameId,trialNum, repNum, condition, emoji) |> summarize(n=sum(num)) |> mutate(any=ifelse(n>1, 1, n)) |> 
-  mutate(cond=case_when(
-    condition=="2_thin" ~ "Expt 3: 2 thin",
-    condition=="6_thin" ~ "Expt 3: 6 thin",
-    condition=="emoji" ~ "Expt 2: 6 thin"
-  )) |> mutate(emoji=factor(emoji, levels=c("total", "checkmark", "thinking face", "red x", "laughing face")))
+to_plot <- combined_emoji |>
+  mutate(emoji = case_when(
+    text == "✅" ~ "checkmark",
+    text == "🤔" ~ "thinking face",
+    text == "❌" ~ "red x",
+    text == "😂" ~ "laughing face",
+  )) |>
+  filter(!is.na(emoji)) |>
+  full_join(listeners) |>
+  filter(condition %in% c("2_thin", "6_thin", "emoji")) |>
+  unique() |>
+  mutate(is.emoji = ifelse(is.na(emoji), 0, 1)) |>
+  pivot_wider(names_from = emoji, values_from = is.emoji, values_fill = 0) |>
+  select(-`NA`) |>
+  mutate(total = checkmark + `thinking face` + `red x` + `laughing face`) |>
+  pivot_longer(`thinking face`:`total`, names_to = "emoji", values_to = "count") |>
+  group_by(gameId, trialNum, repNum, condition, numPlayers, emoji) |>
+  mutate(num = ifelse(count > 1, 1, count)) |>
+  group_by(gameId, trialNum, repNum, condition, emoji) |>
+  summarize(n = sum(num)) |>
+  mutate(any = ifelse(n > 1, 1, n)) |>
+  mutate(cond = case_when(
+    condition == "2_thin" ~ "Expt 3: 2 thin",
+    condition == "6_thin" ~ "Expt 3: 6 thin",
+    condition == "emoji" ~ "Expt 2: 6 thin"
+  )) |>
+  mutate(emoji = factor(emoji, levels = c("total", "checkmark", "thinking face", "red x", "laughing face")))
 
- colors <- c("black", "#268bd2", "#6c71c4", "#dc3225", "#859900")
+colors <- c("black", "#268bd2", "#6c71c4", "#dc3225", "#859900")
 
-  ggplot(to_plot, aes(x=repNum+1, y=any, color=emoji))+
-    geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
-        stat_summary( fun.data = "mean_cl_boot", position = position_dodge(width=.3), alpha=1)+
-        scale_color_manual(values=colors)+
-  facet_wrap(~cond)+
-    labs(x="Block", y="Fraction trials", color="")+
-  guides(color = guide_legend(override.aes = list(linetype = 0, alpha=1, fill=NA) ) )+
-    theme(legend.text=element_text(size=12))
-
+ggplot(to_plot, aes(x = repNum + 1, y = any, color = emoji)) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  scale_color_manual(values = colors) +
+  facet_wrap(~cond) +
+  labs(x = "Block", y = "Fraction trials", color = "") +
+  guides(color = guide_legend(override.aes = list(linetype = 0, alpha = 1, fill = NA))) +
+  theme(legend.text = element_text(size = 12))
 ```
 
 We note a deviation from the pre-registration here in the analysis of the emojis. In the pre-registration we said we would "analyse the distribution of emoji’s produced as a function of block and its relation to accuracy and speaker utterance length." We did not do this beyond the visualization shown here. 
@@ -609,80 +684,519 @@ We note a deviation from the pre-registration here in the analysis of the emojis
 
 \pagebreak
 
+# Sensitivity Analysis of full complete games only
+
+As a (post-hoc) sensitivity analysis, we re-ran our main analyses on the subset of games that completed all 6 blocks with a full set of players. This is a check on whether any of the results are driven by partial games that were included in early blocks but not later blocks or experiment 3 games that started without a full set of players or had players drop out. 
+
+The graph equivalents are shown in Figures TODO and TODO here, all of the statistical output is in supplement tables TODO to TODO. 
+
+Noticeable differences are the group size doesn't have a noticeable effect on accuracy is experiment 3 in the sensitivity analysis. Note that large experiment 3 games were the ones most likely to be excluded, both for incompleteness or for not having the full 6 players throughout. 
+
+```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Equivalent of Manuscript Figure 2, with only full complete games. Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible."}
+# accuracy
+
+acc_pred_1 <- read_rds(here("code/paper_mods/complete_only/prediction/acc_pred_1.rds"))
+acc_pred_2 <- read_rds(here("code/paper_mods/complete_only/prediction/acc_pred_2.rds"))
+acc_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/acc_pred_3.rds"))
+# 1
+one_acc_dat <- limited_results |>
+  filter(condition == "rotate") |>
+  group_by(playerId, repNum, gameId, numPlayers) |>
+  filter(response != "false") |>
+  mutate(correct.num = ifelse(correct, 1, 0)) |>
+  mutate(numPlayers = as.character(numPlayers))
+
+one_acc_plot <- ggplot(one_acc_dat, aes(x = repNum + 1, y = correct.num, color = numPlayers)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.6, 1.05)) +
+  geom_point(data = one_acc_dat |> group_by(repNum, gameId, numPlayers) |> summarize(correct.num = mean(correct.num)), position = position_dodge(width = .4), alpha = .3) +
+  # geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  geom_lineribbon(data = acc_pred_1, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(numPlayers, after_scale = alpha(fill, .2)))) +
+  labs(x = "Block", y = "Fraction correctly selected", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  # annotate("text", x=1,y=1.05,label="A", size=6, fontface="bold")+
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold")
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
+
+two_acc_dat <- limited_results |>
+  filter(condition %in% c("no_rotate", "full_feedback", "emoji")) |>
+  filter(numPlayers == 6) |>
+  group_by(playerId, repNum, gameId, numPlayers) |>
+  filter(response != "false") |>
+  mutate(correct.num = ifelse(correct, 1, 0)) |>
+  mutate(
+    condition = case_when(
+      condition == "no_rotate" ~ "6 same describer",
+      condition == "full_feedback" ~ "6 full feedback",
+      condition == "emoji" ~ "6 thin"
+    ),
+    condition = factor(condition, levels = c("6 full feedback", "6 same describer", "6 thin"))
+  )
+
+two_acc_plot <- ggplot(two_acc_dat, aes(x = repNum + 1, y = correct.num, color = condition)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.6, 1.05)) +
+  geom_point(data = two_acc_dat |> group_by(repNum, gameId, condition) |> summarize(correct.num = mean(correct.num)), position = position_dodge(width = .4), alpha = .3) +
+  # geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  geom_lineribbon(data = acc_pred_2, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  labs(x = "", y = "", color = "", title = "Accuracy", subtitle = "Experiment 2") +
+  # annotate("text", x=1,y=1.05,label="B", size=6, fontface="bold")+
+  # annotate("text", x=3.5,y=1.05,label="Accuracy", size=6)+
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.y = element_blank()
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
+
+# 3
+three_acc_dat <- limited_results |>
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>
+  group_by(playerId, repNum, gameId, condition) |>
+  filter(response != "false") |>
+  mutate(correct.num = ifelse(correct, 1, 0)) |>
+  mutate(
+    condition = str_replace(condition, "_", " "),
+    condition = factor(condition, levels = c("2 thick", "6 thick", "2 thin", "6 thin"))
+  )
+
+three_acc_plot <- ggplot(three_acc_dat, aes(x = repNum + 1, y = correct.num, color = condition)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.6, 1.05)) +
+  geom_point(
+    data = three_acc_dat |> group_by(repNum, gameId, condition) |> summarize(correct.num = mean(correct.num)),
+    position = position_dodge(width = .4), alpha = .3
+  ) +
+  # geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  geom_lineribbon(
+    data = acc_pred_3,
+    aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))
+  ) +
+  # annotate("text", x=1,y=1.05,label="C", size=6, fontface="bold")+
+  labs(x = "", y = "", color = "", title = "", subtitle = "Experiment 3") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.title.y = element_blank()
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.1))) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
+
+acc <- plot_grid(one_acc_plot, two_acc_plot, three_acc_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("A", "B", "C"), label_size = 20, label_y = .9)
+
+
+red_pred_1 <- read_rds(here("code/paper_mods/complete_only/prediction/red_pred_1.rds"))
+red_pred_2 <- read_rds(here("code/paper_mods/complete_only/prediction/red_pred_2.rds"))
+red_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/red_pred_3.rds"))
+# 1
+one_red_dat <- limited_chat |>
+  filter(condition == "rotate") |>
+  filter(role == "speaker") |>
+  mutate(groupxtangram = str_c(gameId, tangram)) |>
+  group_by(repNum, gameId, tangram, groupxtangram, numPlayers) |>
+  summarize(words = sum(total_num_words)) |>
+  mutate(numPlayers = as.character(numPlayers))
+
+one_red_plot <- ggplot(one_red_dat, aes(x = repNum + 1, y = words, color = numPlayers)) +
+  geom_point(data = one_red_dat |> group_by(repNum, gameId, numPlayers) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  # geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  geom_lineribbon(data = red_pred_1, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(numPlayers, after_scale = alpha(fill, .2)))) +
+  coord_cartesian(ylim = c(0, 45)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = FALSE) +
+  # annotate("text", x=1,y=45,label="D", size=6, fontface="bold")+
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title.x = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
+
+
+# 2
+
+two_red_dat <- limited_chat |>
+  filter(condition %in% c("no_rotate", "full_feedback", "emoji")) |>
+  filter(numPlayers == 6) |>
+  filter(role == "speaker") |>
+  mutate(groupxtangram = str_c(gameId, tangram)) |>
+  group_by(repNum, gameId, tangram, groupxtangram, condition) |>
+  summarize(words = sum(total_num_words)) |>
+  mutate(
+    condition = case_when(
+      condition == "no_rotate" ~ "6 same describer",
+      condition == "full_feedback" ~ "6 full feedback",
+      condition == "emoji" ~ "6 thin"
+    ),
+    condition = factor(condition, levels = c("6 full feedback", "6 same describer", "6 thin"))
+  )
+
+two_red_plot <- ggplot(two_red_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  # geom_point(size=1, alpha=.05, position = position_dodge(width=.4))+
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = FALSE) +
+  geom_point(data = two_red_dat |> group_by(repNum, gameId, condition) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .5) +
+  # geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  geom_lineribbon(data = red_pred_2, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  coord_cartesian(ylim = c(0, 45)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(x = "", y = "", color = "", title = "Words from describer", subtitle = "Experiment 2") +
+  # annotate("text", x=1,y=45,label="E", size=6, fontface="bold")+
+  # annotate("text", x=3.5,y=45,label="Words from describer", size=6)+
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
+
+# 3
+three_red_dat <- limited_chat |>
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>
+  filter(role == "speaker") |>
+  mutate(groupxtangram = str_c(gameId, tangram)) |>
+  group_by(repNum, gameId, tangram, groupxtangram, condition) |>
+  summarize(words = sum(total_num_words)) |>
+  mutate(
+    condition = str_replace(condition, "_", " "),
+    condition = factor(condition, levels = c("2 thick", "6 thick", "2 thin", "6 thin"))
+  )
+
+
+three_red_plot <- ggplot(three_red_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  geom_point(
+    data = three_red_dat |> group_by(repNum, gameId, condition) |> summarize(words = mean(words)),
+    position = position_dodge(width = .4), alpha = .3
+  ) +
+  # geom_smooth(method=glm, formula=y~poly(x,2), alpha=.3)+
+  geom_lineribbon(data = red_pred_3, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = FALSE) +
+  coord_cartesian(ylim = c(0, 45)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(x = "", y = "", color = "", title = "", subtitle = "Experiment 3") +
+  # annotate("text", x=1,y=45,label="F", size=6, fontface="bold")+
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
+
+red <- plot_grid(one_red_plot, two_red_plot, three_red_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("D", "E", "F"), label_size = 20, label_y = .9)
+plot_grid(acc, red, nrow = 2, rel_heights = c(.95, 1.1))
+```
+
+```{r sbert, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Equivalent of Manuscript Figure 4. Language similarity results measured with pairwise cosine similarity between embeddings of two utterances. (A-C). Convergence of descriptions within games as measured by similarity between an utterance from block 1-5 to the block 6 utterance in the same game for the same image. (D-F). Divergence of descriptions across games as measured by the similarity between two utterances produced for the same image by different groups in the same block. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible."}
+# convergence
+one_two_converge <- read_rds(here("code/models/one_two_converge.rds")) |> inner_join(include |> ungroup() |> select(gameId))
+three_converge <- read_rds(here("code/models/three_converge.rds")) |> inner_join(include |> ungroup() |> select(gameId))
+
+# 1
+
+one_conv_dat <- one_two_converge |> filter(condition %in% c("2", "3", "4", "5", "6"))
+conv_pred_1 <- read_rds(here("code/paper_mods/complete_only/prediction/conv_pred_1.rds"))
+conv_pred_2 <- read_rds(here("code/paper_mods/complete_only/prediction/conv_pred_2.rds"))
+conv_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/conv_pred_3.rds"))
+one_conv_plot <- ggplot(one_conv_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(
+    position = position_dodge(width = .4), alpha = .3,
+    data = one_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim))
+  ) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = conv_pred_1
+  ) +
+  coord_cartesian(ylim = c(.2, 1)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
+
+
+# 2
+
+two_conv_dat <- one_two_converge |>
+  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
+  mutate(condition = case_when(
+    condition == "6noro" ~ "6 same describer",
+    condition == "6highfeed" ~ "6 full feedback",
+    condition == "6emoji" ~ "6 thin"
+  ))
+
+two_conv_plot <- ggplot(two_conv_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(
+    position = position_dodge(width = .4), alpha = .3,
+    data = two_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim))
+  ) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = conv_pred_2
+  ) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.2, 1)) +
+  labs(x = "", y = "", color = "", title = "Within game", subtitle = "Experiment 2") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), legend.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
+
+
+
+# 3
+three_conv_dat <- three_converge |> mutate(condition = str_c(str_sub(condition, 1, 1), " ", str_sub(condition, 2, -1)))
+three_conv_plot <- ggplot(three_conv_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(
+    position = position_dodge(width = .4), alpha = .3,
+    data = three_conv_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim))
+  ) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = conv_pred_3
+  ) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.2, 1)) +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  labs(x = "", y = "", color = "", title = "", subtitle = "Experiment 3") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
+
+conv <- plot_grid(one_conv_plot, two_conv_plot, three_conv_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("A", "B", "C"), label_y = .9, label_size = 20)
+
+
+# divergence
+include_1 <- include |>
+  ungroup() |>
+  select(gameId_1 = gameId)
+include_2 <- include |>
+  ungroup() |>
+  select(gameId_2 = gameId)
+one_two_diverge <- read_rds(here("code/models/one_two_diverge.rds")) |> inner_join(include_1) |>
+  inner_join(include_2)
+three_diverge <- read_rds(here("code/models/three_diverge.rds")) |> inner_join(include_1) |>
+  inner_join(include_2)
+
+div_pred_1 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_1.rds")) 
+  
+div_pred_2 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_2.rds")) 
+#div_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_3.rds")) 
+
+# 1
+one_div_dat <- one_two_diverge |> filter(condition %in% c("2", "3", "4", "5", "6"))
+one_div_plot <- ggplot(one_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(
+    position = position_dodge(width = .4), alpha = .3,
+    data = one_div_dat |> group_by(repNum, tangram, condition) |> summarize(sim = mean(sim))
+  ) +
+  geom_lineribbon(aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = div_pred_1
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", subtitle = "Experiment 1", title = "") +
+  theme(
+    legend.position = "bottom",
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 12),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
+
+# 2
+two_div_dat <- one_two_diverge |>
+  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
+  mutate(
+    condition = case_when(
+      condition == "6noro" ~ "6 same describer",
+      condition == "6highfeed" ~ "6 full feedback",
+      condition == "6emoji" ~ "6 thin"
+    ),
+    condition = factor(condition, levels = c("6 full feedback", "6 same describer", "6 thin"))
+  )
+
+two_div_plot <- ggplot(two_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(data = two_div_dat |> group_by(repNum, tangram, condition) |>
+    summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(data = div_pred_2, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  labs(x = "", y = "", color = "", title = "Between games", subtitle = "Experiment 2") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "bottom",
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
+
+# 3
+three_div_dat <- three_diverge |>
+  mutate(
+    condition = str_c(str_sub(condition, 1, 1), " ", str_sub(condition, 2, -1)),
+    condition = factor(condition, levels = c("2 thick", "6 thick", "2 thin", "6 thin"))
+  )
+
+three_div_plot <- ggplot(three_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(data = three_div_dat |> group_by(repNum, tangram, condition) |>
+    summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  #geom_lineribbon(data = div_pred_3, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  labs(x = "", y = "", color = "", subtitle = "Experiment 3", title = "") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "bottom",
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
+
+div <- plot_grid(one_div_plot, two_div_plot, three_div_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("D", "E", "F"), label_y = .9, label_size = 20)
+plot_grid(conv, div, nrow = 2, rel_heights = c(.95, 1.1))
+```
+
+
 # Additional measure of convergence
 
 The main text included the graph for convergence comparing utterances from blocks 1-5 to the utterance from block 6. Here we show two other measures of semantic shifts for descriptions for the same tangram in the same game: similarity to the first utterance and similarity to the next utterance. 
 
 Similarity to the first utterance is not very informative (but we pre-registered it). Similarity to the next utterance is what actually drives the convergence phenomena: pairs of utterances from adjacent blocks become closer together over time. 
 ```{r other,  fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Additional measures of convergence and divergence. A-C is the similarity between utterances on a given block to the first block utterance for the same image, in the same game.  Dots are per-game averages, smooths are quadratic. D-F is the similarity between utterances on a given block to the corresponding utterances in the next block.  Dots are per-game averages, smooths are quadratic.", cache=T}
-#convergence
+# convergence
 
 one_two_first <- read_rds(here("code/models/one_two_tofirst.rds"))
 three_tofirst <- read_rds(here("code/models/three_tofirst.rds"))
-#1
-one_first_dat <- one_two_first |> filter(condition %in% c("2", "3","4","5","6"))
+# 1
+one_first_dat <- one_two_first |> filter(condition %in% c("2", "3", "4", "5", "6"))
 first_pred_1 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_1.rds"))
 first_pred_2 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_2.rds"))
 first_pred_3 <- read_rds(here("code/paper_mods/prediction/tofirst_pred_3.rds"))
-one_first_plot <- ggplot(one_first_dat, aes(x=later+1,y=sim,color=condition))+
-geom_point(data=one_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=first_pred_1)+  coord_cartesian(ylim=c(.25,.9))+
-  scale_x_continuous(breaks=seq(2,6))+
-  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
-          plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+one_first_plot <- ggplot(one_first_dat, aes(x = later + 1, y = sim, color = condition)) +
+  geom_point(data = one_first_dat |> group_by(later, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = later + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = first_pred_1
+  ) +
+  coord_cartesian(ylim = c(.25, .9)) +
+  scale_x_continuous(breaks = seq(2, 6)) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
 
-#1
+# 1
 
-#2
+# 2
 
-two_first_dat <- one_two_first |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |> 
-    mutate(condition=case_when(
-    condition=="6noro" ~ "6 same describer",
-    condition=="6highfeed" ~ "6 full feedback",
-    condition=="6emoji" ~ "6 thin"))
+two_first_dat <- one_two_first |>
+  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
+  mutate(condition = case_when(
+    condition == "6noro" ~ "6 same describer",
+    condition == "6highfeed" ~ "6 full feedback",
+    condition == "6emoji" ~ "6 thin"
+  ))
 
-two_first_plot <- 
-  ggplot(two_first_dat, aes(x=later+1,y=sim,color=condition))+
-geom_point(data=two_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=first_pred_2)+  scale_x_continuous(breaks=seq(2,6))+
-  coord_cartesian(ylim=c(.25,.9))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  labs(y="Cosine Similarity", x="", color="", title="Similarity to first block", subtitle="Experiment 2")+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=14),
-          plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),        axis.title.y=element_blank(),
-        axis.title=element_text(size=14))+    
-  scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
-#3
+two_first_plot <-
+  ggplot(two_first_dat, aes(x = later + 1, y = sim, color = condition)) +
+  geom_point(data = two_first_dat |> group_by(later, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = later + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = first_pred_2
+  ) +
+  scale_x_continuous(breaks = seq(2, 6)) +
+  coord_cartesian(ylim = c(.25, .9)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  labs(y = "Cosine Similarity", x = "", color = "", title = "Similarity to first block", subtitle = "Experiment 2") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title.y = element_blank(),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
+# 3
 
-three_first_dat <- three_tofirst |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)))
+three_first_dat <- three_tofirst |> mutate(condition = str_c(str_sub(condition, 1, 1), " ", str_sub(condition, 2, -1)))
 
-three_first_plot <- ggplot(three_first_dat, aes(x=later+1,y=sim,color=condition))+
-geom_point(data=three_first_dat |> group_by(later, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=later+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=first_pred_3)+  scale_x_continuous(breaks=seq(2,6))+
-  coord_cartesian(ylim=c(.25,.9))+
-  labs(y="Cosine Similarity", x="", color="", title="", subtitle="Experiment 3")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  theme(legend.position="none",
-        axis.text=element_text(size=12),
-        axis.title.y=element_blank(),
-          plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),        legend.text=element_text(size=14),
-        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
+three_first_plot <- ggplot(three_first_dat, aes(x = later + 1, y = sim, color = condition)) +
+  geom_point(data = three_first_dat |> group_by(later, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = later + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = first_pred_3
+  ) +
+  scale_x_continuous(breaks = seq(2, 6)) +
+  coord_cartesian(ylim = c(.25, .9)) +
+  labs(y = "Cosine Similarity", x = "", color = "", title = "", subtitle = "Experiment 3") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    axis.title.y = element_blank(),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), legend.text = element_text(size = 14),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
 
-tofirst <- plot_grid(one_first_plot, two_first_plot, three_first_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("A","B", "C"), label_y=.9, label_size=20)
+tofirst <- plot_grid(one_first_plot, two_first_plot, three_first_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("A", "B", "C"), label_y = .9, label_size = 20)
 
 one_two_next <- read_rds(here("code/models/one_two_tonext.rds"))
 three_next <- read_rds(here("code/models/three_tonext.rds"))
@@ -690,74 +1204,85 @@ three_next <- read_rds(here("code/models/three_tonext.rds"))
 next_pred_1 <- read_rds(here("code/paper_mods/prediction/tonext_pred_1.rds"))
 next_pred_2 <- read_rds(here("code/paper_mods/prediction/tonext_pred_2.rds"))
 next_pred_3 <- read_rds(here("code/paper_mods/prediction/tonext_pred_3.rds"))
-#1
-one_next_dat <-  one_two_next|> filter(condition %in% c("2", "3","4","5","6"))
+# 1
+one_next_dat <- one_two_next |> filter(condition %in% c("2", "3", "4", "5", "6"))
 
-one_next_plot <- ggplot(one_next_dat, aes(x=earlier+1,y=sim,color=condition))+
-   geom_point(data=one_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=next_pred_1)+  
-  scale_x_continuous(breaks=seq(2,6))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  scale_x_continuous(breaks=seq(1,5))+
-        coord_cartesian(ylim=c(.25,1))+
-  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 1")+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_text(size=14),
-        axis.title.x = element_blank())+
-  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+one_next_plot <- ggplot(one_next_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(data = one_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = next_pred_1
+  ) +
+  scale_x_continuous(breaks = seq(2, 6)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  scale_x_continuous(breaks = seq(1, 5)) +
+  coord_cartesian(ylim = c(.25, 1)) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.title.x = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
 
-#2
+# 2
 
-two_next_dat <-  one_two_next |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
-  mutate(condition=case_when(
-    condition=="6noro" ~ "6 same describer",
-    condition=="6highfeed" ~ "6 full feedback",
-    condition=="6emoji" ~ "6 thin"))
+two_next_dat <- one_two_next |>
+  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
+  mutate(condition = case_when(
+    condition == "6noro" ~ "6 same describer",
+    condition == "6highfeed" ~ "6 full feedback",
+    condition == "6emoji" ~ "6 thin"
+  ))
 
-two_next_plot <- ggplot(two_next_dat, aes(x=earlier+1,y=sim,color=condition))+
-     geom_point(data=two_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=next_pred_2)+  
-  scale_x_continuous(breaks=seq(1,5))+
-        coord_cartesian(ylim=c(.25,1))+
-  labs(y="Cosine Similarity", x="", color="", title="Similarity to next block", subtitle="Experiment 2")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_blank())+
-   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
+two_next_plot <- ggplot(two_next_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(data = two_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = next_pred_2
+  ) +
+  scale_x_continuous(breaks = seq(1, 5)) +
+  coord_cartesian(ylim = c(.25, 1)) +
+  labs(y = "Cosine Similarity", x = "", color = "", title = "Similarity to next block", subtitle = "Experiment 2") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
 
-#3
-three_next_dat <-  three_next |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1)))
+# 3
+three_next_dat <- three_next |> mutate(condition = str_c(str_sub(condition, 1, 1), " ", str_sub(condition, 2, -1)))
 
-three_next_plot <- ggplot(three_next_dat, aes(x=earlier+1,y=sim,color=condition))+
-      geom_point(data=three_next_dat |> group_by(earlier,gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=earlier+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=next_pred_3)+  
-  scale_x_continuous(breaks=seq(1,5))+
-        coord_cartesian(ylim=c(.25,1))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  labs(y="Cosine Similarity", x="Block", color="", title="", subtitle="Experiment 3")+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                  plot.subtitle=element_text(size=16, hjust=.5),
-          plot.title=element_text(size=18, hjust=.5, face="bold"),
-        axis.title=element_blank())+
-scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
+three_next_plot <- ggplot(three_next_dat, aes(x = earlier + 1, y = sim, color = condition)) +
+  geom_point(data = three_next_dat |> group_by(earlier, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = earlier + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = next_pred_3
+  ) +
+  scale_x_continuous(breaks = seq(1, 5)) +
+  coord_cartesian(ylim = c(.25, 1)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", title = "", subtitle = "Experiment 3") +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
 
-tonext <- plot_grid(one_next_plot,two_next_plot,three_next_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("D", "E","F"), label_y=.9, label_size=20)
+tonext <- plot_grid(one_next_plot, two_next_plot, three_next_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("D", "E", "F"), label_y = .9, label_size = 20)
 
 
-plot_grid(tofirst, tonext, nrow=2, rel_heights = c(.8,1))
+plot_grid(tofirst, tonext, nrow = 2, rel_heights = c(.8, 1))
 ```
 
 \FloatBarrier
@@ -768,101 +1293,104 @@ plot_grid(tofirst, tonext, nrow=2, rel_heights = c(.8,1))
 An additional measure of convergence/divergence patterns is how different tangrams get described in the same game -- as nicknames evolve, different tangrams get more different descriptions. 
 
 ```{r dist,   fig.width=10, fig.height=4, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Divergence in descriptions of different tangrams. Cosine similarity between the descriptions of two different tangrams in the same block and group are shown.  Dots are per-game averages, smooths are quadratic.", cache=T}
-
-one_two_tandiv<- read_rds(here("code/models/one_two_tangrams_div.rds"))
-three_tandiv<- read_rds(here("code/models/three_tangrams_div.rds"))
+one_two_tandiv <- read_rds(here("code/models/one_two_tangrams_div.rds"))
+three_tandiv <- read_rds(here("code/models/three_tangrams_div.rds"))
 # divergence
 tandiv_pred_1 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_1.rds"))
 tandiv_pred_2 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_2.rds"))
 tandiv_pred_3 <- read_rds(here("code/paper_mods/prediction/tandiv_pred_3.rds"))
 
-#1
-one_div_dat <-  one_two_tandiv |> filter(condition %in% c("2", "3","4","5","6"))
+# 1
+one_div_dat <- one_two_tandiv |> filter(condition %in% c("2", "3", "4", "5", "6"))
 
-one_div_plot <- ggplot(one_div_dat, aes(x=repNum+1,y=sim,color=condition))+
-      geom_point(data=one_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=tandiv_pred_1)+   
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  scale_x_continuous(breaks=seq(1,6))+
-        coord_cartesian(ylim=c(.1,.7))+
-  labs(y="Cosine Similarity", x="Block", color="", title="Experiment 1")+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-                 plot.title=element_text(size=16, hjust=.5),
-        axis.title=element_text(size=14))+
-  scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+one_div_plot <- ggplot(one_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(data = one_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = tandiv_pred_1
+  ) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  labs(y = "Cosine Similarity", x = "Block", color = "", title = "Experiment 1") +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.title = element_text(size = 16, hjust = .5),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1, aesthetics = c("color", "fill"))
 
-#2
+# 2
 
-two_div_dat <-  one_two_tandiv |>  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
-  mutate(condition=case_when(
-    condition=="6noro" ~ "6 same describer",
-    condition=="6highfeed" ~ "6 full feedback",
-    condition=="6emoji" ~ "6 thin"))
+two_div_dat <- one_two_tandiv |>
+  filter(condition %in% c("6emoji", "6highfeed", "6noro")) |>
+  mutate(condition = case_when(
+    condition == "6noro" ~ "6 same describer",
+    condition == "6highfeed" ~ "6 full feedback",
+    condition == "6emoji" ~ "6 thin"
+  ))
 
-two_div_plot <- ggplot(two_div_dat, aes(x=repNum+1,y=sim,color=condition))+
-    geom_point(data=two_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=tandiv_pred_2)+   
-  scale_x_continuous(breaks=seq(1,6))+
-      coord_cartesian(ylim=c(.1,.7))+
-  labs(y="Cosine Similarity", x="", color="", title="Experiment 2")+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-        axis.title=element_text(size=14),
-                 plot.title=element_text(size=16, hjust=.5),
-        axis.title.y=element_blank())+
-   scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
+two_div_plot <- ggplot(two_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(data = two_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = tandiv_pred_2
+  ) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  labs(y = "Cosine Similarity", x = "", color = "", title = "Experiment 2") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.title = element_text(size = 16, hjust = .5),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, aesthetics = c("color", "fill"))
 
-#3
-three_div_dat <-  three_tandiv |> mutate(condition=str_c(str_sub(condition,1,1)," ", str_sub(condition,2,-1))) 
+# 3
+three_div_dat <- three_tandiv |> mutate(condition = str_c(str_sub(condition, 1, 1), " ", str_sub(condition, 2, -1)))
 
-three_div_plot <- ggplot(three_div_dat, aes(x=repNum+1,y=sim,color=condition))+
-      geom_point(data=three_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim=mean(sim)),position = position_dodge(width=.4), alpha=.3)+
-  geom_lineribbon(aes(x=block+1,ymin=low, y=mean, ymax=high, fill=stage(condition,after_scale=alpha(fill,.2))),
-                  data=tandiv_pred_3)+   
-  scale_x_continuous(breaks=seq(1,6))+
-   coord_cartesian(ylim=c(.1,.7))+
-  guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5) ), fill=F )+
-  labs(y="Cosine Similarity", x="", color="", title="Experiment 3")+
-  theme(legend.position="bottom",
-        axis.text=element_text(size=12),
-        legend.text=element_text(size=13),
-        axis.title=element_text(size=14),
-                 plot.title=element_text(size=16, hjust=.5),
-        axis.title.y=element_blank())+
-scale_color_manual(values=color_scheme_3, aesthetics=c("color", "fill"))
+three_div_plot <- ggplot(three_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
+  geom_point(data = three_div_dat |> group_by(repNum, gameId, condition) |> summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
+  geom_lineribbon(aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2))),
+    data = tandiv_pred_3
+  ) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  coord_cartesian(ylim = c(.1, .7)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 5)), fill = F) +
+  labs(y = "Cosine Similarity", x = "", color = "", title = "Experiment 3") +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.title = element_text(size = 16, hjust = .5),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3, aesthetics = c("color", "fill"))
 
-plot_grid(one_div_plot,two_div_plot,three_div_plot, nrow=1, rel_widths = c(1.05,1,1))
-
-
+plot_grid(one_div_plot, two_div_plot, three_div_plot, nrow = 1, rel_widths = c(1.05, 1, 1))
 ```
 
 ```{r}
-
 tandiv_1 <- read_rds(here(msum_loc, "tandiv_1.rds"))
 tandiv_spec_1 <- read_rds(here(mform_loc, "tandiv_1.rds"))
-
 ```
 ```{r}
-
 tandiv_2a <- read_rds(here(msum_loc, "tandiv_2a.rds"))
-tandiv_spec_2a<- read_rds(here(mform_loc, "tandiv_2a.rds"))
+tandiv_spec_2a <- read_rds(here(mform_loc, "tandiv_2a.rds"))
 
 tandiv_2b <- read_rds(here(msum_loc, "tandiv_2c.rds"))
 
 tandiv_2c <- read_rds(here(msum_loc, "tandiv_2c.rds"))
-
 ```
 
 ```{r}
-tandiv_3 <- read_rds(here(msum_loc,"tandiv_3.rds"))
+tandiv_3 <- read_rds(here(msum_loc, "tandiv_3.rds"))
 tandiv_spec_3 <- read_rds(here(mform_loc, "tandiv_3.rds"))
-
 ```
 ```{r}
 tolast_1 <- read_rds(here(msum_loc, "tolast_1.rds"))
@@ -884,12 +1412,164 @@ tonext_2c <- read_rds(here(msum_loc, "tonext_2c.rds"))
 tolast_3 <- read_rds(here(msum_loc, "tolast_3.rds"))
 
 tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
-
 ```
 
 
 \FloatBarrier
 \pagebreak
+
+# Analysis of reaction times
+
+```{r timing, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible."}
+
+individual_timing <- combined_results |> select(playerId, gameId, targetNum, repNum, trialNum, numPlayers, submitted, time, tangram, condition) |> filter(submitted) |> 
+  filter(!is.na(time)) |> 
+  filter(time>0) |> 
+  filter(time<180) # some anamolous time recordings from poor computer clock recording ??? but we limit to 0-180 (limit on trial length)
+
+group_timing <- individual_timing |> group_by(gameId, targetNum, repNum, trialNum, numPlayers, tangram, condition) |> summarize(time=max(time))
+# 1
+one_ind_dat <- individual_timing |> 
+  filter(condition=="rotate") 
+
+one_ind_plot <- ggplot(one_ind_dat, aes(x=repNum+1, y=time, color=as.factor(numPlayers)))+
+     scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+  geom_point(position = position_dodge(width=.4), alpha=.01)+
+      geom_smooth(method = "lm") + 
+    labs(x="Block", y="Time to selection (seconds)", color="", title="", subtitle="Experiment 1")+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+two_ind_dat <- individual_timing |>
+  filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
+  filter(numPlayers==6) |> 
+  mutate(condition=case_when(
+    condition=="no_rotate" ~ "6 same describer",
+    condition=="full_feedback" ~ "6 full feedback",
+    condition=="emoji" ~ "6 thin"),
+    condition=factor(condition, levels=c("6 full feedback", "6 same describer", "6 thin"))
+  )
+
+two_ind_plot <- ggplot(two_ind_dat, aes(x=repNum+1, y=time, color=condition))+
+    scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+  geom_point(position = position_dodge(width=.4), alpha=.01)+
+      geom_smooth(method = "lm") + 
+    labs(x="", y="", color="", title="Matcher speeds", subtitle="Experiment 2")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+          axis.title=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
+          axis.title.y=element_blank())+ 
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.2) ) )+
+    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
+
+#3
+three_ind_dat <- individual_timing|> 
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
+  mutate(condition=str_replace(condition, "_", " "),
+         condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin"))) 
+
+three_ind_plot <-  ggplot(three_ind_dat, aes(x=repNum+1, y=time, color=condition))+
+    scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+    geom_point(position = position_dodge(width=.4), alpha=.01)+
+      geom_smooth(method = "lm") + 
+    labs(x="", y="", color="", title="", subtitle="Experiment 3")+
+    theme(legend.position="none",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+                   plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
+          axis.title=element_text(size=14),
+          axis.title.y=element_blank())+
+    guides(color = guide_legend(nrow=2, byrow=T, override.aes = list(linetype = 0, alpha=1, fill=NA, size=1.1) ) )+
+    scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
+ 
+ind <- plot_grid(one_ind_plot, two_ind_plot, three_ind_plot, nrow=1, rel_widths = c(1.05, 1, 1), labels=c("A", "B", "C"), label_size=20, label_y=.9)
+ 
+
+one_group_dat <- group_timing |> 
+  filter(condition=="rotate") 
+
+one_group_plot <- ggplot(one_group_dat, aes(x=repNum+1, y=time, color=as.factor(numPlayers)))+
+      scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+    geom_point(position = position_dodge(width=.4), alpha=.05)+
+      geom_smooth(method = "lm") + 
+    labs(x="Block", y="Time / trial (seconds)", color="", title="", subtitle="Experiment 1")+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+  theme(legend.position="bottom",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=13),
+          axis.title=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"))+
+    scale_color_manual(values=color_scheme_1, aesthetics=c("color", "fill"))
+
+two_group_dat <- group_timing |>
+  filter(condition %in% c("no_rotate","full_feedback", "emoji")) |>
+  filter(numPlayers==6) |> 
+  mutate(condition=case_when(
+    condition=="no_rotate" ~ "6 same describer",
+    condition=="full_feedback" ~ "6 full feedback",
+    condition=="emoji" ~ "6 thin"),
+    condition=factor(condition, levels=c("6 full feedback", "6 same describer", "6 thin"))
+  )
+
+two_group_plot <- ggplot(two_group_dat, aes(x=repNum+1, y=time, color=condition))+
+      scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+    geom_point(position = position_dodge(width=.4), alpha=.05)+
+      geom_smooth(method = "lm") + 
+    labs(x="", y="", color="", title="Group speeds", subtitle="Experiment 2")+
+  
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+  theme(legend.position="bottom",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+          axis.title=element_text(size=14),
+          plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
+          axis.title.y=element_blank())+ 
+    scale_color_manual(values=color_scheme_2, aesthetics=c("color", "fill"))
+
+#3
+three_group_dat <- group_timing|> 
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |> 
+  mutate(condition=str_replace(condition, "_", " "),
+         condition=factor(condition, levels=c("2 thick", "6 thick", "2 thin", "6 thin"))) 
+
+three_group_plot <-  ggplot(three_group_dat, aes(x=repNum+1, y=time, color=condition))+
+      scale_x_continuous(breaks=seq(1,6))+
+     coord_cartesian(ylim=c(0,180))+
+    geom_point(position = position_dodge(width=.4), alpha=.05)+
+      geom_smooth(method = "lm") + 
+    labs(x="", y="", color="", title="", subtitle="Experiment 3")+
+    guides(color = guide_legend(nrow=2, byrow=F, override.aes = list(linetype = 0, alpha=1, fill=NA, size=5)), fill=FALSE  )+
+  theme(legend.position="bottom",
+          axis.text=element_text(size=12),
+          legend.text=element_text(size=14),
+                   plot.subtitle=element_text(size=16, hjust=.5),
+          plot.title=element_text(size=18, hjust=.5, face="bold"),
+          axis.title=element_text(size=14),
+          axis.title.y=element_blank())+
+    scale_color_manual(values=color_scheme_3, aesthetics = c("color", "fill"))
+ 
+group <- plot_grid(one_group_plot,two_group_plot, three_group_plot, nrow=1, rel_widths = c(1.05,1,1), labels=c("D", "E", "F"), label_size=20, label_y=.9)
+ plot_grid(ind, group, nrow=2, rel_heights = c(.95,1.1))
+
+
+```
 
 # Summaries of model outputs
 
@@ -900,31 +1580,55 @@ Note that for all models, block was 0 indexed, so intercepts are what happened d
 
  
 ```{r}
-form <- function(model){
- dep <- as.character(model$formula[2])
- ind <- as.character(model$formula[3])
- 
- str_c(dep," ~ ",ind) |> str_replace_all(" ","") |> 
-      str_replace_all("~", "~$\\\\sim$ ") |> 
-  str_replace_all("\\*","~$\\\\times$ ") |> 
-  str_replace_all("\\+", "~+ ") |> 
-   str_replace_all("_", "")
+form <- function(model) {
+  dep <- as.character(model$formula[2])
+  ind <- as.character(model$formula[3])
+
+  str_c(dep, " ~ ", ind) |>
+    str_replace_all(" ", "") |>
+    str_replace_all("~", "~$\\\\sim$ ") |>
+    str_replace_all("\\*", "~$\\\\times$ ") |>
+    str_replace_all("\\+", "~+ ") |>
+    str_replace_all("_", "")
 }
 
-do_table <- function(mod, cap,decimal=2){
-  model <- read_rds(here(msum_loc,mod)) |> 
-    mutate(Estimate=round(Estimate, digits=decimal),
-           Term=str_replace_all(Term, "_", ""),
-           Lower=round(lower, digits=decimal),
-           Upper=round(upper, digits=decimal),
-           `Credible Interval`=str_c("[",Lower,", ", Upper,"]")) |> 
+do_table <- function(mod, cap, decimal = 2) {
+  model <- read_rds(here(msum_loc, mod)) |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Term = str_replace_all(Term, "_", ""),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
     select(Term, Estimate, `Credible Interval`)
 
-spec <- read_rds(here(mform_loc,mod))
+  spec <- read_rds(here(mform_loc, mod))
 
-kable(model |> select(Term, Est.=Estimate, `95\\% CrI`=`Credible Interval`), escape=F, format='latex', booktabs=T, linesep="",
-      caption=str_c(cap, ": ",form(spec), sep=""),
-      align='lll', position="H")
+  kable(model |> select(Term, Est. = Estimate, `95\\% CrI` = `Credible Interval`),
+    escape = F, format = "latex", booktabs = T, linesep = "",
+    caption = str_c(cap, ": ", form(spec), sep = ""),
+    align = "lll", position = "H"
+  )
+}
+do_sens_table <- function(mod, cap, decimal = 2) {
+  model <- read_rds(here(msum_complete_loc, mod)) |>
+    mutate(
+      Estimate = round(Estimate, digits = decimal),
+      Term = str_replace_all(Term, "_", ""),
+      Lower = round(lower, digits = decimal),
+      Upper = round(upper, digits = decimal),
+      `Credible Interval` = str_c("[", Lower, ", ", Upper, "]")
+    ) |>
+    select(Term, Estimate, `Credible Interval`)
+
+  spec <- read_rds(here(mform_complete_loc, mod))
+
+  kable(model |> select(Term, Est. = Estimate, `95\\% CrI` = `Credible Interval`),
+    escape = F, format = "latex", booktabs = T, linesep = "",
+    caption = str_c(cap, ": ", form(spec), sep = ""),
+    align = "lll", position = "H"
+  )
 }
 ```
 
@@ -934,13 +1638,11 @@ kable(model |> select(Term, Est.=Estimate, `95\\% CrI`=`Credible Interval`), esc
 Accuracy models were all run as logistic models with normal(0,1) priors for both betas and sd. This model was not explicitly included in the experiment 1 and 2 pre-registrations; it was included with more ambitious mixed effects (which did not run in a timely manner) in the experiment 3 pre-registration. 
 
 ```{r}
-
 do_table("acc_1.rds", "Experiment 1 logistic model of matcher accuracy")
 do_table("acc_2a.rds", "Experiment 2: 6 same describer logistic model of matcher accuracy")
 do_table("acc_2b.rds", "Experiment 2: 6 full feedback logistic model of matcher accuracy")
 do_table("acc_2c.rds", "Experiment 2: 6 thin logistic model of matcher accuracy")
 do_table("acc_3.rds", "Experiment 3 logistic model of matcher accuracy")
-
 ```
 
 \FloatBarrier
@@ -952,13 +1654,11 @@ do_table("acc_3.rds", "Experiment 3 logistic model of matcher accuracy")
 Reduction models were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a correlation prior of lkj(1). This model was pre-registered for each experiment and run with the mixed effects structure as pre-specified. 
 
 ```{r}
-
 do_table("red_1.rds", "Experiment 1")
 do_table("red_2a.rds", "Experiment 2: 6 same describer")
 do_table("red_2b.rds", "Experiment 2: 6 full feedback")
 do_table("red_2c.rds", "Experiment 2: 6 thin")
 do_table("red_3.rds", "Experiment 3")
-
 ```
 
 \FloatBarrier
@@ -967,9 +1667,7 @@ do_table("red_3.rds", "Experiment 3")
 For experiment 1, we also pre-specified a model about whether the describer's correctness on the prior block (when they were a matcher) had an effect on how many words of description they produced. Priors were the same as for primary reduction model.
 
 ```{r}
-
 do_table("weird_1.rds", "Experiment 1")
-
 ```
 
 \FloatBarrier
@@ -979,7 +1677,6 @@ do_table("weird_1.rds", "Experiment 1")
 As an exploratory check, we reran some of the primary reduction models using the log number of words as the DV; otherwise model specifications and priors were the same.
 
 ```{r}
-
 do_table("log_red_1.rds", "Experiment 1 log reduction")
 do_table("log_red_3.rds", "Experiment 3 log reduction")
 ```
@@ -988,16 +1685,13 @@ do_table("log_red_3.rds", "Experiment 3 log reduction")
 
 These models were not pre-registered. 
 
-For the model of how often any matchers used the backchannel, the priors were normal(0,1) for both beta and sd. 
+For the model of how often any matchers made contributions, the priors were normal(0,1) for both beta and sd. 
 
 For the model of how much was said on trials when matchers talked, the priors were the same as for the primary (describer) reduction model. 
 ```{r }
-
 do_table("list_1.rds", "Experiment 1")
 
 do_table("anylist_1.rds", "Experiment 1")
-
-
 ```
 
 \FloatBarrier
@@ -1009,12 +1703,10 @@ These models were not pre-registered. They looked at describer reduction only on
 Reduction models were run as linear models with the same priors as the primary reduction model. 
 
 ```{r}
-
 do_table("pre_list_1.rds", "Experiment 1")
 do_table("pre_list_2a.rds", "Experiment 2: 6 same describer")
 do_table("pre_list_2b.rds", "Experiment 2: 6 full feedback")
 do_table("pre_list_3.rds", "Experiment 3")
-
 ```
 
 \FloatBarrier
@@ -1029,13 +1721,11 @@ These models were verbally described (but not formally specified) in the pre-reg
 This is the primary convergence metric presented in the main paper. 
 
 ```{r}
-
-do_table("tolast_1.rds", "Experiment 1", decimal=3)
-do_table("tolast_2a.rds", "Experiment 2: 6 same describer", decimal=3)
-do_table("tolast_2b.rds", "Experiment 2: 6 full feedback", decimal=3)
-do_table("tolast_2c.rds", "Experiment 2: 6 thin", decimal=3)
-do_table("tolast_3.rds", "Experiment 3", decimal=3)
-
+do_table("tolast_1.rds", "Experiment 1", decimal = 3)
+do_table("tolast_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_table("tolast_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_table("tolast_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_table("tolast_3.rds", "Experiment 3", decimal = 3)
 ```
 
 \FloatBarrier
@@ -1045,13 +1735,11 @@ do_table("tolast_3.rds", "Experiment 3", decimal=3)
 This is the divergence metric presented in the paper. 
 
 ```{r}
-
-do_table("div_1.rds", "Experiment 1", decimal=3)
-do_table("div_2a.rds", "Experiment 2: 6 same describer",decimal=3)
-do_table("div_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
-do_table("div_2c.rds", "Experiment 2: 6 thin",decimal=3)
-do_table("div_3.rds", "Experiment 3",decimal=3)
-
+do_table("div_1.rds", "Experiment 1", decimal = 3)
+do_table("div_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_table("div_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_table("div_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_table("div_3.rds", "Experiment 3", decimal = 3)
 ```
 
 \FloatBarrier
@@ -1060,13 +1748,11 @@ do_table("div_3.rds", "Experiment 3",decimal=3)
 This is an additional metric comparing the similiarities between descriptions for different tangrams within a game. It measures how distinct the descriptions for different tangram images are. 
 
 ```{r}
-
-do_table("tandiv_1.rds", "Experiment 1",decimal=3)
-do_table("tandiv_2a.rds", "Experiment 2: 6 same describer",decimal=3)
-do_table("tandiv_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
-do_table("tandiv_2c.rds", "Experiment 2: 6 thin",decimal=3)
-do_table("tandiv_3.rds", "Experiment 3",decimal=3)
-
+do_table("tandiv_1.rds", "Experiment 1", decimal = 3)
+do_table("tandiv_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_table("tandiv_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_table("tandiv_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_table("tandiv_3.rds", "Experiment 3", decimal = 3)
 ```
 
 \FloatBarrier
@@ -1076,13 +1762,11 @@ do_table("tandiv_3.rds", "Experiment 3",decimal=3)
 We also looked at how similar an utterance was to the next block utterance for the same image in the same group: this can be thought of as the derivative of the to-last comparison. (Although cosine similarities are not actually additive in the same way integrals are).
 
 ```{r}
-
-do_table("tonext_1.rds", "Experiment 1",decimal=3)
-do_table("tonext_2a.rds", "Experiment 2: 6 same describer",decimal=3)
-do_table("tonext_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
-do_table("tonext_2c.rds", "Experiment 2: 6 thin",decimal=3)
-do_table("tonext_3.rds", "Experiment 3",decimal=3)
-
+do_table("tonext_1.rds", "Experiment 1", decimal = 3)
+do_table("tonext_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_table("tonext_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_table("tonext_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_table("tonext_3.rds", "Experiment 3", decimal = 3)
 ```
 
 \FloatBarrier
@@ -1092,13 +1776,11 @@ do_table("tonext_3.rds", "Experiment 3",decimal=3)
 We also looked at how similar an utterance was to the first block utterance for the same image. This is not very informative because first round utterances tend to be pretty noisy with lots of hedges and filler words. 
 
 ```{r}
-
-do_table("tofirst_1.rds", "Experiment 1",decimal=3)
-do_table("tofirst_2a.rds", "Experiment 2: 6 same describer",decimal=3)
-do_table("tofirst_2b.rds", "Experiment 2: 6 full feedback",decimal=3)
-do_table("tofirst_2c.rds", "Experiment 2: 6 thin",decimal=3)
-do_table("tofirst_3.rds", "Experiment 3",decimal=3)
-
+do_table("tofirst_1.rds", "Experiment 1", decimal = 3)
+do_table("tofirst_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_table("tofirst_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_table("tofirst_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_table("tofirst_3.rds", "Experiment 3", decimal = 3)
 ```
 
 \FloatBarrier
@@ -1108,8 +1790,55 @@ As an exploratory measure, we combined data across all experiments and re-ran th
 ```{r}
 do_table("acc_meta.rds", "Mega-analytic on accuracy")
 do_table("mega_red.rds", "Mega-analytic of reduction")
-do_table("mega_div.rds", "Mega-analytic on divergence between groups", decimal=3)
-do_table("mega_tolast.rds", "Mega-analytic on convergence to last", decimal=3)
+do_table("mega_div.rds", "Mega-analytic on divergence between groups", decimal = 3)
+do_table("mega_tolast.rds", "Mega-analytic on convergence to last", decimal = 3)
+```
+\FloatBarrier
+# Sensitivity check models
 
+These are the same specification as the primary models, just on the subset of the data from games that were full and complete. 
+
+## Accuracy
+
+```{r}
+do_sens_table("acc_1.rds", "Experiment 1 logistic model of matcher accuracy")
+do_sens_table("acc_2a.rds", "Experiment 2: 6 same describer logistic model of matcher accuracy")
+do_sens_table("acc_2b.rds", "Experiment 2: 6 full feedback logistic model of matcher accuracy")
+do_sens_table("acc_2c.rds", "Experiment 2: 6 thin logistic model of matcher accuracy")
+do_sens_table("acc_3.rds", "Experiment 3 logistic model of matcher accuracy")
 ```
 
+\FloatBarrier
+## Reduction
+
+
+```{r}
+do_sens_table("red_1.rds", "Experiment 1")
+do_sens_table("red_2a.rds", "Experiment 2: 6 same describer")
+do_sens_table("red_2b.rds", "Experiment 2: 6 full feedback")
+do_sens_table("red_2c.rds", "Experiment 2: 6 thin")
+do_sens_table("red_3.rds", "Experiment 3")
+```
+
+\FloatBarrier
+## Convergence within games
+
+```{r}
+do_sens_table("tolast_1.rds", "Experiment 1", decimal = 3)
+do_sens_table("tolast_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_sens_table("tolast_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_sens_table("tolast_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+do_sens_table("tolast_3.rds", "Experiment 3", decimal = 3)
+```
+
+\FloatBarrier
+## Divergence between games
+
+
+```{r}
+do_sens_table("div_1.rds", "Experiment 1", decimal = 3)
+do_sens_table("div_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
+do_sens_table("div_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
+do_sens_table("div_2c.rds", "Experiment 2: 6 thin", decimal = 3)
+#do_sens_table("div_3.rds", "Experiment 3", decimal = 3)
+```

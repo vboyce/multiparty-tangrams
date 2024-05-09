@@ -1,0 +1,134 @@
+
+\documentclass{stanfordletter}
+%\makelabels
+
+\makelabels
+\usepackage{todonotes}
+\usepackage{varioref}
+\usepackage{xr}
+\externaldocument[paper-]{../revision}
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=apa,doi=false,url=false,hyperref=true,apamaxprtauth=30,uniquename=false]{biblatex}
+\usepackage{framed}
+\DeclareLanguageMapping{american}{american-apa}
+%\bibliography{../draft0}
+\newcommand{\citet}[1]{\textcite{#1}}
+\newcommand{\citep}[1]{\parencite{#1}}
+
+\newcommand{\theysaid}[1]{\begin{leftbar} \noindent 
+		\textsl{ #1}\end{leftbar}}
+\newcommand{\revised}[1]{\begin{quote}	#1 \end{quote}}
+
+\usepackage{longtable,booktabs,array}
+\usepackage{float}
+\begin{document}
+	\name{Veronica Boyce}
+	\signature{Veronica Boyce \\ Robert D. Hawkins \\ Noah D. Goodman \\ Michael C. Frank}
+	
+	
+	\begin{letter}{}
+		
+		
+          \opening{To whom it may concern, } 
+
+          
+           
+          
+          %When submitting revised materials, we require that you include a cover letter with a point-by-point response to the reviewers' comments. If you submitted a single PDF at initial submission, you must submit individual publication-ready files (e.g., Word file for manuscript text; EPS, TIFF, or high-resolution PDF for figures; Word file for tables; etc.)
+          %TODO cover letter
+          %TODO individual files <-- this may be a huge pita
+          %TODO ORCID 
+         
+          
+          \theysaid{Note from PNAS Editorial Office: PNAS requires that you include in your main text Materials and Methods section a brief statement identifying the IRB that approved your experiments, including the reference/permit numbers (where available).}
+          %TODO add IRB
+          
+          \theysaid{Editor Comments:}
+          \theysaid{Thank you for your submission to PNAS. I noticed that the manuscript has been in the system for over two months, and so I apologize for the delay.}
+          
+          \theysaid{Two experts have read your paper and provided comments. As you will see, both were quite positive about your work, and both provided some suggestions for improvement. I, too, have read your paper and agree completely that this work is sufficiently compelling that it will likely be acceptable for PNAS. My only comment is, like Reviewer 2, I was initially puzzled by the paragraph beginning on line 128.}
+
+          
+          \theysaid{I request that you prepare a revision that responds to the reviewers. I do not anticipate having to send the manuscript out for further review because I feel that I have a good enough understanding of the issues that you investigated and the points raised in the review.}
+          
+          \theysaid{Thank you once again for allowing us to read this most interesting manuscript.}
+          
+          
+          
+          %\theysaid{Reviewer Comments:}
+         \theysaid{Reviewer \#1:}
+         
+          %\theysaid{Suitable Quality?: Yes
+          %Sufficient General Interest?: Yes
+          %Conclusions Justified?: Yes
+          %Clearly Written?: Yes
+          %Procedures Described?: Yes
+          %Supplemental Material Warranted?: Yes}
+          
+          \theysaid{Comments:}
+          \theysaid{This study examines how groups of people develop converging references for abstract images under various constraints (e.g., group size ranging from 2-6, types of feedback, etc.). The results replicate previous findings (e.g., matchers' gradually increasing accuracy and describers' decreasing expression length across repeated trials) and extend them to further understanding how larger groups, beyond dyadic interactions, achieve mutual understanding and successful communication. The results indicate that group size and the extent to which group partners could interact significantly affect how groups develop shared references - smaller group and groups with less constraints in their interaction developed more group-specific shared references compared to larger group and those constrained in their interaction.}
+          
+          \theysaid{This study is one of the few attempts to examine multi-party communication with high ecological validity and will significantly contributes to our understanding of everyday language use. The research design is clever and appropriate for addressing the research question, and the manuscript is clearly written. However, I do have some suggestions and questions to further improve the manuscript.}
+          
+          \theysaid{- First of all, I think it is important to discuss potential differences between communication modality (oral vs. written language), either in the introduction or the discussion. Communication modality and associated features (e.g., shared physical space in oral communication) can be possible constraints in developing shared references. While I understand it is not the primary focus of the study, most of the cited literature is based on oral communication, whereas the study examines communication in written language among multiple partners. Although there are common features between modalities and the authors' choice to examine communication in written modality was unavoidable - otherwise, it would have been challenging due to practical reasons (e.g., recruitment) - I still believe it would be beneficial to introduce potential influence of communication modality in this study for audience, especially the general audience who may not be familiar with this topic.}
+          %TODO more on oral v chat modality in intro and/or discussion 
+          
+          \theysaid{Related to this point, when I encountered the term matcher "backchannel" (in Figure 1 and study design), I assumed it was analogous to backchannel feedback in oral communication, which includes verbal acknowledgments or non-verbal gestures. In the study, when it is limited to 4 emojis, I thought they were analogous to backchannel feedback in oral communication, but in the other condition, when matchers had a chatbox to provide feedback, their responses were more like turn-taking. Thus, the term "backchannel" was a bit confusing.}
+          %TODO clarify backchannel and/or change term 
+          
+          \theysaid{- I also had a question about how the number of groups in each condition for each experiment was determined and whether it was pre-registered. In SI Table 3, I noticed that in Experiments 1-2, the number of groups in each condition was not matched, resulting in differences across conditions. I understand that controlling participants' participation when they were online can be challenging, but I would like to learn more about how many groups were initially aimed to be collected, whether it was pre-planned, and if not, how and when the decision was made to stop collecting data.}
+          %TODO add more about recruitment distributions to supplement ? or methods? 
+          
+          \theysaid{- Related to the number of data in each condition, I wonder about power because in some analyses (group size in E1 and game thickness in E3), the effect of a factor was not significant until the meta-analysis where more data were pooled together. This could be due to insufficient power. Any information about power would be helpful (especially for future studies).}
+          %TODO discussion of power? / also is there anything we can cite on small numbers of highest order groups with mixed models?
+         
+          
+          \theysaid{- I also understand the authors' decision to include all participants, even when some dropped out during the study. However, it would be helpful to have a separate analysis including only groups who completed the intended manipulation (i.e., where no one dropped out during the study) to demonstrate that it does not alter the reported results.}
+          %TODO add to supplement only the "treatment as treated" and finished the game analyses -- although note that this also biased differently!
+          
+          \theysaid{- In the method, the time it took for each participant to click the target was recorded. Were they also analyzed? If so, is the result comparable to the result of describers' expression length (e.g., longer expressions lead to longer reaction time)? Or does the group size somehow modulate it?}
+          %TODO add RT analysis to supplement & mention in text 
+          
+          \theysaid{- Minor point: The resolution of Figure 1A is low, making it difficult to read text in the figure.}
+          %TODO in figures: make sure Fig 1A is good
+          
+          
+          \theysaid{Reviewer \#2:}
+          
+          \theysaid{Suitable Quality?: Yes
+          Sufficient General Interest?: Yes
+          Conclusions Justified?: Yes
+          Clearly Written?: Yes
+          Procedures Described?: Yes
+          Supplemental Material Warranted?: Yes}
+          
+          \theysaid{Comments:}
+          \theysaid{This is a very strong, well-written paper that explores a number of important issues relevant to reference and communicative dynamics. While there has been a wealth of research looking at communication processes in dyadic interactions, there has been relatively little psycholinguistic investigation into the nature of larger group interactions. The most substantial contributions of this work, therefore, lies in the way it systematically explores not only how group size affects the ability of interlocutors to efficiently develop communicative conventions, but also how such patterns of convergence are influenced by specific affordances of the communicative context. While I don't think anyone would find it surprising that 'thin' communication contexts result in less efficient interactions, it is nevertheless revealing to see how these constraints on communication interact with group size in interesting ways. This is a really nice set of results that expands our understanding of the dynamics of how interlocutors establish referential conventions. The contributions of this work are further strengthened by the methodological and analytic sophistication applied to the experiments, which are clever and appropriate for the questions being asked. I especially appreciated the use of sentence embeddings to derive a measure of semantic similarity for descriptions produced both within and between groups - this is an innovative way to show concretely not only how conventions emerge within groups but also how the nature of item descriptions begin to diverge across groups as they develop idiosyncratic ways of referring. All told, I like this paper, and only have a few, minor additional comments and suggestions.}
+          
+          
+          \theysaid{p. 5, line 128ff: In the brief overview for Experiment 2, when I initially read "We manipulated two factors that we expected to increase group coherence...." I was imagining two clear independent manipulations within the same experiment - e.g., same describer vs. rotating describer or full feedback vs. impoverished feedback. This may be my fault, but it wasn't until the fuller description of this study on p. 14 that I came to understand that these manipulations were actually being implemented in comparison to what was done in Experiment 1. Similarly for line134: "We also manipulated a factor that...". I would suggest somehow making it clearer here that there were three conditions, each of which represented a critical change to one factor that was expected to impact group coherence.}
+          %TODO clarify this paragraph (In Overview of experiments -- Experiment 2...)
+          
+          \theysaid{p. 7, concerning the conclusion that larger groups made greater use of backchannels - How can this be separated from the fact that larger groups also simply had more matchers available to backchannel?}
+          %TODO how can we think about matchers backchannel volume when number of matchers changes? 
+          
+          \theysaid{As mentioned above, I liked the analyses examining semantic similarity of describers' utterances within and between groups. I wondered, though, whether it would be possible to have more qualitative information about the nature of the actual descriptions, with an eye toward a more concrete understanding of how describers may have chosen to accommodate their utterances to the demands of the communicative situation. On p. 11, the paper alludes to the fact that initial similarity of descriptions across groups could have been higher because describers focused on 'shapes or body parts.' This reminded me of Fussell \& Krauss (1989), which found that speakers showed a relative preference for literal/geometric descriptions of novel images (vs figurative/holistic labels) when the descriptions were for an unfamiliar recipient, for whom a 'generic' description might be more appropriate. All else being equal, talking to a larger group or knowing that matchers may be restricted in what they can say may similarly prompt speakers to be more conservative in their descriptions, leading to an emphasis upon context-independent features that may be presumed to be equally available to addressees. Conventions can be based on different kinds of semantic perspectives. Basically, I would be interested in having a more fleshed out picture of the description content, if possible.}
+          %TODO what can we say about the content that's within scope
+          
+          
+          %TODO High resolution figure files are required for the final version of your manuscript. 
+          
+          %PNAS figure preparation guidelines state that no specific feature within an image may be enhanced, obscured, moved, removed, or introduced. The grouping or consolidation of images from multiple sources must be made explicit by the arrangement of the figure and in the figure legend. Adjustments of brightness, contrast, or color balance are acceptable if they are applied to the whole image and if they do not obscure, eliminate, or misrepresent any information present in the original, including backgrounds. Please note that our production editors may flag figures that are not in compliance with our figure policy, resulting in delays. For more information on submitting high resolution figures please review the PNAS digital art guidelines.
+          
+          
+          
+          \closing{Sincerely,}
+		
+	\end{letter}
+	
+\end{document}
+
+
+
+

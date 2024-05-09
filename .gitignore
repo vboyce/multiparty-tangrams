@@ -28,5 +28,8 @@ code/*.csv
 data/*/combined*
 data/*/exchanges*
 
+code/paper_mods/*.rds
+code/paper_mods/complete_only/*.rds
+*.bcf
 *ipynb_checkpoints*
 *rsconnect*
