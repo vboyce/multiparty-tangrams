@@ -420,7 +420,8 @@ model_speaker_acc <- brm(
 
 ### listener reduction
 
-listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
+listeners <- combined_results |> 
+  select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
 
 listener_chat <- combined_chat |>
   filter(role == "listener") |>
@@ -431,6 +432,14 @@ listener_chat <- combined_chat |>
   filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback")) |>
   rename(block = repNum)
 
+per_listener_chat <- combined_chat |>
+  filter(role == "listener") |>
+  full_join(listeners) |>
+  group_by(condition, numPlayers, trialNum, repNum, gameId, playerId) |>
+  mutate(total_num_words = ifelse(is.na(total_num_words), 0, total_num_words)) |>
+  summarize(words = sum(total_num_words)) |>
+  filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback")) |>
+  rename(block = repNum)
 
 listener_priors <- c(
   set_prior("normal(12, 20)", class = "Intercept"),
@@ -447,6 +456,15 @@ model_1_list <- brm(words ~ block * numPlayers + (block | gameId),
   control = list(adapt_delta = .95)
 )
 
+# this is a model of when something is said, how much?
+model_1_per_list <- brm(words ~ block * numPlayers + (block | playerId),
+                    data = per_listener_chat |> filter(condition == "rotate") |>
+                      filter(words > 0),
+                    file = here(model_location, "per_list_1"),
+                    prior = red_priors,
+                    control = list(adapt_delta = .95)
+)
+
 ### listener not talking at all
 
 
@@ -457,10 +475,19 @@ anylistener_priors <- c(
 
 anytalk <- listener_chat |> mutate(is.words = ifelse(words > 0, 1, 0))
 
+per_anytalk <- per_listener_chat |> mutate(is.words = ifelse(words > 0, 1, 0))
+
 model_1_anylist <- brm(is.words ~ block * numPlayers + (1 | gameId),
   family = bernoulli(link = "logit"),
   data = anytalk |> filter(condition == "rotate"),
   file = here(model_location, "anylist_1"),
+  prior = anylistener_priors,
+  control = list(adapt_delta = .95)
+)
+model_1_per_anylist <- brm(is.words ~ block * numPlayers + (1 | playerId),
+  family = bernoulli(link = "logit"),
+  data = per_anytalk |> filter(condition == "rotate"),
+  file = here(model_location, "per_anylist_1"),
   prior = anylistener_priors,
   control = list(adapt_delta = .95)
 )

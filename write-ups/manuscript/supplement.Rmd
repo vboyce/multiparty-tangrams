@@ -8,6 +8,7 @@ output:
     toc_depth: 2
     keep_tex: true
     extra_dependencies: ["float"]
+    latex_engine: lualatex
 header-includes:
  - \usepackage{float}
  - \usepackage{setspace}\singlespacing
@@ -422,6 +423,9 @@ combined_results |>
 
 # More on matcher utterances 
 
+We can think about matcher utterances either at the level of one matcher or at the level of a group. In larger groups, the total number of matchers who could contribute is higher, so matcher utterances might be more common. But, on a per-matcher basis, having more group-mates could increase the amount a given matcher contributes (more people to potentially have lateral conversations with) or it could decrease it (others are already asking the questions you were going to). 
+
+We look at matcher utterances both ways -- on a game level and on an individual level. We break it down into two steps: are there contributions on a given trial and separately, for trials with contributions, how long are the contributions (in conditions with a chat modality)
  
 ```{r, include=T}
 listeners <- combined_results |> select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
@@ -456,7 +460,7 @@ all_list <- listener_chat |>
 
 Matchers' contributions declined over the course of the game. The use of emoji in the thin games is not directly comparable to matcher language use in thick games, since some emoji usage (such as the green checkmark) is most likely equivalent to non-referential matcher language ("got it" etc.) that was excluded. The higher rate of emoji use versus referential language thus could be due to its non-equivalence, a lower level of accuracy in thin games, or matchers having a lower threshold for sending emojis compared to writing out clarifications. 
 
-```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions. A-C: Fraction of trials where any matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one matcher contributed, the number of words of referential language produced by matchers. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
+```{r listeners, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions at the group level. A-C: Fraction of trials where any matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where at least one matcher contributed, the number of words of referential language produced by matchers. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
 anytalk <- all_list |>
   group_by(condition, numPlayers, condition2, gameId, trialNum, repNum) |>
   summarize(words = sum(words)) |>
@@ -636,6 +640,217 @@ bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow = 1, rel_wi
 plot_grid(top, bot, nrow = 2, rel_heights = c(1, .75))
 ```
 
+ 
+```{r, include=T}
+
+listener_chat_indiv <- combined_chat |>
+  filter(role == "listener") |>
+  full_join(listeners) |>
+  group_by(condition, numPlayers, trialNum, repNum, gameId, playerId) |>
+  mutate(total_num_words = ifelse(is.na(total_num_words), 0, total_num_words)) |>
+  summarize(words = sum(total_num_words)) |>
+  filter(condition %in% c("rotate", "2_thick", "6_thick", "no_rotate", "full_feedback"))
+
+emojis_indiv <- combined_emoji |>
+  mutate(emoji = case_when(
+    text == "✅" ~ "check",
+    text == "🤔" ~ "think",
+    text == "❌" ~ "x",
+    text == "😂" ~ "lol",
+  )) |>
+  full_join(listeners) |>
+  filter(condition %in% c("2_thin", "6_thin", "emoji")) |>
+  mutate(is.emoji = ifelse(is.na(emoji), 0, 1)) |>
+  group_by(gameId, trialNum, repNum, condition, numPlayers, playerId)
+
+count_emoji_indiv <- emojis_indiv |> summarize(words = sum(is.emoji))
+
+all_list_indiv <- listener_chat_indiv |>
+  union(count_emoji_indiv) |>
+  mutate(condition2 = ifelse(condition == "rotate", str_c(numPlayers, condition), condition))
+```
+
+
+```{r listeners_indiv, fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Matcher contributions at the individual level. A-C: Fraction of trials where an individual matcher said anything that was referential. Dots are per game averages. Smooths are binomial fit lines. D-F: On trials where a matcher contributed, the number of words of referential language that matcher produced. Dots are per game averages. Smooths are quadratic fit lines. Y-axis is truncated, and a few outliers points are not visible."}
+anytalk_indiv <- all_list_indiv |>
+  group_by(condition, numPlayers, condition2, gameId, trialNum, repNum, playerId) |>
+  summarize(words = sum(words)) |>
+  mutate(is.words = ifelse(words > 0, 1, 0))
+
+# maybe try per game trials/block where any listener talked?
+
+
+one_talk_dat <- anytalk_indiv |>
+  filter(condition == "rotate") |>
+  mutate(numPlayers = as.character(numPlayers))
+
+one_talk_plot <-
+  ggplot(one_talk_dat, aes(x = repNum + 1, y = is.words, color = numPlayers)) +
+  geom_point(data = one_talk_dat |> group_by(gameId, repNum, numPlayers) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)
+  ) +
+  scale_color_manual(values = color_scheme_1)
+
+
+# 2
+
+two_talk_dat <- anytalk_indiv |>
+  filter(condition %in% c("no_rotate", "full_feedback", "emoji")) |>
+  mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
+
+two_talk_plot <-
+  ggplot(two_talk_dat, aes(x = repNum + 1, y = is.words, color = condition)) +
+  geom_point(data = two_talk_dat |> group_by(gameId, repNum, condition) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "", color = "", title = "Any matcher words", subtitle = "Experiment 2") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2)
+
+# 3
+
+
+three_talk_dat <- anytalk_indiv |>
+  filter(condition %in% c("2_thin", "2_thick", "6_thin", "6_thick")) |>
+  mutate(condition = str_replace(condition, "_", " "))
+
+three_talk_plot <-
+  ggplot(three_talk_dat, aes(x = repNum + 1, y = is.words, color = condition)) +
+  geom_point(data = three_talk_dat |> group_by(gameId, repNum, condition) |> summarize(is.words = mean(is.words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .3), alpha = 1) +
+  coord_cartesian(ylim = c(0, 1.05)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Fraction trials with any words", x = "", color = "", title = "", subtitle = "Experiment 3") +
+  guides(color = guide_legend(nrow = 2, byrow = T, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 1.2))) +
+  theme(
+    legend.position = "bottom",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"), axis.title.y = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_3)
+
+top <- plot_grid(one_talk_plot, two_talk_plot, three_talk_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("A", "B", "C"), label_y = .9, label_size = 20)
+
+
+
+
+one_list_dat <- all_list_indiv |>
+  filter(words != 0) |>
+  filter(condition == "rotate") |>
+  mutate(numPlayers = as.character(numPlayers))
+
+one_list_plot <-
+  ggplot(one_list_dat, aes(x = repNum + 1, y = words, color = numPlayers)) +
+  geom_point(data = one_list_dat |> group_by(gameId, repNum, numPlayers) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "Block", color = "", title = "", subtitle = "Experiment 1") +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    axis.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title.x = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_1, drop = F)
+
+
+# 2
+
+two_list_dat <- all_list_indiv |>
+  filter(words != 0) |>
+  filter(condition %in% c("no_rotate", "full_feedback")) |>
+  filter(numPlayers == 6) |>
+  mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
+
+two_list_plot <- ggplot(two_list_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  geom_point(data = two_list_dat |> group_by(gameId, repNum, condition) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_point(size = 1, alpha = .05, position = position_dodge(width = .4)) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "", color = "", title = "Words from matchers", subtitle = "Experiment 2") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  ) +
+  scale_color_manual(values = color_scheme_2, drop = F)
+
+# 3
+
+
+three_list_dat <- all_list_indiv |>
+  filter(words != 0) |>
+  filter(condition %in% c("2_thick", "6_thick")) |>
+  mutate(condition = str_replace(condition, "_", " "))
+
+three_list_plot <-
+  ggplot(three_list_dat, aes(x = repNum + 1, y = words, color = condition)) +
+  geom_point(data = three_list_dat |> group_by(gameId, repNum, condition) |> summarize(words = mean(words)), position = position_dodge(width = .4), alpha = .3) +
+  geom_smooth(method = glm, formula = y ~ poly(x, 2), alpha = .3) +
+  scale_color_manual(values = color_scheme_3) +
+  guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = 6))) +
+  coord_cartesian(ylim = c(0, 25)) +
+  scale_x_continuous(breaks = seq(1, 6)) +
+  labs(y = "Number of words", x = "", color = "", title = "", subtitle = "Experiment 3") +
+  theme(
+    legend.position = "none",
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 13),
+    plot.subtitle = element_text(size = 16, hjust = .5),
+    plot.title = element_text(size = 18, hjust = .5, face = "bold"),
+    axis.title = element_blank()
+  )
+
+bot <- plot_grid(one_list_plot, two_list_plot, three_list_plot, nrow = 1, rel_widths = c(1.05, 1, 1), labels = c("D", "E", "F"), label_y = .9, label_size = 20)
+
+plot_grid(top, bot, nrow = 2, rel_heights = c(1, .75))
+```
+
 
 ```{r emoji,  fig.width=8, fig.height=2.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Fraction of trials on which at least one matcher produced the labelled emoji. Fraction of trials when any emoji was produced are shown in black.  Dots are per condition, per block estimates with 95\\% bootstrapped CIs. Smooths are binomial fit lines. "}
 to_plot <- combined_emoji |>
@@ -683,6 +898,7 @@ We note a deviation from the pre-registration here in the analysis of the emojis
 \FloatBarrier
 
 \pagebreak
+
 
 # Sensitivity Analysis of full complete games only
 
@@ -1018,7 +1234,7 @@ three_diverge <- read_rds(here("code/models/three_diverge.rds")) |> inner_join(i
 div_pred_1 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_1.rds")) 
   
 div_pred_2 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_2.rds")) 
-#div_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_3.rds")) 
+div_pred_3 <- read_rds(here("code/paper_mods/complete_only/prediction/div_pred_3.rds")) 
 
 # 1
 one_div_dat <- one_two_diverge |> filter(condition %in% c("2", "3", "4", "5", "6"))
@@ -1087,7 +1303,7 @@ three_div_dat <- three_diverge |>
 three_div_plot <- ggplot(three_div_dat, aes(x = repNum + 1, y = sim, color = condition)) +
   geom_point(data = three_div_dat |> group_by(repNum, tangram, condition) |>
     summarize(sim = mean(sim)), position = position_dodge(width = .4), alpha = .3) +
-  #geom_lineribbon(data = div_pred_3, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
+  geom_lineribbon(data = div_pred_3, aes(x = block + 1, ymin = low, y = mean, ymax = high, fill = stage(condition, after_scale = alpha(fill, .2)))) +
   scale_x_continuous(breaks = seq(1, 6)) +
   coord_cartesian(ylim = c(.1, .7)) +
   labs(x = "", y = "", color = "", subtitle = "Experiment 3", title = "") +
@@ -1688,10 +1904,17 @@ These models were not pre-registered.
 For the model of how often any matchers made contributions, the priors were normal(0,1) for both beta and sd. 
 
 For the model of how much was said on trials when matchers talked, the priors were the same as for the primary (describer) reduction model. 
-```{r }
-do_table("list_1.rds", "Experiment 1")
 
-do_table("anylist_1.rds", "Experiment 1")
+We ran these models both at the group level (did any matcher make a contribution, how many words of matcher contributions were there) and at the individual level (for a given matcher, did they make a contribution, and if so, how many words did they contribute). 
+```{r }
+do_table("anylist_1.rds", "Experiment 1: group-level")
+
+do_table("per_anylist_1.rds", "Experiment 1: individual-level")
+
+do_table("list_1.rds", "Experiment 1: group-level")
+
+do_table("per_list_1.rds", "Experiment 1: individual-level")
+
 ```
 
 \FloatBarrier
@@ -1840,5 +2063,5 @@ do_sens_table("div_1.rds", "Experiment 1", decimal = 3)
 do_sens_table("div_2a.rds", "Experiment 2: 6 same describer", decimal = 3)
 do_sens_table("div_2b.rds", "Experiment 2: 6 full feedback", decimal = 3)
 do_sens_table("div_2c.rds", "Experiment 2: 6 thin", decimal = 3)
-#do_sens_table("div_3.rds", "Experiment 3", decimal = 3)
+do_sens_table("div_3.rds", "Experiment 3", decimal = 3)
 ```
