@@ -1,0 +1,200 @@
+---
+title: "Language analyses"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r set-up, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F, fig.width=8, fig.height=3)
+knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
+options(knitr.table.format = "html")
+library(tidyverse)
+library(jsonlite)
+library(here)
+library(rlang)
+library(lme4)
+library(brms)
+# library(rstanarm)
+library(rstan)
+library(viridis)
+library(testthat)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+theme_set(theme_bw())
+
+ParseJSONColumn <- function(x) {
+  str_c("[ ", str_c(x, collapse = ",", sep = " "), " ]") %>%
+    fromJSON(flatten = T)
+}
+
+source("prep_ms.R")
+```
+
+
+```{r}
+detect_body <- str_c(
+  "\\b(face|head|heads|back|shoulder|shoulders",
+  "|arm|arms|leg|legs|foot|feet|body|knee|knees|",
+  "toe|toes|hand|hands|body|butt|heel|heels|ear|ears|nose|neck|chest|hair)\\b"
+)
+
+detect_shape <- str_c(
+  "squar|triangle|triangular|diamond|shape|",
+  "trapez|angle|degree|parallel|rhomb|box|cube|line|white|black"
+)
+
+detect_position <- str_c("right|left|above|below|under|over|top|bottom|behind|side|beneath")
+
+detect_posture <- str_c(
+  "kick|crouch|squat|kneel|knelt|stood|",
+  "stand|sit|sat|lying|walk|facing|fall|looking|",
+  "lean|seat|laying"
+)
+
+detect_person <- str_c("\\b(woman|man|person|guy|boy|girl|dude|lady)\\b")
+
+tagged <- combined_chat |>
+    mutate(expt = case_when(
+    condition %in% c("emoji", "full_feedback", "no_rotate") ~ 2,
+    str_detect(condition, "rotate") ~ 1,
+    T ~ 3
+  )) |> 
+  mutate(condition=ifelse(expt==1, str_c(numPlayers,"_rotate"), condition)) |> 
+  mutate(expt=str_c("Experiment ",expt)) |> 
+  select(gameId, repNum, tangram, playerId, role, text, condition, expt, total_num_words) |>
+  filter(role == "speaker") |>
+  group_by(gameId, repNum, tangram, condition, expt) |>
+  summarize(
+    text = str_c(text, " "),
+    total_num_words = sum(total_num_words)
+  ) |>
+  mutate(text = str_to_lower(text)) |>
+  mutate(
+    regex_body = str_count(text, detect_body),
+    regex_shape = str_count(text, detect_shape),
+    regex_position = str_count(text, detect_position),
+    regex_posture = str_count(text, detect_posture),
+    regex_person = str_count(text, detect_person)
+  )
+```
+
+# Prelim plots
+
+Being as lazy as possible. We take the everything-the-speaker-said-on-a-trial and count the number of occurances of different classes of words (defined by dictionary / regex). 
+
+Then we look at change over time/condition in 
+
+* average number of these words
+* average pct of words these words make up
+* pct of games/trials that had any of those words
+
+```{r}
+labels <- tagged |> mutate(none=as.numeric(regex_body == 0 & regex_shape == 0 & regex_position == 0 & regex_posture == 0 & regex_person == 0)) |> 
+  mutate(pct_body=regex_body/total_num_words,
+         pct_shape=regex_shape/total_num_words,
+         pct_position=regex_position/total_num_words,
+         pct_posture=regex_posture/total_num_words,
+         pct_person=regex_person/total_num_words,
+         any_body=as.numeric(regex_body>0),
+         any_shape=as.numeric(regex_shape>0),
+         any_position=as.numeric(regex_position>0),
+         any_posture=as.numeric(regex_posture>0),
+         any_person=as.numeric(regex_person>0))
+```
+
+```{r}
+color_scheme <- c(
+  "2_rotate" = "#FFBDD4", "5_rotate" = "#A12EFF", "3_rotate" = "#FF7DF0", "6_rotate" = "#6940FF", "4_rotate" = "#D24AFF", "full_feedback" = "#425df5", "no_rotate" = "#00A2FF", "emoji" = "#D47E04", "2_thin" = "#FFDA09", "6_thin" = "#D47E04",
+  "2_thick" = "#77F3DB", "6_thick" = "#00BDA8"
+)
+```
+
+## shape words
+trying to pick up on "literal" descriptions 
+
+  "squar|triangle|triangular|diamond|shape|",
+  "trapez|angle|degree|parallel|rhomb|box|cube|line|white|black"
+  
+```{r}
+
+ggplot(labels, aes(x=repNum, y=regex_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=pct_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=any_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+```
+
+## body part words
+
+  face|head|heads|back|shoulder|shoulders",
+  "|arm|arms|leg|legs|foot|feet|body|knee|knees|",
+  "toe|toes|hand|hands|body|butt|heel|heels|ear|ears|nose|neck|chest|hair 
+
+```{r}
+ggplot(labels, aes(x=repNum, y=regex_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=pct_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=any_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+```
+
+## positional words
+
+right|left|above|below|under|over|top|bottom|behind|side|beneath
+
+```{r}
+
+ggplot(labels, aes(x=repNum, y=regex_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=pct_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=any_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+```
+
+
+## posture words
+
+  "kick|crouch|squat|kneel|knelt|stood|",
+  "stand|sit|sat|lying|walk|facing|fall|looking|",
+  "lean|seat|laying"
+
+```{r}
+ggplot(labels, aes(x=repNum, y=regex_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=pct_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=any_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+```
+
+## person words
+
+woman|man|person|guy|boy|girl|dude|lady
+
+```{r}
+
+ggplot(labels, aes(x=repNum, y=regex_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+ggplot(labels, aes(x=repNum, y=pct_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+
+
+
+
+
+ggplot(labels, aes(x=repNum, y=any_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+```
+
+## none of the above
+
+trials where none of the above classes of words appeared (~ abstract only)
+
+```{r}
+ggplot(labels, aes(x=repNum, y=none, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+
+```

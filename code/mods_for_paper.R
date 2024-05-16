@@ -420,7 +420,7 @@ model_speaker_acc <- brm(
 
 ### listener reduction
 
-listeners <- combined_results |> 
+listeners <- combined_results |>
   select(condition, playerId, gameId, repNum, trialNum, targetNum, numPlayers)
 
 listener_chat <- combined_chat |>
@@ -458,11 +458,11 @@ model_1_list <- brm(words ~ block * numPlayers + (block | gameId),
 
 # this is a model of when something is said, how much?
 model_1_per_list <- brm(words ~ block * numPlayers + (block | playerId),
-                    data = per_listener_chat |> filter(condition == "rotate") |>
-                      filter(words > 0),
-                    file = here(model_location, "per_list_1"),
-                    prior = red_priors,
-                    control = list(adapt_delta = .95)
+  data = per_listener_chat |> filter(condition == "rotate") |>
+    filter(words > 0),
+  file = here(model_location, "per_list_1"),
+  prior = red_priors,
+  control = list(adapt_delta = .95)
 )
 
 ### listener not talking at all
@@ -565,6 +565,22 @@ save_summary <- function(model) {
   stats
 }
 
+save_me <- function(model) {
+  intervals <- gather_draws(model, `sd_.*`, regex = T) %>%
+    mean_qi() |>
+    separate(.variable, into=c("group", "Term"), sep="__") |> 
+    mutate(
+      lower = .lower,
+      upper = .upper,
+      group = str_sub(group, 4, -1),
+      Estimate = .value
+    ) %>%
+    select(group, Term, Estimate, lower, upper)
+
+  intervals
+}
+
+
 
 form <- function(model) {
   dep <- as.character(model$formula[2])
@@ -587,26 +603,18 @@ do_model <- function(path) {
 
 mods <- list.files(path = here(model_location), pattern = ".*rds") |> walk(~ do_model(.))
 
+do_me <- function(path) {
+  model <- read_rds(here(model_location, path))
+  message(path)
+  save_me(model) |> write_rds(here(model_location, "mixed_fx", path))
+}
 
-# stats <- function(model, row){
-#   str_c(model[row,1],": Est=", model[row,2], ", CrI=", model[row,3])
-# }
-#
-# stats_text  <- function(model, row){
-#   str_c( model[row,2], " (CrI=", model[row,3],")")
-# }
-#
-# form <- function(model){
-#  dep <- as.character(model$formula[2])
-#  ind <- as.character(model$formula[3])
-#
-#  str_c(dep," ~ ",ind) %>% str_replace_all(" ","") %>%
-#   str_replace_all("\\*"," $\\\\times$ ") %>%
-#   str_replace_all("\\+", "&nbsp;+ ") %>%
-#    str_replace_all("~", "$\\\\sim$ ")
-# }
-#
-#
+mods_me <- c(
+  "acc_1.rds", "acc_3.rds", "div_1.rds", "div_3.rds",
+  "red_1.rds", "red_3.rds", "tolast_1.rds", "tolast_3.rds"
+) |> walk(~ do_me(.))
+
+
 
 # extracting combinations of factors for red3
 m <- model_3_red
