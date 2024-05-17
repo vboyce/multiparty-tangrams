@@ -7,7 +7,7 @@ output:
 
 
 ```{r set-up, include=F}
-knitr::opts_chunk$set(echo = FALSE, warning = F, message = F, fig.width=8, fig.height=3)
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F, fig.width = 8, fig.height = 3)
 knitr::opts_chunk$set(dev = "png", dev.args = list(type = "cairo-png"))
 options(knitr.table.format = "html")
 library(tidyverse)
@@ -20,6 +20,7 @@ library(brms)
 library(rstan)
 library(viridis)
 library(testthat)
+library(cowplot)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 theme_set(theme_bw())
@@ -53,16 +54,14 @@ detect_posture <- str_c(
   "lean|seat|laying"
 )
 
-detect_person <- str_c("\\b(woman|man|person|guy|boy|girl|dude|lady)\\b")
-
 tagged <- combined_chat |>
-    mutate(expt = case_when(
+  mutate(expt = case_when(
     condition %in% c("emoji", "full_feedback", "no_rotate") ~ 2,
     str_detect(condition, "rotate") ~ 1,
     T ~ 3
-  )) |> 
-  mutate(condition=ifelse(expt==1, str_c(numPlayers,"_rotate"), condition)) |> 
-  mutate(expt=str_c("Experiment ",expt)) |> 
+  )) |>
+  mutate(condition = ifelse(expt == 1, str_c(numPlayers, "_rotate"), condition)) |>
+  mutate(expt = str_c("Experiment ", expt)) |>
   select(gameId, repNum, tangram, playerId, role, text, condition, expt, total_num_words) |>
   filter(role == "speaker") |>
   group_by(gameId, repNum, tangram, condition, expt) |>
@@ -75,126 +74,116 @@ tagged <- combined_chat |>
     regex_body = str_count(text, detect_body),
     regex_shape = str_count(text, detect_shape),
     regex_position = str_count(text, detect_position),
-    regex_posture = str_count(text, detect_posture),
-    regex_person = str_count(text, detect_person)
+    regex_posture = str_count(text, detect_posture)
+  )
+```
+# Nicer graphs attempts
+
+```{r}
+labels <- tagged |>
+  mutate(none = as.numeric(regex_body == 0 & regex_shape == 0 & regex_position == 0 & regex_posture == 0)) |>
+  mutate(
+    pct_body = regex_body / total_num_words,
+    pct_shape = regex_shape / total_num_words,
+    pct_position = regex_position / total_num_words,
+    pct_posture = regex_posture / total_num_words,
+    any_body = as.numeric(regex_body > 0),
+    any_shape = as.numeric(regex_shape > 0),
+    any_position = as.numeric(regex_position > 0),
+    any_posture = as.numeric(regex_posture > 0)
   )
 ```
 
-# Prelim plots
-
-Being as lazy as possible. We take the everything-the-speaker-said-on-a-trial and count the number of occurances of different classes of words (defined by dictionary / regex). 
-
-Then we look at change over time/condition in 
-
-* average number of these words
-* average pct of words these words make up
-* pct of games/trials that had any of those words
-
 ```{r}
-labels <- tagged |> mutate(none=as.numeric(regex_body == 0 & regex_shape == 0 & regex_position == 0 & regex_posture == 0 & regex_person == 0)) |> 
-  mutate(pct_body=regex_body/total_num_words,
-         pct_shape=regex_shape/total_num_words,
-         pct_position=regex_position/total_num_words,
-         pct_posture=regex_posture/total_num_words,
-         pct_person=regex_person/total_num_words,
-         any_body=as.numeric(regex_body>0),
-         any_shape=as.numeric(regex_shape>0),
-         any_position=as.numeric(regex_position>0),
-         any_posture=as.numeric(regex_posture>0),
-         any_person=as.numeric(regex_person>0))
+color_scheme_1 <- c("2"="#FFBDD4", "5"="#A12EFF", "3"="#FF7DF0","6"="#6940FF","4"="#D24AFF")
+color_scheme_2 <- c( "6 full feedback"="#425df5", "6 same describer"="#00A2FF","6 thin"="#D47E04")
+
+color_scheme_3 <- c("2 thin"="#FFDA09","6 thin"="#D47E04", 
+                    "2 thick"="#77F3DB","6 thick"="#00BDA8")
 ```
 
-```{r}
-color_scheme <- c(
-  "2_rotate" = "#FFBDD4", "5_rotate" = "#A12EFF", "3_rotate" = "#FF7DF0", "6_rotate" = "#6940FF", "4_rotate" = "#D24AFF", "full_feedback" = "#425df5", "no_rotate" = "#00A2FF", "emoji" = "#D47E04", "2_thin" = "#FFDA09", "6_thin" = "#D47E04",
-  "2_thick" = "#77F3DB", "6_thick" = "#00BDA8"
-)
-```
-
-## shape words
-trying to pick up on "literal" descriptions 
-
-  "squar|triangle|triangular|diamond|shape|",
-  "trapez|angle|degree|parallel|rhomb|box|cube|line|white|black"
+```{r, fig.width=10, fig.height=12}
+do_plot <- function(type, label, xlabel, legend, subs) {
   
-```{r}
+  labels_1 <- labels |>
+    filter(expt == "Experiment 1") |>
+    mutate(condition=str_sub(condition, 1,1 ))
+  plot_1 <- labels_1 |> 
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_1 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+    scale_color_manual(values = color_scheme_1) +
+       theme(
+      legend.position = legend,
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = "", x = xlabel, y = "Fraction trials", color="") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
+  
+    labels_2 <- labels |> 
+    filter(expt == "Experiment 2") |>
+     mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
+  plot_2 <- labels_2 |> 
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_2 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+    scale_color_manual(values = color_scheme_2) +
+    theme(
+      legend.position = legend,
+      axis.title.y = element_blank(),
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = label, x = "", color="") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
 
-ggplot(labels, aes(x=repNum, y=regex_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+    labels_3 <- labels |> 
+          filter(expt == "Experiment 3") |>
+  mutate(condition=str_replace(condition, "_", " "))
+  plot_3 <- labels_3 |>
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_3 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    scale_color_manual(values = color_scheme_3) +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+       theme(
+      legend.position = legend,
+      axis.title.y = element_blank(),
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = "", x = "", color = "") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
 
-ggplot(labels, aes(x=repNum, y=pct_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+  if (subs){
+      plot_grid(plot_1+labs(subtitle="Experiment 1"), plot_2+labs(subtitle="Experiment 2"), plot_3+labs(subtitle="Experiment 3"), nrow = 1, rel_widths = c(1.05, 1, 1))
+  }
+else{
+  plot_grid(plot_1+theme(axis.title.x=element_blank()), plot_2+theme(axis.title.x=element_blank()), plot_3+theme(axis.title.x=element_blank()), nrow = 1, rel_widths = c(1.05, 1, 1))
+  }
+}
 
-ggplot(labels, aes(x=repNum, y=any_shape, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
+shape_plot <- do_plot(any_shape, "Geometric words", "Block", "none", T)
+body_plot <- do_plot(any_body, "Body part words", "", "none", F)
+position_plot <- do_plot(any_position, "Position words", "", "none", F)
+posture_plot <- do_plot(any_posture, "Posture words", "", "none", F)
+none_plot <- do_plot(none, "None of the above", "", "bottom", F)
 
-```
-
-## body part words
-
-  face|head|heads|back|shoulder|shoulders",
-  "|arm|arms|leg|legs|foot|feet|body|knee|knees|",
-  "toe|toes|hand|hands|body|butt|heel|heels|ear|ears|nose|neck|chest|hair 
-
-```{r}
-ggplot(labels, aes(x=repNum, y=regex_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=pct_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=any_body, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-```
-
-## positional words
-
-right|left|above|below|under|over|top|bottom|behind|side|beneath
-
-```{r}
-
-ggplot(labels, aes(x=repNum, y=regex_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=pct_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=any_position, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-```
-
-
-## posture words
-
-  "kick|crouch|squat|kneel|knelt|stood|",
-  "stand|sit|sat|lying|walk|facing|fall|looking|",
-  "lean|seat|laying"
-
-```{r}
-ggplot(labels, aes(x=repNum, y=regex_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=pct_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=any_posture, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-```
-
-## person words
-
-woman|man|person|guy|boy|girl|dude|lady
-
-```{r}
-
-ggplot(labels, aes(x=repNum, y=regex_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-ggplot(labels, aes(x=repNum, y=pct_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
-
-
-
-
-
-ggplot(labels, aes(x=repNum, y=any_person, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-```
-
-## none of the above
-
-trials where none of the above classes of words appeared (~ abstract only)
-
-```{r}
-ggplot(labels, aes(x=repNum, y=none, color=condition))+stat_summary(fun.data="mean_cl_boot", geom="line")+facet_wrap(~expt)+scale_color_manual(values=color_scheme)
-
+plot_grid(shape_plot, body_plot, position_plot, posture_plot, none_plot, nrow=5, rel_heights=c(1.25,1,1,1,1.35))
 ```

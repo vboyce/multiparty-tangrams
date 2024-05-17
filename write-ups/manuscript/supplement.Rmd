@@ -144,6 +144,161 @@ plot_grid(a, b, c, labels = "AUTO", label_size = 20, label_y = .95, label_x = .0
 \FloatBarrier
 \pagebreak
 
+# Changes in descriptions
+
+As an exploratory, qualitative analysis of the describer's language, we performed dictionary searches to classify whether the describers utterances contained the following types of words. 
+
+Geometric/literal words: squar\*, triangle, triangular, diamond, shape, trapez\*, angle, degree, parallel\*, rhomb*, box, cube, line, white, black
+
+Words for body parts: face, head, heads, back, shoulder, shoulders, arm, arms, leg, legs, foot, feet, body, knee, knees, toe, toes, hand, hands, body, butt, heel, heels, ear, ears, nose, neck, chest, hair
+
+Positional words: right, left, above, below, under, over, top, bottom, behind, side, beneath
+
+Posture words: kick\*, crouch\*, squat\*, kneel\*, knelt, stood, stand\*, sit\*, sat, lying, walk\*, facing, fall\*, looking, lean\*, seat\*, laying
+
+Qualitatively, descriptions that contain none of these words are usually shorter, abstract, more conventionalized descriptions. 
+
+```{r}
+detect_body <- str_c(
+  "\\b(face|head|heads|back|shoulder|shoulders",
+  "|arm|arms|leg|legs|foot|feet|body|knee|knees|",
+  "toe|toes|hand|hands|body|butt|heel|heels|ear|ears|nose|neck|chest|hair)\\b"
+)
+
+detect_shape <- str_c(
+  "squar|triangle|triangular|diamond|shape|",
+  "trapez|angle|degree|parallel|rhomb|box|cube|line|white|black"
+)
+
+detect_position <- str_c("right|left|above|below|under|over|top|bottom|behind|side|beneath")
+
+detect_posture <- str_c(
+  "kick|crouch|squat|kneel|knelt|stood|",
+  "stand|sit|sat|lying|walk|facing|fall|looking|",
+  "lean|seat|laying"
+)
+
+tagged <- combined_chat |>
+  mutate(expt = case_when(
+    condition %in% c("emoji", "full_feedback", "no_rotate") ~ 2,
+    str_detect(condition, "rotate") ~ 1,
+    T ~ 3
+  )) |>
+  mutate(condition = ifelse(expt == 1, str_c(numPlayers, "_rotate"), condition)) |>
+  mutate(expt = str_c("Experiment ", expt)) |>
+  select(gameId, repNum, tangram, playerId, role, text, condition, expt, total_num_words) |>
+  filter(role == "speaker") |>
+  group_by(gameId, repNum, tangram, condition, expt) |>
+  summarize(
+    text = str_c(text, " "),
+    total_num_words = sum(total_num_words)
+  ) |>
+  mutate(text = str_to_lower(text)) |>
+  mutate(
+    regex_body = str_count(text, detect_body),
+    regex_shape = str_count(text, detect_shape),
+    regex_position = str_count(text, detect_position),
+    regex_posture = str_count(text, detect_posture)
+  )
+
+labels <- tagged |>
+  mutate(none = as.numeric(regex_body == 0 & regex_shape == 0 & regex_position == 0 & regex_posture == 0)) |>
+  mutate(
+    any_body = as.numeric(regex_body > 0),
+    any_shape = as.numeric(regex_shape > 0),
+    any_position = as.numeric(regex_position > 0),
+    any_posture = as.numeric(regex_posture > 0)
+  )
+```
+
+```{r words, fig.width=10, fig.height=12, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO Fraction of trials where the describer used the following types of words. "}
+do_plot <- function(type, label, xlabel, legend, subs) {
+  
+  labels_1 <- labels |>
+    filter(expt == "Experiment 1") |>
+    mutate(condition=str_sub(condition, 1,1 ))
+  plot_1 <- labels_1 |> 
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_1 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+    scale_color_manual(values = color_scheme_1) +
+       theme(
+      legend.position = legend,
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = "", x = xlabel, y = "Fraction trials", color="") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
+  
+    labels_2 <- labels |> 
+    filter(expt == "Experiment 2") |>
+     mutate(condition = case_when(
+    condition == "no_rotate" ~ "6 same describer",
+    condition == "full_feedback" ~ "6 full feedback",
+    condition == "emoji" ~ "6 thin"
+  ))
+  plot_2 <- labels_2 |> 
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_2 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+    scale_color_manual(values = color_scheme_2) +
+    theme(
+      legend.position = legend,
+      axis.title.y = element_blank(),
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = label, x = "", color="") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
+
+    labels_3 <- labels |> 
+          filter(expt == "Experiment 3") |>
+  mutate(condition=str_replace(condition, "_", " "))
+  plot_3 <- labels_3 |>
+    ggplot(aes(x = repNum + 1, y = {{ type }}, color = condition)) +
+    geom_point(data = labels_3 |> group_by(condition, repNum, tangram) |> summarize(m = mean({{ type }})), aes(x = repNum + 1, y = m, color = condition), position = position_dodge(width = .5), alpha = .1) +
+    stat_summary(fun.data = "mean_cl_boot", geom = "line") +
+    scale_color_manual(values = color_scheme_3) +
+    stat_summary(fun.data = "mean_cl_boot", position = position_dodge(width = .5)) +
+       theme(
+      legend.position = legend,
+      axis.title.y = element_blank(),
+      axis.text = element_text(size = 12),
+    legend.text = element_text(size = 14),
+    plot.subtitle = element_text(size = 14, hjust = .5),
+    plot.title = element_text(size = 16, hjust = .5, face = "bold"),
+    axis.title = element_text(size = 14)) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(title = "", x = "", color = "") +
+    guides(color = guide_legend(nrow = 2, byrow = F, override.aes = list(linetype = 0, alpha = 1, fill = NA, size = .5)), fill = FALSE)
+
+  if (subs){
+      plot_grid(plot_1+labs(subtitle="Experiment 1"), plot_2+labs(subtitle="Experiment 2"), plot_3+labs(subtitle="Experiment 3"), nrow = 1, rel_widths = c(1.05, 1, 1))
+  }
+else{
+  plot_grid(plot_1+theme(axis.title.x=element_blank()), plot_2+theme(axis.title.x=element_blank()), plot_3+theme(axis.title.x=element_blank()), nrow = 1, rel_widths = c(1.05, 1, 1))
+  }
+}
+
+shape_plot <- do_plot(any_shape, "Geometric words", "Block", "none", T)
+body_plot <- do_plot(any_body, "Body part words", "", "none", F)
+position_plot <- do_plot(any_position, "Position words", "", "none", F)
+posture_plot <- do_plot(any_posture, "Posture words", "", "none", F)
+none_plot <- do_plot(none, "None of the above", "", "bottom", F)
+
+plot_grid(shape_plot, body_plot, position_plot, posture_plot, none_plot, nrow=5, rel_heights=c(1.25,1,1,1,1.35))
+```
+
+\pagebreak
+\FloatBarrier
 # Additional game transcripts
 
 ```{=latex}
