@@ -32,7 +32,7 @@ footnote:
     text: "Corresponding author. Email: vboyce@stanford.edu."
 bibliography: ["papers.bib"] # Replace with one or more of your own bibtex files. Better BibTeX for Zotero is your friend
 csl: dmk-format.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
-link-citations: TRUE
+link-citations: FALSE
 header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{angles,positioning,arrows.meta, quotes, shapes, shapes.geometric}
@@ -76,6 +76,7 @@ Pre-print status: this work is on the pre-print server PsyArxiv at https://osf.i
 Classification: Social Sciences -> Psychological and Cognitive Sciences
 
 Keywords: Communication, Psycholinguistics, Reference games, Convention formation, large-scale online experiment
+
 
 \pagebreak
 <!---------------------- Abstract --------------------->
