@@ -215,7 +215,7 @@ In principle, repeated reference games provide a strong operationalization of co
 However, empirically studying multi-party communication raises a number of difficulties in practice. 
 A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings [@almaatouq2022].
 We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using interactive web-based platforms [@almaatouq2020empirica;@haber2019;@hawkins2023partners]. 
-Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies [@hawkins2020], and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
+Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies, although people produce fewer words in text modalities than oral modalities [@hawkins2020]. The text-based chat modalities arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord. 
 
 We leverage our platform to explore effects of group size and interaction channel thickness in a series of three experiments. 
 While we find that small groups reliably converge on group-specific "shorthand" regardless of the interaction structure, larger groups require thicker channels -- richer conversational feedback among members -- to achieve the same degree of coherence. 
@@ -476,9 +476,9 @@ Describer efficiency is given by the number of words produced by the describer t
 The degree to which describers are able to communicate more efficiently without negatively impacting matcher accuracy is indicative of convergence on a more effective shared communication protocol within the group.
 
 We begin by examining matcher accuracy, the extent to which the intended target was reliably transmitted to all matchers.
-We constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3). 
+We constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3). For this and other effects, there was substantial variation at the tangram and game levels, with some tangrams being markedly easier than others and some groups performing differently than others. This wide variation made it difficult to precisely estimate population-level main effects, leading to wide confidence intervals. See SI Figure 11 for a visualization of the relative magnitudes of population effects and game and tangram level variations.  
 Across all conditions, we observed strong positive effects of repetition block, indicating improved performance over time (Figure \@ref(fig:behavioral)A-C, SI Tables 4-8).
-In Experiment 3, larger games began with lower initial accuracy (`r stats(acc_3,7)`) and improved more slowly (`r stats(acc_3,4)`) than smaller games, although group size differences were not reliable in Experiment 1 (SI Table 4), and these experiment 3 differences are not robust in a sensitivity analysis (SI figure TODO and table TODO). 
+In Experiment 3, larger games began with lower initial accuracy (`r stats(acc_3,7)`) and improved more slowly (`r stats(acc_3,4)`) than smaller games, although group size differences were not reliable in Experiment 1 (SI Table 4), and these experiment 3 differences are not robust in a sensitivity analysis (SI Figure 4C and SI Table 58). 
 Among large groups in Experiment 2, accuracy was higher in the thicker conditions than in the condition with thin interaction structure (SI Tables 5-7), although effects of game thickness were not reliable in Experiment 3 (SI Table 8). 
 
 Because each experiment only explored a slice of the full parameter space, we also considered an exploratory analysis that pooled data across experiments, aiming to mitigate the loss in power from running entirely separate regression models. 
@@ -514,18 +514,18 @@ thick6 <- str_c("$\\beta=", round(red_3_extra[2,4],2),", (95\\%\\:\\mathrm{CrI}=
 After establishing that groups were able to communicate accurately, we turned to the challenges faced by describers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow describers to communicate more effectively over time.
 We tested these predictions using linear mixed-effects models predicting the number of words a describer produced on each trial as a function of condition and block. 
-These models counted all words the describer produced, including after matcher contributions (similar effects were found in models predicting the length of describer's utterances before any matcher contributions, see SI Tables 19-22).
+These models counted all words the describer produced, including after matcher contributions (similar effects were found in models predicting the length of describer's utterances before any matcher contributions, see SI Tables 21-24).
 
 First, as predicted, describers in larger groups produced longer descriptions at the outset than describers in smaller groups (Figure \@ref(fig:behavioral)D-F). 
 This effect held for the continuous manipulation of group size for Experiment 1 (`r stats(red_1,4)`) as well as the 2-person versus 6-person manipulation in Experiment 3 (`r stats(red_3,8)`).
 Smaller groups also continued to use shorter descriptions than larger groups over the course of the game. 
 In Experiment 1, the rate at which efficiency increased was similar across different size groups (`r stats(red_1,3)`). 
-In Experiment 3, larger groups reduced faster than smaller ones (`r stats(red_3, 5)`), but the faster reduction did not fully make up for the longer initial starting point, and was not robust to a sensitivity analysis (SI figure todo and table TODO). 
+In Experiment 3, larger groups reduced faster than smaller ones (`r stats(red_3, 5)`), but the faster reduction did not fully make up for the longer initial starting point, and was not robust to a sensitivity analysis (SI Figure 4F and SI Table 63). 
 
  
 While thin 6-person games showed a flatter reduction trajectory than thicker 6-person games in Experiment 2 (SI Tables 10-12), there was no reliable effect of game thickness on reduction in Experiment 3 (SI Table 13). 
 
-The reduction patterns of description lengths is paralleled by how long matchers too to make selections; across conditions, matchers selected faster in later conditions (SI FIGURE TODO), and the correlation between speed and description length was consistent across experiments (SI FIGURE). 
+The reduction patterns of description lengths is paralleled by how long matchers took to make selections; across conditions, matchers selected faster in later conditions (SI Figure 9), and the correlation between speed and description length was consistent across experiments (SI Figure 10). 
 
 Aggregating across experiments with a mega-analytic model, however, suggested that larger games were associated with steeper reduction (`r stats(red_mega,3)`) from a more verbose starting point (`r stats(red_mega,6)`) than smaller games, and thin games had shallower reduction curves (`r stats(red_mega,4)`) than thicker games. 
 Overall, then, smaller games used shorter descriptions than larger games across various time points in the experiment, and thinner games reduced less than thicker games. 
@@ -669,10 +669,10 @@ listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
 
 As a final measure of group performance, we examined the back-and-forth interactions between the describer and the group of matchers.
 Matchers use their chat contributions to actively provide feedback, ask questions, offer alternative descriptions, and seek clarification about the describer's referring expressions. 
-Example transcripts from successful games, one in the 6-thick condition and one in the 6-thin condition, are shown in Table \ref{listener-examples}. Additional examples are in the Supplement Tables 1 and 2. 
-Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (Supplement Figure 3A, `r stats(anylist_1, 4)`), which declined across repetition blocks (`r stats(anylist_1, 2)`). On an individual level, a matcher in a larger group was more likely to make contributions than a matcher in a smaller group, although each contribution tended to be shorter. (Supplement Figure 4A, TODO HERE!)
-The length of matcher interjections also decreased over time, especially for large groups (Supplement Figure 3B, `r stats(list_1,3)`), consistent with the need for early matcher involvement in establishing referential conventions. 
-Emoji use in Experiment 3 followed similar trends (Supplement Figure 4).
+Example transcripts from successful games, one in the 6-thick condition and one in the 6-thin condition, are shown in Table \ref{listener-examples}. Additional examples are in the SI Tables 1 and 2. 
+Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (SI Figure 6A, `r stats(anylist_1, 4)`), which declined across repetition blocks (`r stats(anylist_1, 2)`). On an individual level, a matcher in a larger group was more likely to make contributions than a matcher in a smaller group, although each contribution tended to be shorter (SI Figure 7, SI Tables 18, 20).
+The length of matcher interjections also decreased over time, especially for large groups (SI Figure 6D, `r stats(list_1,3)`) consistent with the need for early matcher involvement in establishing referential conventions. 
+Emoji use in Experiment 3 followed similar trends (SI Figure 8).
 Overall, describers in larger groups receive more total input from matchers, suggesting larger groups may require greater participation by matchers to reliably establish common ground.
 
 
@@ -883,11 +883,11 @@ tonext_3 <- read_rds(here(msum_loc, "tonext_3.rds"))
 tolast_mega <- read_rds(here(msum_loc,"mega_tolast.rds"))
 ```
 
-We modeled semantic convergence with a mixed effects linear regression model predicting the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition (Figure \@ref(fig:sbert)A-C; SI Tables 23-27). 
+We modeled semantic convergence with a mixed effects linear regression model predicting the similarity between a block 1-5 utterance and the corresponding block 6 utterance as a function of the earlier block number and condition (Figure \@ref(fig:sbert)A-C; SI Tables 25-29). 
 All conditions showed some convergence toward a conventional ``shorthand" for the picture, but the speed of convergence was affected both by group size and channel width.
 First, we found that smaller groups reached stable descriptions faster than larger games. 
 In Experiment 1, initial similarity was invariant across group size (`r stats(tolast_1, 2,3)`), but smaller groups converged faster (Figure \@ref(fig:sbert)A, `r stats(tolast_1, 4,3)`). 
-In Experiment 3, 6-person thick games started off further from their eventual convention than 2-person thick games (`r stats(tolast_3, 8,3)`) but closed the gap over time (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 7,3)`, this effect is not robust to sensitivity analysis, SI figure todo and table todo). 
+In Experiment 3, 6-person thick games started off further from their eventual convention than 2-person thick games (`r stats(tolast_3, 8,3)`) but closed the gap over time (Figure \@ref(fig:sbert)C, `r stats(tolast_3, 7,3)`, this effect is not robust to sensitivity analysis, SI Figure 5C and SI Table 68). 
 Second, thicker games tended to converge faster than thin games (Figure \@ref(fig:sbert)B-C). 
 In Experiment 3, small thin games started off slightly further from their convention than small thick games, and this gap widened over time (`r stats(tolast_3, 5,3)`).
 Finally, the combination of thin interaction structure and larger group hindered convergence more than either factor individually. 
@@ -895,7 +895,7 @@ Beyond the generally slower convergence in thin games, 6-person thin games showe
 
 Pooling across experiments in a mega-analysis confirms this pattern. 
 Thin games converge less than thick games overall (`r stats(tolast_mega, 5,3)`), and *large* thin games are especially slow to converge (`r stats(tolast_mega, 4,3)`). 
-Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (Supplement Figure 5D-F, SI Tables 38-42). 
+Across games, convergence towards the last utterance was driven by cumulative increasing similarity between pairs of utterances in adjacent blocks (SI Figure 12D-F, SI Tables 40-44). 
 In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round. 
 In summary, we found that stable descriptions emerged earlier if the group was smaller, or if the group had a thick interaction structure.
 
@@ -918,17 +918,19 @@ div_mega <- read_rds(here(msum_loc,"mega_div.rds"))
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, we predicted that their descriptions would become increasingly dissimilar as groups increasingly adapt to their own idiosyncratic shared history. 
 To test this effect, we constructed a mixed-effects linear regression model predicting the cross-game similarity between a pair of utterances for the same image. 
-A decrease in the similarity between different groups descriptions occurred in every condition, indicating increasing arbitrariness and group-specificity of descriptions (Figure \@ref(fig:sbert)D-F, SI Tables 28-32).
+A decrease in the similarity between different groups descriptions occurred in every condition, indicating increasing arbitrariness and group-specificity of descriptions (Figure \@ref(fig:sbert)D-F, SI Tables 30-34).
 However, different game sizes and interaction structures revealed very different strengths of divergence.
 
 First, smaller games used more group-specific language.
 In Experiment 1, smaller games diverged more quickly than larger games (`r stats(div_1,3,3)`). 
-In Experiment 3, 2-person thick games started off more dissimiliar than 6-person thick games, although 6-person games diverged faster and eventually approached the dissimilarity levels of 2-person thick games (SI Table 32). 
+In Experiment 3, 2-person thick games started off more dissimiliar than 6-person thick games, although 6-person games diverged faster and eventually approached the dissimilarity levels of 2-person thick games (SI Table 34). 
 Second, thicker interaction structure was associated with stronger group-specific divergence. 
 In Experiment 3, 2-person thin games diverged more slowly than 2-person thick games (`r stats(div_3, 3,3)`). 
 As with the convergence patterns, large games with thin interaction structures had the flattest trajectories, as thinness and largeness compounded.
 In Experiment 3, 6-person thin games diverged even less than 2-player thin games (Figure \@ref(fig:sbert)F, `r stats(div_3, 4,3)`), and in Experiment 2, 6-person thin games barely diverged at all (Figure \@ref(fig:sbert)E, `r stats(div_2c,2,3)`). 
 A mega-analytic model confirms this pattern: thin games differentiate less between groups (`r stats(div_mega,4,3)`) and large thin groups differentiate even less (`r stats(div_mega, 5,3)`).
+
+As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6 thin condition, however, retains a higher level of geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a low level of utterances that do not contain any of these classes of words.
 
 # Discussion
 
@@ -948,13 +950,17 @@ In our work, however, we observe distinct patterns for measures of raw utterance
 In Experiment 3, thin 6-person games showed much less group-specific divergence despite comparable accuracy and efficiency.
 This gap raises the possibility that it is possible to become more efficient and accurate without converging on a unified group-specific label. 
 Instead, they may be converging to a multi-label solution based on group priors [@guilbeault2021]. 
-Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation.
+Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation. The transcripts for these games provide a rich dataset for exploring different ways language is used to form referential conventions. 
 
 <!-- ## Limitations and future directions.  -->
 
 Even within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a "thin" channel by limited matchers to 4 discrete utterances (emojis), but there are other ways to manipulate channel width for describers and matchers, such as rate limiting typing or adding time pressure. Future work could sample other points in the experimental space, including exploring other manipulations on channel thickness, the effects of different target images, or groups of people with real-life prior connections. 
 
+<!-- ## Adding oral v etc -->
+People communicate using language in a variety of modalities that vary whether whether the participants use oral or written language, whether they are co-present in the same space, and whether they have visual access to each other. All of these situations have a shared communicative and linguistic base, but different situations have different affordances and different norms for how to communicate. In this work, we used a web-based chat modality where communication was text based and there was not co-presence or visual access.  Given previous work has found overall similar trends across different modalities [@hawkins2020], we suspect that the general pattern of effects we see here in terms of group size and group coherence are likely to extend to other modalities. However, different modalities may allow for different approaches that may be more or less sensitive to group size, describer rotation, or different levels of matcher contributions. For instance, in face-to-face oral settings, it may be easier for describers to continuously talk until interrupted or track the comprehension of individual group members, which could lead to overall higher amounts of language and higher performance. People communicate in a variety of ways in everyday life, and studying different of these situations is useful both for understanding the specific modalities and for understanding their shared communicative underpinnings.
+
 We cannot make causal claims about specific mechanisms by which manipulations such as group size resulted in different outcomes: there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, producers can tailor their utterances to the one matcher, but in large groups, producers must balance the competing needs of different comprehenders [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the comprehenders [@fox-tree2013;@horton2002; @horton2005]. Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions. 
+
 
 <!-- ## Conclusion  -->
 
@@ -967,7 +973,7 @@ Sampling from a broader range of communicative situations is thus a critical par
 Our iterated reference task was implemented with Empirica [@almaatouq2020empirica], a React-based web development framework for real-time multi-player tasks. 
 Our experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: same describer at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] 
 We followed the pre-registered analysis plan for each experiment, although accuracy models were not explicitly specified until Experiment 3, and linguistic analyses were only verbally described starting with Experiment 2b. 
-Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
+Results from some pre-registered models are omitted from the main text for brevity but are shown in the SI.
 Exploratory mega-analytic models pooling across the three experiments were not pre-registered.
 
 All materials, data, and analysis code is available at \url{https://github.com/vboyce/multiparty-tangrams}.
@@ -1007,7 +1013,7 @@ There was no signal to the describer or other matchers about who had already mad
 We recorded what all participants said in the chat, as well as who selected which image and how long they took to make their selections. 
 
 Once all matchers had made a selection (or a 3-minute timer ran out), participants were given feedback and proceeded to the next trial. 
-Matchers only received *binary* feedback about whether they had chosen correctly or not; that is, matchers who made an incorrect choice were not shown the correct answer (see Supplement Figure 1 for example feedback). 
+Matchers only received *binary* feedback about whether they had chosen correctly or not; that is, matchers who made an incorrect choice were not shown the correct answer (see SI Figure 1 for example feedback). 
 The describer saw which tangram each matcher selected, but matchers did not see one another's selections. 
 Matchers got 4 points for each correct answer; the describer got points equal to the average of the matchers' points.
 These points were translated into performance bonuses at the end of the experiment (1 point = 1 cent bonus). 
@@ -1041,7 +1047,7 @@ Participants could use the chat box freely, which meant that the chat transcript
 
 In Experiments 1 and 2, games did not start if there were not enough participants and ended if any participant disconnected. 
 In Experiment 3, games started after a waiting period even if they were not entirely full and continued even in the event that a participant disconnected (with describer role reassigned if necessary), unless the game dropped below 2 players. 
-The distribution of player counts in games that were initially recruited to be 6 player games is shown in SI Figure 2. 
+The distribution of player counts in games that were initially recruited to be 6 player games is shown in SI Figure 3. 
 The realities of online recruitment and disconnection meant that the number of games varied between conditions. 
 We excluded incomplete blocks from analyses, but included complete blocks from partial games (See SI Table 3).
 When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick condition had a describer who did not give any sort of coherent descriptions, even with substantial matcher prompting. We excluded this game from analyses. 
@@ -1050,8 +1056,8 @@ When skimming transcripts to tag non-referential utterances, we noticed that one
 
 We fit all regression models in brms [@burkner2018] with weakly regularizing priors.
 We were unable to fit the full pre-registered mixed effects structure in a reasonable amount of time for some models, so we included the maximal  hierarchical effects that were tractable. 
-All model results and priors and formulae are reported in the Supplement.
-Models of accuracy used by-group random intercepts only, models of word count used full mixed effect structure, and models of S-BERT similarities used by-group and by-target random intercepts as applicable.
+All model results and priors and formulae are reported in the SI.
+Models of accuracy used by-group random intercepts only, models of word count used full mixed effect structure, and models of S-BERT similarities used by-group and by-target random intercepts as applicable (see SI Figure 11).
 Models of matcher accuracy were logistic models with normal(0,1) priors for betas and sd.
 Models of describer efficiency were run as linear models with an intercept prior of normal(12,20), a beta prior of normal(0,10), an sd prior of normal(0,5) and a random-effect correlation prior of lkj(1). 
 For all of the models of SBERT similarity, we used linear models with the priors normal(.5,.2) for the intercept, normal(0,.1) for betas, and normal(0,.05) for sd. 
@@ -1059,14 +1065,14 @@ As an additional post-hoc analysis, we ran mega-analytic models combining data a
 For these models, we grouped the 3 thin-ish conditions (2c, and the two thin conditions of experiment 3) as one level, and coded the rest of the conditions as thick-ish. 
 Game size was coded as a continuous measure (2 through 6). The priors for the mega-analytic models were the same as for the per-experiment models described above. 
 
-As a sensitivity analysis, we re-ran the primary models on the subset of the data from games that a) completed all 72 trials and b) had the full complement of players the entire time (relevant to 6-player experiment 3 games where games could start or continue with fewer players). Discrepancies are mentioned in the results, and these analyses are depicted in SI FIGURES AND TABLES. 
+As a sensitivity analysis, we re-ran the primary models on the subset of the data from games that a) completed all 72 trials and b) had the full complement of players the entire time (relevant to 6-player experiment 3 games where games could start or continue with fewer players). Discrepancies are mentioned in the results, and these analyses are depicted in SI Figures 4 and 5 and SI Tables 54-73. 
 We also needed to decide how to handle dropout in Experiment 3, as some of the 6-player games did not retain all 6 players for the entire game. 
 Our decision was to follow an intent-to-treat analysis and treat data as missing completely at random. 
 Note that this choice underestimates differences between 2-player and (genuine) 6-player games by labeling some smaller groups as 6-player groups.
 We do not know exactly what leads some participants to drop out, but it is possible that some factors may be random (ex. connection issues) and others may be correlated with performance (ex. frustration because group is struggling).   
 We do not know whether groups that start and continue at the full size differ from games where some participants drop out. 
 This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group. 
-The number of games in each condition and rates of dropoff are shown in SI Table 3 and SI Figure 2. 
+The number of games in each condition and rates of dropoff are shown in SI Table 3 and SI Figure 3. 
 
 # Author's Note
 Experiment 1 was previously reported in Proceedings of the Annual Meeting of the Cognitive Science Society 44 (2022). 
