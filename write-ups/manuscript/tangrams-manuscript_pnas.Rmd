@@ -258,7 +258,7 @@ In the third variant, we changed how matchers could make contributions to the gr
 
 Experiment 3 crossed the extremes of group size from experiment 1 (2 vs. 6 people) with the extremes of group interactions from Experiment 2 (*thick* vs. *thin* interaction structure). 
 In the *thick* condition, we maintained a consistent describer, gave all matchers full task feedback, and allowed them to freely use a chat box. 
-In the *thin* condition, we forced the describer to rotate on each block, restricted feedback to their own binary correctness, and restricted listener contributions to the four emojis.
+In the *thin* condition, we forced the describer to rotate on each block, restricted feedback to their own binary correctness, and restricted matcher contributions to the four emojis.
 Note that the 2-player thick game most closely resembles the design of classic repeated reference games [@clark1986].
 
 ```{r behavioral, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible."}
@@ -478,6 +478,7 @@ The degree to which describers are able to communicate more efficiently without 
 
 We begin by examining matcher accuracy, the extent to which the intended target was reliably transmitted to all matchers.
 We constructed a series of 5 logistic mixed-effects regression models predicting accuracy as a function of condition and repetition block (separate models were run for experiment 1, each condition in experiment 2, and experiment 3). For this and other effects, there was substantial variation at the tangram and game levels, with some tangrams being markedly easier than others and some groups performing differently than others. This wide variation made it difficult to precisely estimate population-level main effects, leading to wide confidence intervals. See SI Figure 11 for a visualization of the relative magnitudes of population effects and game and tangram level variations.  
+
 Across all conditions, we observed strong positive effects of repetition block, indicating improved performance over time (Figure \@ref(fig:behavioral)A-C, SI Tables 4-8).
 In Experiment 3, larger games began with lower initial accuracy (`r stats(acc_3,7)`) and improved more slowly (`r stats(acc_3,4)`) than smaller games, although group size differences were not reliable in Experiment 1 (SI Table 4), and these experiment 3 differences are not robust in a sensitivity analysis (SI Figure 4C and SI Table 58). 
 Among large groups in Experiment 2, accuracy was higher in the thicker conditions than in the condition with thin interaction structure (SI Tables 5-7), although effects of game thickness were not reliable in Experiment 3 (SI Table 8). 
