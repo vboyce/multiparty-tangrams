@@ -8,8 +8,6 @@ author:
     email: vboyce@stanford.edu 
     affiliation:
       - Stanford Psych
-    footnote:
-      - corresp
   - name: Robert D. Hawkins
     affiliation: 
       - UW-Madison
@@ -27,12 +25,9 @@ address:
     address: Computer Science Department, Stanford University, Stanford, CA 94305
   - code: UW-Madison
     address: Psychology Department, University of Wisconsin -- Madison, Madison, WI, 53715
-footnote:
-  - code: corresp
-    text: "Corresponding author. Email: vboyce@stanford.edu."
 bibliography: ["papers.bib"] # Replace with one or more of your own bibtex files. Better BibTeX for Zotero is your friend
-csl: dmk-format.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
-link-citations: FALSE
+csl: apa7.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
+link-citations: TRUE
 header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{angles,positioning,arrows.meta, quotes, shapes, shapes.geometric}
@@ -225,7 +220,7 @@ More broadly, our work suggests that studying communication in larger groups is 
 
 
 ```{r diagram,  fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, a describer described the target image to the group of matchers. Each image appeared once per block for six blocks. (B) Experiments varied along 3 dimensions: Group size, group coherence, and matcher contributions. (C) Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and matcher contributions constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and matcher contributions)."}
-knitr::include_graphics("expt-diagram3.pdf")
+knitr::include_graphics("expt-diagram4.pdf")
 ```
 
 # Results
