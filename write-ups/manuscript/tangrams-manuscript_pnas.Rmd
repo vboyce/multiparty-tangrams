@@ -932,43 +932,52 @@ As with the convergence patterns, large games with thin interaction structures h
 In Experiment 3, 6-person thin games diverged even less than 2-player thin games (Figure \@ref(fig:sbert)F, `r stats(div_3, 4,3)`), and in Experiment 2, 6-person thin games barely diverged at all (Figure \@ref(fig:sbert)E, `r stats(div_2c,2,3)`). 
 A mega-analytic model confirms this pattern: thin games differentiate less between groups (`r stats(div_mega,4,3)`) and large thin groups differentiate even less (`r stats(div_mega, 5,3)`).
 
-As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6 thin condition, however, retains a higher level of geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a low level of utterances that do not contain any of these classes of words.
+As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6-person thin condition, however, retains a higher level of literal geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a lower level of utterances that do not contain any of these classes of words.
 
 # Discussion
 
-Communication often occurs in multi-party settings, but research on referential communication typically does not focus on such settings -- largely due to practical obstacles. 
-Dyadic reference games have been used to measure informational efficiency, characterized by describer-matcher pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups. 
-In the current work, we asked how this process of reference formation unfolds in larger groups and under varying interaction structures. 
-Across 3 online experiments and 11 experimental conditions, we varied game features including group size, modality of matcher contributions, and degree of group coherence. 
-All conditions replicated classic phenomena: increasing accuracy, reduction in describer utterances, semantic convergence within games, and differentiation of descriptions between groups. 
-However, we also found that the interaction structure of a group substantially affects how rapidly groups develop partner-specific conventions. 
-Small groups may be able to form conventions under limited feedback, but larger groups require thicker interaction structure.
+From classrooms to boardrooms, human communication often takes place in multi-party settings. 
+However, experimental research rarely focuses on such settings, largely due to practical obstacles. 
+<!-- Dyadic reference games have been used to measure informational efficiency, characterized by describer-matcher pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups.  -->
+In the current work, we asked how convention formation processes, typically studied in dyadic reference games, unfold in larger groups and under varying interaction structures. 
+Across 3 online experiments and 11 experimental conditions, we varied multiple features of interaction structure including group size, modality of matcher contributions, and degree of group coherence. 
+All conditions replicated classic dyadic phenomena: increasing accuracy and efficiency, semantic convergence within games, and differentiation of descriptions between groups. 
+However, we also found that the interaction structure substantially affects how rapidly groups develop partner-specific conventions. 
+Small groups may be able to successfully form conventions under limited feedback, but larger groups require thicker interaction structure.
 Multi-player groups may therefore reveal key factors which are masked in purely dyadic settings.
 
 <!-- ## Efficiency without semantic convergence  -->
-
-Increasing efficiency has often been taken as an index of group-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018]. 
+Increasing efficiency, for example, has often been taken as an index of group-specific convention formation [@clark1986; @brennan1996; @yoon2014; @yoon2018]. 
 In our work, however, we observe distinct patterns for measures of raw utterance length compared to the dynamics of semantic content. 
 In Experiment 3, thin 6-person games showed much less group-specific divergence despite comparable accuracy and efficiency.
-This gap raises the possibility that it is possible to become more efficient and accurate without converging on a unified group-specific label. 
-Instead, they may be converging to a multi-label solution based on group priors [@guilbeault2021]. 
+This gap raises the possibility that it is possible to become more efficient and accurate without negotiating a unified group-specific label. 
+Instead, they may be relying more strongly on the group's priors [@guilbeault2021]. 
 Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation. The transcripts for these games provide a rich dataset for exploring different ways language is used to form referential conventions. 
 
-<!-- ## Limitations and future directions.  -->
+The causal mechanisms driving group size effects remain unclear. 
+There are many differences between a 2-person group and a 6-person group that could plausibly lead to different outcomes. 
+For example, in a dyad, producers can tailor their utterances to the one matcher, but in large groups, producers must balance the competing needs of different comprehenders [@schober1989; @yoon2018; @tolins2016]. These effects likely vary with the knowledge state and the communication channels available to comprehenders [@fox-tree2013; @horton2002; @horton2005]. 
+Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, pointing towards future experimental conditions. 
 
-Even within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a "thin" channel by limited matchers to 4 discrete utterances (emojis), but there are other ways to manipulate channel width for describers and matchers, such as rate limiting typing or adding time pressure. Future work could sample other points in the experimental space, including exploring other manipulations on channel thickness, the effects of different target images, or groups of people with real-life prior connections. 
+<!-- ## Limitations and future directions.  -->
+Even within the boundaries of the repeated reference game paradigm, there is a high-dimensional space of possible experiments. 
+We sampled only a few points along a few salient dimensions. 
+In our experiment 3, we grouped some factors together in order to run more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a "thin" channel by limiting matchers to 4 discrete utterances (emojis), but there are other possible restrictions that could be placed on the channel, such as rate-limited typing or explicit time pressure. 
+Future work could explore other dimensions of the interaction structure, introducing pre-existing relationships or familiarity among group members, alternative incentives involving competition and power, or alternative referential targets involving more complex concepts.
 
 <!-- ## Adding oral v etc -->
-People communicate using language in a variety of modalities that vary whether whether the participants use oral or written language, whether they are co-present in the same space, and whether they have visual access to each other. All of these situations have a shared communicative and linguistic base, but different situations have different affordances and different norms for how to communicate. In this work, we used a web-based chat modality where communication was text based and there was not co-presence or visual access.  Given previous work has found overall similar trends across different modalities [@hawkins2020], we suspect that the general pattern of effects we see here in terms of group size and group coherence are likely to extend to other modalities. However, different modalities may allow for different approaches that may be more or less sensitive to group size, describer rotation, or different levels of matcher contributions. For instance, in face-to-face oral settings, it may be easier for describers to continuously talk until interrupted or track the comprehension of individual group members, which could lead to overall higher amounts of language and higher performance. People communicate in a variety of ways in everyday life, and studying different of these situations is useful both for understanding the specific modalities and for understanding their shared communicative underpinnings.
-
-We cannot make causal claims about specific mechanisms by which manipulations such as group size resulted in different outcomes: there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, producers can tailor their utterances to the one matcher, but in large groups, producers must balance the competing needs of different comprehenders [@schober1989;@tolins2016]. These effects likely vary by both the knowledge state of and communication channels available to the comprehenders [@fox-tree2013;@horton2002; @horton2005]. Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions. 
-
+A particularly important dimension shaping interaction is the modality of communication, including whether whether the participants use oral or written language, whether they are co-present in the same space, and whether they have visual access to each others' faces and gestures.
+Distinct modalities carry distinct affordances and norms. 
+In this work, we relied on a text-based chat modality without allowing co-presence or visual access.  
+We suspect that the general pattern of effects we see, in terms of group size and coherence, are likely to extend to other modalities []. 
+However, different modalities may allow for different strategies that may be more or less sensitive to group size, describer rotation, or different levels of matcher contributions. For instance, in face-to-face oral settings, it may be easier for describers to continuously talk until interrupted, or to monitor the comprehension of individual group members from their facial expressions. 
+<!-- People communicate in a variety of ways in everyday life, and studying different of these situations is useful both for understanding the specific modalities and for understanding their shared communicative underpinnings. -->
 
 <!-- ## Conclusion  -->
-
-Communication occurs across a broad range of situations, varying on many dimensions, including group size, medium of interaction, and group structure. 
-A narrow focus on dyads with rich communication channels can lead to theories that mispredict how interactions play out in multi-party groups with varying interaction structure. 
-Sampling from a broader range of communicative situations is thus a critical part of better understanding human communication. 
+In conclusion, narrowly focusing on the settings that are easy to study in the lab -- dyads with rich communication channels -- can lead to theories that mispredict how interactions play out in multi-party groups. 
+By studying common ground and coordination across a wider range of interaction structures, we can develop a more nuanced understanding of the obstacles that stand in the way of successful communication and how groups can overcome them.
+This understanding can inform the design of policies and collaborative platforms that promote effective communication in various contexts, from small-scale conversations to large-scale civic discourse. 
+As remote work and online communication become increasingly prevalent, it is increasingly crucial to understand how the structure of group communication environments shapes the effectiveness of human communication. 
 
 # Materials and Methods
 
