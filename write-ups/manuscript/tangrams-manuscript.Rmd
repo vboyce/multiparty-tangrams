@@ -28,7 +28,7 @@ footnote:
   - code: corresp
     text: "Corresponding author. Email: vboyce@stanford.edu"
 bibliography: ["papers.bib"] # Replace with one or more of your own bibtex files. Better BibTeX for Zotero is your friend
-csl: dmk-format.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
+csl: apa7.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
 link-citations: TRUE
 header-includes:
   - \usepackage{tikz}

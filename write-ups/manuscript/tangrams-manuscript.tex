@@ -75,28 +75,38 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+	\begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+% allow citations to break across lines
+\let\@cite@ofmt\@firstofone
+% avoid brackets around text for \cite:
+\def\@biblabel#1{}
+\def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% dont indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+{\begin{list}{}{%
+			\setlength{\itemindent}{0pt}
+			\setlength{\leftmargin}{0pt}
+			\setlength{\parsep}{0pt}
+			% turn on hanging indent if param 1 is 1
+			\ifodd #1
+			\setlength{\leftmargin}{\cslhangindent}
+			\setlength{\itemindent}{-1\cslhangindent}
+			\fi
+			% set entry spacing
+			\setlength{\itemsep}{#2\baselineskip}}}
+	{\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 %%%%%%%% START HEADER PARTIAL %%%%%%%%%%%%
@@ -152,7 +162,7 @@
   \usepackage{polyglossia}
   \setmainlanguage[]{}
 \else
-  \usepackage[english,main=english]{babel}
+  \usepackage[main=english]{babel}
 % get rid of language-specific shorthands (see #6817):
 \let\LanguageShortHands\languageshorthands
 \def\languageshorthands#1{}
@@ -298,12 +308,11 @@ $\anotelblbycode{corresp}$%
 \maketitle
 
 %%%%%%%%%% START AFTER TITLE PARTIAL %%%%%%%%%%%%%
-\anotebycode{corresp}
 
 
 %%%%%%%%%% END AFTER TITLE PARTIAL %%%%%%%%%%%%%
 
-\pagebreak
+
 \setstretch{1}
 \begin{otherlanguage}{english}
 
@@ -322,35 +331,34 @@ Overall, these results shed new light on the core structural factors that enable
 
 \end{otherlanguage}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 Much of human social life revolves around communication in groups.
-At school, teachers address large classrooms of children (\protect\hyperlink{ref-cazden1988classroom}{Cazden 1988}); at home, we chat with groups of friends and family members over dinner (\protect\hyperlink{ref-tannen2005conversational}{Tannen 2005}); and at work, we attend meetings with colleagues and managers (\protect\hyperlink{ref-caplow1957organizational}{Caplow 1957}, \protect\hyperlink{ref-zack1993interactivity}{Zack 1993}).
-Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology (\protect\hyperlink{ref-traum2004}{Traum 2004}, \protect\hyperlink{ref-ginzburg2005}{Ginzburg \& Fernandez 2005}, \protect\hyperlink{ref-branigan2006}{Branigan 2006}).
-For example, producers need to account for the fact that different comprehenders in the group may have different mental states or levels of background understanding (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-weber2003}{Weber \& Camerer 2003}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}, \protect\hyperlink{ref-yoon2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoon2018}{2018}), while comprehenders must account for the fact that utterances are not necessarily tailored to them (\protect\hyperlink{ref-carletta1998}{Carletta et al. 1998}, \protect\hyperlink{ref-fay2000}{Fay et al. 2000}, \protect\hyperlink{ref-metzing2003}{Metzing \& Brennan 2003}, \protect\hyperlink{ref-rogers2013}{Rogers et al. 2013}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}, \protect\hyperlink{ref-cohngordon}{Cohn-Gordon et al. 2019}, \protect\hyperlink{ref-yoon2019}{Yoon \& Brown‐Schmidt 2019}).
+At school, teachers address large classrooms of children (\citeproc{ref-cazden1988classroom}{Cazden, 1988}); at home, we chat with groups of friends and family members over dinner (\citeproc{ref-tannen2005conversational}{Tannen, 2005}); and at work, we attend meetings with colleagues and managers (\citeproc{ref-caplow1957organizational}{Caplow, 1957}; \citeproc{ref-zack1993interactivity}{Zack, 1993}).
+Such settings present considerable challenges that do not arise in the purely two-party (dyadic) settings typically studied in psychology (\citeproc{ref-branigan2006}{Branigan, 2006}; \citeproc{ref-ginzburg2005}{Ginzburg \& Fernandez, 2005}; \citeproc{ref-traum2004}{Traum, 2004}).
+For example, producers need to account for the fact that different comprehenders in the group may have different mental states or levels of background understanding (\citeproc{ref-fox-tree2013}{Fox Tree \& Clark, 2013}; \citeproc{ref-horton2002}{Horton \& Gerrig, 2002}; \citeproc{ref-horton2005}{Horton \& Gerrig, 2005}; \citeproc{ref-weber2003}{Weber \& Camerer, 2003}; \citeproc{ref-yoon2014}{Yoon \& Brown-Schmidt, 2014}, \citeproc{ref-yoon2018}{2018}), while comprehenders must account for the fact that utterances are not necessarily tailored to them (\citeproc{ref-carletta1998}{Carletta et al., 1998}; \citeproc{ref-cohngordon}{Cohn-Gordon et al., 2019}; \citeproc{ref-fay2000}{Fay et al., 2000}; \citeproc{ref-metzing2003}{Metzing \& Brennan, 2003}; \citeproc{ref-rogers2013}{Rogers et al., 2013}; \citeproc{ref-tolins2016}{Tolins \& Fox Tree, 2016}; \citeproc{ref-yoon2019}{Yoon \& Brown‐Schmidt, 2019}).
 What enables producers and comprehenders to nevertheless overcome these challenges and navigate multi-party settings with relative ease?
 
 One promising set of hypotheses centers on the group's \emph{interaction structure}, the set of constraints placed on the group's shared communication channel.
-Many different aspects of interaction structure have been implicated in the effectiveness of dyadic communication, including the availability and quality of concurrent feedback (\protect\hyperlink{ref-krauss1966}{Krauss \& Weinheimer 1966}, \protect\hyperlink{ref-KraussBricker67_Delay}{Krauss \& Bricker 1967}, \protect\hyperlink{ref-kraut1982listener}{Kraut et al. 1982}), the bandwidth of the communication modality (\protect\hyperlink{ref-dewhirst1971influence}{Dewhirst 1971}, \protect\hyperlink{ref-KraussEtAl77}{Krauss et al. 1977}), and the group's access to a shared workspace (\protect\hyperlink{ref-clark2004speaking}{Clark \& Krych 2004}, \protect\hyperlink{ref-garrod2007foundations}{Garrod et al. 2007}).
-Yet larger groups introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors (\protect\hyperlink{ref-hiltz1986experiments}{Hiltz et al. 1986}, \protect\hyperlink{ref-swaab2012communication}{Swaab et al. 2012}).
-While communication is generally expected to deteriorate as groups get larger (\protect\hyperlink{ref-seaman1997communication}{Seaman \& Basili 1997}, \protect\hyperlink{ref-macmillan_communication_2004}{MacMillan et al. 2004}), the structural ``thickness'' of the feedback channel may slow such deterioration (\protect\hyperlink{ref-ahern1994effect}{Ahern 1994}, \protect\hyperlink{ref-parisi2005evaluating}{Parisi \& Brungart 2005}).
+Many different aspects of interaction structure have been implicated in the effectiveness of dyadic communication, including the availability and quality of concurrent feedback (\citeproc{ref-KraussBricker67_Delay}{Krauss \& Bricker, 1967}; \citeproc{ref-krauss1966}{Krauss \& Weinheimer, 1966}; \citeproc{ref-kraut1982listener}{Kraut et al., 1982}), the bandwidth of the communication modality (\citeproc{ref-dewhirst1971influence}{Dewhirst, 1971}; \citeproc{ref-KraussEtAl77}{Krauss et al., 1977}), and the group's access to a shared workspace (\citeproc{ref-clark2004speaking}{Clark \& Krych, 2004}; \citeproc{ref-garrod2007foundations}{Garrod et al., 2007}).
+Yet larger groups introduce qualitatively different dimensions of interaction structure, leading to a large but often inconsistent body of findings even for these well-understood factors (\citeproc{ref-hiltz1986experiments}{Hiltz et al., 1986}; \citeproc{ref-swaab2012communication}{Swaab et al., 2012}).
+While communication is generally expected to deteriorate as groups get larger (\citeproc{ref-macmillan_communication_2004}{MacMillan et al., 2004}; \citeproc{ref-seaman1997communication}{Seaman \& Basili, 1997}), the structural ``thickness'' of the feedback channel may slow such deterioration (\citeproc{ref-ahern1994effect}{Ahern, 1994}; \citeproc{ref-parisi2005evaluating}{Parisi \& Brungart, 2005}).
 
 In this paper, we develop an experimental paradigm for evaluating the relative contribution of these factors: a \emph{multi-party repeated reference game.}
 The ability to distinguish one particular entity from other possible entities, known as \emph{reference}, is one of the most primitive and ubiquitous functions of communication.
-Reference games (\protect\hyperlink{ref-Wittgenstein1953}{Wittgenstein 1953}, \protect\hyperlink{ref-lewis1969convention}{Lewis 1969}) have been widely used to study dyadic communication under controlled conditions in the lab.
+Reference games (\citeproc{ref-lewis1969convention}{Lewis, 1969}; \citeproc{ref-Wittgenstein1953}{Wittgenstein, 1953}) have been widely used to study dyadic communication under controlled conditions in the lab.
 They provide a clear metric of communicative effectiveness: how many words are required before a matcher successfully chooses a target image from a context of distractors?
-\emph{Repeated} reference games, where the same target images appear multiple times in succession, were introduced to examine how interlocutors establish shared reference in the absence of conventional labels (\protect\hyperlink{ref-krauss1964}{Krauss \& Weinheimer 1964}, \protect\hyperlink{ref-clark1986}{Clark \& Wilkes-Gibbs 1986}).
+\emph{Repeated} reference games, where the same target images appear multiple times in succession, were introduced to examine how interlocutors establish shared reference in the absence of conventional labels (\citeproc{ref-clark1986}{Clark \& Wilkes-Gibbs, 1986}; \citeproc{ref-krauss1964}{Krauss \& Weinheimer, 1964}).
 At the beginning of the game, long and costly descriptions are typically required to succeed.
 A key finding, however, is that dyads become increasingly efficient over the course of interaction.
-Fewer words are required to achieve the same accuracy, but referring expressions also become more impenetrable to outsiders (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-wilkes1992coordinating}{Wilkes-Gibbs \& Clark 1992}).
-The evolution of referring expressions over repetitions shows the characteristic dynamics of conventions: \emph{stability}, or convergence on labels within a group, and \emph{arbitrariness}, or divergence to different across groups, suggesting that dyads leverage their shared communication history to coordinate on expectations about how to label the target images (\protect\hyperlink{ref-hawkins2023partners}{Hawkins et al. 2023}).
+Fewer words are required to achieve the same accuracy, but referring expressions also become more impenetrable to outsiders (\citeproc{ref-schober1989}{Schober \& Clark, 1989}; \citeproc{ref-wilkes1992coordinating}{Wilkes-Gibbs \& Clark, 1992}).
+The evolution of referring expressions over repetitions shows the characteristic dynamics of conventions: \emph{stability}, or convergence on labels within a group, and \emph{arbitrariness}, or divergence to different across groups, suggesting that dyads leverage their shared communication history to coordinate on expectations about how to label the target images (\citeproc{ref-hawkins2023partners}{Hawkins et al., 2023}).
 
 In principle, repeated reference games provide a strong operationalization of communicative effectiveness for the problem of multi-party communication: describers must simultaneously achieve shared reference with multiple matchers.
 However, empirically studying multi-party communication raises a number of difficulties in practice.
-A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings (\protect\hyperlink{ref-almaatouq2022}{Almaatouq et al. 2022}).
-We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using interactive web-based platforms (\protect\hyperlink{ref-haber2019}{Haber et al. 2019}, \protect\hyperlink{ref-almaatouq2020empirica}{Almaatouq et al. 2021}, \protect\hyperlink{ref-hawkins2023partners}{Hawkins et al. 2023}).
-Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies (\protect\hyperlink{ref-hawkins2020}{Hawkins et al. 2020}), and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
+A much larger pool of participants must be recruited to achieve sufficient power at the relevant unit of analysis -- the group -- spanning a very high-dimensional space of possible parameter settings (\citeproc{ref-almaatouq2022}{Almaatouq et al., 2022}).
+We address this problem by drawing on recent technical advances that have made it newly possible to achieve such samples using interactive web-based platforms (\citeproc{ref-almaatouq2020empirica}{Almaatouq et al., 2021}; \citeproc{ref-haber2019}{Haber et al., 2019}; \citeproc{ref-hawkins2023partners}{Hawkins et al., 2023}).
+Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies (\citeproc{ref-hawkins2020}{Hawkins et al., 2020}), and arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.
 
 We leverage our platform to explore effects of group size and interaction channel thickness in a series of three experiments.
 While we find that small groups reliably converge on group-specific ``shorthand'' regardless of the interaction structure, larger groups require thicker channels -- richer conversational feedback among members -- to achieve the same degree of coherence.
@@ -366,12 +374,11 @@ More broadly, our work suggests that studying communication in larger groups is 
 \caption{(A) Participants played a repeated reference game in groups of size 2 to 6. On each trial, a describer described the target image to the group of matchers. Each image appeared once per block for six blocks. (B) Experiments varied along 3 dimensions: Group size, group coherence, and matcher backchannel. (C) Experiment 1 (pink) varied group size from 2 to 6 players while holding group coherence and backchannel constant. Experiment 2 (blue) held group size constant at 6 and manipulated the other dimensions. Experiment 3 (green) tested 4 corners of the space, crossing group size (2 vs. 6 players) with the thickness of interaction structure (high vs. low coherence and backchannel).}\label{fig:diagram}
 \end{figure*}
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
 We recruited 1319 participants through Prolific, an online crowd-sourcing platform.
 Participants were organized into 313 groups of size two to six for a communication game (Figure \ref{fig:behavioral}A).
-On each trial, everyone in the group was shown a gallery of 12 tangram images (\protect\hyperlink{ref-clark1986}{Clark \& Wilkes-Gibbs 1986}, \protect\hyperlink{ref-hawkins2020}{Hawkins et al. 2020}, \protect\hyperlink{ref-ji2022abstract}{Ji et al. 2022}).
+On each trial, everyone in the group was shown a gallery of 12 tangram images (\citeproc{ref-clark1986}{Clark \& Wilkes-Gibbs, 1986}; \citeproc{ref-hawkins2020}{Hawkins et al., 2020}; \citeproc{ref-ji2022abstract}{Ji et al., 2022}).
 One player was designated the \emph{describer} and the others were designated the \emph{matchers}.
 The describer was asked to use a chat box interface to describe a privately indicated \emph{target} image.
 After all matchers guessed which of the 12 images was the target, they received task feedback and proceeded to the next trial.
@@ -382,8 +389,7 @@ We systematically sampled points along four dimensions parameterizing different 
 We manipulated \emph{group size} (ranging from two to six), \emph{role stability} (whether or not participants took turns in the describer role), richness of \emph{task feedback} (whether or not matchers were able to see each other's responses), and richness of the \emph{matcher backchannel} (whether matchers were able to freely respond through a chatbox or could only use emojis; Figure \ref{fig:behavioral}C).
 Other factors, such as the set of stimuli and background knowledge about one's partners, were held constant across games.
 
-\hypertarget{overview-of-experiments}{%
-\subsubsection{Overview of experiments}\label{overview-of-experiments}}
+\subsubsection{Overview of experiments}\label{overview-of-experiments}
 
 Experiment 1 began by investigating how performance scaled with group size.
 Based on prior qualitative work, we predicted that larger groups face a more challenging coordination problem.
@@ -401,7 +407,7 @@ In the limited backchannel condition, matchers were limited to four discrete emo
 Experiment 3 crossed the extremes of group size from experiment 1 (2 vs.~6 people) with the extremes of group interactions from Experiment 2 (\emph{thick} vs.~\emph{thin} interaction structure).
 In the \emph{thick} condition, we maintained a consistent describer, gave all matchers full task feedback, and allowed them to freely use a chat box.
 In the \emph{thin} condition, we forced the describer to rotate on each block, restricted feedback to their own binary correctness, and restricted the backchannel to the four emojis.
-Note that the 2-player thick game most closely resembles the design of classic repeated reference games (\protect\hyperlink{ref-clark1986}{Clark \& Wilkes-Gibbs 1986}).
+Note that the 2-player thick game most closely resembles the design of classic repeated reference games (\citeproc{ref-clark1986}{Clark \& Wilkes-Gibbs, 1986}).
 
 \begin{figure*}[t!]
 
@@ -412,8 +418,7 @@ Note that the 2-player thick game most closely resembles the design of classic r
 \caption{Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\% credible intervals. Y-axes are truncated, and a few outliers points are not visible.}\label{fig:behavioral}
 \end{figure*}
 
-\hypertarget{smaller-and-higher-coherence-groups-are-more-accurate}{%
-\subsubsection{Smaller and higher-coherence groups are more accurate}\label{smaller-and-higher-coherence-groups-are-more-accurate}}
+\subsubsection{Smaller and higher-coherence groups are more accurate}\label{smaller-and-higher-coherence-groups-are-more-accurate}
 
 Our first set of hypotheses focused on group performance: how accurately and efficiently groups were able to perform the referential task.
 We characterize group performance along two complementary metrics: (1) matcher accuracy and (2) describer efficiency.
@@ -432,8 +437,7 @@ Specifically, we aggregated data from all experiments into a post-hoc mega-analy
 Overall, we found evidence that accuracy increased over time (\(\beta=0.46,\:95\%\:\mathrm{CrI}=[0.4, 0.52]\)) but the rate of increase was reduced for thin games (\(\beta=-0.12,\:95\%\:\mathrm{CrI}=[-0.21, -0.02]\)) and larger games (\(\beta=-0.07,\:95\%\:\mathrm{CrI}=[-0.09, -0.05]\)) compared to smaller or thicker games.
 That is, smaller groups and groups with higher coherence tended to be more accurate, though the magnitude and reliability of these effects varied across individual experiments.
 
-\hypertarget{smaller-and-higher-coherence-groups-are-more-efficient}{%
-\subsubsection{Smaller and higher-coherence groups are more efficient}\label{smaller-and-higher-coherence-groups-are-more-efficient}}
+\subsubsection{Smaller and higher-coherence groups are more efficient}\label{smaller-and-higher-coherence-groups-are-more-efficient}
 
 After establishing that groups were able to communicate accurately, we turned to the challenges faced by describers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow describers to communicate more effectively over time.
@@ -532,8 +536,7 @@ Overall, then, smaller games used shorter descriptions than larger games across 
     \end{subtable}
 \end{table}
 
-\hypertarget{larger-groups-make-greater-use-of-backchannels}{%
-\subsubsection{Larger groups make greater use of backchannels}\label{larger-groups-make-greater-use-of-backchannels}}
+\subsubsection{Larger groups make greater use of backchannels}\label{larger-groups-make-greater-use-of-backchannels}
 
 As a final measure of group performance, we examined the back-and-forth interactions between the describer and the group of matchers.
 The backchannel allows matchers to actively provide feedback, ask questions, offer alternative descriptions, and seek clarification about the describer's referring expressions.
@@ -543,8 +546,7 @@ The length of matcher interjections also decreased over time, especially for lar
 Emoji use in Experiment 3 followed similar trends (Supplement Figure 4).
 Larger groups may require greater participation by matchers to reliably establish common ground.
 
-\hypertarget{descriptions-converge-faster-in-groups-with-thicker-channels}{%
-\subsubsection{Descriptions converge faster in groups with thicker channels}\label{descriptions-converge-faster-in-groups-with-thicker-channels}}
+\subsubsection{Descriptions converge faster in groups with thicker channels}\label{descriptions-converge-faster-in-groups-with-thicker-channels}
 
 \begin{figure*}[t!]
 
@@ -559,8 +561,8 @@ In the previous sections, we examined three metrics of communicative performance
 We confirmed that groups in all conditions replicated the classic patterns of increasing accuracy and decreasing description length.
 We also found some initial evidence that larger groups may struggle to improve performance in the absence of thick communication channels.
 Here, we aim to better understand the mechanisms that allow describers to use shorter descriptions without sacrificing accuracy.
-In particular, we explore the hypothesis that interaction structure and group size affect performance through a \emph{convention formation} process (\protect\hyperlink{ref-clark1986}{Clark \& Wilkes-Gibbs 1986}).
-Under a recent model of convention formation (\protect\hyperlink{ref-hawkins2023partners}{Hawkins et al. 2023}), groups are able to leverage their shared history to coordinate on stable expectations about how to refer to particular images.
+In particular, we explore the hypothesis that interaction structure and group size affect performance through a \emph{convention formation} process (\citeproc{ref-clark1986}{Clark \& Wilkes-Gibbs, 1986}).
+Under a recent model of convention formation (\citeproc{ref-hawkins2023partners}{Hawkins et al., 2023}), groups are able to leverage their shared history to coordinate on stable expectations about how to refer to particular images.
 This model makes specific predictions about how interaction structure affects the ability to coordinate, in terms of the available feedback.
 
 First, due to heterogeneity in the group -- 6 individuals who may have diverging conceptualizations --- a rational describer should provide a strictly more detailed initial description to hedge against multiple possible misunderstandings, as we previously observed.
@@ -570,7 +572,7 @@ Third, convergence should be faster when a single individual is consistently in 
 To assess the dynamics of describer descriptions, we examine the \emph{semantic similarity} of descriptions within and across games.
 We quantified description similarity by concatenating describer messages together within a trial and embedding this description into a high-dimensional vector space using SBERT.
 SBERT is a BERT-based sentence embedder designed to map semantically similar sentences to embeddings that are nearby in embedding space.
-Semantically meaningful comparisons between sentences are made by taking pairwise cosine similarities between the embeddings (\protect\hyperlink{ref-reimers2019}{Reimers \& Gurevych 2019}).
+Semantically meaningful comparisons between sentences are made by taking pairwise cosine similarities between the embeddings (\citeproc{ref-reimers2019}{Reimers \& Gurevych, 2019}).
 
 To measure stability, or convergence within groups, we compared utterances from blocks one through five to the final (block six) description for the same image from the same game.
 To measure arbitrariness, or divergence across groups depending on group-specific history, we compared utterances produced by different describers for the same image in the corresponding blocks.
@@ -601,8 +603,7 @@ Across games, convergence towards the last utterance was driven by cumulative in
 In early rounds, descriptions could change substantially between rounds, but by later rounds, many descriptions had already reduced and solidified and varied little round to round.
 In summary, we found that stable descriptions emerged earlier if the group was smaller, or if the group had a thick interaction structure.
 
-\hypertarget{games-with-thicker-channels-diverge-from-one-another-more-quickly}{%
-\subsubsection{Games with thicker channels diverge from one another more quickly}\label{games-with-thicker-channels-diverge-from-one-another-more-quickly}}
+\subsubsection{Games with thicker channels diverge from one another more quickly}\label{games-with-thicker-channels-diverge-from-one-another-more-quickly}
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, we predicted that their descriptions would become increasingly dissimilar as groups increasingly adapt to their own idiosyncratic shared history.
 To test this effect, we constructed a mixed-effects linear regression model predicting the cross-game similarity between a pair of utterances for the same image.
@@ -618,8 +619,7 @@ As with the convergence patterns, large games with thin interaction structures h
 In Experiment 3, 6-person thin games diverged even less than 2-player thin games (Figure \ref{fig:sbert}F, \(\beta=0.017,\:95\%\:\mathrm{CrI}=[0.015, 0.019]\)), and in Experiment 2, 6-person thin games barely diverged at all (Figure \ref{fig:sbert}E, \(\beta=-0.004,\:95\%\:\mathrm{CrI}=[-0.006, -0.001]\)).
 A mega-analytic model confirms this pattern: thin games differentiate less between groups (\(\beta=0.005,\:95\%\:\mathrm{CrI}=[0.004, 0.007]\)) and large thin groups differentiate even less (\(\beta=0.004,\:95\%\:\mathrm{CrI}=[0.004, 0.005]\)).
 
-\hypertarget{general-discussion}{%
-\section{General Discussion}\label{general-discussion}}
+\section{General Discussion}\label{general-discussion}
 
 Communication often occurs in multi-party settings, but research on referential communication typically does not focus on such settings -- largely due to practical obstacles.
 Dyadic reference games have been used to measure informational efficiency, characterized by describer-matcher pairs creating conventional (stable but somewhat arbitrary) labels which are not shared by other groups.
@@ -630,25 +630,24 @@ However, we also found that the interaction structure of a group substantially a
 Small groups may be able to form conventions under limited feedback, but larger groups require thicker interaction structure.
 Multi-player groups may therefore reveal key factors which are masked in purely dyadic settings.
 
-Increasing efficiency has often been taken as an index of group-specific convention formation (\protect\hyperlink{ref-clark1986}{Clark \& Wilkes-Gibbs 1986}, \protect\hyperlink{ref-brennan1996}{Brennan \& Clark 1996}, \protect\hyperlink{ref-yoon2014}{Yoon \& Brown-Schmidt 2014}, \protect\hyperlink{ref-yoon2018}{2018}).
+Increasing efficiency has often been taken as an index of group-specific convention formation (\citeproc{ref-brennan1996}{Brennan \& Clark, 1996}; \citeproc{ref-clark1986}{Clark \& Wilkes-Gibbs, 1986}; \citeproc{ref-yoon2014}{Yoon \& Brown-Schmidt, 2014}, \citeproc{ref-yoon2018}{2018}).
 In our work, however, we observe distinct patterns for measures of raw utterance length compared to the dynamics of semantic content.
 In Experiment 3, thin 6-person games showed much less group-specific divergence despite comparable accuracy and efficiency.
 This gap raises the possibility that it is possible to become more efficient and accurate without converging on a unified group-specific label.
-Instead, they may be converging to a multi-label solution based on group priors (\protect\hyperlink{ref-guilbeault2021}{Guilbeault et al. 2021}).
+Instead, they may be converging to a multi-label solution based on group priors (\citeproc{ref-guilbeault2021}{Guilbeault et al., 2021}).
 Thus, we encourage measures of semantic content (and not just performance) when evaluating convention formation.
 
 Even within the general framework of iterated reference, there is a high dimensional feature space of possible experiments. We sampled only a few points along a few dimensions in the space that felt salient. In our experiment 3, we grouped some factors together in order to have more games in each condition: a fully factorial design would have been too expensive to power adequately. We instantiated a ``thin'' channel by limited matchers to 4 discrete utterances (emojis), but there are other ways to manipulate channel width for describers and matchers, such as rate limiting typing or adding time pressure. Future work could sample other points in the experimental space, including exploring other manipulations on channel thickness, the effects of different target images, or groups of people with real-life prior connections.
 
-We cannot make causal claims about specific mechanisms by which manipulations such as group size resulted in different outcomes: there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, producers can tailor their utterances to the one matcher, but in large groups, producers must balance the competing needs of different comprehenders (\protect\hyperlink{ref-schober1989}{Schober \& Clark 1989}, \protect\hyperlink{ref-tolins2016}{Tolins \& Fox Tree 2016}). These effects likely vary by both the knowledge state of and communication channels available to the comprehenders (\protect\hyperlink{ref-horton2002}{Horton \& Gerrig 2002}, \protect\hyperlink{ref-horton2005}{Horton \& Gerrig 2005}, \protect\hyperlink{ref-fox-tree2013}{Fox Tree \& Clark 2013}). Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions.
+We cannot make causal claims about specific mechanisms by which manipulations such as group size resulted in different outcomes: there are many differences between being in a 2-person group versus a 6-person group that could lead to the different outcomes. In a dyad, producers can tailor their utterances to the one matcher, but in large groups, producers must balance the competing needs of different comprehenders (\citeproc{ref-schober1989}{Schober \& Clark, 1989}; \citeproc{ref-tolins2016}{Tolins \& Fox Tree, 2016}). These effects likely vary by both the knowledge state of and communication channels available to the comprehenders (\citeproc{ref-fox-tree2013}{Fox Tree \& Clark, 2013}; \citeproc{ref-horton2002}{Horton \& Gerrig, 2002}; \citeproc{ref-horton2005}{Horton \& Gerrig, 2005}). Further work digging into the language used and the interactions between participants might unearth plausible mechanisms for how differences in group size and interaction structure influence outcomes, and this in turn could then point towards future experimental conditions.
 
 Communication occurs across a broad range of situations, varying on many dimensions, including group size, medium of interaction, and group structure.
 A narrow focus on dyads with rich communication channels can lead to theories that mispredict how interactions play out in multi-party groups with varying interaction structure.
 Sampling from a broader range of communicative situations is thus a critical part of better understanding human communication.
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
-Our iterated reference task was implemented with Empirica (\protect\hyperlink{ref-almaatouq2020empirica}{Almaatouq et al. 2021}), a React-based web development framework for real-time multi-player tasks.
+Our iterated reference task was implemented with Empirica (\citeproc{ref-almaatouq2020empirica}{Almaatouq et al., 2021}), a React-based web development framework for real-time multi-player tasks.
 Our experiments were designed sequentially and pre-registered individually.\footnote{Experiment 1: \url{https://osf.io/cn9f4} for the 2-4 player groups, and \url{https://osf.io/rpz67} for the 5-6 player data run later. Experiment 2: same describer at \url{https://osf.io/f9xyd}, full feedback at \url{https://osf.io/j5zbm}, and thin at \url{https://osf.io/k5f4t}. Experiment 3: \url{https://osf.io/untzy}}
 We followed the pre-registered analysis plan for each experiment, although accuracy models were not explicitly specified until Experiment 3, and linguistic analyses were only verbally described starting with Experiment 2b.
 Results from some pre-registered models are omitted from the main text for brevity but are shown in the Supplement.
@@ -656,8 +655,7 @@ Exploratory mega-analytic models pooling across the three experiments were not p
 
 All materials, data, and analysis code is available at \url{https://github.com/vboyce/multiparty-tangrams}.
 
-\hypertarget{participants}{%
-\subsubsection{Participants}\label{participants}}
+\subsubsection{Participants}\label{participants}
 
 Participants were recruited using the Prolific platform.
 All participants self-reported as fluent native English speakers on Prolific's demographic prescreen.
@@ -665,15 +663,13 @@ Experiment 1 took place between May and July 2021, Experiment 2 between March an
 Each participant took part in only one experiment and was blocked from participating in subsequent experiments.
 As games with more participants tended to run longer, we paid participants different rates based on group size, with the goal of a consistent \$10 hourly rate. Participants were paid \$7 for 2-player games, \$8.50 for 3-player games, \$10 for 4-player games, and \$11 for 5- and 6-player games. When one player occupied the describer role for the entirety of a 6-player game, they were rewarded an additional \$2 bonus. Across all games, participants could earn up to \$2.88 in performance bonuses. A total of 1319 people participated across the 3 experiments, for roughly 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. A breakdown of number of games and participants in each condition is shown in SI Table 3.
 
-\hypertarget{materials}{%
-\subsubsection{Materials}\label{materials}}
+\subsubsection{Materials}\label{materials}
 
-The same 12 tangram images, drawn from Hawkins et al. (\protect\hyperlink{ref-hawkins2020}{2020}) and Clark \& Wilkes-Gibbs (\protect\hyperlink{ref-clark1986}{1986}), were used every block.
+The same 12 tangram images, drawn from Hawkins et al. (\citeproc{ref-hawkins2020}{2020}) and Clark \& Wilkes-Gibbs (\citeproc{ref-clark1986}{1986}), were used every block.
 These images were displayed in a 4 \(\times\) 3 grid with the order randomized across participants to disincentivize spatial descriptions such as ``top left,'' as the image might be in a different place on the describer's and matchers' screens.
 To reduce cognitive load from visual search, the locations were fixed for each participant across trials.
 
-\hypertarget{procedure}{%
-\subsubsection{Procedure}\label{procedure}}
+\subsubsection{Procedure}\label{procedure}
 
 The experimental procedure was very similar across the three experiments.
 We first describe the procedure used in Experiment 1 and then describe the differences in later experiments.
@@ -712,7 +708,7 @@ Experiment 2 consisted of three different variations on Experiment 1, all conduc
 Each of these conditions differed from the Experiment 1 baseline in exactly one way.
 In the \emph{same describer} condition, one person was designated the describer for the entire game, rather than having the describer role rotate.
 In the \emph{full feedback} condition, all participants were shown what all others had selected as well as the identity of the correct target.
-This condition was similar to previous dyadic work, such as Hawkins et al. (\protect\hyperlink{ref-hawkins2020}{2020}), where the correct answer was indicated during feedback.
+This condition was similar to previous dyadic work, such as Hawkins et al. (\citeproc{ref-hawkins2020}{2020}), where the correct answer was indicated during feedback.
 In the \emph{thin} condition, we altered the chatbox interface for matchers.
 Instead of a textbox, matchers had 4 buttons, each of which sent a different emoji to the chat. Matchers were given suggested meanings for the 4 emojis during the instruction phase. They could send as many emojis as desired; for instance, they might initially indicate confusion, and later indicate understanding. In addition, for the thin condition, we added notifications that appeared in the chat box marking the time when each player had made a selection.
 
@@ -723,8 +719,7 @@ The thick condition combined the two coherency-enhancing variations from Experim
 Across both conditions in Experiment 3, notifications were sent to the chat to indicate when a participant had made a selection.
 For experiment 3, game lobbies worked slightly differently, and 5 minutes after the first participant had joined the lobby, the game started if there were at least two participants. Correspondingly, in experiment 3, games did not stop if a player disconnected, instead if there were at least two players still active, the game continued, swapping a player into the role of describer if necessary to continue the game.
 
-\hypertarget{data-pre-processing-and-exclusions}{%
-\subsubsection{Data pre-processing and exclusions}\label{data-pre-processing-and-exclusions}}
+\subsubsection{Data pre-processing and exclusions}\label{data-pre-processing-and-exclusions}
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries (``Hello''), meta-commentary about how well the task was going, and bare confirmations or denials (``ok'', ``got it'', ``yes'', ``no''). We excluded these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams (``ok, so it looks like a zombie'', ``yes, the one with legs''); these lines were retained intact.
 
@@ -735,10 +730,9 @@ The realities of online recruitment and disconnection meant that the number of g
 We excluded incomplete blocks from analyses, but included complete blocks from partial games (See SI Table 3).
 When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick condition had a describer who did not give any sort of coherent descriptions, even with substantial matcher prompting. We excluded this game from analyses.
 
-\hypertarget{modelling-strategy}{%
-\subsubsection{Modelling strategy}\label{modelling-strategy}}
+\subsubsection{Modelling strategy}\label{modelling-strategy}
 
-We fit all regression models in brms (\protect\hyperlink{ref-burkner2018}{Bürkner 2018}) with weakly regularizing priors.
+We fit all regression models in brms (\citeproc{ref-burkner2018}{Bürkner, 2018}) with weakly regularizing priors.
 We were unable to fit the full pre-registered mixed effects structure in a reasonable amount of time for some models, so we included the maximal hierarchical effects that were tractable.
 All model results and priors and formulae are reported in the Supplement.
 Models of accuracy used by-group random intercepts only, models of word count used full mixed effect structure, and models of S-BERT similarities used by-group and by-target random intercepts as applicable.
@@ -757,8 +751,7 @@ We do not know whether groups that start and continue at the full size differ fr
 This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group.
 The number of games in each condition and rates of dropoff are shown in SI Table 3 and SI Figure 2.
 
-\hypertarget{authors-note}{%
-\section{Author's Note}\label{authors-note}}
+\section{Author's Note}\label{authors-note}
 
 Experiment 1 was previously reported in Proceedings of the Annual Meeting of the Cognitive Science Society 44 (2022).
 
@@ -766,162 +759,161 @@ We thank the LangCog Lab, Saxelab, CAMP 5, HSP 2023, and Cogsci 2022 audiences f
 
 We report CRediT taxonomy contributions as follows: All authors did conceptualization and methodology. VB did data curation, formal analysis, investigation, visualization, and writing -- original draft. VB and RDH did software. RDH, NDG, and MCF did writing -- editing. MCF and NDG did funding. MCF did supervision.
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
 \setlength{\parindent}{-0.1in} 
 \setlength{\leftskip}{0.125in}
 
 \noindent
 
-\hypertarget{refs}{}
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-ahern1994effect}{}}%
-Ahern TC (1994) The effect of interface on the structure of interaction in computer-mediated small-group discussion. \emph{Journal of Educational Computing Research} \textbf{11}:235--250
+\bibitem[\citeproctext]{ref-ahern1994effect}
+Ahern, T. C. (1994). The effect of interface on the structure of interaction in computer-mediated small-group discussion. \emph{Journal of Educational Computing Research}, \emph{11}(3), 235--250.
 
-\leavevmode\vadjust pre{\hypertarget{ref-almaatouq2020empirica}{}}%
-Almaatouq A, Becker J, Houghton JP, Paton N, Watts DJ, Whiting ME (2021) Empirica: A virtual lab for high-throughput macro-level experiments. \emph{Behavior Research Methods} \textbf{53}:2158--2171
+\bibitem[\citeproctext]{ref-almaatouq2020empirica}
+Almaatouq, A., Becker, J., Houghton, J. P., Paton, N., Watts, D. J., \& Whiting, M. E. (2021). Empirica: A virtual lab for high-throughput macro-level experiments. \emph{Behavior Research Methods}, \emph{53}(5), 2158--2171.
 
-\leavevmode\vadjust pre{\hypertarget{ref-almaatouq2022}{}}%
-Almaatouq A, Griffiths TL, Suchow JW, Whiting ME, Evans J, Watts DJ (2022) Beyond {Playing} 20 {Questions} with {Nature}: {Integrative Experiment Design} in the {Social} and {Behavioral Sciences}. \emph{Behavioral and Brain Sciences}:1--55. doi:\href{https://doi.org/10.1017/S0140525X22002874}{10.1017/S0140525X22002874}
+\bibitem[\citeproctext]{ref-almaatouq2022}
+Almaatouq, A., Griffiths, T. L., Suchow, J. W., Whiting, M. E., Evans, J., \& Watts, D. J. (2022). Beyond {Playing} 20 {Questions} with {Nature}: {Integrative Experiment Design} in the {Social} and {Behavioral Sciences}. \emph{Behavioral and Brain Sciences}, 1--55. \url{https://doi.org/10.1017/S0140525X22002874}
 
-\leavevmode\vadjust pre{\hypertarget{ref-branigan2006}{}}%
-Branigan H (2006) Perspectives on multi-party dialogue. \emph{Research on Language and Computation} \textbf{4}:153--177
+\bibitem[\citeproctext]{ref-branigan2006}
+Branigan, H. (2006). Perspectives on multi-party dialogue. \emph{Research on Language and Computation}, \emph{4}(2), 153--177.
 
-\leavevmode\vadjust pre{\hypertarget{ref-brennan1996}{}}%
-Brennan SE, Clark HH (1996) Conceptual {Pacts} and {Lexical Choice} in {Conversation}. :12
+\bibitem[\citeproctext]{ref-brennan1996}
+Brennan, S. E., \& Clark, H. H. (1996). \emph{Conceptual {Pacts} and {Lexical Choice} in {Conversation}}. 12.
 
-\leavevmode\vadjust pre{\hypertarget{ref-burkner2018}{}}%
-Bürkner P-C (2018) Advanced bayesian multilevel modeling with the r package brms. \emph{The R Journal} \textbf{10}:395--411
+\bibitem[\citeproctext]{ref-burkner2018}
+Bürkner, P.-C. (2018). Advanced bayesian multilevel modeling with the r package brms. \emph{The R Journal}, \emph{10}(1), 395--411.
 
-\leavevmode\vadjust pre{\hypertarget{ref-caplow1957organizational}{}}%
-Caplow T (1957) Organizational size. \emph{Administrative Science Quarterly}:484--505
+\bibitem[\citeproctext]{ref-caplow1957organizational}
+Caplow, T. (1957). Organizational size. \emph{Administrative Science Quarterly}, 484--505.
 
-\leavevmode\vadjust pre{\hypertarget{ref-carletta1998}{}}%
-Carletta J, Garrod S, Fraser-Krauss H (1998) Placement of {Authority} and {Communication Patterns} in {Workplace Groups}: {The Consequences} for {Innovation}. \emph{Small Group Research} \textbf{29}:531--559. doi:\href{https://doi.org/10.1177/1046496498295001}{10.1177/1046496498295001}
+\bibitem[\citeproctext]{ref-carletta1998}
+Carletta, J., Garrod, S., \& Fraser-Krauss, H. (1998). Placement of {Authority} and {Communication Patterns} in {Workplace Groups}: {The Consequences} for {Innovation}. \emph{Small Group Research}, \emph{29}(5), 531--559. \url{https://doi.org/10.1177/1046496498295001}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cazden1988classroom}{}}%
-Cazden CB (1988) Classroom discourse: The language of teaching and learning. ERIC
+\bibitem[\citeproctext]{ref-cazden1988classroom}
+Cazden, C. B. (1988). \emph{Classroom discourse: The language of teaching and learning.} ERIC.
 
-\leavevmode\vadjust pre{\hypertarget{ref-clark2004speaking}{}}%
-Clark HH, Krych MA (2004) Speaking while monitoring addressees for understanding. \emph{Journal of memory and language} \textbf{50}:62--81
+\bibitem[\citeproctext]{ref-clark2004speaking}
+Clark, H. H., \& Krych, M. A. (2004). Speaking while monitoring addressees for understanding. \emph{Journal of Memory and Language}, \emph{50}(1), 62--81.
 
-\leavevmode\vadjust pre{\hypertarget{ref-clark1986}{}}%
-Clark HH, Wilkes-Gibbs D (1986) \href{http://www.speech.kth.se/~edlund/bielefeld/references/clark-and-wilkes-gibbs-1986.pdf}{Referring as a collaborative process}. \emph{Cognition}
+\bibitem[\citeproctext]{ref-clark1986}
+Clark, H. H., \& Wilkes-Gibbs, D. (1986). Referring as a collaborative process. \emph{Cognition}. \url{http://www.speech.kth.se/~edlund/bielefeld/references/clark-and-wilkes-gibbs-1986.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-cohngordon}{}}%
-Cohn-Gordon Reuben, Levy R, Bergen L (2019) The pragmatics of multiparty communication.
+\bibitem[\citeproctext]{ref-cohngordon}
+Cohn-Gordon, Reuben, Levy, R., \& Bergen, L. (2019). \emph{The pragmatics of multiparty communication}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-dewhirst1971influence}{}}%
-Dewhirst HD (1971) Influence of perceived information-sharing norms on communication channel utilization. \emph{Academy of Management Journal} \textbf{14}:305--315
+\bibitem[\citeproctext]{ref-dewhirst1971influence}
+Dewhirst, H. D. (1971). Influence of perceived information-sharing norms on communication channel utilization. \emph{Academy of Management Journal}, \emph{14}(3), 305--315.
 
-\leavevmode\vadjust pre{\hypertarget{ref-fay2000}{}}%
-Fay N, Garrod S, Carletta J (2000) Group {Discussion} as {Interactive Dialogue} or as {Serial Monologue}: {The Influence} of {Group Size}. \emph{Psychol Sci} \textbf{11}:481--486. doi:\href{https://doi.org/10.1111/1467-9280.00292}{10.1111/1467-9280.00292}
+\bibitem[\citeproctext]{ref-fay2000}
+Fay, N., Garrod, S., \& Carletta, J. (2000). Group {Discussion} as {Interactive Dialogue} or as {Serial Monologue}: {The Influence} of {Group Size}. \emph{Psychol Sci}, \emph{11}(6), 481--486. \url{https://doi.org/10.1111/1467-9280.00292}
 
-\leavevmode\vadjust pre{\hypertarget{ref-fox-tree2013}{}}%
-Fox Tree JE, Clark NB (2013) Communicative {Effectiveness} of {Written Versus Spoken Feedback}. \emph{Discourse Processes} \textbf{50}:339--359. doi:\href{https://doi.org/10.1080/0163853X.2013.797241}{10.1080/0163853X.2013.797241}
+\bibitem[\citeproctext]{ref-fox-tree2013}
+Fox Tree, J. E., \& Clark, N. B. (2013). Communicative {Effectiveness} of {Written Versus Spoken Feedback}. \emph{Discourse Processes}, \emph{50}(5), 339--359. \url{https://doi.org/10.1080/0163853X.2013.797241}
 
-\leavevmode\vadjust pre{\hypertarget{ref-garrod2007foundations}{}}%
-Garrod S, Fay N, Lee J, Oberlander J, MacLeod T (2007) Foundations of representation: Where might graphical symbol systems come from? \emph{Cognitive science} \textbf{31}:961--987
+\bibitem[\citeproctext]{ref-garrod2007foundations}
+Garrod, S., Fay, N., Lee, J., Oberlander, J., \& MacLeod, T. (2007). Foundations of representation: Where might graphical symbol systems come from? \emph{Cognitive Science}, \emph{31}(6), 961--987.
 
-\leavevmode\vadjust pre{\hypertarget{ref-ginzburg2005}{}}%
-Ginzburg J, Fernandez R (2005) Action at a distance: The difference between dialogue and multilogue. \emph{Proceedings of DIALOR}:9
+\bibitem[\citeproctext]{ref-ginzburg2005}
+Ginzburg, J., \& Fernandez, R. (2005). Action at a distance: The difference between dialogue and multilogue. \emph{Proceedings of DIALOR}, 9.
 
-\leavevmode\vadjust pre{\hypertarget{ref-guilbeault2021}{}}%
-Guilbeault D, Baronchelli A, Centola D (2021) Experimental evidence for scale-induced category convergence across populations. \emph{Nat Commun} \textbf{12}:327. doi:\href{https://doi.org/10.1038/s41467-020-20037-y}{10.1038/s41467-020-20037-y}
+\bibitem[\citeproctext]{ref-guilbeault2021}
+Guilbeault, D., Baronchelli, A., \& Centola, D. (2021). Experimental evidence for scale-induced category convergence across populations. \emph{Nature Communications}, \emph{12}(1, 1), 327. \url{https://doi.org/10.1038/s41467-020-20037-y}
 
-\leavevmode\vadjust pre{\hypertarget{ref-haber2019}{}}%
-Haber J, Baumgärtner T, Takmaz E, Gelderloos L, Bruni E, Fernández R (2019) The {PhotoBook Dataset}: {Building Common Ground} through {Visually-Grounded Dialogue}. In: \emph{Proc. 57th {Annu}. {Meet}. {Assoc}. {Comput}. {Linguist}.} {Association for Computational Linguistics}, {Florence, Italy}, p 1895--1910. Available from: \url{https://www.aclweb.org/anthology/P19-1184} {[}Last accessed 1 February 2022{]}. doi:\href{https://doi.org/10.18653/v1/P19-1184}{10.18653/v1/P19-1184}
+\bibitem[\citeproctext]{ref-haber2019}
+Haber, J., Baumgärtner, T., Takmaz, E., Gelderloos, L., Bruni, E., \& Fernández, R. (2019). The {PhotoBook Dataset}: {Building Common Ground} through {Visually-Grounded Dialogue}. \emph{Proc. 57th {Annu}. {Meet}. {Assoc}. {Comput}. {Linguist}.}, 1895--1910. \url{https://doi.org/10.18653/v1/P19-1184}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hawkins2020}{}}%
-Hawkins RD, Frank MC, Goodman ND (2020) \href{http://arxiv.org/abs/1912.07199}{Characterizing the dynamics of learning in repeated reference games}. \emph{ArXiv191207199 Cs}
+\bibitem[\citeproctext]{ref-hawkins2020}
+Hawkins, R. D., Frank, M. C., \& Goodman, N. D. (2020). Characterizing the dynamics of learning in repeated reference games. \emph{ArXiv191207199 Cs}. \url{http://arxiv.org/abs/1912.07199}
 
-\leavevmode\vadjust pre{\hypertarget{ref-hawkins2023partners}{}}%
-Hawkins RD, Franke M, Frank MC, Goldberg AE, Smith K, Griffiths TL, Goodman ND (2023) From partners to populations: A hierarchical bayesian account of coordination and convention. \emph{Psychological Review} \textbf{130}:977
+\bibitem[\citeproctext]{ref-hawkins2023partners}
+Hawkins, R. D., Franke, M., Frank, M. C., Goldberg, A. E., Smith, K., Griffiths, T. L., \& Goodman, N. D. (2023). From partners to populations: A hierarchical bayesian account of coordination and convention. \emph{Psychological Review}, \emph{130}(4), 977.
 
-\leavevmode\vadjust pre{\hypertarget{ref-hiltz1986experiments}{}}%
-Hiltz SR, Johnson K, Turoff M (1986) Experiments in group decision making: Communication process and outcome in face-to-face versus computerized conferences. \emph{Human communication research} \textbf{13}:225--252
+\bibitem[\citeproctext]{ref-hiltz1986experiments}
+Hiltz, S. R., Johnson, K., \& Turoff, M. (1986). Experiments in group decision making: Communication process and outcome in face-to-face versus computerized conferences. \emph{Human Communication Research}, \emph{13}(2), 225--252.
 
-\leavevmode\vadjust pre{\hypertarget{ref-horton2002}{}}%
-Horton WS, Gerrig RJ (2002) {SpeakersÕ} experiences and audience design: Knowing when and knowing how to adjust utterances to addresseesq. \emph{Journal of Memory and Language}:18
+\bibitem[\citeproctext]{ref-horton2002}
+Horton, W. S., \& Gerrig, R. J. (2002). {SpeakersÕ} experiences and audience design: Knowing when and knowing how to adjust utterances to addresseesq. \emph{Journal of Memory and Language}, 18.
 
-\leavevmode\vadjust pre{\hypertarget{ref-horton2005}{}}%
-Horton WS, Gerrig RJ (2005) The impact of memory demands on audience design during language production. \emph{Cognition} \textbf{96}:127--142. doi:\href{https://doi.org/10.1016/j.cognition.2004.07.001}{10.1016/j.cognition.2004.07.001}
+\bibitem[\citeproctext]{ref-horton2005}
+Horton, W. S., \& Gerrig, R. J. (2005). The impact of memory demands on audience design during language production. \emph{Cognition}, \emph{96}(2), 127--142. \url{https://doi.org/10.1016/j.cognition.2004.07.001}
 
-\leavevmode\vadjust pre{\hypertarget{ref-ji2022abstract}{}}%
-Ji A, Kojima N, Rush N, Suhr A, Vong WK, Hawkins R, Artzi Y (2022) Abstract visual reasoning with tangram shapes. In: \emph{Proceedings of the 2022 conference on empirical methods in natural language processing}.p 582--601
+\bibitem[\citeproctext]{ref-ji2022abstract}
+Ji, A., Kojima, N., Rush, N., Suhr, A., Vong, W. K., Hawkins, R., \& Artzi, Y. (2022). Abstract visual reasoning with tangram shapes. \emph{Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing}, 582--601.
 
-\leavevmode\vadjust pre{\hypertarget{ref-KraussBricker67_Delay}{}}%
-Krauss RM, Bricker PD (1967) Effects of transmission delay and access delay on the efficiency of verbal communication. \emph{The Journal of the Acoustical Society of America} \textbf{41}:286--292
+\bibitem[\citeproctext]{ref-KraussBricker67_Delay}
+Krauss, R. M., \& Bricker, P. D. (1967). Effects of transmission delay and access delay on the efficiency of verbal communication. \emph{The Journal of the Acoustical Society of America}, \emph{41}(2), 286--292.
 
-\leavevmode\vadjust pre{\hypertarget{ref-krauss1964}{}}%
-Krauss RM, Weinheimer S (1964) Changes in reference phrases as a function of frequency of usage in social interaction: A preliminary study. \emph{Psychon Sci} \textbf{1}:113--114. doi:\href{https://doi.org/10.3758/BF03342817}{10.3758/BF03342817}
+\bibitem[\citeproctext]{ref-KraussEtAl77}
+Krauss, R. M., Garlock, C. M., Bricker, P. D., \& McMahon, L. E. (1977). The role of audible and visible back-channel responses in interpersonal communication. \emph{Journal of Personality and Social Psychology}, \emph{35}(7), 523.
 
-\leavevmode\vadjust pre{\hypertarget{ref-krauss1966}{}}%
-Krauss RM, Weinheimer S (1966) Concurrent feedback, confirmation, and the encoding of referents in verbal communication. \emph{Journal of Personality and Social Psychology} \textbf{4}:343--346. doi:\href{https://doi.org/10.1037/h0023705}{10.1037/h0023705}
+\bibitem[\citeproctext]{ref-krauss1964}
+Krauss, R. M., \& Weinheimer, S. (1964). Changes in reference phrases as a function of frequency of usage in social interaction: A preliminary study. \emph{Psychon Sci}, \emph{1}(1-12), 113--114. \url{https://doi.org/10.3758/BF03342817}
 
-\leavevmode\vadjust pre{\hypertarget{ref-KraussEtAl77}{}}%
-Krauss RM, Garlock CM, Bricker PD, McMahon LE (1977) The role of audible and visible back-channel responses in interpersonal communication. \emph{Journal of Personality and Social Psychology} \textbf{35}:523
+\bibitem[\citeproctext]{ref-krauss1966}
+Krauss, R. M., \& Weinheimer, S. (1966). Concurrent feedback, confirmation, and the encoding of referents in verbal communication. \emph{Journal of Personality and Social Psychology}, \emph{4}(3), 343--346. \url{https://doi.org/10.1037/h0023705}
 
-\leavevmode\vadjust pre{\hypertarget{ref-kraut1982listener}{}}%
-Kraut RE, Lewis SH, Swezey LW (1982) Listener responsiveness and the coordination of conversation. \emph{Journal of personality and social psychology} \textbf{43}:718
+\bibitem[\citeproctext]{ref-kraut1982listener}
+Kraut, R. E., Lewis, S. H., \& Swezey, L. W. (1982). Listener responsiveness and the coordination of conversation. \emph{Journal of Personality and Social Psychology}, \emph{43}(4), 718.
 
-\leavevmode\vadjust pre{\hypertarget{ref-lewis1969convention}{}}%
-Lewis D (1969) Convention: A philosophical study. John Wiley \& Sons
+\bibitem[\citeproctext]{ref-lewis1969convention}
+Lewis, D. (1969). \emph{Convention: A philosophical study}. John Wiley \& Sons.
 
-\leavevmode\vadjust pre{\hypertarget{ref-macmillan_communication_2004}{}}%
-MacMillan J, Entin EE, Serfaty D (2004) Communication overhead: {The} hidden cost of team cognition. In: \emph{Team cognition: {Understanding} the factors that drive process and performance.} American Psychological Association, Washington, DC, US, p 61--82. doi:\href{https://doi.org/10.1037/10690-004}{10.1037/10690-004}
+\bibitem[\citeproctext]{ref-macmillan_communication_2004}
+MacMillan, J., Entin, E. E., \& Serfaty, D. (2004). Communication overhead: {The} hidden cost of team cognition. In \emph{Team cognition: {Understanding} the factors that drive process and performance.} (pp. 61--82). American Psychological Association. \url{https://doi.org/10.1037/10690-004}
 
-\leavevmode\vadjust pre{\hypertarget{ref-metzing2003}{}}%
-Metzing C, Brennan SE (2003) When conceptual pacts are broken: {Partner-specific} effects on the comprehension of referring expressions. \emph{Journal of Memory and Language} \textbf{49}:201--213. doi:\href{https://doi.org/10.1016/S0749-596X(03)00028-7}{10.1016/S0749-596X(03)00028-7}
+\bibitem[\citeproctext]{ref-metzing2003}
+Metzing, C., \& Brennan, S. E. (2003). When conceptual pacts are broken: {Partner-specific} effects on the comprehension of referring expressions. \emph{Journal of Memory and Language}, \emph{49}(2), 201--213. \url{https://doi.org/10.1016/S0749-596X(03)00028-7}
 
-\leavevmode\vadjust pre{\hypertarget{ref-parisi2005evaluating}{}}%
-Parisi JA, Brungart DS (2005) Evaluating communication effectiveness in team collaboration. In: \emph{Ninth european conference on speech communication and technology (INTERSPEECH)}.
+\bibitem[\citeproctext]{ref-parisi2005evaluating}
+Parisi, J. A., \& Brungart, D. S. (2005). Evaluating communication effectiveness in team collaboration. \emph{Ninth European Conference on Speech Communication and Technology (INTERSPEECH)}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-reimers2019}{}}%
-Reimers N, Gurevych I (2019) Sentence-{BERT}: {Sentence Embeddings} using {Siamese BERT-Networks}. doi:\href{https://doi.org/10.48550/arXiv.1908.10084}{10.48550/arXiv.1908.10084}
+\bibitem[\citeproctext]{ref-reimers2019}
+Reimers, N., \& Gurevych, I. (2019). \emph{Sentence-{BERT}: {Sentence Embeddings} using {Siamese BERT-Networks}}. {arXiv}. \url{https://doi.org/10.48550/arXiv.1908.10084}
 
-\leavevmode\vadjust pre{\hypertarget{ref-rogers2013}{}}%
-Rogers SL, Fay N, Maybery M (2013) Audience {Design} through {Social Interaction} during {Group Discussion}. \emph{PLOS ONE} \textbf{8}:e57211. doi:\href{https://doi.org/10.1371/journal.pone.0057211}{10.1371/journal.pone.0057211}
+\bibitem[\citeproctext]{ref-rogers2013}
+Rogers, S. L., Fay, N., \& Maybery, M. (2013). Audience {Design} through {Social Interaction} during {Group Discussion}. \emph{PLOS ONE}, \emph{8}(2), e57211. \url{https://doi.org/10.1371/journal.pone.0057211}
 
-\leavevmode\vadjust pre{\hypertarget{ref-schober1989}{}}%
-Schober MF, Clark HH (1989) Understanding by addressees and overhearers. \emph{Cognitive Psychology} \textbf{21}:211--232. doi:\href{https://doi.org/10.1016/0010-0285(89)90008-X}{10.1016/0010-0285(89)90008-X}
+\bibitem[\citeproctext]{ref-schober1989}
+Schober, M. F., \& Clark, H. H. (1989). Understanding by addressees and overhearers. \emph{Cognitive Psychology}, \emph{21}(2), 211--232. \url{https://doi.org/10.1016/0010-0285(89)90008-X}
 
-\leavevmode\vadjust pre{\hypertarget{ref-seaman1997communication}{}}%
-Seaman CB, Basili VR (1997) Communication and organization in software development: An empirical study. \emph{IBM Systems Journal} \textbf{36}:550--563
+\bibitem[\citeproctext]{ref-seaman1997communication}
+Seaman, C. B., \& Basili, V. R. (1997). Communication and organization in software development: An empirical study. \emph{IBM Systems Journal}, \emph{36}(4), 550--563.
 
-\leavevmode\vadjust pre{\hypertarget{ref-swaab2012communication}{}}%
-Swaab RI, Galinsky AD, Medvec V, Diermeier DA (2012) The communication orientation model: Explaining the diverse effects of sight, sound, and synchronicity on negotiation and group decision-making outcomes. \emph{Personality and Social Psychology Review} \textbf{16}:25--53
+\bibitem[\citeproctext]{ref-swaab2012communication}
+Swaab, R. I., Galinsky, A. D., Medvec, V., \& Diermeier, D. A. (2012). The communication orientation model: Explaining the diverse effects of sight, sound, and synchronicity on negotiation and group decision-making outcomes. \emph{Personality and Social Psychology Review}, \emph{16}(1), 25--53.
 
-\leavevmode\vadjust pre{\hypertarget{ref-tannen2005conversational}{}}%
-Tannen D (2005) Conversational style: Analyzing talk among friends. Oxford University Press
+\bibitem[\citeproctext]{ref-tannen2005conversational}
+Tannen, D. (2005). \emph{Conversational style: Analyzing talk among friends}. Oxford University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-tolins2016}{}}%
-Tolins J, Fox Tree JE (2016) Overhearers {Use Addressee Backchannels} in {Dialog Comprehension}. \emph{Cogn Sci} \textbf{40}:1412--1434. doi:\href{https://doi.org/10.1111/cogs.12278}{10.1111/cogs.12278}
+\bibitem[\citeproctext]{ref-tolins2016}
+Tolins, J., \& Fox Tree, J. E. (2016). Overhearers {Use Addressee Backchannels} in {Dialog Comprehension}. \emph{Cogn Sci}, \emph{40}(6), 1412--1434. \url{https://doi.org/10.1111/cogs.12278}
 
-\leavevmode\vadjust pre{\hypertarget{ref-traum2004}{}}%
-Traum D (2004) Issues in {Multiparty Dialogues}. In: Dignum F (ed) \emph{Advances in {Agent Communication}}. {Springer Berlin Heidelberg}, {Berlin, Heidelberg}, p 201--211. Available from: \url{http://link.springer.com/10.1007/978-3-540-24608-4_12} {[}Last accessed 1 February 2022{]}. doi:\href{https://doi.org/10.1007/978-3-540-24608-4_12}{10.1007/978-3-540-24608-4\_12}
+\bibitem[\citeproctext]{ref-traum2004}
+Traum, D. (2004). Issues in {Multiparty Dialogues}. In F. Dignum (Ed.), \emph{Advances in {Agent Communication}} (Vol. 2922, pp. 201--211). {Springer Berlin Heidelberg}. \url{https://doi.org/10.1007/978-3-540-24608-4_12}
 
-\leavevmode\vadjust pre{\hypertarget{ref-weber2003}{}}%
-Weber RA, Camerer CF (2003) Cultural {Conﬂict} and {Merger Failure}: {An Experimental Approach}. \emph{Manag Sci} \textbf{49}:16
+\bibitem[\citeproctext]{ref-weber2003}
+Weber, R. A., \& Camerer, C. F. (2003). Cultural {Conﬂict} and {Merger Failure}: {An Experimental Approach}. \emph{Manag. Sci.}, \emph{49}(4), 16.
 
-\leavevmode\vadjust pre{\hypertarget{ref-wilkes1992coordinating}{}}%
-Wilkes-Gibbs D, Clark HH (1992) Coordinating beliefs in conversation. \emph{Journal of memory and language} \textbf{31}:183--194
+\bibitem[\citeproctext]{ref-wilkes1992coordinating}
+Wilkes-Gibbs, D., \& Clark, H. H. (1992). Coordinating beliefs in conversation. \emph{Journal of Memory and Language}, \emph{31}(2), 183--194.
 
-\leavevmode\vadjust pre{\hypertarget{ref-Wittgenstein1953}{}}%
-Wittgenstein L (1953) Philosophical investigations. Wiley-Blackwell, New York, NY, USA
+\bibitem[\citeproctext]{ref-Wittgenstein1953}
+Wittgenstein, L. (1953). \emph{Philosophical investigations}. Wiley-Blackwell.
 
-\leavevmode\vadjust pre{\hypertarget{ref-yoon2014}{}}%
-Yoon SO, Brown-Schmidt S (2014) Adjusting conceptual pacts in three-party conversation. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition} \textbf{40}:919--937. doi:\href{https://doi.org/10.1037/a0036161}{10.1037/a0036161}
+\bibitem[\citeproctext]{ref-yoon2014}
+Yoon, S. O., \& Brown-Schmidt, S. (2014). Adjusting conceptual pacts in three-party conversation. \emph{Journal of Experimental Psychology: Learning, Memory, and Cognition}, \emph{40}(4), 919--937. \url{https://doi.org/10.1037/a0036161}
 
-\leavevmode\vadjust pre{\hypertarget{ref-yoon2018}{}}%
-Yoon SO, Brown-Schmidt S (2018) Aim {Low}: {Mechanisms} of {Audience Design} in {Multiparty Conversation}. \emph{Discourse Processes} \textbf{55}:566--592. doi:\href{https://doi.org/10.1080/0163853X.2017.1286225}{10.1080/0163853X.2017.1286225}
+\bibitem[\citeproctext]{ref-yoon2018}
+Yoon, S. O., \& Brown-Schmidt, S. (2018). Aim {Low}: {Mechanisms} of {Audience Design} in {Multiparty Conversation}. \emph{Discourse Processes}, \emph{55}(7), 566--592. \url{https://doi.org/10.1080/0163853X.2017.1286225}
 
-\leavevmode\vadjust pre{\hypertarget{ref-yoon2019}{}}%
-Yoon SO, Brown‐Schmidt S (2019) Audience {Design} in {Multiparty Conversation}. \emph{Cogn Sci} \textbf{43}:e12774. doi:\href{https://doi.org/10.1111/cogs.12774}{10.1111/cogs.12774}
+\bibitem[\citeproctext]{ref-yoon2019}
+Yoon, S. O., \& Brown‐Schmidt, S. (2019). Audience {Design} in {Multiparty Conversation}. \emph{Cogn. Sci.}, \emph{43}(8), e12774. \url{https://doi.org/10.1111/cogs.12774}
 
-\leavevmode\vadjust pre{\hypertarget{ref-zack1993interactivity}{}}%
-Zack MH (1993) Interactivity and communication mode choice in ongoing management groups. \emph{Information Systems Research} \textbf{4}:207--239
+\bibitem[\citeproctext]{ref-zack1993interactivity}
+Zack, M. H. (1993). Interactivity and communication mode choice in ongoing management groups. \emph{Information Systems Research}, \emph{4}(3), 207--239.
 
 \end{CSLReferences}
 

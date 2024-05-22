@@ -32,9 +32,6 @@
 		
           \opening{To whom it may concern, } 
 
-          
-           
-          
           %When submitting revised materials, we require that you include a cover letter with a point-by-point response to the reviewers' comments. If you submitted a single PDF at initial submission, you must submit individual publication-ready files (e.g., Word file for manuscript text; EPS, TIFF, or high-resolution PDF for figures; Word file for tables; etc.)
           %TODO cover letter
           %TODO individual files <-- this may be a huge pita
@@ -59,11 +56,15 @@
 
 		Thank you for bringing this up. First, we have revised our mention of modality in the Introduction to flag this difference:
           
-          \revised{Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies, although people produce fewer words in text modalities than oral modalities (Hawkins et al, 2020). The text-based chat modalities arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.}
+          \revised{Repeated reference games in web-based platforms have previously replicated earlier results from face-to-face studies, although people produce fewer words in text modalities than oral modalities (Hawkins et al., 2020). The text-based chat modalities arguably more closely resemble the interfaces used by modern teams who increasingly communicate through group text threads or popular platforms like Slack or Discord.}
           
-Second, we have added a paragraph to the limitations section of the Discussion where we address how different modalities have different affordances and how we might expect our results to translate to different modalities.           
+Second, we have added a paragraph to the limitations section of the Discussion where we address how different modalities have different affordances and how we might expect our results to translate to different modalities. 
 
-          \revised{People communicate using language in a variety of modalities that vary whether whether the participants use oral or written language, whether they are co-present in the same space, and whether they have visual access to each other. All of these situations have a shared communicative and linguistic base, but different situations have different affordances and different norms for how to communicate. In this work, we used a web-based chat modality where communication was text based and there was not co-presence or visual access.  Given previous work has found overall similar trends across different modalities [@hawkins2020], we suspect that the general pattern of effects we see here in terms of group size and group coherence are likely to extend to other modalities. However, different modalities may allow for different approaches that may be more or less sensitive to group size, describer rotation, or different levels of matcher contributions. For instance, in face-to-face oral settings, it may be easier for describers to continuously talk until interrupted or track the comprehension of individual group members, which could lead to overall higher amounts of language and higher performance. People communicate in a variety of ways in everyday life, and studying different of these situations is useful both for understanding the specific modalities and for understanding their shared communicative underpinnings.}
+          \revised{A particularly important dimension shaping interaction is the modality of communication, including whether whether the participants use oral or written language, whether they are co-present in the same space, and whether they have visual access to each others' faces and gestures.
+          	Distinct modalities carry distinct affordances and norms.
+          	In this work, we relied on a text-based chat modality without allowing co-presence or visual access.
+          	
+          	We suspect that the general pattern of effects we see, in terms of group size and coherence, are likely to extend to other modalities. However, different modalities may allow for different strategies that may be more or less sensitive to group size, describer rotation, or different levels of matcher contributions. For instance, in face-to-face oral settings, it may be easier for describers to continuously talk until interrupted, or to monitor the comprehension of individual group members from their facial expressions.}
           
           \theysaid{Related to this point, when I encountered the term matcher "backchannel" (in Figure 1 and study design), I assumed it was analogous to backchannel feedback in oral communication, which includes verbal acknowledgments or non-verbal gestures. In the study, when it is limited to 4 emojis, I thought they were analogous to backchannel feedback in oral communication, but in the other condition, when matchers had a chatbox to provide feedback, their responses were more like turn-taking. Thus, the term "backchannel" was a bit confusing.}
           
@@ -73,7 +74,7 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           
           First, we briefly mention how recruitment logistics affected the number of games in the Participants subsection of the main text Methods Section. 
           
-          \revised{A total of 1319 people participated across the 3 experiments. We recruited enough participants for 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. However, due to attrition in filling the games initially or due to participants dropping out of the games, we ended up with fewer games in some conditions. For logistical reasons of matching participants into real-time games, we had to recruit participants in fairly large batches, and so did not have precise control to add new games to replace games that did not fill or had participants drop out early.  A breakdown of number of games and participants in each condition is shown in SI Table 3 along with further discussion of recruitment logistics. }
+          \revised{A total of 1319 people participated across the 3 experiments. We recruited enough participants for 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. However, due to attrition in filling the games initially and due to participants dropping out of the games, we ended up with fewer games in some conditions. For logistical reasons of matching participants into real-time games, we had to recruit participants in fairly large batches, and so did not have precise control to add new games to replace games that did not fill or had participants drop out early. A breakdown of number of games and participants in each condition is shown in SI Table 3 along with further discussion of recruitment logistics.}
           
 	We have added much more detail on the recruitment process and explained how it led to the uneven distributions of groups in the Supplement.     
 	
@@ -91,16 +92,12 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           
           \theysaid{- Related to the number of data in each condition, I wonder about power because in some analyses (group size in E1 and game thickness in E3), the effect of a factor was not significant until the meta-analysis where more data were pooled together. This could be due to insufficient power. Any information about power would be helpful (especially for future studies).}
           
-          Unfortunately, we can't say much about power, although we can explain why many of the effects had wide credible intervals in the per-experiment models. 
-          
-          Post-hoc power is a recapitulation of the effect sizes found in this experiment and thus not a useful measure [TODO CITATIONS?]. It also isn't meaningful within our Bayesian effect-size-estimation framework. 
-          
           The issue here, which is general to this type of experiment, is that there is large variation at the item and group levels. At the item level, the tangram images very considerable in how difficult they are to refer to. At the group level, games varied considerable in their performance, in how many words they used, and in what type of language they use. 
           
           Against the background of these large sources of variability, it can be difficult to estimate the size of the population level effects. We used mixed models with full random effects structures (or at least as close to full as would run in a reasonable time), and what we see is that different draws from the model vary in what effects are attributed to the specific groups and items and what to the underlying population effect. Thus, there is often wide uncertainty in the 95\% Credible Intervals. 
           
           We mention this in the main text in section ``Smaller and higher-coherence groups are more accurate'' in Results in the following way: 
-          \revised{For this and other effects, there was substantial variation at the tangram and game levels, with some tangrams being markedly easier than others and some groups performing differently than others. This wide variation made it difficult to precisely estimate population-level main effects, leading to wide confidence intervals. See SI Figure 11 for a visualization of the relative magnitudes of population effects and game and tangram level variation.}
+          \revised{For this and other effects, there was substantial variation at the tangram and game levels, with some tangrams being markedly easier than others and some groups performing differently than others. This wide variation made it difficult to precisely estimate population-level main effects, leading to wide credible intervals. See SI Figure 11 for a visualization of the relative magnitudes of population effects and game and tangram level variations.}
           
           In the SI, we added Figure 11 which visualizes the estimates and credible intervals for the fixed (population-level) effects and the standard deviations of the group-level effects for comparison, along with the following explanation: 
           
@@ -125,7 +122,7 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           We added the following text to the Methods section explaining this additional analysis:
           
 
-          \revised{As a sensitivity analysis, we re-ran the primary models on the subset of the data from games that a) completed all 72 trials and b) had the full complement of players the entire time (relevant to 6-player experiment 3 games where games could start or continue with fewer players). Discrepancies are mentioned in the results, and these analyses are depicted in SI Figures 4 and 5 and SI Tables 54-73. }
+          \revised{As a sensitivity analysis, we re-ran the primary models on the subset of the data from games that a) completed all 72 trials and b) had the full complement of players the entire time (relevant to 6-player experiment 3 games where games could start or continue with fewer players). Discrepancies are mentioned in the results, and these analyses are depicted in SI Figures 4 and 5 and SI Tables 54-73.}
           
           For the most part, the model results were qualitatively the same and quantitatively similar to the results on the full sample. Where there were differences, such as when an effect reported in the main text had a Credible Interval overlapping 0 in the sensitivity analysis, we now mention in the main Results text that the certain result is not robust to the sensitivity analysis. 
 
@@ -134,7 +131,7 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           \revised{In Experiment 3, larger games began with
           	lower initial accuracy ($\beta$ = −0.64, 95\% CrI = [−1.05, −0.25]) and improved more slowly ($\beta$ =
           	−0.34, 95\% CrI = [−0.43, −0.25]) than smaller games, although group size differences were not
-          	reliable in Experiment 1 (SI Table 4), and these experiment 3 differences are not robust in a 
+          	reliable in Experiment 1 (SI Table 4), and these experiment 3 differences were not robust in a 
           	sensitivity	analysis (SI	Figure 4C and SI Table 58).}
           
           
@@ -147,7 +144,7 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           	Addition to the ``Descriptions converge faster in groups with thicker channels'' section: 
           	\revised{In Experiment 3, 6-person thick games started off further
           		from their eventual convention than 2-person thick games ($\beta$ = −0.069, 95\% CrI = [−0.113, −0.025])
-          		but closed the gap over time (Figure 4C, $\beta$ = 0.009, 95\% CrI = [0.001, 0.017], this effect is not robust to sensitivity analysis,
+          		but closed the gap over time (Figure 4C, $\beta$ = 0.009, 95\% CrI = [0.001, 0.017], this effect was not robust to sensitivity analysis,
           		SI Figure 5C and SI Table 68).}
           	
           \theysaid{- In the method, the time it took for each participant to click the target was recorded. Were they also analyzed? If so, is the result comparable to the result of describers' expression length (e.g., longer expressions lead to longer reaction time)? Or does the group size somehow modulate it?}
@@ -159,14 +156,11 @@ Second, we have added a paragraph to the limitations section of the Discussion w
           
           We added a brief mention of these results to the main text in the results section ``Smaller and higher-coherence groups are more efficient'':
           
-          \revised{The reduction patterns of description lengths is paralleled by how long matchers took to make selections; across conditions, matchers selected faster in later conditions (SI Figure 9), and the correlation between speed and description length was consistent across experiments (SI Figure 10). }
+          \revised{The reduction patterns of description lengths is paralleled by how long matchers took to make selections; across conditions, matchers selected faster in later conditions (SI Figure 9), and the correlation between speed and description length was consistent across experiments (SI Figure 10).}
           
           \theysaid{- Minor point: The resolution of Figure 1A is low, making it difficult to read text in the figure.}
-          %TODO in figures: make sure Fig 1A is good
           
-          [TODO: Veronica still needs to fix this.]
-          
-          Thanks for bringing this up -- we have re-created Figure 1A to address this issue. 
+          Thanks for bringing this up -- we have re-created Figure 1A and made it slighltly more schematic so that the text is a readable size. 
           
           \theysaid{Reviewer \#2:}
           \theysaid{Comments:}
@@ -179,9 +173,9 @@ Thanks for letting us know that this paragraph was confusing. We have reworked t
 
 This part of the ``Overview of experiments'' subsection now reads: 
           
-          \revised{Experiment 2 focused on the most challenging 6-player groups and explored the role of interaction structure. Each condition in Experiment 2 varied one aspect of the experiment relative to the Experiment 1 6-player baseline. We tried two variants that we expected to increase group coherence and improve performance, and a third variant we expected to interfere with the ability to establish mutual understanding and thus impede performance. 
-          	In the first variant, we maintained the same describer throughout rather than a rotating describer, such that the same individual has the opportunity to aggregate feedback across trials and track which matchers are struggling with which targets. 
-          	In the second variant, we gave the group of matchers full feedback about what every other member of the group had selected, and we showed the intended target. 
+          \revised{Experiment 2 focused on the most challenging 6-player groups and explored the role of interaction structure. Each condition in Experiment 2 varied one aspect of the experiment relative to the Experiment 1 6-player baseline. We tried two variants that we expected to increase group coherence and improve performance, and a third variant we expected to interfere with the ability to establish mutual understanding and thus impede performance.
+          	In the first variant, we maintained the same describer throughout rather than a rotating describer, such that the same individual has the opportunity to aggregate feedback across trials and track which matchers are struggling with which targets.
+          	In the second variant, we gave the group of matchers full feedback about what every other member of the group had selected, and we showed the intended target.
           	In the third variant, we changed how matchers could make contributions to the group. In contrast to prior experiments, where matchers could contribute freely to the chat; here, we limited matchers to sending four discrete emojis (green check, thinking face, red x, and laughing-crying face) that could convey simple valence and level of comprehension, but not any referential content.}
           
           \theysaid{p. 7, concerning the conclusion that larger groups made greater use of backchannels - How can this be separated from the fact that larger groups also simply had more matchers available to backchannel?}
@@ -196,11 +190,10 @@ This part of the ``Overview of experiments'' subsection now reads:
          
           We have revised the main text, which now reads:
           
-          \revised{Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (SI Figure 6A, $\beta$ = 0.79, 95\% CrI = [0.58, 0.98]), which declined across repetition blocks ($\beta$ =
-          	−0.8, 95\% CrI = [−0.97, −0.62])). On an individual level, a matcher in a larger group was more likely to make contributions than a matcher in a smaller group, although each contribution tended to be shorter (SI Figure 7, SI Tables 18, 20).
-          The length of matcher interjections also decreased over time, especially for large groups (SI Figure           6D, $\beta$ = −0.41, 95\%CrI = [−0.72, −0.11])) consistent with the need for early matcher involvement in establishing referential conventions. 
-          Emoji use in Experiment 3 followed similar trends (SI Figure 8).
-          Overall, describers in larger groups receive more total input from matchers, suggesting larger groups may require greater participation by matchers to reliably establish common ground.}
+          \revised{Overall, we found that larger groups displayed a higher proportion of trials where at least one matcher produced utterances (SI Figure 6A, \(\beta=0.79,\:95\%\:\mathrm{CrI}=[0.58, 0.98]\)), which declined across repetition blocks (\(\beta=-0.8,\:95\%\:\mathrm{CrI}=[-0.97, -0.62]\)). On an individual level, a matcher in a larger group was more likely to make contributions than a matcher in a smaller group, although each contribution tended to be shorter (SI Figure 7, SI Tables 18, 20).
+          	The length of matcher interjections also decreased over time, especially for large groups (SI Figure 6D, \(\beta=-0.41,\:95\%\:\mathrm{CrI}=[-0.72, -0.11]\)) consistent with the need for early matcher involvement in establishing referential conventions.
+          	Emoji use in Experiment 3 followed similar trends (SI Figure 8).
+          	Overall, describers in larger groups receive more total input from matchers, suggesting larger groups may require greater participation by matchers to reliably establish common ground.}
          
           
           \theysaid{As mentioned above, I liked the analyses examining semantic similarity of describers' utterances within and between groups. I wondered, though, whether it would be possible to have more qualitative information about the nature of the actual descriptions, with an eye toward a more concrete understanding of how describers may have chosen to accommodate their utterances to the demands of the communicative situation. On p. 11, the paper alludes to the fact that initial similarity of descriptions across groups could have been higher because describers focused on 'shapes or body parts.' This reminded me of Fussell \& Krauss (1989), which found that speakers showed a relative preference for literal/geometric descriptions of novel images (vs figurative/holistic labels) when the descriptions were for an unfamiliar recipient, for whom a 'generic' description might be more appropriate. All else being equal, talking to a larger group or knowing that matchers may be restricted in what they can say may similarly prompt speakers to be more conservative in their descriptions, leading to an emphasis upon context-independent features that may be presumed to be equally available to addressees. Conventions can be based on different kinds of semantic perspectives. Basically, I would be interested in having a more fleshed out picture of the description content, if possible.}
@@ -229,7 +222,8 @@ This part of the ``Overview of experiments'' subsection now reads:
           
           At the end of the main text Results section `` Games with thicker channels diverge from one another more quickly'', we have added:
           
-          \revised{As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6 thin condition, however, retains a higher level of geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a low level of utterances that do not contain any of these classes of words.}
+          \revised{As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6-person thin condition, however, retains a higher level of literal geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a lower level of utterances that do not contain any of these classes of words.
+          }
           
           And in the discussion:
           \revised{The transcripts for these games provide a rich dataset for exploring different ways language is used to form referential conventions. }
