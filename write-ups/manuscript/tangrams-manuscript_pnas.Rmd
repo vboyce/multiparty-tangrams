@@ -1,96 +1,74 @@
 ---
-title: |
-  | Interaction structure constrains 
-  | the emergence of conventions in group communication
+title: Interaction structure constrains the emergence of conventions in group communication
 
+# Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
 author:
   - name: Veronica Boyce
-    email: vboyce@stanford.edu 
-    affiliation:
-      - Stanford Psych
+    affiliation: a,1
   - name: Robert D. Hawkins
-    affiliation: 
-      - UW-Madison
+    affiliation: b
   - name: Noah D. Goodman
-    affiliation: 
-      - Stanford Psych
-      - Stanford CS
+    affiliation: a,c
   - name: Michael C. Frank 
-    affiliation: 
-      - Stanford Psych
+    affiliation: a
 address:
-  - code: Stanford Psych
+  - code: a
     address: Psychology Department, Stanford University, Stanford, CA 94305
-  - code: Stanford CS
+  - code: c
     address: Computer Science Department, Stanford University, Stanford, CA 94305
-  - code: UW-Madison
+  - code: b
     address: Psychology Department, University of Wisconsin -- Madison, Madison, WI, 53715
-bibliography: ["papers.bib"] # Replace with one or more of your own bibtex files. Better BibTeX for Zotero is your friend
-csl: apa7.csl # Use any CSL style. See https://www.zotero.org/styles for a good list. Ignored if citation_package: natbib
-link-citations: TRUE
+corresponding_author:
+  code: 1
+  text: "To whom correspondence should be addressed. E-mail: vboyce@stanford.edu"
+
+# For footer text
+lead_author_surname: Boyce
+
+author_contributions: |
+  We report CRediT taxonomy contributions as follows: All authors did conceptualization and methodology. VB did data curation, formal analysis, investigation, visualization, and writing -- original draft. VB and RDH did software. RDH, NDG, and MCF did writing -- editing. MCF and NDG did funding. MCF did supervision. 
+  
+abstract: |
+  Real-world communication frequently requires language producers to address more than one comprehender at once, yet most psycholinguistic research focuses on one-on-one communication. As the audience size grows, interlocuters face new challenges that do not arise in dyads. They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding. Here, we ask which properties of the group's *interaction structure* facilitate successful communication. We used a repeated reference game paradigm in which directors instructed between one and five matchers to choose specific targets out of a set of abstract figures.  Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of peer interaction between matchers.  Across groups of different sizes and interaction constraints, describers produced increasingly efficient utterances and matchers made increasingly accurate selections. Critically, however, we found that smaller groups and groups with less-constrained interaction structures ("thick channels") showed stronger convergence to group-specific conventions than large groups with constrained interaction structures ("thin channels"), which struggled with convention formation.  Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
+
+
+significance: |
+  Human linguistic communication is remarkably versatile, from one-on-one conversations to large group chats on messaging platforms. Yet existing empirical work has overwhelmingly focused on one-on-one contexts, overlooking the factors that affect real-world communication in larger groups. We address this gap using a large-scale reference game task, examining how groups of varying sizes and interaction structures coordinate on linguistic conventions for novel objects. We found effective and robust communication across multiple settings, but larger (6-person) groups were more sensitive to differences in group structure and communication channels. Our results suggest that "thicker" communication channels - where group members provide more feedback to one another - can result in better communication in larger groups.
+
+acknowledgements: |
+ We thank the LangCog Lab, Saxelab, CAMP 5, HSP 2023, and Cogsci 2022 audiences for helpful feedback on this work. Experiment 1 was previously reported in Proceedings of the Annual Meeting of the Cognitive Science Society 44 (2022). This work was supported by a Hoffman-Yee Grant from the Stanford Institute for Human-Centered AI.
+
+keywords:
+  - Communication
+  - Psycholinguistics
+  - Reference games
+  - Convention formation
+  - large-scale online experiment
+
+## must be one of: pnasresearcharticle (usual two-column layout), pnasmathematics (one column layout), or pnasinvited (invited submissions only)
+pnas_type: pnasresearcharticle
+
+bibliography: papers.bib
+csl: pnas.csl
+
+## change to true to add optional line numbering
+lineno: false
+
 header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{angles,positioning,arrows.meta, quotes, shapes, shapes.geometric}
   - \usepackage{graphicx}
   - \usepackage{emoji}
   - \usepackage{caption, subcaption}
-output:
-  bookdown::pdf_document2:
-    toc: FALSE
+output: 
+  rticles::pnas_article:
     keep_tex: TRUE
-    template: generic_article_template.tex
-    #md_extensions: "-autolink_bare_uris"
     latex_engine: lualatex
-    number_sections: FALSE
-    citation_package: default # Can also be "natbib"
-lang: en # Main document language in BCP47 format
-geometry: "margin=1.25in"
-linestretch: 1 # for double spacing
-endfloat: FALSE # Set to TRUE to turn on latex endfloat package to place figures and tables at end of document
-# endfloatoption: # See endfloat documentation for more possibilities
-#   - tablesfirst # Default
-#   - nomarkers # Default
-numberlines: TRUE
-authblk: TRUE # FALSE = author affiliations in footnotes; TRUE = author affiliations in a block below author names
-footnotehyper: FALSE # TRUE will give you enhanced table footnote capabilities. Set to FALSE to be able to use French blocks. Needed due to what appears to be a latex bug.
-urlcolor: blue
-linkcolor: blue
-citecolor: blue
-graphics: TRUE # Needed to be able to include images
-tables: TRUE # Needed to be able to include tables
-
 ---
-
-Corresponding author: Veronica Boyce
-Email: vboyce@stanford.edu
-Address: Building 420. 450 Jane Stanford Way, Stanford, CA, 94305. 
-Phone: 650-933-0841
 
 Pre-print status: this work is on the pre-print server PsyArxiv at https://osf.io/preprints/psyarxiv/a3wfy under a CC-BY license. 
 
 Classification: Social Sciences -> Psychological and Cognitive Sciences
-
-Keywords: Communication, Psycholinguistics, Reference games, Convention formation, large-scale online experiment
-
-
-\pagebreak
-<!---------------------- Abstract --------------------->
-
-::: {.abstract data-latex="" lang=en}
-
-Real-world communication frequently requires language producers to address more than one comprehender at once, yet most psycholinguistic research focuses on one-on-one communication.
-As the audience size grows, interlocuters face new challenges that do not arise in dyads. 
-They must consider multiple perspectives and weigh multiple sources of feedback to build shared understanding.
-Here, we ask which properties of the group's *interaction structure* facilitate successful communication.
-We used a repeated reference game paradigm in which directors instructed between one and five matchers to choose specific targets out of a set of abstract figures. 
-Across 313 games ($N=1,319$ participants), we manipulated several key constraints on the group's interaction, including the amount of feedback that matchers could give to directors and the availability of peer interaction between matchers. 
-Across groups of different sizes and interaction constraints, describers produced increasingly efficient utterances and matchers made increasingly accurate selections. 
-Critically, however, we found that smaller groups and groups with less-constrained interaction structures ("thick channels") showed stronger convergence to group-specific conventions than large groups with constrained interaction structures ("thin channels"), which struggled with convention formation. 
-Overall, these results shed new light on the core structural factors that enable communication to thrive in larger groups.
-
-:::
-
-Significance Statement: Human linguistic communication is remarkably versatile, from one-on-one conversations to large group chats on platforms like Slack. Yet existing empirical work has overwhelmingly focused on one-on-one contexts, overlooking the factors that affect real-world communication in larger groups. We address this gap using a large-scale reference game task, examining how groups of varying sizes and interaction structures coordinate on linguistic conventions for novel objects. We found effective and robust communication across multiple settings, but larger (6-person) groups were more sensitive to differences in group structure and communication channels. Our results suggest that "thicker" communication channels - where group members provide more feedback to one another - can result in better communication in larger groups.
 <!------------ Main text -------------------->
 
 ```{r set-up, include=FALSE}
@@ -183,7 +161,7 @@ summarize(players=sum(numPlayers))
 words <- combined_chat |> ungroup() |> select(total_num_words) |> summarize(words=sum(total_num_words)) 
 ```
 
-# Introduction
+# Introduction {.unnumbered}
 
 Much of human social life revolves around communication in groups. 
 At school, teachers address large classrooms of children [@cazden1988classroom]; at home, we chat with groups of friends and family members over dinner [@tannen2005conversational]; and at work, we attend meetings with colleagues and managers [@caplow1957organizational; @zack1993interactivity].
@@ -223,7 +201,7 @@ More broadly, our work suggests that studying communication in larger groups is 
 knitr::include_graphics("expt-diagram4.pdf")
 ```
 
-# Results
+# Results {.unnumbered}
 
 We recruited `r players` participants through Prolific, an online crowd-sourcing platform.
 Participants were organized into `r games` groups of size two to six for a communication game (Figure \@ref(fig:behavioral)A).
@@ -238,7 +216,7 @@ We systematically sampled points along four dimensions parameterizing different 
 We manipulated *group size* (ranging from two to six), *role stability* (whether or not participants took turns in the describer role), richness of *task feedback* (whether or not matchers were able to see each other's responses), and richness of the *matcher contributions* (whether matchers were able to freely respond through a chatbox or could only use emojis; Figure \@ref(fig:behavioral)C).
 Other factors, such as the set of stimuli and background knowledge about one's partners, were held constant across games. 
 
-### Overview of experiments 
+### Overview of experiments {.unnumbered}
 
 Experiment 1 began by investigating how performance scaled with group size.
 Based on prior qualitative work, we predicted that larger groups face a more challenging coordination problem. 
@@ -463,7 +441,7 @@ acc_3 <- read_rds(here(msum_loc,"acc_3.rds"))
 acc_mega <- read_rds(here(msum_loc,"acc_meta.rds"))
 ```
 
-### Smaller and higher-coherence groups are more accurate
+### Smaller and higher-coherence groups are more accurate {.unnumbered}
 
 Our first set of hypotheses focused on group performance: how accurately and efficiently groups were able to perform the referential task. 
 We characterize group performance along two complementary metrics: (1) matcher accuracy and (2) describer efficiency. 
@@ -506,7 +484,7 @@ thin6 <- str_c("$\\beta=", round(red_3_extra[2,3],2),", (95\\%\\:\\mathrm{CrI}=[
 thick6 <- str_c("$\\beta=", round(red_3_extra[2,4],2),", (95\\%\\:\\mathrm{CrI}=[",round(red_3_extra[1,4],2),", ",round(red_3_extra[3,4],1), "]$)")
 ```
 
-### Smaller and higher-coherence groups are more efficient
+### Smaller and higher-coherence groups are more efficient {.unnumbered}
 
 After establishing that groups were able to communicate accurately, we turned to the challenges faced by describers when deciding how much information to provide.
 Specifically, we predicted that larger and more heterogeneous groups may initially require more information, but that thicker interaction structure may similarly allow describers to communicate more effectively over time.
@@ -662,7 +640,7 @@ listener_sample <- pre_chat_3 |> filter(target=="/experiment/tangram_H.png") |> 
 
 ```
 
-### Larger groups make greater use of matcher contributions
+### Larger groups make greater use of matcher contributions {.unnumbered}
 
 As a final measure of group performance, we examined the back-and-forth interactions between the describer and the group of matchers.
 Matchers use their chat contributions to actively provide feedback, ask questions, offer alternative descriptions, and seek clarification about the describer's referring expressions. 
@@ -673,7 +651,7 @@ Emoji use in Experiment 3 followed similar trends (SI Figure 8).
 Overall, describers in larger groups receive more total input from matchers, suggesting larger groups may require greater participation by matchers to reliably establish common ground.
 
 
-### Descriptions converge faster in groups with thicker channels
+### Descriptions converge faster in groups with thicker channels {.unnumbered}
 
 ```{r sbert-diagram, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Example utterances describing the shown tangram figure produced by two 3-player games in Experiment 1. To measure convergence within a game (blue), we measured the cosine similarity between SBERT embeddings of descriptions and the embedding of the round 6 utterance (taken to be the convention). Higher cosine similarity indicates more similar meaning. To measure divergence between games (green), we measured the similarity between embeddings of utterances from the same round across games."}
 knitr::include_graphics("sbert.pdf")
@@ -911,7 +889,7 @@ div_mega <- read_rds(here(msum_loc,"mega_div.rds"))
 ```
 
 
-### Games with thicker channels diverge from one another more quickly 
+### Games with thicker channels diverge from one another more quickly {.unnumbered}
 
 While groups may initially overlap in their descriptions, including details of shapes or body parts, we predicted that their descriptions would become increasingly dissimilar as groups increasingly adapt to their own idiosyncratic shared history. 
 To test this effect, we constructed a mixed-effects linear regression model predicting the cross-game similarity between a pair of utterances for the same image. 
@@ -929,7 +907,7 @@ A mega-analytic model confirms this pattern: thin games differentiate less betwe
 
 As a complement to the embedding analysis, we also examined the frequency of a few classes of words in the descriptions. Literal geometric words (ex. square, triangle, etc) and words for body parts (leg, arm, etc) are common early in games, but decline over repetition in most conditions, to be replaced by more abstract descriptions that do not contain these classes of words (SI Figure 2). The 6-person thin condition, however, retains a higher level of literal geometric and body part words, along with high levels of positional words (above, left, below, etc) and posture words (kicking, standing, seated, etc), with a lower level of utterances that do not contain any of these classes of words.
 
-# Discussion
+# Discussion {.unnumbered}
 
 From classrooms to boardrooms, human communication often takes place in multi-party settings. 
 However, experimental research rarely focuses on such settings, largely due to practical obstacles. 
@@ -974,7 +952,7 @@ By studying common ground and coordination across a wider range of interaction s
 This understanding can inform the design of policies and collaborative platforms that promote effective communication in various contexts, from small-scale conversations to large-scale civic discourse. 
 As remote work and online communication become increasingly prevalent, it is increasingly crucial to understand how the structure of group communication environments shapes the effectiveness of human communication. 
 
-# Materials and Methods
+# Materials and Methods {.unnumbered}
 
 Our iterated reference task was implemented with Empirica [@almaatouq2020empirica], a React-based web development framework for real-time multi-player tasks. 
 Our experiments were designed sequentially and pre-registered individually.^[Experiment 1: https://osf.io/cn9f4 for the 2-4 player groups, and https://osf.io/rpz67 for the 5-6 player data run later. Experiment 2: same describer at  https://osf.io/f9xyd, full feedback at  https://osf.io/j5zbm, and thin at  https://osf.io/k5f4t. Experiment 3: https://osf.io/untzy] 
@@ -984,7 +962,7 @@ Exploratory mega-analytic models pooling across the three experiments were not p
 
 All materials, data, and analysis code is available at \url{https://github.com/vboyce/multiparty-tangrams}.
 
-### Participants
+### Participants {.unnumbered}
 This research was covered by the Stanford IRB under protocol 20009 "Online investigations of language learning". 
 Participants were recruited using the Prolific platform. 
 All participants self-reported as fluent native English speakers on Prolific's demographic prescreen. 
@@ -994,13 +972,13 @@ As games with more participants tended to run longer, we paid participants diffe
 
 A total of 1319 people participated across the 3 experiments. We recruited enough participants for 20 games in each condition in experiments 1 and 2 and 40 games per condition in experiment 3. However, due to attrition in filling the games initially and due to participants dropping out of the games, we ended up with fewer games in some conditions. For logistical reasons of matching participants into real-time games, we had to recruit participants in fairly large batches, and so did not have precise control to add new games to replace games that did not fill or had participants drop out early.  A breakdown of number of games and participants in each condition is shown in SI Table 3 along with further discussion of recruitment logistics. 
 
-### Materials
+### Materials {.unnumbered}
 
 The same 12 tangram images, drawn from @hawkins2020 and @clark1986, were used every block. 
 These images were displayed in a 4 $\times$ 3 grid with the order randomized across participants to disincentivize spatial descriptions such as "top left," as the image might be in a different place on the describer's and matchers' screens.
 To reduce cognitive load from visual search, the locations were fixed for each participant across trials.
 
-### Procedure
+### Procedure {.unnumbered}
 
 The experimental procedure was very similar across the three experiments.
 We first describe the procedure used in Experiment 1 and then describe the differences in later experiments. 
@@ -1047,7 +1025,7 @@ The thick condition combined the two coherency-enhancing variations from Experim
 Across both conditions in Experiment 3, notifications were sent to the chat to indicate when a participant had made a selection. 
 For experiment 3, game lobbies worked slightly differently, and 5 minutes after the first participant had joined the lobby, the game started if there were at least two participants. Correspondingly, in experiment 3, games did not stop if a player disconnected, instead if there were at least two players still active, the game continued, swapping a player into the role of describer if necessary to continue the game.  
 
-### Data pre-processing and exclusions
+### Data pre-processing and exclusions {.unnumbered}
 
 Participants could use the chat box freely, which meant that the chat transcript contained some non-referential language. The first author skimmed the chat transcripts, tagging utterances that did not refer to the current tangram. These were primarily pleasantries ("Hello"), meta-commentary about how well the task was going, and bare confirmations or denials ("ok", "got it", "yes", "no"). We excluded these utterances from our analyses. Note that chat lines sometimes included non-referential words in addition to words referring to the tangrams ("ok, so it looks like a zombie", "yes, the one with legs"); these lines were retained intact. 
 
@@ -1058,7 +1036,7 @@ The realities of online recruitment and disconnection meant that the number of g
 We excluded incomplete blocks from analyses, but included complete blocks from partial games (See SI Table 3).
 When skimming transcripts to tag non-referential utterances, we noticed that one game in the 6-player thick condition had a describer who did not give any sort of coherent descriptions, even with substantial matcher prompting. We excluded this game from analyses. 
 
-### Modelling strategy
+### Modelling strategy {.unnumbered}
 
 We fit all regression models in brms [@burkner2018] with weakly regularizing priors.
 We were unable to fit the full pre-registered mixed effects structure in a reasonable amount of time for some models, so we included the maximal  hierarchical effects that were tractable. 
@@ -1080,24 +1058,11 @@ We do not know whether groups that start and continue at the full size differ fr
 This is potentially an issue across all experiments; in experiments 1 and 2, groups stopped playing if anyone dropped out, and in experiment 3 they kept playing as a smaller group. 
 The number of games in each condition and rates of dropoff are shown in SI Table 3 and SI Figure 3. 
 
-# Author's Note
-Experiment 1 was previously reported in Proceedings of the Annual Meeting of the Cognitive Science Society 44 (2022). 
 
-We thank the LangCog Lab, Saxelab, CAMP 5, HSP 2023, and Cogsci 2022 audiences for helpful feedback on this work. 
 
-This work was supported by a Hoffman-Yee Grant from the Stanford Institute for Human-Centered AI.
-
-We report CRediT taxonomy contributions as follows: All authors did conceptualization and methodology. VB did data curation, formal analysis, investigation, visualization, and writing -- original draft. VB and RDH did software. RDH, NDG, and MCF did writing -- editing. MCF and NDG did funding. MCF did supervision. 
-
-# References 
-
-```{r}
-# References will be generated automatically by Pandoc and included here.
-# The following code is some latex to format the bibliography. Do not remove it.
-```
-
-\setlength{\parindent}{-0.1in} 
-\setlength{\leftskip}{0.125in}
-\noindent
+<!-- Leave these lines as they are at the end of your .Rmd file to ensure placement of methods & acknowledgements sections before the references-->
+\showmatmethods
+\showacknow
+\pnasbreak
 
 
