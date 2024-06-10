@@ -23,6 +23,14 @@ header-includes:
  - \usepackage{emoji}
  - \usepackage{caption, subcaption}
  - \usepackage{placeins}
+ - \renewcommand{\figurename}{Figure S}
+ - \makeatletter
+ - \def\fnum@figure{\figurename\thefigure}
+ - \makeatother
+ - \renewcommand{\tablename}{Table S}
+ - \makeatletter
+ - \def\fnum@table{\tablename\thetable}
+ - \makeatother
 
 ---
 ```{r set-up, include=FALSE}
@@ -127,7 +135,7 @@ form <- function(model) {
 
 \pagebreak
 # Feedback
-Figure 1 shows the type of feedback shown to participants in different conditions. 
+Figure S1 shows the type of feedback shown to participants in different conditions. 
 
 ```{r feedback-diag, fig.env = "figure*", fig.pos = "t!", fig.width=10, fig.height=8, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap="Feedback shown to participants. In low-coherence games, matchers saw feedback as shown in A and B. In all games, describers saw feedback like in C; icons were associated with players and indicated who selected which. In high feedback games, matchers saw grids like C, but with text as in A and B."}
 a <- ggplot() +
@@ -155,7 +163,7 @@ Positional words: right, left, above, below, under, over, top, bottom, behind, s
 Posture words: kick\*, crouch\*, squat\*, kneel\*, knelt, stood, stand\*, sit\*, sat, lying, walk\*, facing, fall\*, looking, lean\*, seat\*, laying
 
 Qualitatively, descriptions that contain none of these words are usually shorter, more abstract, more conventionalized descriptions. 
-Figure 2 shows the fraction of trials where the speaker used these words. Generally, the more concrete word categories become less frequent over time, although this effect seems weaker in larger, thinner games. 
+Figure S2 shows the fraction of trials where the speaker used these words. Generally, the more concrete word categories become less frequent over time, although this effect seems weaker in larger, thinner games. 
 
 ```{r}
 detect_body <- str_c(
@@ -562,7 +570,7 @@ knitr::kable(summary, caption = "The number of games in each experiment and cond
 
 In experiment 3, the 6* player games did not all have 6 players, both because games continued as participants dropped out and because if there weren't enough players after 5 minutes of waiting, the game would start with whoever was there. All analyses use "intent to treat" and call these 6 player games. 
 
-In Figure 3, the number of games goes up in some cases because only complete blocks (where the describer said something every trial) are analysed. If there was initial confusion and a describer missed a trial, that block was excluded. 
+In Figure S3, the number of games goes up in some cases because only complete blocks (where the describer said something every trial) are analysed. If there was initial confusion and a describer missed a trial, that block was excluded. 
 
 ```{r player-count, fig.width=8, fig.height=3, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Number of players during 6 thin and 6 thick games in experiment 3. Blocks that were incomplete were excluded, so if a describer said nothing during a trial, that block was excluded." }
 combined_results |>
@@ -584,7 +592,7 @@ combined_results |>
 
 As (post-hoc) sensitivity analyses, we re-ran our main analyses on the subset of games that completed all 6 blocks with a full set of players. This is a check on whether any of the results are driven by a) partial games that were included in early blocks but not later blocks or b) experiment 3 games that started without a full set of players or had players drop out. 
 
-Versions of main paper Figures 2 and 4 with just these complete games are shown here in SI Figures 4 and 5. The full model output for the sensitivity analyses is in SI Tables 54-73. 
+Versions of main paper Figures 2 and 4 with just these complete games are shown here in Figures S4 and S5. The full model output for the sensitivity analyses is in Tables S54-S73. 
 
 The only qualitative differences in the results between these models and those on the full dataset are in experiment 3.  Note that large experiment 3 games were the ones most likely to be excluded, both for incompleteness and for not having the full 6 players throughout. 
 
@@ -1494,11 +1502,11 @@ We note a deviation from the pre-registration here in the analysis of the emojis
 
 # Reaction times
 
-As the number of words produced by the speaker each trial decreases over repetition, so does the time each trial takes. In SI Figure 9, the time to selection (per-matcher) is shown in panels A-C, and the time per trial (equivalent to how long the slowest matcher took) is shown in panels B-D. 
+As the number of words produced by the speaker each trial decreases over repetition, so does the time each trial takes. In Figure S9, the time to selection (per-matcher) is shown in panels A-C, and the time per trial (equivalent to how long the slowest matcher took) is shown in panels B-D. 
 
 Matchers sped up over time across conditions, although thin large groups may not have speed up as much. Larger groups appear to be a bit slower at the level of individual matchers, which compounds to overall slower games as there are more matchers to wait for. 
 
-We also confirm in SI Figure 10 that there is a strong relationship between the number of words from the describer and the length of a trial. 
+We also confirm in Figure S10 that there is a strong relationship between the number of words from the describer and the length of a trial. 
 
 ```{r timing, fig.env = "figure*", fig.pos = "b!", fig.width=10, fig.height=8.5, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "TODO Behavioral results across all three experiments. (A-C). Matcher accuracy at selecting the target image. (D-F). Number of words produced by the describer each trial. For all, small dots are per game, per block means, and smooth lines are predictions from model fixed effects with 95\\% credible intervals. Y-axes are truncated, and a few outliers points are not visible."}
 individual_timing <- combined_results |>
@@ -1765,7 +1773,7 @@ One problem with precisely estimating the fixed effects of interest is that ther
 
 Models were fit with the maximum mixed effect structure for which the model would run in a reasonable amount of time. 
 
-As shown in SI Figure 11, the standard deviations for the grouping levels are substantial compared to the non-Intercept coefficient estimates. This means that the between-game or between-tangram variation is large compared to the effects of interest. This variation causes wide estimates as there is model uncertainty in how to apportion observed effects between group-level idiosyncrasies and population-level fixed effects.
+As shown in Figure S11, the standard deviations for the grouping levels are substantial compared to the non-Intercept coefficient estimates. This means that the between-game or between-tangram variation is large compared to the effects of interest. This variation causes wide estimates as there is model uncertainty in how to apportion observed effects between group-level idiosyncrasies and population-level fixed effects.
 
 This variability is diminished in the mega-analytic models which were fit with less extensive mixed effects (to aid in model convergence) and with more data. 
 

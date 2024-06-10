@@ -58,7 +58,7 @@ linkcolor: blue
 citecolor: blue
 graphics: TRUE # Needed to be able to include images
 tables: TRUE # Needed to be able to include tables
-
+wordcount: TRUE
 ---
 Corresponding author: Veronica Boyce, vboyce@stanford.edu
 
@@ -100,7 +100,7 @@ library(viridis)
 library(cowplot)
 library(tidybayes)
 library(kableExtra)
- 
+ wordcountaddin::word_count()
 
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
